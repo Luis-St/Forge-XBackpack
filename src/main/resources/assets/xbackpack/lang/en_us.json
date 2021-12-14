@@ -1,0 +1,8 @@
+{
+  "xbackpack.container.backpack": "Backpack",
+  "xbackpack.key.categories.backpack": "Backpack",
+  "xbackpack.key.backpack_open": "Open Backpack",
+  "xbackpack.key.backpack_next": "Next Tool",
+  "xbackpack.key.backpack_slot_top": "Tool Down",
+  "xbackpack.key.backpack_slot_down": "Tool Up"
+}
