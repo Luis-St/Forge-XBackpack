@@ -11,6 +11,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
+/**
+ * 
+ * @author Luis-st
+ *
+ */
+
 public class BackpackScreen extends AbstractContainerScreen<BackpackMenu> {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(XBackpack.MOD_ID, "textures/gui/container/backpack.png");
@@ -30,6 +36,7 @@ public class BackpackScreen extends AbstractContainerScreen<BackpackMenu> {
 		RenderSystem.setShaderTexture(0, TEXTURE);
 		int width = (this.width - (this.imageWidth + 44)) / 2;
 		int height = (this.height - this.imageHeight) / 2;
+		// we render the inventory of the backpack and of the player seperat
 		this.blit(stack, width, height, 0, 0, 220, 184);
 		this.blit(stack, width, height + 89, 0, 89, 198, 184);
 	}

@@ -13,10 +13,16 @@ import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+/**
+ * 
+ * @author Luis-st
+ *
+ */
+
 @Mod.EventBusSubscriber(modid = XBackpack.MOD_ID, value = Dist.CLIENT)
 public class OnClientTickEvent {
 	
-	private static int lastPacket;
+	private static int lastPacket; // small cooldown for the Tool cycle
 	
 	@SubscribeEvent
 	public static void ClientTick(TickEvent.ClientTickEvent event) {

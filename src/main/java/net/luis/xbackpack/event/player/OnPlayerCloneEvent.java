@@ -8,6 +8,12 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+/**
+ * 
+ * @author Luis-st
+ *
+ */
+
 @Mod.EventBusSubscriber(modid = XBackpack.MOD_ID)
 public class OnPlayerCloneEvent {
 	
@@ -15,7 +21,7 @@ public class OnPlayerCloneEvent {
 	public static void PlayerClone(PlayerEvent.Clone event) {
 		Player original = event.getOriginal();
 		Player player = event.getPlayer();
-		original.reviveCaps();
+		original.reviveCaps(); // required since 1.17
 		original.getCapability(XBackpackCapabilities.BACKPACK, null).ifPresent(oldBackpack -> {
 			player.getCapability(XBackpackCapabilities.BACKPACK, null).ifPresent(newBackpack -> {
 				if (oldBackpack instanceof BackpackHandler && newBackpack instanceof BackpackHandler) {
@@ -25,7 +31,7 @@ public class OnPlayerCloneEvent {
 				}
 			});
 		});
-		original.invalidateCaps();
+		original.invalidateCaps(); // required since 1.17
 	}
 
 }

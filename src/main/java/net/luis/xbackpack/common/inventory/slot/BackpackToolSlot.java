@@ -10,6 +10,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
+/**
+ * 
+ * @author Luis-st
+ *
+ */
+
 public class BackpackToolSlot extends SlotItemHandler {
 
 	public static final ResourceLocation EMPTY_TOOL_SLOT = new ResourceLocation(XBackpack.MOD_ID, "item/empty_tool_slot");

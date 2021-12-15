@@ -7,6 +7,12 @@ import net.minecraft.world.Container;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 
+/**
+ * 
+ * @author Luis-st
+ *
+ */
+
 public class BackpackOffhandSlot extends Slot {
 
 	public BackpackOffhandSlot(Container container, int index, int xPosition, int yPosition) {

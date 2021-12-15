@@ -11,6 +11,12 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 
+/**
+ * 
+ * @author Luis-st
+ *
+ */
+
 public class BackpackArmorSlot extends Slot {
 	
 	private final Player player;
@@ -39,6 +45,7 @@ public class BackpackArmorSlot extends Slot {
 	
 	@Override
 	public boolean mayPickup(Player player) {
+		// copy of the vanilla logic, because we don't want to change the logic
 		ItemStack stack = this.getItem();
 		return !stack.isEmpty() && !player.isCreative() && EnchantmentHelper.hasBindingCurse(stack) ? false : super.mayPickup(player);
 	}

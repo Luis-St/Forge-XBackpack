@@ -12,6 +12,12 @@ import net.minecraft.world.SimpleMenuProvider;
 import net.minecraftforge.network.NetworkEvent.Context;
 import net.minecraftforge.network.NetworkHooks;
 
+/**
+ * 
+ * @author Luis-st
+ *
+ */
+
 public class BackpackOpen {
 	
 	private static final Component CONTAINER_NAME = new TranslatableComponent(XBackpack.MOD_ID + ".container.backpack");

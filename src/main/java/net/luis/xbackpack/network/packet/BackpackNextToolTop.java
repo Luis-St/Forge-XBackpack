@@ -11,6 +11,12 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkEvent.Context;
 
+/**
+ * 
+ * @author Luis-st
+ *
+ */
+
 public class BackpackNextToolTop {
 	
 	public static void encode(BackpackNextToolTop packet, FriendlyByteBuf byteBuf) {

@@ -2,17 +2,26 @@ package net.luis.xbackpack.event.client;
 
 import net.luis.xbackpack.XBackpack;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+
+/**
+ * 
+ * @author Luis-st
+ *
+ */
 
 @Mod.EventBusSubscriber(modid = XBackpack.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class OnTextureStitchEvent {
 
 	@SubscribeEvent
 	public static void TextureStitch(TextureStitchEvent.Pre event) {
-		event.addSprite(new ResourceLocation(XBackpack.MOD_ID, "item/empty_tool_slot"));
+		if (event.getAtlas().location().equals(InventoryMenu.BLOCK_ATLAS)) { // we want to add the empty ToolSlot texture only to the Block Atlas
+			event.addSprite(new ResourceLocation(XBackpack.MOD_ID, "item/empty_tool_slot"));
+		}
 	}
 
 }

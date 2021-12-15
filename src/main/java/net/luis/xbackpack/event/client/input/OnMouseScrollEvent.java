@@ -15,6 +15,12 @@ import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+/**
+ * 
+ * @author Luis-st
+ *
+ */
+
 @Mod.EventBusSubscriber(modid = XBackpack.MOD_ID, value = Dist.CLIENT)
 public class OnMouseScrollEvent {
 

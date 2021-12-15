@@ -14,6 +14,12 @@ import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
 
+/**
+ * 
+ * @author Luis-st
+ *
+ */
+
 public class XBackpackNetworkHandler {
 	
 	private static final String version = "1";

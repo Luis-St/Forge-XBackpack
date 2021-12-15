@@ -11,6 +11,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.network.NetworkEvent.Context;
 
+/**
+ * 
+ * @author Luis-st
+ *
+ */
+
 public class BackpackToolTop {
 	
 	public static void encode(BackpackToolTop packet, FriendlyByteBuf byteBuf) {

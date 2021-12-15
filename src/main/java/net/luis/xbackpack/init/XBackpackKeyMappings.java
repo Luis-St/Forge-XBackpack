@@ -3,6 +3,12 @@ package net.luis.xbackpack.init;
 import net.luis.xbackpack.XBackpack;
 import net.minecraft.client.KeyMapping;
 
+/**
+ * 
+ * @author Luis-st
+ *
+ */
+
 public class XBackpackKeyMappings {
 	
 	public static final String BACKPACK_CATEGORY = XBackpack.MOD_ID + ".key.categories.backpack";

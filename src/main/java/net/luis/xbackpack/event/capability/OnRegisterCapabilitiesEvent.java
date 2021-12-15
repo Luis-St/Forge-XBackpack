@@ -7,6 +7,12 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 
+/**
+ * 
+ * @author Luis-st
+ *
+ */
+
 @Mod.EventBusSubscriber(modid = XBackpack.MOD_ID, bus = Bus.MOD)
 public class OnRegisterCapabilitiesEvent {
 	

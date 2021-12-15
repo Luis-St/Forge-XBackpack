@@ -16,6 +16,12 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
 
+/**
+ * 
+ * @author Luis-st
+ *
+ */
+
 public class BackpackMenu extends AbstractContainerMenu {
 	
 	public BackpackMenu(int id, Inventory inventory, FriendlyByteBuf byteBuf) {
@@ -73,7 +79,7 @@ public class BackpackMenu extends AbstractContainerMenu {
 							return ItemStack.EMPTY;
 						}
 					}
-				} else if (BackpackConstans.VALID_OFFHAND_SLOT_ITEMS.contains(slotStack.getItem())) {
+				} else if (BackpackConstans.SHIFTABLE_OFFHAND_SLOT_ITEMS.contains(slotStack.getItem())) {
 					if (!this.moveItemStackTo(slotStack, 78, 79, false)) {
 						if (!this.moveItemStackTo(slotStack, 0, 36, false)) {
 							return ItemStack.EMPTY;
