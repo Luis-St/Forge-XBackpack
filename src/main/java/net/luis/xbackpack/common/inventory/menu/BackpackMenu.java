@@ -34,16 +34,16 @@ public class BackpackMenu extends AbstractContainerMenu {
 		IBackpack backpack = player.getCapability(XBackpackCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new);
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 9; j++) {
-				this.addSlot(new SlotItemHandler(backpack, j + i * 9, 8 + j * 18, (i * 18) + 18));
+				this.addSlot(new SlotItemHandler(backpack, j + i * 9, 8 + j * 18, (i * 18) + 18)); // add the main Menu Slots
 			}
 		}
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 9; j++) {
-				this.addSlot(new Slot(inventory, j + i * 9 + 9, 8 + j * 18, 102 + i * 18));
+				this.addSlot(new Slot(inventory, j + i * 9 + 9, 8 + j * 18, 102 + i * 18)); // add the Inventory Slots
 			}
 		}
 		for (int i = 0; i < 9; i++) {
-			this.addSlot(new Slot(inventory, i, 8 + i * 18, 160));
+			this.addSlot(new Slot(inventory, i, 8 + i * 18, 160)); // add the Hotbar Slots
 		}
 		this.addSlot(new BackpackToolSlot(backpack, 36, 174, 54));
 		this.addSlot(new BackpackToolSlot(backpack, 37, 174, 72));
@@ -66,32 +66,32 @@ public class BackpackMenu extends AbstractContainerMenu {
 		if (slot != null && slot.hasItem()) {
 			ItemStack slotStack = slot.getItem();
 			stack = slotStack.copy();
-			if (35 >= index && index >= 0) {
+			if (35 >= index && index >= 0) { // move from Menu to Inventory
 				if (!this.moveItemStackTo(slotStack, 63, 72, false)) {
 					if (!this.moveItemStackTo(slotStack, 36, 63, false)) {
 						return ItemStack.EMPTY;
 					}
 				}
-			} else if (71 >= index && index >= 36) {
+			} else if (71 >= index && index >= 36) { // move from Inventory to Menu
 				if (BackpackConstans.VALID_TOOL_SLOT_ITEMS.contains(slotStack.getItem())) {
-					if (!this.moveItemStackTo(slotStack, 72, 74, false)) {
+					if (!this.moveItemStackTo(slotStack, 72, 74, false)) { // first try to move into ToolSlots else Menu
 						if (!this.moveItemStackTo(slotStack, 0, 36, false)) {
 							return ItemStack.EMPTY;
 						}
 					}
 				} else if (BackpackConstans.SHIFTABLE_OFFHAND_SLOT_ITEMS.contains(slotStack.getItem())) {
-					if (!this.moveItemStackTo(slotStack, 78, 79, false)) {
+					if (!this.moveItemStackTo(slotStack, 78, 79, false)) { // first try to move into OffhandSlot else Menu
 						if (!this.moveItemStackTo(slotStack, 0, 36, false)) {
 							return ItemStack.EMPTY;
 						}
 					}
 				} else if (BackpackConstans.VALID_ARMOR_SLOT_ITEMS.contains(slotStack.getItem())) {
-					if (!this.moveItemStackTo(slotStack, 74, 78, false)) {
+					if (!this.moveItemStackTo(slotStack, 74, 78, false)) { // first try to move into ArmorSlots else Menu
 						if (!this.moveItemStackTo(slotStack, 0, 36, false)) {
 							return ItemStack.EMPTY;
 						}
 					}
-				} else if (!this.moveItemStackTo(slotStack, 0, 36, false)) {
+				} else if (!this.moveItemStackTo(slotStack, 0, 36, false)) { // fallback move for all other Items
 					return ItemStack.EMPTY;
 				}
 			} else if (78 >= index && index >= 72) {

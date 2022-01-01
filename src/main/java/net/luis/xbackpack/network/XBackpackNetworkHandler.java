@@ -26,6 +26,7 @@ public class XBackpackNetworkHandler {
 	private static int id = 0;
 	private static SimpleChannel simpleChannel;
 
+	// Registration of all Packets
 	public static void init() {
 		simpleChannel = NetworkRegistry.newSimpleChannel(new ResourceLocation(XBackpack.MOD_ID, "simple_chnanel"), () -> version, version::equals, version::equals);
 		simpleChannel.registerMessage(id++, BackpackOpen.class, BackpackOpen::encode, BackpackOpen::decode, BackpackOpen::handle, Optional.of(NetworkDirection.PLAY_TO_SERVER));

@@ -19,6 +19,7 @@ public class OnPlayerCloneEvent {
 	
 	@SubscribeEvent
 	public static void PlayerClone(PlayerEvent.Clone event) {
+		// copy the Backpack when the Player die
 		Player original = event.getOriginal();
 		Player player = event.getPlayer();
 		original.reviveCaps(); // required since 1.17

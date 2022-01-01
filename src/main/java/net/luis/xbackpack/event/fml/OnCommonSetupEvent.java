@@ -18,7 +18,7 @@ public class OnCommonSetupEvent {
 	
 	@SubscribeEvent
 	public static void commonSetup(FMLCommonSetupEvent event) {
-		XBackpackNetworkHandler.init();
+		XBackpackNetworkHandler.init(); // register the Network stuff
 	}
 	
 }

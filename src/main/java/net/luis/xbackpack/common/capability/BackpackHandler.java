@@ -10,7 +10,7 @@ import net.minecraftforge.items.ItemStackHandler;
 
 public class BackpackHandler extends ItemStackHandler implements IBackpack {
 
-	// package private, because a new instance should only be created in the BackpackProvider
+	// package private, because a new instance should only be created in BackpackProvider
 	BackpackHandler(int size) {
 		super(size);
 	}

@@ -9,6 +9,7 @@ import net.minecraft.client.KeyMapping;
  *
  */
 
+//Registration class of the KeyMappings
 public class XBackpackKeyMappings {
 	
 	public static final String BACKPACK_CATEGORY = XBackpack.MOD_ID + ".key.categories.backpack";

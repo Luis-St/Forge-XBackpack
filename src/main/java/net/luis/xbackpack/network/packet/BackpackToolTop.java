@@ -20,11 +20,11 @@ import net.minecraftforge.network.NetworkEvent.Context;
 public class BackpackToolTop {
 	
 	public static void encode(BackpackToolTop packet, FriendlyByteBuf byteBuf) {
-		
+		// no data to encode
 	}
 	
 	public static BackpackToolTop decode(FriendlyByteBuf byteBuf) {
-		return new BackpackToolTop();
+		return new BackpackToolTop(); // no data to decode
 	}
 	
 	public static void handle(BackpackToolTop packet, Supplier<Context> context) {
@@ -33,7 +33,7 @@ public class BackpackToolTop {
 			IItemHandlerModifiable itemModifiable = player.getCapability(XBackpackCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new);
 			ItemStack main = player.getMainHandItem().copy();
 			ItemStack top = itemModifiable.getStackInSlot(36).copy();	
-			if (BackpackConstans.VALID_TOOL_SLOT_ITEMS.contains(main.getItem())) {
+			if (BackpackConstans.VALID_TOOL_SLOT_ITEMS.contains(main.getItem())) { // simple anti cheat
 				player.setItemInHand(InteractionHand.MAIN_HAND, top);
 				itemModifiable.setStackInSlot(36, main);
 			}

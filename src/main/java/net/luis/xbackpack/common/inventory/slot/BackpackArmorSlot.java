@@ -45,14 +45,14 @@ public class BackpackArmorSlot extends Slot {
 	
 	@Override
 	public boolean mayPickup(Player player) {
-		// copy of the vanilla logic, because we don't want to change the logic
+		// copy of the vanilla logic, because we don't want to change the logic at the moment
 		ItemStack stack = this.getItem();
 		return !stack.isEmpty() && !player.isCreative() && EnchantmentHelper.hasBindingCurse(stack) ? false : super.mayPickup(player);
 	}
 	
 	@Override
 	public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
-		switch (this.equipmentSlot) {
+		switch (this.equipmentSlot) { // get correct background for the Slot
 		case HEAD: return Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_HELMET);
 		case CHEST: return Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_CHESTPLATE);
 		case LEGS: return Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_LEGGINGS);

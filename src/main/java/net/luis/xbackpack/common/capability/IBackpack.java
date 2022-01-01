@@ -9,5 +9,7 @@ import net.minecraftforge.items.IItemHandlerModifiable;
  */
 
 public interface IBackpack extends IItemHandlerModifiable {
-
+	
+	// at the moment we don't change any logic here
+	
 }
