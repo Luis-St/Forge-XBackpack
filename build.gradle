@@ -161,7 +161,7 @@ jar {
 // creates a jar file of type source
 task source(type: Jar) {
     from sourceSets.main.allJava
-    classifier = 'source'
+    classifier = 'Source'
 }
 
 // Example configuration to allow publishing using the maven-publish plugin
