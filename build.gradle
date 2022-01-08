@@ -158,8 +158,8 @@ jar {
     }
 }
 
-// creates a jar file of type source
-task source(type: Jar) {
+// creates a API jar file
+task buildApi(type: Jar) {
     from sourceSets.main.allJava
     classifier = 'API'
 }
