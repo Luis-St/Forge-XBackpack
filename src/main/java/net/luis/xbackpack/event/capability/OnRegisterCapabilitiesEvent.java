@@ -18,7 +18,7 @@ public class OnRegisterCapabilitiesEvent {
 	
 	@SubscribeEvent
 	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
-		event.register(IBackpack.class); // register the Backpack Capability
+		event.register(IBackpack.class);
 	}
 
 }

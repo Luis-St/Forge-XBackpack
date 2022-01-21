@@ -19,7 +19,7 @@ public class OnTextureStitchEvent {
 
 	@SubscribeEvent
 	public static void TextureStitch(TextureStitchEvent.Pre event) {
-		if (event.getAtlas().location().equals(InventoryMenu.BLOCK_ATLAS)) { // we want to add the empty ToolSlot texture only to the BlockAtlas
+		if (event.getAtlas().location().equals(InventoryMenu.BLOCK_ATLAS)) {
 			event.addSprite(new ResourceLocation(XBackpack.MOD_ID, "item/empty_tool_slot"));
 		}
 	}

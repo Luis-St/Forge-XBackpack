@@ -34,16 +34,16 @@ public class BackpackMenu extends AbstractContainerMenu {
 		IBackpack backpack = player.getCapability(XBackpackCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new);
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 9; j++) {
-				this.addSlot(new SlotItemHandler(backpack, j + i * 9, 8 + j * 18, (i * 18) + 18)); // add the main Menu Slots
+				this.addSlot(new SlotItemHandler(backpack, j + i * 9, 8 + j * 18, (i * 18) + 18));
 			}
 		}
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 9; j++) {
-				this.addSlot(new Slot(inventory, j + i * 9 + 9, 8 + j * 18, 102 + i * 18)); // add the Inventory Slots
+				this.addSlot(new Slot(inventory, j + i * 9 + 9, 8 + j * 18, 102 + i * 18));
 			}
 		}
 		for (int i = 0; i < 9; i++) {
-			this.addSlot(new Slot(inventory, i, 8 + i * 18, 160)); // add the Hotbar Slots
+			this.addSlot(new Slot(inventory, i, 8 + i * 18, 160));
 		}
 		this.addSlot(new BackpackToolSlot(backpack, 36, 174, 54));
 		this.addSlot(new BackpackToolSlot(backpack, 37, 174, 72));

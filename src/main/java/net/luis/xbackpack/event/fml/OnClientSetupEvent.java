@@ -23,7 +23,6 @@ public class OnClientSetupEvent {
 	
 	@SubscribeEvent
 	public static void clientSetup(FMLClientSetupEvent event) {
-		// register the client stuff of the Backpack mod
 		event.enqueueWork(() -> {
 			MenuScreens.register(XBackpackMenuTypes.BACKPACK_MENU.get(), BackpackScreen::new);
 		});

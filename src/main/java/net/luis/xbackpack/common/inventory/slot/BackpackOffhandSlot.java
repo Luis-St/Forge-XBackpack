@@ -21,7 +21,7 @@ public class BackpackOffhandSlot extends Slot {
 	
 	@Override
 	public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
-		return Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_SHIELD); // get OffhandSlot background
+		return Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_SHIELD);
 	}
 	
 }

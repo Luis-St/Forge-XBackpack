@@ -22,7 +22,7 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = XBackpack.MOD_ID, value = Dist.CLIENT)
 public class OnClientTickEvent {
 	
-	private static int lastPacket; // small cooldown for the Tool cycle
+	private static int lastPacket;
 	
 	@SubscribeEvent
 	public static void ClientTick(TickEvent.ClientTickEvent event) {

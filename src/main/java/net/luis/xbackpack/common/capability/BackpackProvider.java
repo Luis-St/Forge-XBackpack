@@ -25,12 +25,12 @@ public class BackpackProvider implements ICapabilitySerializable<CompoundTag> {
 
 	@Override
 	public CompoundTag serializeNBT() {
-		return this.handler.serializeNBT(); // handlet in the BackpackHandler
+		return this.handler.serializeNBT();
 	}
 
 	@Override
 	public void deserializeNBT(CompoundTag tag) {
-		this.handler.deserializeNBT(tag); // handlet in the BackpackHandler
+		this.handler.deserializeNBT(tag);
 	}
 
 }

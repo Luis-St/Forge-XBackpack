@@ -41,7 +41,7 @@ public class BackpackToolSlot extends SlotItemHandler {
 	
 	@Override
 	public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
-		return Pair.of(InventoryMenu.BLOCK_ATLAS, EMPTY_TOOL_SLOT); // get custom ToolSlot background
+		return Pair.of(InventoryMenu.BLOCK_ATLAS, EMPTY_TOOL_SLOT);
 	}
 
 }

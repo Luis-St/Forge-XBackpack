@@ -36,7 +36,6 @@ public class BackpackScreen extends AbstractContainerScreen<BackpackMenu> {
 		RenderSystem.setShaderTexture(0, TEXTURE);
 		int width = (this.width - (this.imageWidth + 44)) / 2;
 		int height = (this.height - this.imageHeight) / 2;
-		// we render the inventoryies seperat
 		this.blit(stack, width, height, 0, 0, 220, 184);
 		this.blit(stack, width, height + 89, 0, 89, 198, 184);
 	}
