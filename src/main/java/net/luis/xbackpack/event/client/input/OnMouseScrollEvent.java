@@ -24,9 +24,15 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = XBackpack.MOD_ID, value = Dist.CLIENT)
 public class OnMouseScrollEvent {
 
+	/**
+	 * handle the mouse scroll input,<br>
+	 * and send if {@link Player#isShiftKeyDown()} returns {@code true}<br>
+	 * a packet to the server<br>
+	 * the packet depends on the {@link InputEvent.MouseScrollEvent#getScrollDelta()}
+	 */
 	@SubscribeEvent
 	@SuppressWarnings("resource")
-	public static void MouseScroll(InputEvent.MouseScrollEvent event) {
+	public static void mouseScroll(InputEvent.MouseScrollEvent event) {
 		double delta = event.getScrollDelta();
 		Player player = Minecraft.getInstance().player;
 		if (player.isShiftKeyDown()) {

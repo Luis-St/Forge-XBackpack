@@ -7,6 +7,7 @@ import net.luis.xbackpack.network.packet.BackpackNextTool;
 import net.luis.xbackpack.network.packet.BackpackOpen;
 import net.luis.xbackpack.network.packet.BackpackToolDown;
 import net.luis.xbackpack.network.packet.BackpackToolTop;
+import net.minecraft.client.KeyMapping;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
@@ -22,10 +23,18 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = XBackpack.MOD_ID, value = Dist.CLIENT)
 public class OnClientTickEvent {
 	
+	/**
+	 * small cooldown for the Tool cycle
+	 */
 	private static int lastPacket;
 	
+	/**
+	 * handle the {@link XBackpackKeyMappings},<br>
+	 * and send if the {@link KeyMapping#isDown()} returns {@code true}<br>
+	 * the related packet via the {@link XBackpackNetworkHandler#getChannel()} to the server
+	 */
 	@SubscribeEvent
-	public static void ClientTick(TickEvent.ClientTickEvent event) {
+	public static void clientTick(TickEvent.ClientTickEvent event) {
 		if (event.phase == Phase.START) {
 			if (0 >= lastPacket) {
 				if (XBackpackKeyMappings.BACKPACK_OPEN.isDown()) {
