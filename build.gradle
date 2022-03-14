@@ -22,7 +22,7 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 minecraft {
-	mappings channel: 'official', version: '1.18.2'
+	mappings channel: 'official', version: '1.18.'
 
 	runs {
 		client {
@@ -30,6 +30,7 @@ minecraft {
 			
 			property 'forge.logging.markers', 'REGISTRIES'
 			property 'forge.logging.console.level', 'debug'
+			property 'forge.enabledGameTestNamespaces', 'xbackpack'
 			
 			mods {
 				examplemod {
@@ -43,8 +44,23 @@ minecraft {
 			
 			property 'forge.logging.markers', 'REGISTRIES'
 			property 'forge.logging.console.level', 'debug'
-			
 			property 'forge.enabledGameTestNamespaces', 'xbackpack'
+			
+			mods {
+				examplemod {
+					source sourceSets.main
+				}
+			}
+		}
+		
+		gameTestServer {
+			workingDirectory project.file('run')
+			
+			property 'forge.logging.markers', 'REGISTRIES'
+			property 'forge.logging.console.level', 'debug'
+			property 'forge.enabledGameTestNamespaces', 'xbackpack'
+			property 'mixin.env.remapRefMap', 'true'
+			property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
 			
 			mods {
 				examplemod {
