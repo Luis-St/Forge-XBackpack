@@ -23,6 +23,11 @@ public class XBackpack {
 	public static final String MOD_ID = "xbackpack";
 	
 	/**
+	 * {@link XBackpack} mod name
+	 */
+	public static final String MOD_NAME = "XBackpack";
+	
+	/**
 	 * {@link XBackpack} internal {@link Logger}
 	 */
 	public static final Logger LOGGER = LogManager.getLogger(XBackpack.class);
