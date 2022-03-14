@@ -1,6 +1,6 @@
 modLoader="javafml" #mandatory
 
-loaderVersion="[39,)" #mandatory
+loaderVersion="[40,)" #mandatory
 
 license="All rights reserved"
 
@@ -8,7 +8,7 @@ license="All rights reserved"
 
 modId="xbackpack" #mandatory
 
-version="1.18.1-1.3" #mandatory
+version="1.18.2-1.4" #mandatory
 
 displayName="XBackpack" #mandatory
 
@@ -30,7 +30,7 @@ XBackpack Development Team
 
     mandatory=true #mandatory
 
-    versionRange="[39,)" #mandatory
+    versionRange="[40,)" #mandatory
 
     ordering="NONE"
 
@@ -42,7 +42,7 @@ XBackpack Development Team
     
     mandatory=true
     
-    versionRange="[1.18.1,1.19)"
+    versionRange="[1.18.2,1.19)"
     
     ordering="NONE"
     
