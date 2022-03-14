@@ -22,7 +22,7 @@ public class BackpackToolSlot extends SlotItemHandler {
 	/**
 	 * tool slot background texture as a {@link ResourceLocation}
 	 */
-	public static final ResourceLocation EMPTY_TOOL_SLOT = new ResourceLocation(XBackpack.MOD_ID, "item/empty_tool_slot");
+	private static final ResourceLocation EMPTY_TOOL_SLOT = new ResourceLocation(XBackpack.MOD_ID, "item/empty_tool_slot");
 	
 	/**
 	 * constructor for a {@link BackpackToolSlot}

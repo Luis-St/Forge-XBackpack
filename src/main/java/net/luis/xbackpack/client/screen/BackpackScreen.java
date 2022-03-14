@@ -22,7 +22,7 @@ public class BackpackScreen extends AbstractContainerScreen<BackpackMenu> {
 	/**
 	 * backpack texture as a {@link ResourceLocation}
 	 */
-	protected static final ResourceLocation TEXTURE = new ResourceLocation(XBackpack.MOD_ID, "textures/gui/container/backpack.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(XBackpack.MOD_ID, "textures/gui/container/backpack.png");
 	
 	/**
 	 * constructor for the {@link BackpackScreen},<br>

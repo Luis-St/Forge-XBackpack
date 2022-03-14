@@ -25,12 +25,12 @@ public class BackpackArmorSlot extends Slot {
 	/**
 	 * the related {@link Player}
 	 */
-	protected final Player player;
+	private final Player player;
 	
 	/**
 	 * the related {@link EquipmentSlot}
 	 */
-	protected final EquipmentSlot equipmentSlot;
+	private final EquipmentSlot equipmentSlot;
 	
 	/**
 	 * constructor for a {@link BackpackArmorSlot}

@@ -25,17 +25,17 @@ public class XBackpackNetworkHandler {
 	/**
 	 * {@link SimpleChannel} version
 	 */
-	protected static final String VERSION = "1";
+	private static final String VERSION = "1";
 	
 	/**
 	 * network packet registration id
 	 */
-	protected static int id = 0;
+	private static int id = 0;
 	
 	/**
 	 * {@link SimpleChannel}
 	 */
-	protected static SimpleChannel simpleChannel;
+	private static SimpleChannel simpleChannel;
 
 	/**
 	 * initialized the {@link SimpleChannel}
