@@ -1,23 +1,14 @@
 modLoader="javafml" #mandatory
-
 loaderVersion="[40,)" #mandatory
-
 license="All rights reserved"
 
 [[mods]] #mandatory
-
 modId="xbackpack" #mandatory
-
-version="1.18.2-1.4" #mandatory
-
+version="1.18.2-1.5" #mandatory
 displayName="XBackpack" #mandatory
-
 credits="Thanks for downloading my Mod" #optional
-
 authors="Luis" #optional
-
 displayURL="https://github.com/Luis-st/Forge-XBackpack/issues"
-
 description='''
 Adds a cool Backpack to the Game
 Have a lot of fun when playing
@@ -25,25 +16,15 @@ XBackpack Development Team
 '''
 
 [[dependencies.xbackpack]] #optional
-
-    modId="forge" #mandatory
-
-    mandatory=true #mandatory
-
-    versionRange="[40,)" #mandatory
-
-    ordering="NONE"
-
-    side="BOTH"
-    
+modId="forge" #mandatory
+mandatory=true #mandator
+versionRange="[40,)" #mandatory
+ordering="NONE"
+side="BOTH"
+ 
 [[dependencies.xbackpack]]
-
-    modId="minecraft"
-    
-    mandatory=true
-    
-    versionRange="[1.18.2,1.19)"
-    
-    ordering="NONE"
-    
-    side="BOTH"
+modId="minecraft"
+mandatory=true
+versionRange="[1.18.2,1.19)"
+ordering="NONE"
+side="BOTH"
