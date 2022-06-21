@@ -6,7 +6,6 @@ import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.common.inventory.menu.BackpackMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
@@ -24,7 +23,7 @@ public class BackpackOpen {
 	/**
 	 * {@link BackpackMenu} component
 	 */
-	private static final Component CONTAINER_NAME = new TranslatableComponent(XBackpack.MOD_ID + ".container.backpack");
+	private static final Component CONTAINER_NAME = Component.translatable(XBackpack.MOD_ID + ".container.backpack");
 	
 	/**
 	 * encode the data of the {@link BackpackOpen} packet,<br>
