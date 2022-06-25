@@ -1,6 +1,5 @@
-package net.luis.xbackpack.common.capability;
+package net.luis.xbackpack.world.capability;
 
-import net.luis.xbackpack.init.XBackpackCapabilities;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.capabilities.Capability;

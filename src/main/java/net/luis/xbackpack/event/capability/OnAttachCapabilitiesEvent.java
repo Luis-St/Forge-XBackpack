@@ -1,7 +1,7 @@
 package net.luis.xbackpack.event.capability;
 
 import net.luis.xbackpack.XBackpack;
-import net.luis.xbackpack.common.capability.BackpackProvider;
+import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;

@@ -2,9 +2,9 @@ package net.luis.xbackpack.network.packet;
 
 import java.util.function.Supplier;
 
-import net.luis.xbackpack.common.BackpackConstans;
-import net.luis.xbackpack.common.inventory.slot.BackpackToolSlot;
-import net.luis.xbackpack.init.XBackpackCapabilities;
+import net.luis.xbackpack.BackpackConstans;
+import net.luis.xbackpack.world.capability.XBackpackCapabilities;
+import net.luis.xbackpack.world.inventory.BackpackToolSlot;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;

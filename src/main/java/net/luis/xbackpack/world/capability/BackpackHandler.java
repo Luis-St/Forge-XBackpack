@@ -1,4 +1,4 @@
-package net.luis.xbackpack.common.capability;
+package net.luis.xbackpack.world.capability;
 
 import net.minecraftforge.items.ItemStackHandler;
 

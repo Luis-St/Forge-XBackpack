@@ -1,7 +1,7 @@
 package net.luis.xbackpack.event.client.input;
 
 import net.luis.xbackpack.XBackpack;
-import net.luis.xbackpack.init.XBackpackKeyMappings;
+import net.luis.xbackpack.client.XBackpackKeyMappings;
 import net.luis.xbackpack.network.XBackpackNetworkHandler;
 import net.luis.xbackpack.network.packet.BackpackNextTool;
 import net.luis.xbackpack.network.packet.BackpackOpen;

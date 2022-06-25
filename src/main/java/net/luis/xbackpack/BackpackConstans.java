@@ -1,4 +1,4 @@
-package net.luis.xbackpack.common;
+package net.luis.xbackpack;
 
 import java.util.List;
 import java.util.stream.Collectors;

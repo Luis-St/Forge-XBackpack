@@ -1,7 +1,6 @@
-package net.luis.xbackpack.init;
+package net.luis.xbackpack.world.inventory;
 
 import net.luis.xbackpack.XBackpack;
-import net.luis.xbackpack.common.inventory.menu.BackpackMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.registries.DeferredRegister;

@@ -1,9 +1,9 @@
 package net.luis.xbackpack.event.fml;
 
 import net.luis.xbackpack.XBackpack;
+import net.luis.xbackpack.client.XBackpackKeyMappings;
 import net.luis.xbackpack.client.screen.BackpackScreen;
-import net.luis.xbackpack.init.XBackpackKeyMappings;
-import net.luis.xbackpack.init.XBackpackMenuTypes;
+import net.luis.xbackpack.world.inventory.XBackpackMenuTypes;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.world.inventory.AbstractContainerMenu;

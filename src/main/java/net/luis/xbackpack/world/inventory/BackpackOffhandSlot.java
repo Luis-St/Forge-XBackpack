@@ -1,4 +1,4 @@
-package net.luis.xbackpack.common.inventory.slot;
+package net.luis.xbackpack.world.inventory;
 
 import com.mojang.datafixers.util.Pair;
 

@@ -1,7 +1,6 @@
-package net.luis.xbackpack.init;
+package net.luis.xbackpack.world.capability;
 
 import net.luis.xbackpack.XBackpack;
-import net.luis.xbackpack.common.capability.IBackpack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;

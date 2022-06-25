@@ -1,9 +1,9 @@
-package net.luis.xbackpack.init;
+package net.luis.xbackpack.client;
 
 import org.lwjgl.glfw.GLFW;
 
 import net.luis.xbackpack.XBackpack;
-import net.luis.xbackpack.common.inventory.slot.BackpackToolSlot;
+import net.luis.xbackpack.world.inventory.BackpackToolSlot;
 import net.minecraft.client.KeyMapping;
 
 /**

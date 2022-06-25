@@ -3,7 +3,7 @@ package net.luis.xbackpack.network.packet;
 import java.util.function.Supplier;
 
 import net.luis.xbackpack.XBackpack;
-import net.luis.xbackpack.common.inventory.menu.BackpackMenu;
+import net.luis.xbackpack.world.inventory.BackpackMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;

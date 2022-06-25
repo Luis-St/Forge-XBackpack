@@ -1,8 +1,8 @@
 package net.luis.xbackpack.event.player;
 
 import net.luis.xbackpack.XBackpack;
-import net.luis.xbackpack.common.capability.BackpackHandler;
-import net.luis.xbackpack.init.XBackpackCapabilities;
+import net.luis.xbackpack.world.capability.BackpackHandler;
+import net.luis.xbackpack.world.capability.XBackpackCapabilities;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

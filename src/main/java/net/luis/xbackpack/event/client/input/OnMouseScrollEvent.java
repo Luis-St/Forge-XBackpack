@@ -1,12 +1,12 @@
 package net.luis.xbackpack.event.client.input;
 
+import net.luis.xbackpack.BackpackConstans;
 import net.luis.xbackpack.XBackpack;
-import net.luis.xbackpack.common.BackpackConstans;
-import net.luis.xbackpack.common.capability.IBackpack;
-import net.luis.xbackpack.init.XBackpackCapabilities;
 import net.luis.xbackpack.network.XBackpackNetworkHandler;
 import net.luis.xbackpack.network.packet.BackpackNextToolDown;
 import net.luis.xbackpack.network.packet.BackpackNextToolTop;
+import net.luis.xbackpack.world.capability.IBackpack;
+import net.luis.xbackpack.world.capability.XBackpackCapabilities;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;

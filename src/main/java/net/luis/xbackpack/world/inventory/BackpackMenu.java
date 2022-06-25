@@ -1,12 +1,8 @@
-package net.luis.xbackpack.common.inventory.menu;
+package net.luis.xbackpack.world.inventory;
 
-import net.luis.xbackpack.common.BackpackConstans;
-import net.luis.xbackpack.common.capability.IBackpack;
-import net.luis.xbackpack.common.inventory.slot.BackpackArmorSlot;
-import net.luis.xbackpack.common.inventory.slot.BackpackOffhandSlot;
-import net.luis.xbackpack.common.inventory.slot.BackpackToolSlot;
-import net.luis.xbackpack.init.XBackpackCapabilities;
-import net.luis.xbackpack.init.XBackpackMenuTypes;
+import net.luis.xbackpack.BackpackConstans;
+import net.luis.xbackpack.world.capability.IBackpack;
+import net.luis.xbackpack.world.capability.XBackpackCapabilities;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
