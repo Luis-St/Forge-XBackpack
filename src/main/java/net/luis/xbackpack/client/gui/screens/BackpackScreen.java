@@ -1,4 +1,4 @@
-package net.luis.xbackpack.client.screen;
+package net.luis.xbackpack.client.gui.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
