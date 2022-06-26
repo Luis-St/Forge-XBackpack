@@ -35,12 +35,22 @@ public class BackpackScreen extends AbstractContainerScreen<BackpackMenu> {
 		this.imageHeight = 144 + 4 * 18;
 		this.inventoryLabelY = this.imageHeight - 125;
 	}
-
+	
+	/**
+	 * render the tooltip of all {@link Item}s in the inventory
+	 */
+	@Override
+	public void render(PoseStack stack, int x, int y, float partialTicks) {
+		super.render(stack, x, y, partialTicks);
+		this.renderTooltip(stack, x, y);
+	}
+	
 	/**
 	 * render the player inventory and the backpack inventory
 	 */
 	@Override
 	protected void renderBg(PoseStack stack, float partialTicks, int x, int y) {
+		this.renderBackground(stack);
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		RenderSystem.setShaderTexture(0, TEXTURE);
