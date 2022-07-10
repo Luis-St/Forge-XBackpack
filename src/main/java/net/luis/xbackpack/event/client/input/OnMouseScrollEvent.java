@@ -11,7 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.client.event.InputEvent.MouseScrollingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -28,11 +28,11 @@ public class OnMouseScrollEvent {
 	 * handle the mouse scroll input,<br>
 	 * and send if {@link Player#isShiftKeyDown()} returns {@code true}<br>
 	 * a packet to the server<br>
-	 * the packet depends on the {@link InputEvent.MouseScrollEvent#getScrollDelta()}
+	 * the packet depends on the {@link MouseScrollingEvent#getScrollDelta()}
 	 */
 	@SubscribeEvent
 	@SuppressWarnings("resource")
-	public static void mouseScroll(InputEvent.MouseScrollEvent event) {
+	public static void mouseScroll(MouseScrollingEvent event) {
 		double delta = event.getScrollDelta();
 		Player player = Minecraft.getInstance().player;
 		if (player.isShiftKeyDown()) {
