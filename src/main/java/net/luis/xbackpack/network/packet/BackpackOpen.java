@@ -52,7 +52,7 @@ public class BackpackOpen {
 	public static void handle(BackpackOpen packet, Supplier<Context> networkContext) {
 		ServerPlayer player = networkContext.get().getSender();
 		networkContext.get().enqueueWork(() -> {
-			NetworkHooks.openGui(player, new SimpleMenuProvider((id, inventory, playerIn) -> {
+			NetworkHooks.openScreen(player, new SimpleMenuProvider((id, inventory, playerIn) -> {
 				return new BackpackMenu(id, inventory);
 			}, CONTAINER_NAME));
 		});

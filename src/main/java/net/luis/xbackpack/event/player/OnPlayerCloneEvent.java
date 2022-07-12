@@ -24,7 +24,7 @@ public class OnPlayerCloneEvent {
 	@SubscribeEvent
 	public static void playerClone(PlayerEvent.Clone event) {
 		Player original = event.getOriginal();
-		Player player = event.getPlayer();
+		Player player = event.getEntity();
 		original.reviveCaps(); // required since 1.17
 		original.getCapability(XBackpackCapabilities.BACKPACK, null).ifPresent(oldBackpack -> {
 			player.getCapability(XBackpackCapabilities.BACKPACK, null).ifPresent(newBackpack -> {

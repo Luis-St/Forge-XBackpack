@@ -15,7 +15,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class XBackpackMenuTypes {
 	
-	public static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(ForgeRegistries.CONTAINERS, XBackpack.MOD_ID);
+	public static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(ForgeRegistries.MENU_TYPES, XBackpack.MOD_ID);
 	
 	/**
 	 * {@link RegistryObject} for {@link BackpackMenu}
