@@ -43,26 +43,28 @@ public class BackpackMenu extends AbstractContainerMenu {
 		super(XBackpackMenuTypes.BACKPACK_MENU.get(), id);
 		Player player = inventory.player;
 		IBackpack backpack = player.getCapability(XBackpackCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new);
-		for (int i = 0; i < 4; i++) {
+		int rows = (BackpackConstans.BACKPACK_SLOT_COUNT - 2) / 9;
+		int index = 0;
+		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < 9; j++) {
-				this.addSlot(new SlotItemHandler(backpack, j + i * 9, 8 + j * 18, (i * 18) + 18));
+				this.addSlot(new SlotItemHandler(backpack, index++, 30 + j * 18, (i * 18) + 18));
 			}
 		}
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 9; j++) {
-				this.addSlot(new Slot(inventory, j + i * 9 + 9, 8 + j * 18, 102 + i * 18));
+				this.addSlot(new Slot(inventory, j + i * 9 + 9, 30 + j * 18, 120 + i * 18));
 			}
 		}
 		for (int i = 0; i < 9; i++) {
-			this.addSlot(new Slot(inventory, i, 8 + i * 18, 160));
+			this.addSlot(new Slot(inventory, i, 30 + i * 18, 178));
 		}
-		this.addSlot(new BackpackToolSlot(backpack, 36, 174, 54));
-		this.addSlot(new BackpackToolSlot(backpack, 37, 174, 72));
-		this.addSlot(new BackpackArmorSlot(inventory, EquipmentSlot.HEAD, 39, -14, 18));
-		this.addSlot(new BackpackArmorSlot(inventory, EquipmentSlot.CHEST, 38, -14, 36));
-		this.addSlot(new BackpackArmorSlot(inventory, EquipmentSlot.LEGS, 37, -14, 54));
-		this.addSlot(new BackpackArmorSlot(inventory, EquipmentSlot.FEET, 36, -14, 72));
-		this.addSlot(new BackpackOffhandSlot(inventory, 40, -14, 160));
+		this.addSlot(new BackpackToolSlot(backpack, index++, 214, 54));
+		this.addSlot(new BackpackToolSlot(backpack, index++, 214, 72));
+		this.addSlot(new BackpackArmorSlot(inventory, EquipmentSlot.HEAD, 39, 8, 18));
+		this.addSlot(new BackpackArmorSlot(inventory, EquipmentSlot.CHEST, 38, 8, 36));
+		this.addSlot(new BackpackArmorSlot(inventory, EquipmentSlot.LEGS, 37, 8, 54));
+		this.addSlot(new BackpackArmorSlot(inventory, EquipmentSlot.FEET, 36, 8, 72));
+		this.addSlot(new BackpackOffhandSlot(inventory, 40, 8, 178));
 	}
 
 	/**

@@ -39,8 +39,8 @@ public class OnMouseScrollEvent {
 			ItemStack main = player.getMainHandItem();
 			if (BackpackConstans.VALID_TOOL_SLOT_ITEMS.contains(main.getItem())) {
 				IBackpack backpack = player.getCapability(XBackpackCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new);
-				ItemStack top = backpack.getStackInSlot(36).copy();
-				ItemStack down = backpack.getStackInSlot(37).copy();
+				ItemStack top = backpack.getStackInSlot(BackpackConstans.BACKPACK_TOOL_SLOT_TOP).copy();
+				ItemStack down = backpack.getStackInSlot(BackpackConstans.BACKPACK_TOOL_SLOT_DOWN).copy();
 				if (!top.isEmpty() && !down.isEmpty()) {
 					if (delta > 0) {
 						event.setCanceled(true);

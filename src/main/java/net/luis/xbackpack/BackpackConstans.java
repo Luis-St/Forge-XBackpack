@@ -3,7 +3,8 @@ package net.luis.xbackpack;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import net.minecraft.core.Registry;
+import com.google.common.collect.ImmutableList;
+
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.CrossbowItem;
@@ -15,6 +16,8 @@ import net.minecraft.world.item.ShearsItem;
 import net.minecraft.world.item.ShieldItem;
 import net.minecraft.world.item.TieredItem;
 import net.minecraftforge.common.extensions.IForgeItem;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 
 /**
  * 
@@ -24,11 +27,15 @@ import net.minecraftforge.common.extensions.IForgeItem;
 
 public class BackpackConstans {
 	
+	public static final int BACKPACK_SLOT_COUNT = 47;
+	
+	public static final int BACKPACK_TOOL_SLOT_TOP = BACKPACK_SLOT_COUNT - 2;
+	public static final int BACKPACK_TOOL_SLOT_DOWN = BACKPACK_SLOT_COUNT - 1;
+	
 	/**
 	 * a List of all registered {@link Item}s
 	 */
-	@SuppressWarnings("deprecation")
-	private static final List<Item> ITEM = Registry.ITEM.stream().collect(Collectors.toList());
+	private static final List<Item> ITEM = ImmutableList.copyOf(ForgeRegistries.ITEMS.getValues());
 	
 	/**
 	 * add Items to this List in {@link FMLCommonSetupEvent},<br>

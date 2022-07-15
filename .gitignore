@@ -31,5 +31,5 @@ LICENSE.txt
 setup.bat
 build.bat
 
-# Maven Files
-maven
+# Cache Files
+src/generated/resources/.cache

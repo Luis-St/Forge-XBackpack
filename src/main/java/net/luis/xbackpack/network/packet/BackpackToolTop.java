@@ -51,10 +51,10 @@ public class BackpackToolTop {
 		context.get().enqueueWork(() -> {
 			IItemHandlerModifiable itemModifiable = player.getCapability(XBackpackCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new);
 			ItemStack main = player.getMainHandItem().copy();
-			ItemStack top = itemModifiable.getStackInSlot(36).copy();	
+			ItemStack top = itemModifiable.getStackInSlot(BackpackConstans.BACKPACK_TOOL_SLOT_TOP).copy();	
 			if (BackpackConstans.VALID_TOOL_SLOT_ITEMS.contains(main.getItem())) {
 				player.setItemInHand(InteractionHand.MAIN_HAND, top);
-				itemModifiable.setStackInSlot(36, main);
+				itemModifiable.setStackInSlot(BackpackConstans.BACKPACK_TOOL_SLOT_TOP, main);
 			}
 		});
 		context.get().setPacketHandled(true);
