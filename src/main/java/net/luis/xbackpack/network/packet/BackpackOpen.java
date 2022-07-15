@@ -21,22 +21,25 @@ public class BackpackOpen {
 	
 	private static final Component CONTAINER_NAME = Component.translatable(XBackpack.MOD_ID + ".container.backpack");
 	
-	public static void encode(BackpackOpen packet, FriendlyByteBuf byteBuf) {
+	public BackpackOpen() {
 		
 	}
 	
-	public static BackpackOpen decode(FriendlyByteBuf byteBuf) {
-		return new BackpackOpen();
+	public BackpackOpen(FriendlyByteBuf buffer) {
+		
 	}
 	
-	public static void handle(BackpackOpen packet, Supplier<Context> networkContext) {
+	public void encode(FriendlyByteBuf buffer) {
+		
+	}
+	
+	public void handle(Supplier<Context> networkContext) {
 		ServerPlayer player = networkContext.get().getSender();
 		networkContext.get().enqueueWork(() -> {
 			NetworkHooks.openScreen(player, new SimpleMenuProvider((id, inventory, playerIn) -> {
 				return new BackpackMenu(id, inventory);
 			}, CONTAINER_NAME));
 		});
-		networkContext.get().setPacketHandled(true);
 	}
 	
 }

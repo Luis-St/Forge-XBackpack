@@ -1,7 +1,5 @@
 package net.luis.xbackpack.network;
 
-import java.util.Optional;
-
 import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.network.packet.BackpackNextTool;
 import net.luis.xbackpack.network.packet.BackpackNextToolDown;
@@ -30,12 +28,18 @@ public class XBackpackNetworkHandler {
 	
 	public static void init() {
 		simpleChannel = NetworkRegistry.newSimpleChannel(new ResourceLocation(XBackpack.MOD_ID, "simple_chnanel"), () -> VERSION, VERSION::equals, VERSION::equals);
-		simpleChannel.registerMessage(id++, BackpackOpen.class, BackpackOpen::encode, BackpackOpen::decode, BackpackOpen::handle, Optional.of(NetworkDirection.PLAY_TO_SERVER));
-		simpleChannel.registerMessage(id++, BackpackNextTool.class, BackpackNextTool::encode, BackpackNextTool::decode, BackpackNextTool::handle, Optional.of(NetworkDirection.PLAY_TO_SERVER));
-		simpleChannel.registerMessage(id++, BackpackToolTop.class, BackpackToolTop::encode, BackpackToolTop::decode, BackpackToolTop::handle, Optional.of(NetworkDirection.PLAY_TO_SERVER));
-		simpleChannel.registerMessage(id++, BackpackToolDown.class, BackpackToolDown::encode, BackpackToolDown::decode, BackpackToolDown::handle, Optional.of(NetworkDirection.PLAY_TO_SERVER));
-		simpleChannel.registerMessage(id++, BackpackNextToolDown.class, BackpackNextToolDown::encode, BackpackNextToolDown::decode, BackpackNextToolDown::handle, Optional.of(NetworkDirection.PLAY_TO_SERVER));
-		simpleChannel.registerMessage(id++, BackpackNextToolTop.class, BackpackNextToolTop::encode, BackpackNextToolTop::decode, BackpackNextToolTop::handle, Optional.of(NetworkDirection.PLAY_TO_SERVER));
+		simpleChannel.messageBuilder(BackpackOpen.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(BackpackOpen::encode).decoder(BackpackOpen::new)
+				.consumerMainThread(BackpackOpen::handle).add();
+		simpleChannel.messageBuilder(BackpackNextTool.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(BackpackNextTool::encode).decoder(BackpackNextTool::new)
+				.consumerMainThread(BackpackNextTool::handle).add();
+		simpleChannel.messageBuilder(BackpackToolTop.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(BackpackToolTop::encode).decoder(BackpackToolTop::new)
+				.consumerMainThread(BackpackToolTop::handle).add();
+		simpleChannel.messageBuilder(BackpackToolDown.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(BackpackToolDown::encode).decoder(BackpackToolDown::new)
+				.consumerMainThread(BackpackToolDown::handle).add();
+		simpleChannel.messageBuilder(BackpackNextToolDown.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(BackpackNextToolDown::encode).decoder(BackpackNextToolDown::new)
+				.consumerMainThread(BackpackNextToolDown::handle).add();
+		simpleChannel.messageBuilder(BackpackNextToolTop.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(BackpackNextToolTop::encode).decoder(BackpackNextToolTop::new)
+				.consumerMainThread(BackpackNextToolTop::handle).add();
 	}
 	
 	public static SimpleChannel getChannel() {

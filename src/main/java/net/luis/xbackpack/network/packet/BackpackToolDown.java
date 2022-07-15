@@ -19,15 +19,19 @@ import net.minecraftforge.network.NetworkEvent.Context;
 
 public class BackpackToolDown {
 	
-	public static void encode(BackpackToolDown packet, FriendlyByteBuf byteBuf) {
+	public BackpackToolDown() {
 		
 	}
 	
-	public static BackpackToolDown decode(FriendlyByteBuf byteBuf) {
-		return new BackpackToolDown();
+	public BackpackToolDown(FriendlyByteBuf buffer) {
+		
 	}
 	
-	public static void handle(BackpackToolDown packet, Supplier<Context> context) {
+	public void encode(FriendlyByteBuf buffer) {
+		
+	}
+	
+	public void handle(Supplier<Context> context) {
 		ServerPlayer player = context.get().getSender();
 		context.get().enqueueWork(() -> {
 			IBackpack backpack = player.getCapability(XBackpackCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new);
@@ -38,7 +42,6 @@ public class BackpackToolDown {
 				backpack.setStackInSlot(BackpackConstans.BACKPACK_TOOL_SLOT_DOWN, main);
 			}
 		});
-		context.get().setPacketHandled(true);
 	}
 	
 }

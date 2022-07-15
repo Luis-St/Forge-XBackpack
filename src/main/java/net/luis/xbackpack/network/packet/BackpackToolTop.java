@@ -19,15 +19,19 @@ import net.minecraftforge.network.NetworkEvent.Context;
 
 public class BackpackToolTop {
 	
-	public static void encode(BackpackToolTop packet, FriendlyByteBuf byteBuf) {
+	public BackpackToolTop() {
 		
 	}
 	
-	public static BackpackToolTop decode(FriendlyByteBuf byteBuf) {
-		return new BackpackToolTop();
+	public BackpackToolTop(FriendlyByteBuf buffer) {
+		
 	}
 	
-	public static void handle(BackpackToolTop packet, Supplier<Context> context) {
+	public void encode(FriendlyByteBuf buffer) {
+		
+	}
+	
+	public void handle(Supplier<Context> context) {
 		ServerPlayer player = context.get().getSender();
 		context.get().enqueueWork(() -> {
 			IItemHandlerModifiable itemModifiable = player.getCapability(XBackpackCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new);
@@ -38,7 +42,6 @@ public class BackpackToolTop {
 				itemModifiable.setStackInSlot(BackpackConstans.BACKPACK_TOOL_SLOT_TOP, main);
 			}
 		});
-		context.get().setPacketHandled(true);
 	}
 	
 }
