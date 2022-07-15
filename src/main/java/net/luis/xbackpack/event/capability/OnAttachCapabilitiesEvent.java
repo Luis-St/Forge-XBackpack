@@ -18,9 +18,6 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = XBackpack.MOD_ID)
 public class OnAttachCapabilitiesEvent {
 	
-	/**
-	 * add the {@link BackpackProvider} to the {@link Player}
-	 */
 	@SubscribeEvent
 	public static void attachPlayerCapabilities(AttachCapabilitiesEvent<Entity> event) {
 		if (event.getObject() instanceof Player) {

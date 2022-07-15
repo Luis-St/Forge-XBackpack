@@ -8,18 +8,15 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 /**
- * registration class, for the {@link XBackpack} {@link MenuType}s
  * 
  * @author Luis-st
+ * 
  */
 
 public class XBackpackMenuTypes {
 	
 	public static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(ForgeRegistries.MENU_TYPES, XBackpack.MOD_ID);
 	
-	/**
-	 * {@link RegistryObject} for {@link BackpackMenu}
-	 */
 	public static final RegistryObject<MenuType<BackpackMenu>> BACKPACK_MENU = MENU_TYPES.register("backpack_menu", () -> {
 		return IForgeMenuType.create(BackpackMenu::new);
 	});

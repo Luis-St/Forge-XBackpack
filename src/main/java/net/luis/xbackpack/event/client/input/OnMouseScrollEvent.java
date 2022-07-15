@@ -23,13 +23,7 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = XBackpack.MOD_ID, value = Dist.CLIENT)
 public class OnMouseScrollEvent {
-
-	/**
-	 * handle the mouse scroll input,<br>
-	 * and send if {@link Player#isShiftKeyDown()} returns {@code true}<br>
-	 * a packet to the server<br>
-	 * the packet depends on the {@link MouseScrollingEvent#getScrollDelta()}
-	 */
+	
 	@SubscribeEvent
 	@SuppressWarnings("resource")
 	public static void mouseScroll(MouseScrollingEvent event) {

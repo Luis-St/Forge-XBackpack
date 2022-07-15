@@ -28,18 +28,14 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class BackpackConstans {
 	
 	public static final int BACKPACK_SLOT_COUNT = 47;
-	
 	public static final int BACKPACK_TOOL_SLOT_TOP = BACKPACK_SLOT_COUNT - 2;
 	public static final int BACKPACK_TOOL_SLOT_DOWN = BACKPACK_SLOT_COUNT - 1;
 	
-	/**
-	 * a List of all registered {@link Item}s
-	 */
 	private static final List<Item> ITEM = ImmutableList.copyOf(ForgeRegistries.ITEMS.getValues());
 	
 	/**
 	 * add Items to this List in {@link FMLCommonSetupEvent},<br>
-	 * if you want to add valid Items for the {@link ToolSlot}
+	 * if you want to add valid Items for the tool slot
 	 */
 	public static final List<Item> VALID_TOOL_SLOT_ITEMS = ITEM.stream().filter(item -> {
 		return item instanceof TieredItem || item instanceof ShearsItem || item instanceof FlintAndSteelItem || item instanceof BowItem || item instanceof CrossbowItem;
@@ -47,9 +43,9 @@ public class BackpackConstans {
 	
 	/**
 	 * add Items to this List in {@link FMLCommonSetupEvent},<br>
-	 * if you want to add valid Items for the {@link ArmorSlot}<br>
+	 * if you want to add valid Items for the armor slot<br>
 	 * <br>
-	 * note: the {@link Item} can only be place in the Slot if {@link IForgeItem#canEquip()} returns {@code true}
+	 * note: the item can only be place in the Slot if {@link IForgeItem#canEquip()} returns {@code true}
 	 */
 	public static final List<Item> VALID_ARMOR_SLOT_ITEMS = ITEM.stream().filter(item -> {
 		return item instanceof ArmorItem || item instanceof ElytraItem || item == Items.CARVED_PUMPKIN;
@@ -57,7 +53,7 @@ public class BackpackConstans {
 	
 	/**
 	 * add Items to this List in {@link FMLCommonSetupEvent},<br> 
-	 * if you want to quick move the {@link Item} via shift into the {@link OffhandSlot}
+	 * if you want to quick move the item via shift into the offhand slot
 	 */
 	public static final List<Item> SHIFTABLE_OFFHAND_SLOT_ITEMS = ITEM.stream().filter(item -> {
 		return item instanceof ShieldItem || item == Items.TORCH || item == Items.SOUL_TORCH || item.isEdible();

@@ -1,7 +1,6 @@
 package net.luis.xbackpack.event.client;
 
 import net.luis.xbackpack.XBackpack;
-import net.luis.xbackpack.world.inventory.BackpackToolSlot;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraftforge.api.distmarker.Dist;
@@ -17,10 +16,7 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = XBackpack.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class OnTextureStitchEvent {
-
-	/**
-	 * stitch the {@link BackpackToolSlot#EMPTY_TOOL_SLOT} to the {@link InventoryMenu#BLOCK_ATLAS}
-	 */
+	
 	@SubscribeEvent
 	public static void textureStitch(TextureStitchEvent.Pre event) {
 		if (event.getAtlas().location().equals(InventoryMenu.BLOCK_ATLAS)) {

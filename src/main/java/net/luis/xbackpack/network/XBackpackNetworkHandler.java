@@ -22,25 +22,12 @@ import net.minecraftforge.network.simple.SimpleChannel;
 
 public class XBackpackNetworkHandler {
 	
-	/**
-	 * {@link SimpleChannel} version
-	 */
 	private static final String VERSION = "1";
 	
-	/**
-	 * network packet registration id
-	 */
 	private static int id = 0;
 	
-	/**
-	 * {@link SimpleChannel}
-	 */
 	private static SimpleChannel simpleChannel;
-
-	/**
-	 * initialized the {@link SimpleChannel}
-	 * and all network packets
-	 */
+	
 	public static void init() {
 		simpleChannel = NetworkRegistry.newSimpleChannel(new ResourceLocation(XBackpack.MOD_ID, "simple_chnanel"), () -> VERSION, VERSION::equals, VERSION::equals);
 		simpleChannel.registerMessage(id++, BackpackOpen.class, BackpackOpen::encode, BackpackOpen::decode, BackpackOpen::handle, Optional.of(NetworkDirection.PLAY_TO_SERVER));
@@ -51,9 +38,6 @@ public class XBackpackNetworkHandler {
 		simpleChannel.registerMessage(id++, BackpackNextToolTop.class, BackpackNextToolTop::encode, BackpackNextToolTop::decode, BackpackNextToolTop::handle, Optional.of(NetworkDirection.PLAY_TO_SERVER));
 	}
 	
-	/**
-	 * @return the {@link XBackpack} {@link SimpleChannel}
-	 */
 	public static SimpleChannel getChannel() {
 		return simpleChannel;
 	}

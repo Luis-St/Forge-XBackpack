@@ -2,7 +2,6 @@ package net.luis.xbackpack.event.client;
 
 import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.client.XBackpackKeyMappings;
-import net.minecraft.client.KeyMapping;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -18,9 +17,6 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 @EventBusSubscriber(modid = XBackpack.MOD_ID, bus = Bus.MOD, value = Dist.CLIENT)
 public class OnRegisterKeyMappingsEvent {
 	
-	/**
-	 * register all mod {@link KeyMapping}s
-	 */
 	@SubscribeEvent
 	public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
 		event.register(XBackpackKeyMappings.BACKPACK_OPEN);

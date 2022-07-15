@@ -16,9 +16,6 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 @Mod.EventBusSubscriber(modid = XBackpack.MOD_ID, bus = Bus.MOD)
 public class OnRegisterCapabilitiesEvent {
 	
-	/**
-	 * register the {@link IBackpack} Capability
-	 */
 	@SubscribeEvent
 	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
 		event.register(IBackpack.class);

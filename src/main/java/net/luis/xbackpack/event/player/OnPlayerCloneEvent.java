@@ -17,25 +17,21 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = XBackpack.MOD_ID)
 public class OnPlayerCloneEvent {
 	
-	/**
-	 * clone the {@link BackpackHandler} from the old {@link XBackpackCapabilities#BACKPACK}<br> 
-	 * into the new Capability, when the {@link Player} die
-	 */
 	@SubscribeEvent
 	public static void playerClone(PlayerEvent.Clone event) {
 		Player original = event.getOriginal();
 		Player player = event.getEntity();
-		original.reviveCaps(); // required since 1.17
+		original.reviveCaps();
 		original.getCapability(XBackpackCapabilities.BACKPACK, null).ifPresent(oldBackpack -> {
 			player.getCapability(XBackpackCapabilities.BACKPACK, null).ifPresent(newBackpack -> {
 				if (oldBackpack instanceof BackpackHandler && newBackpack instanceof BackpackHandler) {
 					((BackpackHandler) newBackpack).deserializeNBT(((BackpackHandler) oldBackpack).serializeNBT());
 				} else {
-					XBackpack.LOGGER.error("Fail to clone Backpack for {}", event.getOriginal().getName().getString());
+					XBackpack.LOGGER.error("Fail to clone Backpack of player {}", event.getOriginal().getName().getString());
 				}
 			});
 		});
-		original.invalidateCaps(); // required since 1.17
+		original.invalidateCaps();
 	}
 
 }
