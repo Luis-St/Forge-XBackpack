@@ -39,16 +39,16 @@ public class OnClientTickEvent {
 			if (0 >= lastPacket) {
 				if (XBackpackKeyMappings.BACKPACK_OPEN.isDown()) {
 					XBackpackNetworkHandler.getChannel().sendToServer(new BackpackOpen());
-					lastPacket = 2;
+					lastPacket = 4;
 				} else if (XBackpackKeyMappings.BACKPACK_NEXT.isDown()) {
 					XBackpackNetworkHandler.getChannel().sendToServer(new BackpackNextTool());
-					lastPacket = 2;
+					lastPacket = 4;
 				} else if (XBackpackKeyMappings.BACKPACK_SLOT_TOP.isDown()) {
 					XBackpackNetworkHandler.getChannel().sendToServer(new BackpackToolTop());
-					lastPacket = 2;
+					lastPacket = 4;
 				} else if (XBackpackKeyMappings.BACKPACK_SLOT_DOWN.isDown()) {
 					XBackpackNetworkHandler.getChannel().sendToServer(new BackpackToolDown());
-					lastPacket = 2;
+					lastPacket = 4;
 				}
 			} else {
 				lastPacket--;
