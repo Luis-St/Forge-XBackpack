@@ -6,6 +6,7 @@ import net.luis.xbackpack.network.XBackpackNetworkHandler;
 import net.luis.xbackpack.network.packet.BackpackNextTool;
 import net.luis.xbackpack.network.packet.BackpackOpen;
 import net.luis.xbackpack.network.packet.BackpackToolDown;
+import net.luis.xbackpack.network.packet.BackpackToolMid;
 import net.luis.xbackpack.network.packet.BackpackToolTop;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.TickEvent;
@@ -36,6 +37,9 @@ public class OnClientTickEvent {
 					lastPacket = 4;
 				} else if (XBackpackKeyMappings.BACKPACK_SLOT_TOP.isDown()) {
 					XBackpackNetworkHandler.getChannel().sendToServer(new BackpackToolTop());
+					lastPacket = 4;
+				} else if (XBackpackKeyMappings.BACKPACK_SLOT_MID.isDown()) {
+					XBackpackNetworkHandler.getChannel().sendToServer(new BackpackToolMid());
 					lastPacket = 4;
 				} else if (XBackpackKeyMappings.BACKPACK_SLOT_DOWN.isDown()) {
 					XBackpackNetworkHandler.getChannel().sendToServer(new BackpackToolDown());

@@ -22,6 +22,7 @@ public class OnRegisterKeyMappingsEvent {
 		event.register(XBackpackKeyMappings.BACKPACK_OPEN);
 		event.register(XBackpackKeyMappings.BACKPACK_NEXT);
 		event.register(XBackpackKeyMappings.BACKPACK_SLOT_TOP);
+		event.register(XBackpackKeyMappings.BACKPACK_SLOT_MID);
 		event.register(XBackpackKeyMappings.BACKPACK_SLOT_DOWN);
 	}
 	

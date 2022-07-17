@@ -3,6 +3,7 @@
   "xbackpack.key.categories.backpack": "Backpack",
   "xbackpack.key.backpack_open": "Open Backpack",
   "xbackpack.key.backpack_next": "Next Tool",
-  "xbackpack.key.backpack_slot_top": "Tool Down",
-  "xbackpack.key.backpack_slot_down": "Tool Up"
+  "xbackpack.key.backpack_slot_top": "Tool Top",
+  "xbackpack.key.backpack_slot_mid": "Tool Mid",
+  "xbackpack.key.backpack_slot_down": "Tool Down"
 }

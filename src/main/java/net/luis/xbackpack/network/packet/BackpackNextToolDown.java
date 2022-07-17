@@ -37,11 +37,13 @@ public class BackpackNextToolDown {
 			IBackpack backpack = player.getCapability(XBackpackCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new);
 			ItemStack main = player.getMainHandItem().copy();
 			ItemStack top = backpack.getStackInSlot(BackpackConstans.BACKPACK_TOOL_SLOT_TOP).copy();
+			ItemStack mid = backpack.getStackInSlot(BackpackConstans.BACKPACK_TOOL_SLOT_MID).copy();
 			ItemStack down = backpack.getStackInSlot(BackpackConstans.BACKPACK_TOOL_SLOT_DOWN).copy();
 			if (BackpackConstans.VALID_TOOL_SLOT_ITEMS.contains(main.getItem())) {
-				player.setItemInHand(InteractionHand.MAIN_HAND, down);
 				backpack.setStackInSlot(BackpackConstans.BACKPACK_TOOL_SLOT_TOP, main);
-				backpack.setStackInSlot(BackpackConstans.BACKPACK_TOOL_SLOT_DOWN, top);
+				backpack.setStackInSlot(BackpackConstans.BACKPACK_TOOL_SLOT_MID, top);
+				backpack.setStackInSlot(BackpackConstans.BACKPACK_TOOL_SLOT_DOWN, mid);
+				player.setItemInHand(InteractionHand.MAIN_HAND, down);
 			}
 		});
 	}
