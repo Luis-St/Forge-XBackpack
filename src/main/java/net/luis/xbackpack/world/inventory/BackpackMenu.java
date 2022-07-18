@@ -49,7 +49,7 @@ public class BackpackMenu extends AbstractContainerMenu {
 		}
 		this.addSlot(new BackpackToolSlot(backpack, index++, 196, 138));
 		this.addSlot(new BackpackToolSlot(backpack, index++, 196, 156));
-		this.addSlot(new BackpackToolSlot(backpack, index++, 196, 174));
+		this.addSlot(new BackpackToolSlot(backpack, index, 196, 174));
 		this.addSlot(new BackpackArmorSlot(inventory, EquipmentSlot.HEAD, 39, 8, 18));
 		this.addSlot(new BackpackArmorSlot(inventory, EquipmentSlot.CHEST, 38, 8, 36));
 		this.addSlot(new BackpackArmorSlot(inventory, EquipmentSlot.LEGS, 37, 8, 54));
@@ -62,72 +62,54 @@ public class BackpackMenu extends AbstractContainerMenu {
 		return true;
 	}
 	
-	/**
-	 * handle the quick move of {@link ItemStack}s:
-	 * <ol>
-	 * 	<li>try to move ItemStack frome Menu to Inventory</li>
-	 * 	<li>try to move ItemStack frome Inventory to Menu</li>
-	 * 	<li>try to move ItemStack into {@link BackpackToolSlot},<br> 
-	 * 		if the item is in {@link BackpackConstans#VALID_TOOL_SLOT_ITEMS}<br>
-	 * 		else try to move into Menu
-	 * 	</li>
-	 * 	<li>try to move ItemStack into {@link BackpackOffhandSlot},<br>
-	 * 		if the item is in {@link BackpackConstans#SHIFTABLE_OFFHAND_SLOT_ITEMS}<br>
-	 * 		else try to move into Menu
-	 * 	</li>
-	 *	<li>try to move ItemStack into {@link BackpackArmorSlot},<br>
-	 *		if the item is in {@link BackpackConstans#VALID_ARMOR_SLOT_ITEMS}<br>
-	 *		else try to move into Menu
-	 *	</li>
-	 * 	<li>fallback move for all other Items</li>
-	 * </ol>
-	 */
 	@Override
 	public ItemStack quickMoveStack(Player player, int index) {
 		XBackpack.LOGGER.info("index {}", index);
 		ItemStack stack = ItemStack.EMPTY;
-//		Slot slot = this.getSlot(index);
-//		if (slot != null && slot.hasItem()) {
-//			ItemStack slotStack = slot.getItem();
-//			stack = slotStack.copy();
-//			if (35 >= index && index >= 0) {
-//				if (!this.moveItemStackTo(slotStack, 63, 72, false)) {
-//					if (!this.moveItemStackTo(slotStack, 36, 63, false)) {
-//						return ItemStack.EMPTY;
-//					}
-//				}
-//			} else if (71 >= index && index >= 36) {
-//				if (BackpackConstans.VALID_TOOL_SLOT_ITEMS.contains(slotStack.getItem())) {
-//					if (!this.moveItemStackTo(slotStack, 72, 74, false)) {
-//						if (!this.moveItemStackTo(slotStack, 0, 36, false)) {
-//							return ItemStack.EMPTY;
-//						}
-//					}
-//				} else if (BackpackConstans.SHIFTABLE_OFFHAND_SLOT_ITEMS.contains(slotStack.getItem())) {
-//					if (!this.moveItemStackTo(slotStack, 78, 79, false)) {
-//						if (!this.moveItemStackTo(slotStack, 0, 36, false)) {
-//							return ItemStack.EMPTY;
-//						}
-//					}
-//				} else if (BackpackConstans.VALID_ARMOR_SLOT_ITEMS.contains(slotStack.getItem())) {
-//					if (!this.moveItemStackTo(slotStack, 74, 78, false)) {
-//						if (!this.moveItemStackTo(slotStack, 0, 36, false)) {
-//							return ItemStack.EMPTY;
-//						}
-//					}
-//				} else if (!this.moveItemStackTo(slotStack, 0, 36, false)) {
-//					return ItemStack.EMPTY;
-//				}
-//			} else if (78 >= index && index >= 72) {
-//				if (!this.moveItemStackTo(slotStack, 63, 72, false)) {
-//					if (!this.moveItemStackTo(slotStack, 36, 63, false)) {
-//						if (!this.moveItemStackTo(slotStack, 0, 36, false)) {
-//							return ItemStack.EMPTY;
-//						}
-//					}
-//				}
-//			}
-//		}
+		Slot slot = this.getSlot(index);
+		if (slot != null && slot.hasItem()) {
+			ItemStack slotStack = slot.getItem();
+			if (872 >= index && index >= 0) { // from menu
+				stack = slotStack.copy();
+				if (!this.moveItemStackTo(slotStack, 900, 909, false)) { // into hotbar
+					if (!this.moveItemStackTo(slotStack, 873, 900, false)) { // into inv
+						return ItemStack.EMPTY;
+					}
+				}
+			} else if (908 >= index && index >= 873) { // from inv
+				stack = slotStack.copy();
+				if (BackpackConstans.VALID_TOOL_SLOT_ITEMS.contains(slotStack.getItem())) {
+					if (!this.moveItemStackTo(slotStack, 909, 912, false)) { // into tool slot
+						if (!this.moveItemStackTo(slotStack, 0, 873, false)) { // into menu
+							return ItemStack.EMPTY;
+						}
+					}
+				} else if (BackpackConstans.SHIFTABLE_OFFHAND_SLOT_ITEMS.contains(slotStack.getItem())) {
+					if (!this.moveItemStackTo(slotStack, 916, 917, false)) { // into offhand slot
+						if (!this.moveItemStackTo(slotStack, 0, 873, false)) { // into menu
+							return ItemStack.EMPTY;
+						}
+					}
+				} else if (BackpackConstans.VALID_ARMOR_SLOT_ITEMS.contains(slotStack.getItem())) {
+					if (!this.moveItemStackTo(slotStack, 912, 916, false)) { // into armor slot
+						if (!this.moveItemStackTo(slotStack, 0, 873, false)) { // into menu
+							return ItemStack.EMPTY;
+						}
+					}
+				} else if (!this.moveItemStackTo(slotStack, 0, 873, false)) { // into menu
+					return ItemStack.EMPTY;
+				}
+			} else if (916 >= index && index >= 909) { // from tool, armor or offhand slot
+				stack = slotStack.copy();
+				if (!this.moveItemStackTo(slotStack, 900, 909, false)) { // into hotbar
+					if (!this.moveItemStackTo(slotStack, 873, 900, false)) { // into inv
+						if (!this.moveItemStackTo(slotStack, 0, 873, false)) { // into menu
+							return ItemStack.EMPTY;
+						}
+					}
+				}
+			}
+		}
 		return stack;
 	}
 

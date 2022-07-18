@@ -5,12 +5,13 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.world.inventory.BackpackMenu;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.luis.xbackpack.world.inventory.slot.MoveableSlot;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.Slot;
 
 /**
  * 
@@ -18,70 +19,67 @@ import net.minecraft.world.entity.player.Inventory;
  *
  */
 
-public class BackpackScreen extends AbstractContainerScreen<BackpackMenu> {
+public class BackpackScreen extends AbstractScrollableContainerScreen<BackpackMenu> {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(XBackpack.MOD_ID, "textures/gui/container/backpack.png");
 	
-	private double scrollOffset = 0;
-	
-	public BackpackScreen(BackpackMenu backpackMenu, Inventory inventory, Component component) {
-		super(backpackMenu, inventory, component);
+	public BackpackScreen(BackpackMenu menu, Inventory inventory, Component titleComponent) {
+		super(menu, inventory, titleComponent);
 		this.passEvents = false;
-		this.imageWidth = 238;
-		this.imageHeight = 202;
+		this.imageWidth = 216;
+		this.imageHeight = 220;
 		this.inventoryLabelX += 22;
-		this.inventoryLabelY = 109;
+		this.inventoryLabelY = 127;
 	}
-	
+
 	@Override
-	public void render(PoseStack stack, int x, int y, float partialTicks) {
-		super.render(stack, x, y, partialTicks);
-		this.renderTooltip(stack, x, y);
+	protected boolean isSlotActive(Slot slot) {
+		if (slot instanceof MoveableSlot moveableSlot) {
+			int y = moveableSlot.getY(this.scrollOffset);
+			return slot.isActive() && 174 >= slot.x && slot.x >= 30 && 108 >= y && y >= 18;
+		}
+		return slot.isActive();
 	}
-	
+
 	@Override
-	protected void renderBg(PoseStack stack, float partialTicks, int x, int y) {
+	protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 		this.renderBackground(stack);
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		RenderSystem.setShaderTexture(0, TEXTURE);	
-		this.blit(stack, this.leftPos, this.topPos, 0, 0, 238, 184);
-		this.blit(stack, this.leftPos, this.topPos + 89, 0, 89, 198, 184);
-		int scrollPosition = (int) (this.topPos + 18 + this.scrollOffset);
-		this.blit(stack, this.leftPos + 196, scrollPosition, 244, 0, 12, 15);
+		this.blit(stack, this.leftPos, this.topPos, 0, 0, 238, 220);
+		int scrollPosition = this.topPos + 18 + this.scrollOffset;
+		this.blit(stack, this.leftPos + 198, scrollPosition, 244, 0, 12, 15);
 	}
-	
-	private boolean isInScrollbar(double mouseX, double mouseY) {
-		double topX = this.leftPos + 196.0;
+
+	@Override
+	protected int getScrollbarWidth() {
+		return 14;
+	}
+
+	@Override
+	protected int getScrollbarHeight() {
+		return 108;
+	}
+
+	@Override
+	protected boolean isInScrollbar(double mouseX, double mouseY) {
+		double topX = this.leftPos + 198.0;
 		double topY = this.topPos + 16.0;
-		if (topX + 14 >= mouseX && mouseX >= topX && topY + 90 >= mouseY && mouseY >= topY) {
+		if (topX + this.getScrollbarWidth() >= mouseX && mouseX >= topX && topY + this.getScrollbarHeight() >= mouseY && mouseY >= topY) {
 			return true;
 		}
 		return false;
 	}
 	
 	@Override
-	public boolean mouseClicked(double mouseX, double mouseY, int button) {
-		if (button == 0 && this.isInScrollbar(mouseX, mouseY)) {
-			this.scrollOffset = Mth.clamp(mouseY - this.topPos - 25.5, 0.0, 73.0);
-			return true;
-		}
-		return super.mouseClicked(mouseX, mouseY, button);
+	protected int clampMouseMove(double mouseY) {
+		return Mth.clamp((int) (mouseY - this.topPos - 25.5), 0, this.getScrollbarHeight() - 17);
 	}
 	
 	@Override
-	public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-		if (button == 0 && this.isInScrollbar(mouseX, mouseY)) {
-			this.scrollOffset = Mth.clamp(mouseY - this.topPos - 25.5, 0.0, 73.0);
-			return true;
-		}
-		return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+	protected int clampMouseScroll(double delta) {
+		return Mth.clamp((int) (this.scrollOffset - delta), 0, this.getScrollbarHeight() - 17);
 	}
 	
-	@Override
-	public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-		this.scrollOffset = (int) Mth.clamp(this.scrollOffset - delta * 2.0, 0.0, 73.0);
-		return true;
-	}
-
 }

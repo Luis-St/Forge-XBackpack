@@ -27,23 +27,24 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class BackpackConstans {
 	
-	public static final int BACKPACK_SLOT_COUNT = 47;
-	public static final int BACKPACK_TOOL_SLOT_TOP = BACKPACK_SLOT_COUNT - 2;
+	public static final int BACKPACK_SLOT_COUNT = 876;
+	public static final int BACKPACK_TOOL_SLOT_TOP = BACKPACK_SLOT_COUNT - 3;
+	public static final int BACKPACK_TOOL_SLOT_MID = BACKPACK_SLOT_COUNT - 2;
 	public static final int BACKPACK_TOOL_SLOT_DOWN = BACKPACK_SLOT_COUNT - 1;
 	
 	private static final List<Item> ITEM = ImmutableList.copyOf(ForgeRegistries.ITEMS.getValues());
 	
 	/**
-	 * add Items to this List in {@link FMLCommonSetupEvent},<br>
-	 * if you want to add valid Items for the tool slot
+	 * add items to this list in {@link FMLCommonSetupEvent},<br>
+	 * if you want to add valid items for the tool slot
 	 */
 	public static final List<Item> VALID_TOOL_SLOT_ITEMS = ITEM.stream().filter(item -> {
 		return item instanceof TieredItem || item instanceof ShearsItem || item instanceof FlintAndSteelItem || item instanceof BowItem || item instanceof CrossbowItem;
 	}).collect(Collectors.toList());
 	
 	/**
-	 * add Items to this List in {@link FMLCommonSetupEvent},<br>
-	 * if you want to add valid Items for the armor slot<br>
+	 * add items to this list in {@link FMLCommonSetupEvent},<br>
+	 * if you want to add valid items for the armor slot<br>
 	 * <br>
 	 * note: the item can only be place in the Slot if {@link IForgeItem#canEquip()} returns {@code true}
 	 */
@@ -52,7 +53,7 @@ public class BackpackConstans {
 	}).collect(Collectors.toList());
 	
 	/**
-	 * add Items to this List in {@link FMLCommonSetupEvent},<br> 
+	 * add items to this list in {@link FMLCommonSetupEvent},<br> 
 	 * if you want to quick move the item via shift into the offhand slot
 	 */
 	public static final List<Item> SHIFTABLE_OFFHAND_SLOT_ITEMS = ITEM.stream().filter(item -> {

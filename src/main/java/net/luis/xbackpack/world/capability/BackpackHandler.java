@@ -23,13 +23,14 @@ public class BackpackHandler extends ItemStackHandler implements IBackpack {
 	@Override
 	public void deserializeNBT(CompoundTag tag) {
 		int size = tag.getInt("Size");
-		if (BackpackConstans.BACKPACK_SLOT_COUNT > size) {
-			XBackpack.LOGGER.info("Increase the backpack slot count to {}", BackpackConstans.BACKPACK_SLOT_COUNT);
+		if (BackpackConstans.BACKPACK_SLOT_COUNT != size) {
+			if (BackpackConstans.BACKPACK_SLOT_COUNT > size) {
+				XBackpack.LOGGER.info("Increase the backpack slot count to {}", BackpackConstans.BACKPACK_SLOT_COUNT);
+			} else {
+				XBackpack.LOGGER.info("Decrease the backpack slot count to {}", BackpackConstans.BACKPACK_SLOT_COUNT);
+			}
 			size = BackpackConstans.BACKPACK_SLOT_COUNT;
-		} 
-		/*else if (size > BackpackConstans.BACKPACK_SLOT_COUNT) {
-			throw new RuntimeException("Can not decrease the backpack slot count to " + BackpackConstans.BACKPACK_SLOT_COUNT + ". Talk to the mod author");
-		}*/
+		}
 		ListTag items = tag.getList("Items", Tag.TAG_COMPOUND);
 		for (int i = 0; i < items.size(); i++) {
 			CompoundTag item = items.getCompound(i);
