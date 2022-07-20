@@ -5,5 +5,21 @@
   "xbackpack.key.backpack_next": "Next Tool",
   "xbackpack.key.backpack_slot_top": "Tool Top",
   "xbackpack.key.backpack_slot_mid": "Tool Mid",
-  "xbackpack.key.backpack_slot_down": "Tool Down"
+  "xbackpack.key.backpack_slot_down": "Tool Down",
+  "xbackpack.backpack_extension.crafting_table.title": "Crafting",
+  "xbackpack.backpack_extension.crafting_table.tooltip": "Crafting",
+  "xbackpack.backpack_extension.furnace.title": "Smelting",
+  "xbackpack.backpack_extension.furnace.tooltip": "Smelting",
+  "xbackpack.backpack_extension.stonecutter.title": "Stonecutter",
+  "xbackpack.backpack_extension.stonecutter.tooltip": "Stonecutter",
+  "xbackpack.backpack_extension.smithing_table.title": "Smithing",
+  "xbackpack.backpack_extension.smithing_table.tooltip": "Smithing",
+  "xbackpack.backpack_extension.brewing_stand.title": "Brewing",
+  "xbackpack.backpack_extension.brewing_stand.tooltip": "Brewing",
+  "xbackpack.backpack_extension.anvil.title": "Repair",
+  "xbackpack.backpack_extension.anvil.tooltip": "Repair",
+  "xbackpack.backpack_extension.enchanting_table.title": "Enchanting",
+  "xbackpack.backpack_extension.enchanting_table.tooltip": "Enchanting",
+  "xbackpack.backpack_extension.grindstone.title": "Disenchanting",
+  "xbackpack.backpack_extension.grindstone.tooltip": "Disenchanting"
 }

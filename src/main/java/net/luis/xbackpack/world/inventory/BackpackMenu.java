@@ -1,9 +1,9 @@
 package net.luis.xbackpack.world.inventory;
 
 import net.luis.xbackpack.BackpackConstans;
-import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.world.capability.IBackpack;
 import net.luis.xbackpack.world.capability.XBackpackCapabilities;
+import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.inventory.slot.BackpackArmorSlot;
 import net.luis.xbackpack.world.inventory.slot.BackpackOffhandSlot;
 import net.luis.xbackpack.world.inventory.slot.BackpackSlot;
@@ -23,6 +23,8 @@ import net.minecraft.world.item.ItemStack;
  */
 
 public class BackpackMenu extends AbstractContainerMenu {
+	
+	private BackpackExtension extension = BackpackExtension.NO.get();
 	
 	public BackpackMenu(int id, Inventory inventory, FriendlyByteBuf byteBuf) {
 		this(id, inventory);
@@ -64,7 +66,6 @@ public class BackpackMenu extends AbstractContainerMenu {
 	
 	@Override
 	public ItemStack quickMoveStack(Player player, int index) {
-		XBackpack.LOGGER.info("index {}", index);
 		ItemStack stack = ItemStack.EMPTY;
 		Slot slot = this.getSlot(index);
 		if (slot != null && slot.hasItem()) {
@@ -112,5 +113,9 @@ public class BackpackMenu extends AbstractContainerMenu {
 		}
 		return stack;
 	}
-
+	
+	public void setExtension(BackpackExtension extension) {
+		this.extension = extension;
+	}
+	
 }
