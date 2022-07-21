@@ -1,20 +1,30 @@
 package net.luis.xbackpack.world.inventory;
 
+import java.util.List;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+
 import net.luis.xbackpack.BackpackConstans;
 import net.luis.xbackpack.world.capability.IBackpack;
 import net.luis.xbackpack.world.capability.XBackpackCapabilities;
 import net.luis.xbackpack.world.extension.BackpackExtension;
+import net.luis.xbackpack.world.inventory.extension.AbstractBackpackExtensionMenu;
+import net.luis.xbackpack.world.inventory.extension.BackpackExtensionMenuHolder;
+import net.luis.xbackpack.world.inventory.extension.CraftingExtensionMenu;
 import net.luis.xbackpack.world.inventory.slot.BackpackArmorSlot;
 import net.luis.xbackpack.world.inventory.slot.BackpackOffhandSlot;
 import net.luis.xbackpack.world.inventory.slot.BackpackSlot;
 import net.luis.xbackpack.world.inventory.slot.BackpackToolSlot;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.items.ItemStackHandler;
 
 /**
  * 
@@ -22,8 +32,9 @@ import net.minecraft.world.item.ItemStack;
  *
  */
 
-public class BackpackMenu extends AbstractContainerMenu {
+public class BackpackMenu extends AbstractContainerMenu implements BackpackExtensionMenuHolder {
 	
+	private final List<AbstractBackpackExtensionMenu> extensionMenus = Lists.newArrayList();
 	private BackpackExtension extension = BackpackExtension.NO.get();
 	
 	public BackpackMenu(int id, Inventory inventory, FriendlyByteBuf byteBuf) {
@@ -34,11 +45,10 @@ public class BackpackMenu extends AbstractContainerMenu {
 		super(XBackpackMenuTypes.BACKPACK_MENU.get(), id);
 		Player player = inventory.player;
 		IBackpack backpack = player.getCapability(XBackpackCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new);
-		int rows = (BackpackConstans.BACKPACK_SLOT_COUNT - 3) / 9;
-		int index = 0;
-		for (int i = 0; i < rows; i++) {
+		ItemStackHandler handler = backpack.getBackpackHandler();
+		for (int i = 0; i < handler.getSlots() / 9; i++) {
 			for (int j = 0; j < 9; j++) {
-				this.addSlot(new BackpackSlot(backpack, index++, 30 + j * 18, (i * 18) + 18));
+				this.addSlot(new BackpackSlot(handler, j + i * 9, 30 + j * 18, 18 + i * 18));
 			}
 		}
 		for (int i = 0; i < 3; i++) {
@@ -49,14 +59,18 @@ public class BackpackMenu extends AbstractContainerMenu {
 		for (int i = 0; i < 9; i++) {
 			this.addSlot(new Slot(inventory, i, 30 + i * 18, 196));
 		}
-		this.addSlot(new BackpackToolSlot(backpack, index++, 196, 138));
-		this.addSlot(new BackpackToolSlot(backpack, index++, 196, 156));
-		this.addSlot(new BackpackToolSlot(backpack, index, 196, 174));
+		this.addSlot(new BackpackToolSlot(backpack.getToolHandler(), 0, 196, 138)); // top
+		this.addSlot(new BackpackToolSlot(backpack.getToolHandler(), 1, 196, 156)); // mid
+		this.addSlot(new BackpackToolSlot(backpack.getToolHandler(), 2, 196, 174)); // down
 		this.addSlot(new BackpackArmorSlot(inventory, EquipmentSlot.HEAD, 39, 8, 18));
 		this.addSlot(new BackpackArmorSlot(inventory, EquipmentSlot.CHEST, 38, 8, 36));
 		this.addSlot(new BackpackArmorSlot(inventory, EquipmentSlot.LEGS, 37, 8, 54));
 		this.addSlot(new BackpackArmorSlot(inventory, EquipmentSlot.FEET, 36, 8, 72));
 		this.addSlot(new BackpackOffhandSlot(inventory, 40, 8, 196));
+		this.extensionMenus.add(new CraftingExtensionMenu(this, player));
+		this.extensionMenus.forEach((extensionMenu) -> {
+			extensionMenu.addSlots(this::addSlot);
+		});
 	}
 	
 	@Override
@@ -111,11 +125,37 @@ public class BackpackMenu extends AbstractContainerMenu {
 				}
 			}
 		}
+		// TODO: add extensions quick move
 		return stack;
+	}
+	
+	@Override
+	public void slotsChanged(Container container) {
+		super.slotsChanged(container);
+		this.extensionMenus.forEach(AbstractBackpackExtensionMenu::slotsChanged);
+	}
+	
+	public BackpackExtension getExtension() {
+		return this.extension;
 	}
 	
 	public void setExtension(BackpackExtension extension) {
 		this.extension = extension;
+	}
+
+	@Override
+	public List<AbstractBackpackExtensionMenu> getExtensionScreens() {
+		return ImmutableList.copyOf(this.extensionMenus);
+	}
+
+	@Override
+	public AbstractBackpackExtensionMenu getExtensionScreen(BackpackExtension extension) {
+		for (AbstractBackpackExtensionMenu extensionScreen : this.extensionMenus) {
+			if (extensionScreen.getExtension() == extension) {
+				return extensionScreen;
+			}
+		}
+		return null;
 	}
 	
 }

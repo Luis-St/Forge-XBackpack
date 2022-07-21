@@ -1,6 +1,5 @@
 package net.luis.xbackpack.world.capability;
 
-import net.luis.xbackpack.BackpackConstans;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.capabilities.Capability;
@@ -15,7 +14,7 @@ import net.minecraftforge.common.util.LazyOptional;
 
 public class BackpackProvider implements ICapabilitySerializable<CompoundTag> {
 	
-	private final BackpackHandler handler = new BackpackHandler(BackpackConstans.BACKPACK_SLOT_COUNT);
+	private final BackpackHandler handler = new BackpackHandler();
 	
 	private final LazyOptional<IBackpack> optional = LazyOptional.of(() -> this.handler);
 
@@ -26,12 +25,12 @@ public class BackpackProvider implements ICapabilitySerializable<CompoundTag> {
 	
 	@Override
 	public CompoundTag serializeNBT() {
-		return this.handler.serializeNBT();
+		return this.handler.serialize();
 	}
 	
 	@Override
 	public void deserializeNBT(CompoundTag tag) {
-		this.handler.deserializeNBT(tag);
+		this.handler.deserialize(tag);
 	}
 
 }

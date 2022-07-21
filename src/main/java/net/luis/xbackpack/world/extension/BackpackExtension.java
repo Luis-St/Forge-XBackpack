@@ -47,13 +47,13 @@ public record BackpackExtension(Component title, Component tooltip, ItemStack ic
 		String component = "xbackpack.backpack_extension.brewing_stand.";
 		return new BackpackExtension(Component.translatable(component + "title"), Component.translatable(component + "tooltip"), new ItemStack(Items.BREWING_STAND), 20, 22, 106, 88);
 	});
-	public static final RegistryObject<BackpackExtension> SMITHING_TABLE = BACKPACK_EXTENSIONS.register("smithing_table", () -> {
-		String component = "xbackpack.backpack_extension.smithing_table.";
-		return new BackpackExtension(Component.translatable(component + "title"), Component.translatable(component + "tooltip"), new ItemStack(Items.SMITHING_TABLE), 20, 22, 111, 46);
-	});
 	public static final RegistryObject<BackpackExtension> GRINDSTONE = BACKPACK_EXTENSIONS.register("grindstone", () -> {
 		String component = "xbackpack.backpack_extension.grindstone.";
 		return new BackpackExtension(Component.translatable(component + "title"), Component.translatable(component + "tooltip"), new ItemStack(Items.GRINDSTONE), 20, 22, 112, 84);
+	});
+	public static final RegistryObject<BackpackExtension> SMITHING_TABLE = BACKPACK_EXTENSIONS.register("smithing_table", () -> {
+		String component = "xbackpack.backpack_extension.smithing_table.";
+		return new BackpackExtension(Component.translatable(component + "title"), Component.translatable(component + "tooltip"), new ItemStack(Items.SMITHING_TABLE), 20, 22, 111, 46);
 	});
 	
 }

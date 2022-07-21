@@ -27,11 +27,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class BackpackConstans {
 	
-	public static final int BACKPACK_SLOT_COUNT = 876;
-	public static final int BACKPACK_TOOL_SLOT_TOP = BACKPACK_SLOT_COUNT - 3;
-	public static final int BACKPACK_TOOL_SLOT_MID = BACKPACK_SLOT_COUNT - 2;
-	public static final int BACKPACK_TOOL_SLOT_DOWN = BACKPACK_SLOT_COUNT - 1;
-	
 	private static final List<Item> ITEM = ImmutableList.copyOf(ForgeRegistries.ITEMS.getValues());
 	
 	/**

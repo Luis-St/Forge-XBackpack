@@ -36,13 +36,13 @@ public class BackpackNextTool {
 		context.get().enqueueWork(() -> {
 			IBackpack backpack = player.getCapability(XBackpackCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new);
 			ItemStack main = player.getMainHandItem().copy();
-			ItemStack top = backpack.getStackInSlot(BackpackConstans.BACKPACK_TOOL_SLOT_TOP).copy();
-			ItemStack mid = backpack.getStackInSlot(BackpackConstans.BACKPACK_TOOL_SLOT_MID).copy();
-			ItemStack down = backpack.getStackInSlot(BackpackConstans.BACKPACK_TOOL_SLOT_DOWN).copy();
+			ItemStack top = backpack.getToolHandler().getStackInSlot(0).copy();
+			ItemStack mid = backpack.getToolHandler().getStackInSlot(1).copy();
+			ItemStack down = backpack.getToolHandler().getStackInSlot(2).copy();
 			if (BackpackConstans.VALID_TOOL_SLOT_ITEMS.contains(main.getItem())) {
-				backpack.setStackInSlot(BackpackConstans.BACKPACK_TOOL_SLOT_TOP, main);
-				backpack.setStackInSlot(BackpackConstans.BACKPACK_TOOL_SLOT_MID, top);
-				backpack.setStackInSlot(BackpackConstans.BACKPACK_TOOL_SLOT_DOWN, mid);
+				backpack.getToolHandler().setStackInSlot(0, main);
+				backpack.getToolHandler().setStackInSlot(1, top);
+				backpack.getToolHandler().setStackInSlot(2, mid);
 				player.setItemInHand(InteractionHand.MAIN_HAND, down);
 			}
 		});
