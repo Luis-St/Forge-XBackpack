@@ -11,7 +11,7 @@ import net.luis.xbackpack.world.extension.BackpackExtension;
  *
  */
 
-public class StonecutterExtensionScreen extends AbstractBackpackExtensionScreen {
+public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 
 	public StonecutterExtensionScreen(BackpackScreen screen, List<BackpackExtension> extensions) {
 		super(screen, BackpackExtension.STONECUTTER.get(), extensions);

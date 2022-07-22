@@ -11,7 +11,7 @@ import net.luis.xbackpack.world.extension.BackpackExtension;
  *
  */
 
-public class AnvilExtensionScreen extends AbstractBackpackExtensionScreen {
+public class AnvilExtensionScreen extends AbstractExtensionScreen {
 
 	public AnvilExtensionScreen(BackpackScreen screen, List<BackpackExtension> extensions) {
 		super(screen, BackpackExtension.ANVIL.get(), extensions);

@@ -1,4 +1,4 @@
-package net.luis.xbackpack.world.inventory;
+package net.luis.xbackpack.world.inventory.handler;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.items.ItemStackHandler;

@@ -17,9 +17,9 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.luis.xbackpack.XBackpack;
-import net.luis.xbackpack.client.gui.screens.extension.AbstractBackpackExtensionScreen;
+import net.luis.xbackpack.client.gui.screens.extension.AbstractExtensionScreen;
 import net.luis.xbackpack.client.gui.screens.extension.AnvilExtensionScreen;
-import net.luis.xbackpack.client.gui.screens.extension.BackpackExtensionScreenHolder;
+import net.luis.xbackpack.client.gui.screens.extension.ExtensionScreenHolder;
 import net.luis.xbackpack.client.gui.screens.extension.BrewingStandExtensionScreen;
 import net.luis.xbackpack.client.gui.screens.extension.CraftingExtensionScreen;
 import net.luis.xbackpack.client.gui.screens.extension.EnchantingTableExtensionScreen;
@@ -31,8 +31,8 @@ import net.luis.xbackpack.network.XBackpackNetworkHandler;
 import net.luis.xbackpack.network.packet.UpdateBackpackExtension;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.inventory.BackpackMenu;
-import net.luis.xbackpack.world.inventory.extension.slot.BackpackExtensionResultSlot;
-import net.luis.xbackpack.world.inventory.extension.slot.BackpackExtensionSlot;
+import net.luis.xbackpack.world.inventory.extension.slot.ExtensionResultSlot;
+import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
 import net.luis.xbackpack.world.inventory.slot.MoveableSlot;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
@@ -47,13 +47,13 @@ import net.minecraft.world.inventory.Slot;
  *
  */
 
-public class BackpackScreen extends AbstractScrollableContainerScreen<BackpackMenu> implements BackpackExtensionScreenHolder {
+public class BackpackScreen extends AbstractScrollableContainerScreen<BackpackMenu> implements ExtensionScreenHolder {
 
 	private static final ResourceLocation BACKPACK = new ResourceLocation(XBackpack.MOD_ID, "textures/gui/container/backpack.png");
 	public static final ResourceLocation ICONS = new ResourceLocation(XBackpack.MOD_ID, "textures/gui/container/backpack_icons.png");
 	
 	private final List<BackpackExtension> extensions = List.of(CRAFTING_TABLE.get(), FURNACE.get(), ANVIL.get(), ENCHANTING_TABLE.get(), STONECUTTER.get(), BREWING_STAND.get(), GRINDSTONE.get(), SMITHING_TABLE.get());
-	private final List<AbstractBackpackExtensionScreen> extensionScreens = Lists.newArrayList();
+	private final List<AbstractExtensionScreen> extensionScreens = Lists.newArrayList();
 	private BackpackExtension extension = BackpackExtension.NO.get();
 	
 	public BackpackScreen(BackpackMenu menu, Inventory inventory, Component titleComponent) {
@@ -86,9 +86,9 @@ public class BackpackScreen extends AbstractScrollableContainerScreen<BackpackMe
 		if (slot instanceof MoveableSlot moveableSlot) {
 			int y = moveableSlot.getY(this.scrollOffset);
 			return slot.isActive() && 174 >= slot.x && slot.x >= 30 && 108 >= y && y >= 18;
-		} else if (slot instanceof BackpackExtensionSlot extensionSlot) {
+		} else if (slot instanceof ExtensionSlot extensionSlot) {
 			return this.extension == extensionSlot.getExtension();
-		} else if (slot instanceof BackpackExtensionResultSlot extensionSlot) {
+		} else if (slot instanceof ExtensionResultSlot extensionSlot) {
 			return this.extension == extensionSlot.getExtension();
 		}
 		return slot.isActive();
@@ -108,7 +108,7 @@ public class BackpackScreen extends AbstractScrollableContainerScreen<BackpackMe
 	
 	private void renderExtensions(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 		for (BackpackExtension extension : this.extensions) {
-			AbstractBackpackExtensionScreen extensionScreen = this.getExtensionScreen(extension);
+			AbstractExtensionScreen extensionScreen = this.getExtensionScreen(extension);
 			if (extensionScreen != null) {
 				if (this.extension == extension && this.extension != BackpackExtension.NO.get()) {
 					extensionScreen.renderOpened(stack, partialTicks, mouseX, mouseY);
@@ -203,13 +203,13 @@ public class BackpackScreen extends AbstractScrollableContainerScreen<BackpackMe
 	}
 
 	@Override
-	public List<AbstractBackpackExtensionScreen> getExtensionScreens() {
+	public List<AbstractExtensionScreen> getExtensionScreens() {
 		return ImmutableList.copyOf(this.extensionScreens);
 	}
 
 	@Override
-	public AbstractBackpackExtensionScreen getExtensionScreen(BackpackExtension extension) {
-		for (AbstractBackpackExtensionScreen extensionScreen : this.extensionScreens) {
+	public AbstractExtensionScreen getExtensionScreen(BackpackExtension extension) {
+		for (AbstractExtensionScreen extensionScreen : this.extensionScreens) {
 			if (extensionScreen.getExtension() == extension) {
 				return extensionScreen;
 			}

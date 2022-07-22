@@ -11,7 +11,7 @@ import net.luis.xbackpack.world.extension.BackpackExtension;
  *
  */
 
-public class BrewingStandExtensionScreen extends AbstractBackpackExtensionScreen {
+public class BrewingStandExtensionScreen extends AbstractExtensionScreen {
 
 	public BrewingStandExtensionScreen(BackpackScreen screen, List<BackpackExtension> extensions) {
 		super(screen, BackpackExtension.BREWING_STAND.get(), extensions);

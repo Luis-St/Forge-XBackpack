@@ -9,8 +9,8 @@ import net.luis.xbackpack.BackpackConstans;
 import net.luis.xbackpack.world.capability.IBackpack;
 import net.luis.xbackpack.world.capability.XBackpackCapabilities;
 import net.luis.xbackpack.world.extension.BackpackExtension;
-import net.luis.xbackpack.world.inventory.extension.AbstractBackpackExtensionMenu;
-import net.luis.xbackpack.world.inventory.extension.BackpackExtensionMenuHolder;
+import net.luis.xbackpack.world.inventory.extension.AbstractExtensionMenu;
+import net.luis.xbackpack.world.inventory.extension.ExtensionMenuHolder;
 import net.luis.xbackpack.world.inventory.extension.CraftingExtensionMenu;
 import net.luis.xbackpack.world.inventory.slot.BackpackArmorSlot;
 import net.luis.xbackpack.world.inventory.slot.BackpackOffhandSlot;
@@ -32,9 +32,9 @@ import net.minecraftforge.items.ItemStackHandler;
  *
  */
 
-public class BackpackMenu extends AbstractContainerMenu implements BackpackExtensionMenuHolder {
+public class BackpackMenu extends AbstractContainerMenu implements ExtensionMenuHolder {
 	
-	private final List<AbstractBackpackExtensionMenu> extensionMenus = Lists.newArrayList();
+	private final List<AbstractExtensionMenu> extensionMenus = Lists.newArrayList();
 	private BackpackExtension extension = BackpackExtension.NO.get();
 	
 	public BackpackMenu(int id, Inventory inventory, FriendlyByteBuf byteBuf) {
@@ -68,6 +68,7 @@ public class BackpackMenu extends AbstractContainerMenu implements BackpackExten
 		this.addSlot(new BackpackArmorSlot(inventory, EquipmentSlot.FEET, 36, 8, 72));
 		this.addSlot(new BackpackOffhandSlot(inventory, 40, 8, 196));
 		this.extensionMenus.add(new CraftingExtensionMenu(this, player));
+		
 		this.extensionMenus.forEach((extensionMenu) -> {
 			extensionMenu.addSlots(this::addSlot);
 		});
@@ -132,7 +133,7 @@ public class BackpackMenu extends AbstractContainerMenu implements BackpackExten
 	@Override
 	public void slotsChanged(Container container) {
 		super.slotsChanged(container);
-		this.extensionMenus.forEach(AbstractBackpackExtensionMenu::slotsChanged);
+		this.extensionMenus.forEach(AbstractExtensionMenu::slotsChanged);
 	}
 	
 	public BackpackExtension getExtension() {
@@ -144,13 +145,13 @@ public class BackpackMenu extends AbstractContainerMenu implements BackpackExten
 	}
 
 	@Override
-	public List<AbstractBackpackExtensionMenu> getExtensionScreens() {
+	public List<AbstractExtensionMenu> getExtensionScreens() {
 		return ImmutableList.copyOf(this.extensionMenus);
 	}
 
 	@Override
-	public AbstractBackpackExtensionMenu getExtensionScreen(BackpackExtension extension) {
-		for (AbstractBackpackExtensionMenu extensionScreen : this.extensionMenus) {
+	public AbstractExtensionMenu getExtensionScreen(BackpackExtension extension) {
+		for (AbstractExtensionMenu extensionScreen : this.extensionMenus) {
 			if (extensionScreen.getExtension() == extension) {
 				return extensionScreen;
 			}

@@ -12,11 +12,11 @@ import net.minecraft.world.inventory.ResultSlot;
  *
  */
 
-public class BackpackExtensionResultSlot extends ResultSlot {
+public class ExtensionResultSlot extends ResultSlot {
 	
 	private final BackpackExtension extension;
 	
-	public BackpackExtensionResultSlot(Player player, CraftingContainer craftingContainer, Container container, int index, int xPosition, int yPosition, BackpackExtension extension) {
+	public ExtensionResultSlot(Player player, CraftingContainer craftingContainer, Container container, int index, int xPosition, int yPosition, BackpackExtension extension) {
 		super(player, craftingContainer, container, index, xPosition, yPosition);
 		this.extension = extension;
 	}

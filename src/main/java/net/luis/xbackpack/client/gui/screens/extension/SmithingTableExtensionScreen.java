@@ -11,7 +11,7 @@ import net.luis.xbackpack.world.extension.BackpackExtension;
  *
  */
 
-public class SmithingTableExtensionScreen extends AbstractBackpackExtensionScreen {
+public class SmithingTableExtensionScreen extends AbstractExtensionScreen {
 
 	public SmithingTableExtensionScreen(BackpackScreen screen, List<BackpackExtension> extensions) {
 		super(screen, BackpackExtension.SMITHING_TABLE.get(), extensions);

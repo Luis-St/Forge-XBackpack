@@ -19,7 +19,7 @@ import net.minecraft.resources.ResourceLocation;
  *
  */
 
-public abstract class AbstractBackpackExtensionScreen {
+public abstract class AbstractExtensionScreen {
 	
 	protected final BackpackScreen screen;
 	protected final Minecraft minecraft;
@@ -32,7 +32,7 @@ public abstract class AbstractBackpackExtensionScreen {
 	protected int leftPos;
 	protected int topPos;
 	
-	protected AbstractBackpackExtensionScreen(BackpackScreen screen, BackpackExtension extension, List<BackpackExtension> extensions) {
+	protected AbstractExtensionScreen(BackpackScreen screen, BackpackExtension extension, List<BackpackExtension> extensions) {
 		this.screen = screen;
 		this.minecraft = screen.getMinecraft();
 		this.extension = extension;

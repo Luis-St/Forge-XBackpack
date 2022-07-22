@@ -10,11 +10,11 @@ import net.minecraftforge.items.SlotItemHandler;
  *
  */
 
-public class BackpackExtensionSlot extends SlotItemHandler {
+public class ExtensionSlot extends SlotItemHandler {
 	
 	private final BackpackExtension extension;
 	
-	public BackpackExtensionSlot(IItemHandler itemHandler, int index, int xPosition, int yPosition, BackpackExtension extension) {
+	public ExtensionSlot(IItemHandler itemHandler, int index, int xPosition, int yPosition, BackpackExtension extension) {
 		super(itemHandler, index, xPosition, yPosition);
 		this.extension = extension;
 	}

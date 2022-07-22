@@ -11,7 +11,7 @@ import net.luis.xbackpack.world.extension.BackpackExtension;
  *
  */
 
-public class GrindstoneExtensionScreen extends AbstractBackpackExtensionScreen {
+public class GrindstoneExtensionScreen extends AbstractExtensionScreen {
 
 	public GrindstoneExtensionScreen(BackpackScreen screen, List<BackpackExtension> extensions) {
 		super(screen, BackpackExtension.GRINDSTONE.get(), extensions);

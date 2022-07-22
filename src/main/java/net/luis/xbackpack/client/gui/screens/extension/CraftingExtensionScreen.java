@@ -11,7 +11,7 @@ import net.luis.xbackpack.world.extension.BackpackExtension;
  *
  */
 
-public class CraftingExtensionScreen extends AbstractBackpackExtensionScreen {
+public class CraftingExtensionScreen extends AbstractExtensionScreen {
 	
 	public CraftingExtensionScreen(BackpackScreen screen, List<BackpackExtension> extensions) {
 		super(screen, BackpackExtension.CRAFTING_TABLE.get(), extensions);

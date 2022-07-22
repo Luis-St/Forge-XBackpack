@@ -6,9 +6,9 @@ import java.util.function.Consumer;
 import net.luis.xbackpack.world.capability.XBackpackCapabilities;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.inventory.BackpackMenu;
-import net.luis.xbackpack.world.inventory.CraftingContainerWrapper;
-import net.luis.xbackpack.world.inventory.extension.slot.BackpackExtensionResultSlot;
-import net.luis.xbackpack.world.inventory.extension.slot.BackpackExtensionSlot;
+import net.luis.xbackpack.world.inventory.extension.slot.ExtensionResultSlot;
+import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
+import net.luis.xbackpack.world.inventory.wrapper.CraftingContainerWrapper;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -27,7 +27,7 @@ import net.minecraft.world.level.Level;
  *
  */
 
-public class CraftingExtensionMenu extends AbstractBackpackExtensionMenu {
+public class CraftingExtensionMenu extends AbstractExtensionMenu {
 	
 	private final CraftingContainerWrapper craftingWrapper;
 	private final ResultContainer resultWrapper;
@@ -40,10 +40,10 @@ public class CraftingExtensionMenu extends AbstractBackpackExtensionMenu {
 
 	@Override
 	public void addSlots(Consumer<Slot> consumer) {
-		consumer.accept(new BackpackExtensionResultSlot(this.player, this.craftingWrapper, this.resultWrapper, 0, 243, 110, BackpackExtension.CRAFTING_TABLE.get()));
+		consumer.accept(new ExtensionResultSlot(this.player, this.craftingWrapper, this.resultWrapper, 0, 243, 110, BackpackExtension.CRAFTING_TABLE.get()));
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
-				consumer.accept(new BackpackExtensionSlot(this.craftingWrapper, j + i * 3, 225 + j * 18, 25 + i * 18, BackpackExtension.CRAFTING_TABLE.get()));
+				consumer.accept(new ExtensionSlot(this.craftingWrapper, j + i * 3, 225 + j * 18, 25 + i * 18, BackpackExtension.CRAFTING_TABLE.get()));
 			}
 		}
 	}

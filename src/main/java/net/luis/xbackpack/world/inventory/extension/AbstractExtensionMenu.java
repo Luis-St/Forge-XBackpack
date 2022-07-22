@@ -13,23 +13,19 @@ import net.minecraft.world.inventory.Slot;
  *
  */
 
-public abstract class AbstractBackpackExtensionMenu {
+public abstract class AbstractExtensionMenu {
 	
 	protected final BackpackMenu menu;
 	protected final Player player;
 	private final BackpackExtension extension;
 	
-	protected AbstractBackpackExtensionMenu(BackpackMenu menu, Player player, BackpackExtension extension) {
+	protected AbstractExtensionMenu(BackpackMenu menu, Player player, BackpackExtension extension) {
 		this.menu = menu;
 		this.player = player;
 		this.extension = extension;
 	}
 	
 	public abstract void addSlots(Consumer<Slot> consumer);
-	
-	public void tick() {
-		
-	}
 	
 	public void slotsChanged() {
 		

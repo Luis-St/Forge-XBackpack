@@ -1,4 +1,4 @@
-package net.luis.xbackpack.world.inventory;
+package net.luis.xbackpack.world.inventory.wrapper;
 
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.AbstractContainerMenu;
