@@ -2,7 +2,8 @@ package net.luis.xbackpack.network;
 
 import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.network.packet.BackpackOpen;
-import net.luis.xbackpack.network.packet.UpdateBackpackExtension;
+import net.luis.xbackpack.network.packet.extension.UpdateBackpackExtension;
+import net.luis.xbackpack.network.packet.extension.UpdateFurnaceExtension;
 import net.luis.xbackpack.network.packet.tool.BackpackNextTool;
 import net.luis.xbackpack.network.packet.tool.BackpackNextToolDown;
 import net.luis.xbackpack.network.packet.tool.BackpackNextToolTop;
@@ -38,6 +39,7 @@ public class XBackpackNetworkHandler {
 		simpleChannel.messageBuilder(BackpackNextToolTop.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(BackpackNextToolTop::encode).decoder(BackpackNextToolTop::new).consumerMainThread(BackpackNextToolTop::handle).add();
 		simpleChannel.messageBuilder(BackpackNextToolDown.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(BackpackNextToolDown::encode).decoder(BackpackNextToolDown::new).consumerMainThread(BackpackNextToolDown::handle).add();
 		simpleChannel.messageBuilder(UpdateBackpackExtension.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(UpdateBackpackExtension::encode).decoder(UpdateBackpackExtension::new).consumerMainThread(UpdateBackpackExtension::handle).add();
+		simpleChannel.messageBuilder(UpdateFurnaceExtension.class, id++, NetworkDirection.PLAY_TO_CLIENT).encoder(UpdateFurnaceExtension::encode).decoder(UpdateFurnaceExtension::new).consumerMainThread(UpdateFurnaceExtension::handle).add();
 	}
 	
 	public static SimpleChannel getChannel() {

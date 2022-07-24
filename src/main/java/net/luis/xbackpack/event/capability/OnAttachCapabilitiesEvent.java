@@ -20,8 +20,8 @@ public class OnAttachCapabilitiesEvent {
 	
 	@SubscribeEvent
 	public static void attachPlayerCapabilities(AttachCapabilitiesEvent<Entity> event) {
-		if (event.getObject() instanceof Player) {
-			event.addCapability(new ResourceLocation(XBackpack.MOD_ID, "backpack"), new BackpackProvider());
+		if (event.getObject() instanceof Player player) {
+			event.addCapability(new ResourceLocation(XBackpack.MOD_ID, "backpack"), new BackpackProvider(player));
 		}
 	}
 

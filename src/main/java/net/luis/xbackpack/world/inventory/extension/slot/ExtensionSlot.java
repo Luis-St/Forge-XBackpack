@@ -1,6 +1,7 @@
 package net.luis.xbackpack.world.inventory.extension.slot;
 
 import net.luis.xbackpack.world.extension.BackpackExtension;
+import net.luis.xbackpack.world.inventory.extension.AbstractExtensionMenu;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
@@ -12,15 +13,19 @@ import net.minecraftforge.items.SlotItemHandler;
 
 public class ExtensionSlot extends SlotItemHandler {
 	
-	private final BackpackExtension extension;
+	private final AbstractExtensionMenu extensionMenu;
 	
-	public ExtensionSlot(IItemHandler itemHandler, int index, int xPosition, int yPosition, BackpackExtension extension) {
+	public ExtensionSlot(AbstractExtensionMenu extensionMenu, IItemHandler itemHandler, int index, int xPosition, int yPosition) {
 		super(itemHandler, index, xPosition, yPosition);
-		this.extension = extension;
+		this.extensionMenu = extensionMenu;
+	}
+	
+	public AbstractExtensionMenu getMenu() {
+		return this.extensionMenu;
 	}
 	
 	public BackpackExtension getExtension() {
-		return this.extension;
+		return this.extensionMenu.getExtension();
 	}
 	
 }

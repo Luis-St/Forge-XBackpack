@@ -22,9 +22,10 @@ import net.minecraft.resources.ResourceLocation;
 public abstract class AbstractExtensionScreen {
 	
 	protected final BackpackScreen screen;
-	protected final Minecraft minecraft;
+	
 	protected final BackpackExtension extension;
 	protected final List<BackpackExtension> extensions;
+	protected Minecraft minecraft;
 	protected ItemRenderer itemRenderer;
 	protected Font font;
 	protected int imageWidth;
@@ -34,18 +35,18 @@ public abstract class AbstractExtensionScreen {
 	
 	protected AbstractExtensionScreen(BackpackScreen screen, BackpackExtension extension, List<BackpackExtension> extensions) {
 		this.screen = screen;
-		this.minecraft = screen.getMinecraft();
 		this.extension = extension;
 		this.extensions = extensions;
 	}
 	
-	public void init(int imageWidth, int imageHeight, int leftPos, int topPos, ItemRenderer itemRenderer, Font font) {
+	public void init(Minecraft minecraft, ItemRenderer itemRenderer, Font font, int imageWidth, int imageHeight, int leftPos, int topPos) {
+		this.minecraft = minecraft;
+		this.itemRenderer = itemRenderer;
+		this.font = font;
 		this.imageWidth = imageWidth;
 		this.imageHeight = imageHeight;
 		this.leftPos = leftPos;
 		this.topPos = topPos;
-		this.itemRenderer = itemRenderer;
-		this.font = font;
 	}
 	
 	protected int getExtensionOffset(BackpackExtension extension) {
@@ -81,7 +82,7 @@ public abstract class AbstractExtensionScreen {
 		return false;
 	}
 	
-	private ResourceLocation getTexture() {
+	protected ResourceLocation getTexture() {
 		ResourceLocation location = BackpackExtension.REGISTRY.get().getKey(this.extension);
 		return new ResourceLocation(location.getNamespace(), "textures/gui/container/" + location.getPath() + "_extension.png");
 	}

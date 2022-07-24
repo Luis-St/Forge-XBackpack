@@ -40,10 +40,10 @@ public class CraftingExtensionMenu extends AbstractExtensionMenu {
 
 	@Override
 	public void addSlots(Consumer<Slot> consumer) {
-		consumer.accept(new ExtensionResultSlot(this.player, this.craftingWrapper, this.resultWrapper, 0, 243, 110, BackpackExtension.CRAFTING_TABLE.get()));
+		consumer.accept(new ExtensionResultSlot(this, this.player, this.craftingWrapper, this.resultWrapper, 0, 243, 110));
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
-				consumer.accept(new ExtensionSlot(this.craftingWrapper, j + i * 3, 225 + j * 18, 25 + i * 18, BackpackExtension.CRAFTING_TABLE.get()));
+				consumer.accept(new ExtensionSlot(this, this.craftingWrapper, j + i * 3, 225 + j * 18, 25 + i * 18));
 			}
 		}
 	}

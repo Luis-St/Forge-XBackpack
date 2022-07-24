@@ -2,6 +2,7 @@ package net.luis.xbackpack.world.capability;
 
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
@@ -14,13 +15,19 @@ import net.minecraftforge.common.util.LazyOptional;
 
 public class BackpackProvider implements ICapabilitySerializable<CompoundTag> {
 	
-	private final BackpackHandler handler = new BackpackHandler();
+	private final Player player;
+	private final BackpackHandler handler;
+	private final LazyOptional<IBackpack> optional;
 	
-	private final LazyOptional<IBackpack> optional = LazyOptional.of(() -> this.handler);
-
+	public BackpackProvider(Player player) {
+		this.player = player;
+		this.handler = new BackpackHandler(this.player);
+		this.optional = LazyOptional.of(() -> this.handler);
+	}
+	
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction side) {
-		return capability == XBackpackCapabilities.BACKPACK ? this.optional.cast() : LazyOptional.empty();
+		return XBackpackCapabilities.BACKPACK.orEmpty(capability, this.optional);
 	}
 	
 	@Override

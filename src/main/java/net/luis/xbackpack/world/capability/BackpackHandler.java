@@ -1,9 +1,13 @@
 package net.luis.xbackpack.world.capability;
 
+import net.luis.xbackpack.BackpackConstans;
 import net.luis.xbackpack.XBackpack;
+import net.luis.xbackpack.world.inventory.handler.FurnaceCraftingHandler;
+import net.luis.xbackpack.world.inventory.handler.FurnaceSmeltHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -15,17 +19,29 @@ import net.minecraftforge.items.ItemStackHandler;
 
 public class BackpackHandler implements IBackpack {
 	
+	private final Player player;
 	private final ItemStackHandler backpackHandler = new ItemStackHandler(873);
 	private final ItemStackHandler toolHandler = new ItemStackHandler(3);
 	private final ItemStackHandler craftingHandler = new ItemStackHandler(9);
-	private final ItemStackHandler furnaceHandler = new ItemStackHandler(11);
+	private final FurnaceCraftingHandler furnaceHandler = new FurnaceCraftingHandler(1, 4, 4);
+	private final FurnaceSmeltHandler smeltHandler;
 	private final ItemStackHandler anvilHandler = new ItemStackHandler(3);
 	private final ItemStackHandler enchantingHandler = new ItemStackHandler(3);
 	private final ItemStackHandler stonecutterHandler = new ItemStackHandler(2);
 	private final ItemStackHandler brewingHandler = new ItemStackHandler(5);
 	private final ItemStackHandler grindstoneHandler = new ItemStackHandler(3);
 	private final ItemStackHandler smithingHandler = new ItemStackHandler(3);
-
+	
+	public BackpackHandler(Player player) {
+		this.player = player;
+		this.smeltHandler = new FurnaceSmeltHandler(this.player, this.furnaceHandler, BackpackConstans.FURNACE_RECIPE_TYPES);
+	}
+	
+	@Override
+	public Player getPlayer() {
+		return this.player;
+	}
+	
 	@Override
 	public ItemStackHandler getBackpackHandler() {
 		return this.backpackHandler;
@@ -42,8 +58,13 @@ public class BackpackHandler implements IBackpack {
 	}
 
 	@Override
-	public ItemStackHandler getFurnaceHandler() {
+	public FurnaceCraftingHandler getFurnaceHandler() {
 		return this.furnaceHandler;
+	}
+	
+	@Override
+	public FurnaceSmeltHandler getSmeltHandler() {
+		return this.smeltHandler;
 	}
 
 	@Override
@@ -77,12 +98,18 @@ public class BackpackHandler implements IBackpack {
 	}
 	
 	@Override
+	public void tick() {
+		this.smeltHandler.tick();
+	}
+	
+	@Override
 	public CompoundTag serialize() {
 		CompoundTag tag = new CompoundTag();
 		tag.put("backpack_handler", this.backpackHandler.serializeNBT());
 		tag.put("tool_handler", this.toolHandler.serializeNBT());
 		tag.put("crafting_handler", this.craftingHandler.serializeNBT());
-		tag.put("furnace_handler", this.furnaceHandler.serializeNBT());
+		tag.put("furnace_handler", this.furnaceHandler.serialize());
+		tag.put("smelt_handler", this.smeltHandler.serialize());
 		tag.put("anvil_handler", this.anvilHandler.serializeNBT());
 		tag.put("enchanting_handler", this.enchantingHandler.serializeNBT());
 		tag.put("stonecutter_handler", this.stonecutterHandler.serializeNBT());
@@ -100,7 +127,8 @@ public class BackpackHandler implements IBackpack {
 			this.backpackHandler.deserializeNBT(tag.getCompound("backpack_handler"));
 			this.toolHandler.deserializeNBT(tag.getCompound("tool_handler"));
 			this.craftingHandler.deserializeNBT(tag.getCompound("crafting_handler"));
-			this.furnaceHandler.deserializeNBT(tag.getCompound("furnace_handler"));
+			this.furnaceHandler.deserialize(tag.getCompound("furnace_handler"));
+			this.smeltHandler.deserialize(tag.getCompound("smelt_handler"));
 			this.anvilHandler.deserializeNBT(tag.getCompound("anvil_handler"));
 			this.enchantingHandler.deserializeNBT(tag.getCompound("enchanting_handler"));
 			this.stonecutterHandler.deserializeNBT(tag.getCompound("stonecutter_handler"));

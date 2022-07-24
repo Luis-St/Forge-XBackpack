@@ -28,7 +28,7 @@ import net.luis.xbackpack.client.gui.screens.extension.GrindstoneExtensionScreen
 import net.luis.xbackpack.client.gui.screens.extension.SmithingTableExtensionScreen;
 import net.luis.xbackpack.client.gui.screens.extension.StonecutterExtensionScreen;
 import net.luis.xbackpack.network.XBackpackNetworkHandler;
-import net.luis.xbackpack.network.packet.UpdateBackpackExtension;
+import net.luis.xbackpack.network.packet.extension.UpdateBackpackExtension;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.inventory.BackpackMenu;
 import net.luis.xbackpack.world.inventory.extension.slot.ExtensionResultSlot;
@@ -77,7 +77,7 @@ public class BackpackScreen extends AbstractScrollableContainerScreen<BackpackMe
 	protected void init() {
 		super.init();
 		this.extensionScreens.forEach((extensionScreen) -> {
-			extensionScreen.init(this.imageWidth, this.imageHeight, this.leftPos, this.topPos, this.itemRenderer, this.font);
+			extensionScreen.init(this.minecraft, this.itemRenderer, this.font, this.imageWidth, this.imageHeight, this.leftPos, this.topPos);
 		});
 	}
 	
