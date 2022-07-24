@@ -1,4 +1,4 @@
-package net.luis.xbackpack.network.packet;
+package net.luis.xbackpack.network.packet.tool;
 
 import java.util.function.Supplier;
 

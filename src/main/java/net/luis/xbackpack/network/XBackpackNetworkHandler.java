@@ -1,14 +1,14 @@
 package net.luis.xbackpack.network;
 
 import net.luis.xbackpack.XBackpack;
-import net.luis.xbackpack.network.packet.BackpackNextTool;
-import net.luis.xbackpack.network.packet.BackpackNextToolDown;
-import net.luis.xbackpack.network.packet.BackpackNextToolTop;
 import net.luis.xbackpack.network.packet.BackpackOpen;
-import net.luis.xbackpack.network.packet.BackpackToolDown;
-import net.luis.xbackpack.network.packet.BackpackToolMid;
-import net.luis.xbackpack.network.packet.BackpackToolTop;
 import net.luis.xbackpack.network.packet.UpdateBackpackExtension;
+import net.luis.xbackpack.network.packet.tool.BackpackNextTool;
+import net.luis.xbackpack.network.packet.tool.BackpackNextToolDown;
+import net.luis.xbackpack.network.packet.tool.BackpackNextToolTop;
+import net.luis.xbackpack.network.packet.tool.BackpackToolDown;
+import net.luis.xbackpack.network.packet.tool.BackpackToolMid;
+import net.luis.xbackpack.network.packet.tool.BackpackToolTop;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;

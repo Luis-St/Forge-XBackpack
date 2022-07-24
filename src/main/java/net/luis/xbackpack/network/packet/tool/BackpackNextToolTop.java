@@ -1,4 +1,4 @@
-package net.luis.xbackpack.network.packet;
+package net.luis.xbackpack.network.packet.tool;
 
 import java.util.function.Supplier;
 
@@ -17,13 +17,13 @@ import net.minecraftforge.network.NetworkEvent.Context;
  *
  */
 
-public class BackpackToolDown {
+public class BackpackNextToolTop {
 	
-	public BackpackToolDown() {
+	public BackpackNextToolTop() {
 		
 	}
 	
-	public BackpackToolDown(FriendlyByteBuf buffer) {
+	public BackpackNextToolTop(FriendlyByteBuf buffer) {
 		
 	}
 	
@@ -36,10 +36,14 @@ public class BackpackToolDown {
 		context.get().enqueueWork(() -> {
 			IBackpack backpack = player.getCapability(XBackpackCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new);
 			ItemStack main = player.getMainHandItem().copy();
+			ItemStack top = backpack.getToolHandler().getStackInSlot(0).copy();
+			ItemStack mid = backpack.getToolHandler().getStackInSlot(1).copy();
 			ItemStack down = backpack.getToolHandler().getStackInSlot(2).copy();
 			if (BackpackConstans.VALID_TOOL_SLOT_ITEMS.contains(main.getItem())) {
-				player.setItemInHand(InteractionHand.MAIN_HAND, down);
+				backpack.getToolHandler().setStackInSlot(0, mid);
+				backpack.getToolHandler().setStackInSlot(1, down);
 				backpack.getToolHandler().setStackInSlot(2, main);
+				player.setItemInHand(InteractionHand.MAIN_HAND, top);
 			}
 		});
 	}
