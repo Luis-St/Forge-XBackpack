@@ -16,6 +16,11 @@ public class FurnaceExtensionFuelSlot extends ExtensionSlot {
 	}
 	
 	@Override
+	public FurnaceExtensionMenu getMenu() {
+		return (FurnaceExtensionMenu) super.getMenu();
+	}
+	
+	@Override
 	public boolean mayPlace(ItemStack stack) {
 		return this.isFuel(stack) || stack.is(Items.BUCKET);
 	}

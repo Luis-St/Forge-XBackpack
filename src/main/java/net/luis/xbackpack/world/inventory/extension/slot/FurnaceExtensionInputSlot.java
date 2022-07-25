@@ -19,6 +19,11 @@ public class FurnaceExtensionInputSlot extends ExtensionSlot {
 	}
 	
 	@Override
+	public FurnaceExtensionMenu getMenu() {
+		return (FurnaceExtensionMenu) super.getMenu();
+	}
+	
+	@Override
 	public boolean mayPlace(ItemStack stack) {
 		return this.canSmelt(stack);
 	}

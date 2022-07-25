@@ -11,6 +11,11 @@ public class FurnaceExtensionResultStorageSlot extends ExtensionSlot {
 	}
 	
 	@Override
+	public FurnaceExtensionMenu getMenu() {
+		return (FurnaceExtensionMenu) super.getMenu();
+	}
+	
+	@Override
 	public boolean mayPlace(ItemStack stack) {
 		return false;
 	}

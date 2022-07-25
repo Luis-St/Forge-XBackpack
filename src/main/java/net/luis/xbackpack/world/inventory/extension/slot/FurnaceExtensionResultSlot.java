@@ -1,6 +1,6 @@
 package net.luis.xbackpack.world.inventory.extension.slot;
 
-import net.luis.xbackpack.world.inventory.extension.AbstractExtensionMenu;
+import net.luis.xbackpack.world.inventory.extension.FurnaceExtensionMenu;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.ForgeEventFactory;
@@ -11,9 +11,14 @@ public class FurnaceExtensionResultSlot extends ExtensionSlot {
 	private final Player player;
 	private int removeCount;
 	
-	public FurnaceExtensionResultSlot(AbstractExtensionMenu extensionMenu, Player player, IItemHandler itemHandler, int index, int xPosition, int yPosition) {
+	public FurnaceExtensionResultSlot(FurnaceExtensionMenu extensionMenu, Player player, IItemHandler itemHandler, int index, int xPosition, int yPosition) {
 		super(extensionMenu, itemHandler, index, xPosition, yPosition);
 		this.player = player;
+	}
+	
+	@Override
+	public FurnaceExtensionMenu getMenu() {
+		return (FurnaceExtensionMenu) super.getMenu();
 	}
 	
 	@Override
