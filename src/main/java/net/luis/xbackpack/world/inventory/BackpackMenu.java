@@ -6,7 +6,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
 import net.luis.xbackpack.BackpackConstans;
-import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.world.capability.IBackpack;
 import net.luis.xbackpack.world.capability.XBackpackCapabilities;
 import net.luis.xbackpack.world.extension.BackpackExtension;
@@ -85,7 +84,6 @@ public class BackpackMenu extends AbstractContainerMenu implements ExtensionMenu
 	
 	@Override
 	public ItemStack quickMoveStack(Player player, int index) {
-		XBackpack.LOGGER.debug("index {}", index);
 		ItemStack stack = ItemStack.EMPTY;
 		Slot slot = this.getSlot(index);
 		if (slot != null && slot.hasItem()) {
@@ -148,19 +146,29 @@ public class BackpackMenu extends AbstractContainerMenu implements ExtensionMenu
 	}
 	
 	public void setExtension(BackpackExtension extension) {
+		if (this.extension != extension) {
+			AbstractExtensionMenu extensionMenu = this.getExtensionMenu(this.extension);
+			if (extensionMenu != null) {
+				extensionMenu.close();
+			}
+		}
 		this.extension = extension;
+		AbstractExtensionMenu extensionMenu = this.getExtensionMenu(this.extension);
+		if (extensionMenu != null) {
+			extensionMenu.open();
+		}
 	}
 
 	@Override
-	public List<AbstractExtensionMenu> getExtensionScreens() {
+	public List<AbstractExtensionMenu> getExtensionMenus() {
 		return ImmutableList.copyOf(this.extensionMenus);
 	}
 
 	@Override
-	public AbstractExtensionMenu getExtensionScreen(BackpackExtension extension) {
-		for (AbstractExtensionMenu extensionScreen : this.extensionMenus) {
-			if (extensionScreen.getExtension() == extension) {
-				return extensionScreen;
+	public AbstractExtensionMenu getExtensionMenu(BackpackExtension extension) {
+		for (AbstractExtensionMenu extensionMenu : this.extensionMenus) {
+			if (extensionMenu.getExtension() == extension) {
+				return extensionMenu;
 			}
 		}
 		return null;

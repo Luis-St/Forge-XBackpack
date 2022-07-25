@@ -26,6 +26,10 @@ public abstract class AbstractExtensionMenu {
 		this.extension = extension;
 	}
 	
+	public void open() {
+		
+	}
+	
 	public abstract void addSlots(Consumer<Slot> consumer);
 	
 	public void slotsChanged(Container container) {
@@ -33,6 +37,10 @@ public abstract class AbstractExtensionMenu {
 	}
 	
 	public void slotsChanged() {
+		
+	}
+	
+	public void close() {
 		
 	}
 	

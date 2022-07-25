@@ -21,8 +21,6 @@ import net.minecraft.network.chat.Component;
 
 public class AnvilExtensionScreen extends AbstractExtensionScreen {
 	
-	private static final Component TOO_EXPENSIVE = Component.translatable("xbackpack.backpack_extension.anvil.expensive");
-	
 	private int cost;
 	
 	public AnvilExtensionScreen(BackpackScreen screen, List<BackpackExtension> extensions) {
@@ -55,12 +53,12 @@ public class AnvilExtensionScreen extends AbstractExtensionScreen {
 	private void renderLabels(PoseStack stack) {
 		CraftingHandler handler = this.minecraft.player.getCapability(XBackpackCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new).getAnvilHandler();
 		RenderSystem.disableBlend();
-		if (this.screen.getMenu().getExtensionScreen(this.extension) instanceof AnvilExtensionMenu menu) {
+		if (this.screen.getMenu().getExtensionMenu(this.extension) instanceof AnvilExtensionMenu menu) {
 			if (this.cost > 0) {
 				int color = 8453920;
 				Component component = null;
 				if (this.cost >= 40 && !this.minecraft.player.getAbilities().instabuild) {
-					component = TOO_EXPENSIVE;
+					component = Component.translatable("xbackpack.backpack_extension.anvil.cost", "X");
 					color = 16736352;
 				} else if (handler.getResultHandler().getStackInSlot(0).isEmpty()) {
 					component = null;

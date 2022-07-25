@@ -38,12 +38,16 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 	public AnvilExtensionMenu(BackpackMenu menu, Player player) {
 		super(menu, player, BackpackExtension.ANVIL.get());
 		this.handler = this.player.getCapability(XBackpackCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new).getAnvilHandler();
-		if (!this.handler.getResultHandler().getStackInSlot(0).isEmpty()) { // TODO: add open and close methods
+	}
+	
+	@Override
+	public void open() {
+		if (!this.handler.getInputHandler().getStackInSlot(0).isEmpty() && !this.handler.getInputHandler().getStackInSlot(1).isEmpty()) {
 			this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);
 			this.createResult();
 		}
 	}
-
+	
 	@Override
 	public void addSlots(Consumer<Slot> consumer) {
 		consumer.accept(new ExtensionSlot(this, this.handler.getInputHandler(), 0, 225, 73));
@@ -251,6 +255,11 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 		this.cost = event.getCost();
 		this.repairItemCountCost = event.getMaterialCost();
 		return true;
+	}
+	
+	@Override
+	public void close() {
+		this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);
 	}
 
 }
