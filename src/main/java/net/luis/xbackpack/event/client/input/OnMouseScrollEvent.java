@@ -8,8 +8,9 @@ import net.luis.xbackpack.network.packet.tool.BackpackNextToolTop;
 import net.luis.xbackpack.world.capability.IBackpack;
 import net.luis.xbackpack.world.capability.XBackpackCapabilities;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.GameType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent.MouseScrollingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -25,11 +26,11 @@ import net.minecraftforge.fml.common.Mod;
 public class OnMouseScrollEvent {
 	
 	@SubscribeEvent
-	@SuppressWarnings("resource")
 	public static void mouseScroll(MouseScrollingEvent event) {
 		double delta = event.getScrollDelta();
-		Player player = Minecraft.getInstance().player;
-		if (player.isShiftKeyDown()) {
+		Minecraft minecraft = Minecraft.getInstance();
+		LocalPlayer player = minecraft.player;
+		if (player.isShiftKeyDown() && minecraft.gameMode.getPlayerMode() != GameType.SPECTATOR) {
 			ItemStack main = player.getMainHandItem();
 			if (BackpackConstans.VALID_TOOL_SLOT_ITEMS.contains(main.getItem())) {
 				IBackpack backpack = player.getCapability(XBackpackCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new);
