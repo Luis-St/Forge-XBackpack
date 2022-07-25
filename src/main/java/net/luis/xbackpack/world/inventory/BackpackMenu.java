@@ -6,13 +6,15 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
 import net.luis.xbackpack.BackpackConstans;
+import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.world.capability.IBackpack;
 import net.luis.xbackpack.world.capability.XBackpackCapabilities;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.inventory.extension.AbstractExtensionMenu;
+import net.luis.xbackpack.world.inventory.extension.AnvilExtensionMenu;
+import net.luis.xbackpack.world.inventory.extension.CraftingExtensionMenu;
 import net.luis.xbackpack.world.inventory.extension.ExtensionMenuHolder;
 import net.luis.xbackpack.world.inventory.extension.FurnaceExtensionMenu;
-import net.luis.xbackpack.world.inventory.extension.CraftingExtensionMenu;
 import net.luis.xbackpack.world.inventory.slot.BackpackArmorSlot;
 import net.luis.xbackpack.world.inventory.slot.BackpackOffhandSlot;
 import net.luis.xbackpack.world.inventory.slot.BackpackSlot;
@@ -70,6 +72,7 @@ public class BackpackMenu extends AbstractContainerMenu implements ExtensionMenu
 		this.addSlot(new BackpackOffhandSlot(inventory, 40, 8, 196));
 		this.extensionMenus.add(new CraftingExtensionMenu(this, player));
 		this.extensionMenus.add(new FurnaceExtensionMenu(this, player));
+		this.extensionMenus.add(new AnvilExtensionMenu(this, player));
 		this.extensionMenus.forEach((extensionMenu) -> {
 			extensionMenu.addSlots(this::addSlot);
 		});
@@ -82,6 +85,7 @@ public class BackpackMenu extends AbstractContainerMenu implements ExtensionMenu
 	
 	@Override
 	public ItemStack quickMoveStack(Player player, int index) {
+		XBackpack.LOGGER.debug("index {}", index);
 		ItemStack stack = ItemStack.EMPTY;
 		Slot slot = this.getSlot(index);
 		if (slot != null && slot.hasItem()) {
@@ -134,7 +138,9 @@ public class BackpackMenu extends AbstractContainerMenu implements ExtensionMenu
 	@Override
 	public void slotsChanged(Container container) {
 		super.slotsChanged(container);
-		this.extensionMenus.forEach(AbstractExtensionMenu::slotsChanged);
+		this.extensionMenus.forEach((extensionMenu) -> {
+			extensionMenu.slotsChanged(container);
+		});
 	}
 	
 	public BackpackExtension getExtension() {

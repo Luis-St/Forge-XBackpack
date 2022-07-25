@@ -2,6 +2,7 @@ package net.luis.xbackpack.world.capability;
 
 import net.luis.xbackpack.BackpackConstans;
 import net.luis.xbackpack.XBackpack;
+import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
 import net.luis.xbackpack.world.inventory.handler.FurnaceCraftingHandler;
 import net.luis.xbackpack.world.inventory.handler.FurnaceSmeltHandler;
 import net.minecraft.nbt.CompoundTag;
@@ -25,7 +26,7 @@ public class BackpackHandler implements IBackpack {
 	private final ItemStackHandler craftingHandler = new ItemStackHandler(9);
 	private final FurnaceCraftingHandler furnaceHandler = new FurnaceCraftingHandler(1, 4, 4);
 	private final FurnaceSmeltHandler smeltHandler;
-	private final ItemStackHandler anvilHandler = new ItemStackHandler(3);
+	private final CraftingHandler anvilHandler = new CraftingHandler(2, 1);
 	private final ItemStackHandler enchantingHandler = new ItemStackHandler(3);
 	private final ItemStackHandler stonecutterHandler = new ItemStackHandler(2);
 	private final ItemStackHandler brewingHandler = new ItemStackHandler(5);
@@ -68,7 +69,7 @@ public class BackpackHandler implements IBackpack {
 	}
 
 	@Override
-	public ItemStackHandler getAnvilHandler() {
+	public CraftingHandler getAnvilHandler() {
 		return this.anvilHandler;
 	}
 
@@ -110,7 +111,7 @@ public class BackpackHandler implements IBackpack {
 		tag.put("crafting_handler", this.craftingHandler.serializeNBT());
 		tag.put("furnace_handler", this.furnaceHandler.serialize());
 		tag.put("smelt_handler", this.smeltHandler.serialize());
-		tag.put("anvil_handler", this.anvilHandler.serializeNBT());
+		tag.put("anvil_handler", this.anvilHandler.serialize());
 		tag.put("enchanting_handler", this.enchantingHandler.serializeNBT());
 		tag.put("stonecutter_handler", this.stonecutterHandler.serializeNBT());
 		tag.put("brewing_handler", this.brewingHandler.serializeNBT());
@@ -129,7 +130,7 @@ public class BackpackHandler implements IBackpack {
 			this.craftingHandler.deserializeNBT(tag.getCompound("crafting_handler"));
 			this.furnaceHandler.deserialize(tag.getCompound("furnace_handler"));
 			this.smeltHandler.deserialize(tag.getCompound("smelt_handler"));
-			this.anvilHandler.deserializeNBT(tag.getCompound("anvil_handler"));
+			this.anvilHandler.deserialize(tag.getCompound("anvil_handler"));
 			this.enchantingHandler.deserializeNBT(tag.getCompound("enchanting_handler"));
 			this.stonecutterHandler.deserializeNBT(tag.getCompound("stonecutter_handler"));
 			this.brewingHandler.deserializeNBT(tag.getCompound("brewing_handler"));

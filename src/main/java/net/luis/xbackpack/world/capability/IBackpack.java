@@ -1,5 +1,6 @@
 package net.luis.xbackpack.world.capability;
 
+import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
 import net.luis.xbackpack.world.inventory.handler.FurnaceCraftingHandler;
 import net.luis.xbackpack.world.inventory.handler.FurnaceSmeltHandler;
 import net.minecraft.nbt.CompoundTag;
@@ -26,7 +27,7 @@ public interface IBackpack {
 	
 	FurnaceSmeltHandler getSmeltHandler();
 	
-	ItemStackHandler getAnvilHandler();
+	CraftingHandler getAnvilHandler();
 	
 	ItemStackHandler getEnchantingHandler();
 	
