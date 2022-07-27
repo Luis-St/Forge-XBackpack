@@ -30,7 +30,7 @@ public class AnvilExtensionScreen extends AbstractExtensionScreen {
 	@Override
 	protected void renderAdditional(PoseStack stack, float partialTicks, int mouseX, int mouseY, boolean open) {
 		if (open) {
-			if (this.minecraft != null && this.shouldRenderCanceled()) {
+			if (this.shouldRenderCanceled()) {
 				RenderSystem.setShaderTexture(0, this.getTexture());
 				this.screen.blit(stack, this.leftPos + this.imageWidth + 59, this.topPos + 71, 111, 0, 22, 21);
 			}

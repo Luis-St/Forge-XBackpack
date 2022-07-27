@@ -40,16 +40,13 @@ public class EnchantmentTableExtensionScreen extends AbstractExtensionScreen {
 	@Override
 	protected void renderAdditional(PoseStack stack, float partialTicks, int mouseX, int mouseY, boolean open) {
 		if (open) {
-			if (this.minecraft != null) {
-				LocalPlayer player = this.minecraft.player;
-				for (int row = 0; row < 3; row++) {
-					this.renderRow(stack, mouseX, mouseY, row, player, this.enchantments[row], this.enchantmentLevels[row], this.enchantingCosts[row]);
-				}
-				for (int row = 0; row < 3; row++) {
-					this.renderTooltip(stack, mouseX, mouseY, row, player, this.enchantments[row], this.enchantmentLevels[row], this.enchantingCosts[row]);
-				}
+			LocalPlayer player = this.minecraft.player;
+			for (int row = 0; row < 3; row++) {
+				this.renderRow(stack, mouseX, mouseY, row, player, this.enchantments[row], this.enchantmentLevels[row], this.enchantingCosts[row]);
 			}
-
+			for (int row = 0; row < 3; row++) {
+				this.renderTooltip(stack, mouseX, mouseY, row, player, this.enchantments[row], this.enchantmentLevels[row], this.enchantingCosts[row]);
+			}
 		}
 	}
 	

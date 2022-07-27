@@ -103,7 +103,9 @@ public abstract class AbstractExtensionScreen {
 		this.screen.blit(stack, this.leftPos + this.imageWidth - 3, this.topPos + offset, 0, 0, this.extension.imageWidth(), this.extension.imageHeight());
 		this.itemRenderer.renderAndDecorateItem(this.extension.icon(), this.leftPos + this.imageWidth + 1, this.topPos + 4 + offset);
 		this.font.draw(stack, this.extension.title(), this.leftPos + this.imageWidth + 19, this.topPos + 9 + offset, 4210752);
-		this.renderAdditional(stack, partialTicks, mouseX, mouseY, true);
+		if (this.minecraft != null) {
+			this.renderAdditional(stack, partialTicks, mouseX, mouseY, true);
+		}
 	}
 	
 	protected void renderAdditional(PoseStack stack, float partialTicks, int mouseX, int mouseY, boolean open) {
