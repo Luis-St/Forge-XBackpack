@@ -25,7 +25,7 @@ import net.minecraftforge.network.PacketDistributor;
  *
  */
 
-public class FurnaceSmeltHandler {
+public class FurnaceSmeltHandler implements ProgressHandler {
 	
 	private final Player player;
 	private final FurnaceCraftingHandler handler;
@@ -42,6 +42,7 @@ public class FurnaceSmeltHandler {
 		this.recipeTypes = recipeTypes;
 	}
 	
+	@Override
 	public void tick() {
 		int oldcookingProgress = this.getCookingProgress();
 		int oldFuelTime = this.getFuelProgress();
@@ -271,20 +272,22 @@ public class FurnaceSmeltHandler {
 		}
 	}
 	
+	@Override
 	public CompoundTag serialize() {
 		CompoundTag tag = new CompoundTag();
-//		tag.putInt("cooking_progress", this.cookingProgress);
-//		tag.putInt("cooking_time", this.cookingTime);
-//		tag.putInt("fuel_time", this.fuelTime);
-//		tag.putInt("max_fuel", this.maxFuel);
+		tag.putInt("cooking_progress", this.cookingProgress);
+		tag.putInt("cooking_time", this.cookingTime);
+		tag.putInt("fuel_time", this.fuelTime);
+		tag.putInt("max_fuel", this.maxFuel);
 		return tag;
 	}
 	
+	@Override
 	public void deserialize(CompoundTag tag) {
-//		this.cookingProgress = tag.getInt("cooking_progress");
-//		this.cookingTime = tag.getInt("cooking_time");
-//		this.fuelTime = tag.getInt("fuel_time");
-//		this.maxFuel = tag.getInt("max_fuel");
+		this.cookingProgress = tag.getInt("cooking_progress");
+		this.cookingTime = tag.getInt("cooking_time");
+		this.fuelTime = tag.getInt("fuel_time");
+		this.maxFuel = tag.getInt("max_fuel");
 	}
 	
 }

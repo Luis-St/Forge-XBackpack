@@ -5,6 +5,7 @@ import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
 import net.luis.xbackpack.world.inventory.handler.FurnaceCraftingHandler;
 import net.luis.xbackpack.world.inventory.handler.FurnaceSmeltHandler;
+import net.luis.xbackpack.world.inventory.handler.ProgressHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -64,7 +65,7 @@ public class BackpackHandler implements IBackpack {
 	}
 	
 	@Override
-	public FurnaceSmeltHandler getSmeltHandler() {
+	public ProgressHandler getSmeltHandler() {
 		return this.smeltHandler;
 	}
 
