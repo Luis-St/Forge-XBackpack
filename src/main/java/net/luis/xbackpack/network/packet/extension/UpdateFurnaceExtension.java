@@ -8,6 +8,12 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent.Context;
 
+/**
+ * 
+ * @author Luis-st
+ *
+ */
+
 public class UpdateFurnaceExtension {
 	
 	private final int cookingProgress;

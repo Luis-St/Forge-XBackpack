@@ -5,6 +5,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.items.IItemHandler;
 
+/**
+ * 
+ * @author Luis-st
+ *
+ */
+
 public class EnchantmentTableExtensionFuelSlot extends ExtensionSlot {
 	
 	public EnchantmentTableExtensionFuelSlot(EnchantmentTableExtensionMenu extensionMenu, IItemHandler itemHandler, int index, int xPosition, int yPosition) {

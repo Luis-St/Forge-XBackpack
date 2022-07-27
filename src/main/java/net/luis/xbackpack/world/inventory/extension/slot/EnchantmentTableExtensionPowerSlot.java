@@ -6,6 +6,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.items.IItemHandler;
 
+/**
+ * 
+ * @author Luis-st
+ *
+ */
+
 public class EnchantmentTableExtensionPowerSlot extends ExtensionSlot {
 	
 	public EnchantmentTableExtensionPowerSlot(EnchantmentTableExtensionMenu extensionMenu, IItemHandler itemHandler, int index, int xPosition, int yPosition) {

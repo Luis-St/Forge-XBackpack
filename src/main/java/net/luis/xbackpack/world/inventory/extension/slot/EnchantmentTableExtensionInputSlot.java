@@ -5,6 +5,12 @@ import net.minecraft.world.item.BookItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 
+/**
+ * 
+ * @author Luis-st
+ *
+ */
+
 public class EnchantmentTableExtensionInputSlot extends ExtensionSlot {
 
 	public EnchantmentTableExtensionInputSlot(EnchantmentTableExtensionMenu extensionMenu, IItemHandler itemHandler, int index, int xPosition, int yPosition) {

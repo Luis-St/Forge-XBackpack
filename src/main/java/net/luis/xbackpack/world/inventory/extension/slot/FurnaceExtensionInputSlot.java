@@ -9,6 +9,12 @@ import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.items.IItemHandler;
 
+/**
+ * 
+ * @author Luis-st
+ *
+ */
+
 public class FurnaceExtensionInputSlot extends ExtensionSlot {
 	
 	private final Player player;

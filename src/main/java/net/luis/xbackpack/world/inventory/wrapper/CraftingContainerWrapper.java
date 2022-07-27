@@ -6,6 +6,12 @@ import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
+/**
+ * 
+ * @author Luis-st
+ *
+ */
+
 public class CraftingContainerWrapper extends CraftingContainer implements IItemHandlerModifiable {
 	
 	private final IItemHandlerModifiable itemHandler;

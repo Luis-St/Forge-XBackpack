@@ -6,6 +6,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.items.IItemHandler;
 
+/**
+ * 
+ * @author Luis-st
+ *
+ */
+
 public class FurnaceExtensionResultSlot extends ExtensionSlot {
 	
 	private final Player player;

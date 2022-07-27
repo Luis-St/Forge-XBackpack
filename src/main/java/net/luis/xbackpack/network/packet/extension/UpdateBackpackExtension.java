@@ -8,6 +8,12 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent.Context;
 
+/**
+ * 
+ * @author Luis-st
+ *
+ */
+
 public class UpdateBackpackExtension {
 	
 	private final BackpackExtension extension;

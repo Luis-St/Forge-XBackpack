@@ -5,6 +5,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 
+/**
+ * 
+ * @author Luis-st
+ *
+ */
+
 public class StonecutterExtensionResultSlot extends ExtensionSlot {
 
 	public StonecutterExtensionResultSlot(StonecutterExtensionMenu extensionMenu, IItemHandler itemHandler, int index, int xPosition, int yPosition) {

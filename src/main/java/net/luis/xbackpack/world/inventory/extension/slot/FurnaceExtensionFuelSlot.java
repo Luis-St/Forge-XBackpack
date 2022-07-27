@@ -9,6 +9,12 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.items.IItemHandler;
 
+/**
+ * 
+ * @author Luis-st
+ *
+ */
+
 public class FurnaceExtensionFuelSlot extends ExtensionSlot {
 	
 	public FurnaceExtensionFuelSlot(FurnaceExtensionMenu extensionMenu, IItemHandler itemHandler, int index, int xPosition, int yPosition) {
