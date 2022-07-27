@@ -8,26 +8,26 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent.Context;
 
-public class UpdateAnvilExtension {
+public class UpdateStonecutterExtension {
 	
-	private final int cost;
+	private final boolean resetSelected;
 	
-	public UpdateAnvilExtension(int cost) {
-		this.cost = cost;
+	public UpdateStonecutterExtension(boolean resetSelected) {
+		this.resetSelected = resetSelected;
 	}
 	
-	public UpdateAnvilExtension(FriendlyByteBuf buffer) {
-		this.cost = buffer.readInt();
+	public UpdateStonecutterExtension(FriendlyByteBuf buffer) {
+		this.resetSelected = buffer.readBoolean();
 	}
 	
 	public void encode(FriendlyByteBuf buffer) {
-		buffer.writeInt(this.cost);
+		buffer.writeBoolean(this.resetSelected);
 	}
 	
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-				XBackpackClientPacketHandler.updateAnvilExtension(this.cost);
+				XBackpackClientPacketHandler.updateStonecutterExtension(this.resetSelected);
 			});
 		});
 	}

@@ -31,7 +31,7 @@ public class UpdateFurnaceExtension {
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-				XBackpackClientPacketHandler.handleUpdateFurnaceExtension(this.cookingProgress, this.fuelProgress);
+				XBackpackClientPacketHandler.updateFurnaceExtension(this.cookingProgress, this.fuelProgress);
 			});
 		});
 	}

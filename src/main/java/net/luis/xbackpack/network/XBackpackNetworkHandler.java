@@ -6,6 +6,7 @@ import net.luis.xbackpack.network.packet.extension.UpdateAnvilExtension;
 import net.luis.xbackpack.network.packet.extension.UpdateBackpackExtension;
 import net.luis.xbackpack.network.packet.extension.UpdateEnchantmentTableExtension;
 import net.luis.xbackpack.network.packet.extension.UpdateFurnaceExtension;
+import net.luis.xbackpack.network.packet.extension.UpdateStonecutterExtension;
 import net.luis.xbackpack.network.packet.tool.BackpackNextTool;
 import net.luis.xbackpack.network.packet.tool.BackpackNextToolDown;
 import net.luis.xbackpack.network.packet.tool.BackpackNextToolTop;
@@ -45,6 +46,8 @@ public class XBackpackNetworkHandler {
 		simpleChannel.messageBuilder(UpdateAnvilExtension.class, id++, NetworkDirection.PLAY_TO_CLIENT).encoder(UpdateAnvilExtension::encode).decoder(UpdateAnvilExtension::new).consumerMainThread(UpdateAnvilExtension::handle).add();
 		simpleChannel.messageBuilder(UpdateEnchantmentTableExtension.class, id++, NetworkDirection.PLAY_TO_CLIENT).encoder(UpdateEnchantmentTableExtension::encode).decoder(UpdateEnchantmentTableExtension::new)
 				.consumerMainThread(UpdateEnchantmentTableExtension::handle).add();
+		simpleChannel.messageBuilder(UpdateStonecutterExtension.class, id++, NetworkDirection.PLAY_TO_CLIENT).encoder(UpdateStonecutterExtension::encode).decoder(UpdateStonecutterExtension::new)
+				.consumerMainThread(UpdateStonecutterExtension::handle).add();
 	}
 	
 	public static SimpleChannel getChannel() {

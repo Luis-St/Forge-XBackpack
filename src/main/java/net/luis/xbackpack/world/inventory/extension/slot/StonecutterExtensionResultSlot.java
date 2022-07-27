@@ -1,29 +1,24 @@
 package net.luis.xbackpack.world.inventory.extension.slot;
 
-import net.luis.xbackpack.world.inventory.extension.AnvilExtensionMenu;
+import net.luis.xbackpack.world.inventory.extension.StonecutterExtensionMenu;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 
-public class AnvilExtensionResultSlot extends ExtensionSlot {
-	
-	public AnvilExtensionResultSlot(AnvilExtensionMenu extensionMenu, IItemHandler itemHandler, int index, int xPosition, int yPosition) {
+public class StonecutterExtensionResultSlot extends ExtensionSlot {
+
+	public StonecutterExtensionResultSlot(StonecutterExtensionMenu extensionMenu, IItemHandler itemHandler, int index, int xPosition, int yPosition) {
 		super(extensionMenu, itemHandler, index, xPosition, yPosition);
 	}
 	
 	@Override
-	public AnvilExtensionMenu getMenu() {
-		return (AnvilExtensionMenu) super.getMenu();
+	public StonecutterExtensionMenu getMenu() {
+		return (StonecutterExtensionMenu) super.getMenu();
 	}
 	
 	@Override
 	public boolean mayPlace(ItemStack stack) {
 		return false;
-	}
-	
-	@Override
-	public boolean mayPickup(Player player) {
-		return this.getMenu().mayPickup(player, this.hasItem());
 	}
 	
 	@Override

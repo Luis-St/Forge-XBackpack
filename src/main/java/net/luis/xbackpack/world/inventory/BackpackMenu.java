@@ -15,6 +15,7 @@ import net.luis.xbackpack.world.inventory.extension.CraftingExtensionMenu;
 import net.luis.xbackpack.world.inventory.extension.EnchantmentTableExtensionMenu;
 import net.luis.xbackpack.world.inventory.extension.ExtensionMenuHolder;
 import net.luis.xbackpack.world.inventory.extension.FurnaceExtensionMenu;
+import net.luis.xbackpack.world.inventory.extension.StonecutterExtensionMenu;
 import net.luis.xbackpack.world.inventory.slot.BackpackArmorSlot;
 import net.luis.xbackpack.world.inventory.slot.BackpackOffhandSlot;
 import net.luis.xbackpack.world.inventory.slot.BackpackSlot;
@@ -74,6 +75,7 @@ public class BackpackMenu extends AbstractContainerMenu implements ExtensionMenu
 		this.extensionMenus.add(new FurnaceExtensionMenu(this, player));
 		this.extensionMenus.add(new AnvilExtensionMenu(this, player));
 		this.extensionMenus.add(new EnchantmentTableExtensionMenu(this, player));
+		this.extensionMenus.add(new StonecutterExtensionMenu(this, player));
 		this.extensionMenus.forEach((extensionMenu) -> {
 			extensionMenu.addSlots(this::addSlot);
 		});

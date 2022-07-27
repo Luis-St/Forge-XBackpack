@@ -1,6 +1,7 @@
 package net.luis.xbackpack.client.gui.screens.extension;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -12,6 +13,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * 
@@ -112,7 +114,23 @@ public abstract class AbstractExtensionScreen {
 		
 	}
 	
+	public void renderTooltip(PoseStack stack, int mouseX, int mouseY, Consumer<ItemStack> tooltipRenderer) {
+		
+	}
+	
 	public boolean mouseClicked(double mouseX, double mouseY, int button) {
+		return false;
+	}
+	
+	public boolean mouseReleased(double mouseX, double mouseY, int button) {
+		return false;
+	}
+	
+	public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+		return false;
+	}
+	
+	public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
 		return false;
 	}
 	

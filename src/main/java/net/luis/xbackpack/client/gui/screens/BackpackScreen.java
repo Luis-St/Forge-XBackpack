@@ -98,6 +98,12 @@ public class BackpackScreen extends AbstractScrollableContainerScreen<BackpackMe
 	}
 	
 	@Override
+	public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+		super.render(stack, mouseX, mouseY, partialTicks);
+		this.renderTooltip(stack, mouseX, mouseY);
+	}
+	
+	@Override
 	protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 		this.renderBackground(stack);
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
@@ -119,6 +125,17 @@ public class BackpackScreen extends AbstractScrollableContainerScreen<BackpackMe
 					extensionScreen.render(stack, partialTicks, mouseX, mouseY);
 				}
 			}
+		}
+	}
+	
+	@Override
+	protected void renderTooltip(PoseStack stack, int mouseX, int mouseY) {
+		super.renderTooltip(stack, mouseX, mouseY);
+		AbstractExtensionScreen extensionScreen = this.getExtensionScreen(this.extension);
+		if (extensionScreen != null) {
+			extensionScreen.renderTooltip(stack, mouseX, mouseY, (itemStack) -> {
+				this.renderTooltip(stack, itemStack, mouseX, mouseY);
+			});
 		}
 	}
 	
@@ -198,6 +215,33 @@ public class BackpackScreen extends AbstractScrollableContainerScreen<BackpackMe
 			return true;
 		}
 		return super.mouseClicked(mouseX, mouseY, button);
+	}
+	
+	@Override
+	public boolean mouseReleased(double mouseX, double mouseY, int button) {
+		AbstractExtensionScreen extensionScreen = this.getExtensionScreen(this.extension);
+		if (extensionScreen != null && extensionScreen.mouseReleased(mouseX, mouseY, button)) {
+			return true;
+		}
+		return super.mouseReleased(mouseX, mouseY, button);
+	}
+	
+	@Override
+	public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+		AbstractExtensionScreen extensionScreen = this.getExtensionScreen(this.extension);
+		if (extensionScreen != null && extensionScreen.mouseDragged(mouseX, mouseY, button, dragX, dragY)) {
+			return true;
+		}
+		return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+	}
+	
+	@Override
+	public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+		AbstractExtensionScreen extensionScreen = this.getExtensionScreen(this.extension);
+		if (extensionScreen != null && extensionScreen.mouseScrolled(mouseX, mouseY, delta)) {
+			return true;
+		}
+		return super.mouseScrolled(mouseX, mouseY, delta);
 	}
 	
 	private void updateExtension(BackpackExtension extension) {
