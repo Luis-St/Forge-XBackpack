@@ -5,12 +5,19 @@ import org.jetbrains.annotations.Nullable;
 import net.luis.xbackpack.client.gui.screens.BackpackScreen;
 import net.luis.xbackpack.client.gui.screens.extension.AbstractExtensionScreen;
 import net.luis.xbackpack.client.gui.screens.extension.AnvilExtensionScreen;
+import net.luis.xbackpack.client.gui.screens.extension.BrewingStandExtensionScreen;
 import net.luis.xbackpack.client.gui.screens.extension.EnchantmentTableExtensionScreen;
 import net.luis.xbackpack.client.gui.screens.extension.FurnaceExtensionScreen;
 import net.luis.xbackpack.client.gui.screens.extension.StonecutterExtensionScreen;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
+
+/**
+ * 
+ * @author Luis-st
+ *
+ */
 
 public class XBackpackClientPacketHandler {
 	
@@ -48,6 +55,12 @@ public class XBackpackClientPacketHandler {
 	public static void updateStonecutterExtension(boolean resetSelected) {
 		if (getExtensionScreen(BackpackExtension.STONECUTTER.get()) instanceof StonecutterExtensionScreen stonecutterScreen) {
 			stonecutterScreen.updateRecipes(resetSelected);
+		}
+	}
+	
+	public static void updateBrewingStandExtension(int fuel, int brewTime) {
+		if (getExtensionScreen(BackpackExtension.BREWING_STAND.get()) instanceof BrewingStandExtensionScreen brewingStandScreen) {
+			brewingStandScreen.update(fuel, brewTime);
 		}
 	}
 	

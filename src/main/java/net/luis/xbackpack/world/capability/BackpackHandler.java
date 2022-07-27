@@ -2,6 +2,8 @@ package net.luis.xbackpack.world.capability;
 
 import net.luis.xbackpack.BackpackConstans;
 import net.luis.xbackpack.XBackpack;
+import net.luis.xbackpack.world.inventory.handler.BrewingStandBrewHandler;
+import net.luis.xbackpack.world.inventory.handler.BrewingStandCraftingHandler;
 import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
 import net.luis.xbackpack.world.inventory.handler.FurnaceCraftingHandler;
 import net.luis.xbackpack.world.inventory.handler.FurnaceSmeltHandler;
@@ -30,13 +32,15 @@ public class BackpackHandler implements IBackpack {
 	private final CraftingHandler anvilHandler = new CraftingHandler(2, 1);
 	private final ItemStackHandler enchantingHandler = new ItemStackHandler(3);
 	private final ItemStackHandler stonecutterHandler = new ItemStackHandler(2);
-	private final ItemStackHandler brewingHandler = new ItemStackHandler(5);
+	private final BrewingStandCraftingHandler brewingHandler = new BrewingStandCraftingHandler(1, 3);
+	private final BrewingStandBrewHandler brewHandler;
 	private final ItemStackHandler grindstoneHandler = new ItemStackHandler(3);
 	private final ItemStackHandler smithingHandler = new ItemStackHandler(3);
 	
 	public BackpackHandler(Player player) {
 		this.player = player;
 		this.smeltHandler = new FurnaceSmeltHandler(this.player, this.furnaceHandler, BackpackConstans.FURNACE_RECIPE_TYPES);
+		this.brewHandler = new BrewingStandBrewHandler(this.player, this.brewingHandler);
 	}
 	
 	@Override
@@ -85,10 +89,15 @@ public class BackpackHandler implements IBackpack {
 	}
 
 	@Override
-	public ItemStackHandler getBrewingHandler() {
+	public BrewingStandCraftingHandler getBrewingHandler() {
 		return this.brewingHandler;
 	}
-
+	
+	@Override
+	public ProgressHandler getBrewHandler() {
+		return this.brewHandler;
+	}
+	
 	@Override
 	public ItemStackHandler getGrindstoneHandler() {
 		return this.grindstoneHandler;
@@ -102,6 +111,7 @@ public class BackpackHandler implements IBackpack {
 	@Override
 	public void tick() {
 		this.smeltHandler.tick();
+		this.brewHandler.tick();
 	}
 	
 	@Override
@@ -115,7 +125,8 @@ public class BackpackHandler implements IBackpack {
 		tag.put("anvil_handler", this.anvilHandler.serialize());
 		tag.put("enchanting_handler", this.enchantingHandler.serializeNBT());
 		tag.put("stonecutter_handler", this.stonecutterHandler.serializeNBT());
-		tag.put("brewing_handler", this.brewingHandler.serializeNBT());
+		tag.put("brewing_handler", this.brewingHandler.serialize());
+		tag.put("brew_handler", this.brewHandler.serialize());
 		tag.put("grindstone_handler", this.grindstoneHandler.serializeNBT());
 		tag.put("smithing_handler", this.smithingHandler.serializeNBT());
 		return tag;
@@ -134,7 +145,8 @@ public class BackpackHandler implements IBackpack {
 			this.anvilHandler.deserialize(tag.getCompound("anvil_handler"));
 			this.enchantingHandler.deserializeNBT(tag.getCompound("enchanting_handler"));
 			this.stonecutterHandler.deserializeNBT(tag.getCompound("stonecutter_handler"));
-			this.brewingHandler.deserializeNBT(tag.getCompound("brewing_handler"));
+			this.brewingHandler.deserialize(tag.getCompound("brewing_handler"));
+			this.brewHandler.deserialize(tag.getCompound("brew_handler"));
 			this.grindstoneHandler.deserializeNBT(tag.getCompound("grindstone_handler"));
 			this.smithingHandler.deserializeNBT(tag.getCompound("smithing_handler"));
 		}

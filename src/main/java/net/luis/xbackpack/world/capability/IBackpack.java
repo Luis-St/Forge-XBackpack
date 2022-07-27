@@ -1,5 +1,6 @@
 package net.luis.xbackpack.world.capability;
 
+import net.luis.xbackpack.world.inventory.handler.BrewingStandCraftingHandler;
 import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
 import net.luis.xbackpack.world.inventory.handler.FurnaceCraftingHandler;
 import net.luis.xbackpack.world.inventory.handler.ProgressHandler;
@@ -33,7 +34,9 @@ public interface IBackpack {
 	
 	ItemStackHandler getStonecutterHandler();
 	
-	ItemStackHandler getBrewingHandler();
+	BrewingStandCraftingHandler getBrewingHandler();
+	
+	ProgressHandler getBrewHandler();
 	
 	ItemStackHandler getGrindstoneHandler();
 	
