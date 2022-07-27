@@ -11,7 +11,11 @@ import net.luis.xbackpack.world.inventory.BackpackMenu;
 import net.luis.xbackpack.world.inventory.extension.slot.AnvilExtensionResultSlot;
 import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
 import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.EnchantedBookItem;
@@ -76,6 +80,13 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 			this.handler.getInputHandler().setStackInSlot(1, ItemStack.EMPTY);
 		}
 		this.cost = 0;
+		if (player instanceof ServerPlayer serverPlayer) {
+			this.playSound(serverPlayer, serverPlayer.getLevel());
+		}
+	}
+	
+	private void playSound(ServerPlayer player, ServerLevel level) {
+		player.connection.send(new ClientboundSoundPacket(SoundEvents.ANVIL_USE, SoundSource.BLOCKS, player.getX(), player.getY(), player.getZ(), 1.0F, level.random.nextFloat() * 0.1F + 0.9F, level.random.nextLong()));
 	}
 	
 	@Override

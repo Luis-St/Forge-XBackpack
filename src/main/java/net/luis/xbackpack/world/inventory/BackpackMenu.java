@@ -12,6 +12,7 @@ import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.inventory.extension.AbstractExtensionMenu;
 import net.luis.xbackpack.world.inventory.extension.AnvilExtensionMenu;
 import net.luis.xbackpack.world.inventory.extension.CraftingExtensionMenu;
+import net.luis.xbackpack.world.inventory.extension.EnchantmentTableExtensionMenu;
 import net.luis.xbackpack.world.inventory.extension.ExtensionMenuHolder;
 import net.luis.xbackpack.world.inventory.extension.FurnaceExtensionMenu;
 import net.luis.xbackpack.world.inventory.slot.BackpackArmorSlot;
@@ -72,6 +73,7 @@ public class BackpackMenu extends AbstractContainerMenu implements ExtensionMenu
 		this.extensionMenus.add(new CraftingExtensionMenu(this, player));
 		this.extensionMenus.add(new FurnaceExtensionMenu(this, player));
 		this.extensionMenus.add(new AnvilExtensionMenu(this, player));
+		this.extensionMenus.add(new EnchantmentTableExtensionMenu(this, player));
 		this.extensionMenus.forEach((extensionMenu) -> {
 			extensionMenu.addSlots(this::addSlot);
 		});
@@ -139,6 +141,15 @@ public class BackpackMenu extends AbstractContainerMenu implements ExtensionMenu
 		this.extensionMenus.forEach((extensionMenu) -> {
 			extensionMenu.slotsChanged(container);
 		});
+	}
+	
+	@Override
+	public boolean clickMenuButton(Player player, int button) {
+		AbstractExtensionMenu extensionMenu = this.getExtensionMenu(this.extension);
+		if (extensionMenu != null) {
+			return extensionMenu.clickMenuButton(player, button);
+		}
+		return super.clickMenuButton(player, button);
 	}
 	
 	public BackpackExtension getExtension() {

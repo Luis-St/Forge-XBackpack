@@ -110,6 +110,10 @@ public abstract class AbstractExtensionScreen {
 		
 	}
 	
+	public boolean mouseClicked(double mouseX, double mouseY, int button) {
+		return false;
+	}
+	
 	public BackpackExtension getExtension() {
 		return this.extension;
 	}

@@ -40,6 +40,10 @@ public abstract class AbstractExtensionMenu {
 		
 	}
 	
+	public boolean clickMenuButton(Player player, int button) {
+		return true;
+	}
+	
 	public void close() {
 		
 	}

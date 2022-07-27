@@ -35,8 +35,8 @@ public record BackpackExtension(Component title, Component tooltip, ItemStack ic
 		String component = "xbackpack.backpack_extension.anvil.";
 		return new BackpackExtension(Component.translatable(component + "title"), Component.translatable(component + "tooltip"), new ItemStack(Items.ANVIL), 20, 22, 111, 46);
 	});
-	public static final RegistryObject<BackpackExtension> ENCHANTING_TABLE = BACKPACK_EXTENSIONS.register("enchanting_table", () -> {
-		String component = "xbackpack.backpack_extension.enchanting_table.";
+	public static final RegistryObject<BackpackExtension> ENCHANTMENT_TABLE = BACKPACK_EXTENSIONS.register("enchantment_table", () -> {
+		String component = "xbackpack.backpack_extension.enchantment_table.";
 		return new BackpackExtension(Component.translatable(component + "title"), Component.translatable(component + "tooltip"), new ItemStack(Items.ENCHANTING_TABLE), 20, 22, 136, 88);
 	});
 	public static final RegistryObject<BackpackExtension> STONECUTTER = BACKPACK_EXTENSIONS.register("stonecutter", () -> {

@@ -2,9 +2,11 @@ package net.luis.xbackpack.client;
 
 import net.luis.xbackpack.client.gui.screens.BackpackScreen;
 import net.luis.xbackpack.client.gui.screens.extension.AnvilExtensionScreen;
+import net.luis.xbackpack.client.gui.screens.extension.EnchantmentTableExtensionScreen;
 import net.luis.xbackpack.client.gui.screens.extension.FurnaceExtensionScreen;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
 
 public class XBackpackClientPacketHandler {
 	
@@ -23,6 +25,17 @@ public class XBackpackClientPacketHandler {
 		if (minecraft.screen instanceof BackpackScreen screen) {
 			if (screen.getExtensionScreen(BackpackExtension.ANVIL.get()) instanceof AnvilExtensionScreen anvilExtension) {
 				anvilExtension.setCost(cost);
+			}
+		}
+	}
+	
+	
+	
+	public static void handleUpdateEnchantmentTableExtension(ResourceLocation[] enchantments, int[] enchantmentLevels, int[] enchantingCosts, int enchantmentSeed) {
+		Minecraft minecraft = Minecraft.getInstance();
+		if (minecraft.screen instanceof BackpackScreen screen) {
+			if (screen.getExtensionScreen(BackpackExtension.ENCHANTMENT_TABLE.get()) instanceof EnchantmentTableExtensionScreen enchantmentTableExtension) {
+				enchantmentTableExtension.update(enchantments, enchantmentLevels, enchantingCosts, enchantmentSeed);
 			}
 		}
 	}

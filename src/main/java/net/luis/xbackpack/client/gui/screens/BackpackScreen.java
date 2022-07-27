@@ -3,7 +3,7 @@ package net.luis.xbackpack.client.gui.screens;
 import static net.luis.xbackpack.world.extension.BackpackExtension.ANVIL;
 import static net.luis.xbackpack.world.extension.BackpackExtension.BREWING_STAND;
 import static net.luis.xbackpack.world.extension.BackpackExtension.CRAFTING_TABLE;
-import static net.luis.xbackpack.world.extension.BackpackExtension.ENCHANTING_TABLE;
+import static net.luis.xbackpack.world.extension.BackpackExtension.ENCHANTMENT_TABLE;
 import static net.luis.xbackpack.world.extension.BackpackExtension.FURNACE;
 import static net.luis.xbackpack.world.extension.BackpackExtension.GRINDSTONE;
 import static net.luis.xbackpack.world.extension.BackpackExtension.SMITHING_TABLE;
@@ -19,10 +19,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.client.gui.screens.extension.AbstractExtensionScreen;
 import net.luis.xbackpack.client.gui.screens.extension.AnvilExtensionScreen;
-import net.luis.xbackpack.client.gui.screens.extension.ExtensionScreenHolder;
 import net.luis.xbackpack.client.gui.screens.extension.BrewingStandExtensionScreen;
 import net.luis.xbackpack.client.gui.screens.extension.CraftingExtensionScreen;
-import net.luis.xbackpack.client.gui.screens.extension.EnchantingTableExtensionScreen;
+import net.luis.xbackpack.client.gui.screens.extension.EnchantmentTableExtensionScreen;
+import net.luis.xbackpack.client.gui.screens.extension.ExtensionScreenHolder;
 import net.luis.xbackpack.client.gui.screens.extension.FurnaceExtensionScreen;
 import net.luis.xbackpack.client.gui.screens.extension.GrindstoneExtensionScreen;
 import net.luis.xbackpack.client.gui.screens.extension.SmithingTableExtensionScreen;
@@ -53,7 +53,7 @@ public class BackpackScreen extends AbstractScrollableContainerScreen<BackpackMe
 	private static final ResourceLocation BACKPACK = new ResourceLocation(XBackpack.MOD_ID, "textures/gui/container/backpack.png");
 	public static final ResourceLocation ICONS = new ResourceLocation(XBackpack.MOD_ID, "textures/gui/container/backpack_icons.png");
 	
-	private final List<BackpackExtension> extensions = List.of(CRAFTING_TABLE.get(), FURNACE.get(), ANVIL.get(), ENCHANTING_TABLE.get(), STONECUTTER.get(), BREWING_STAND.get(), GRINDSTONE.get(), SMITHING_TABLE.get());
+	private final List<BackpackExtension> extensions = List.of(CRAFTING_TABLE.get(), FURNACE.get(), ANVIL.get(), ENCHANTMENT_TABLE.get(), STONECUTTER.get(), BREWING_STAND.get(), GRINDSTONE.get(), SMITHING_TABLE.get());
 	private final List<AbstractExtensionScreen> extensionScreens = Lists.newArrayList();
 	private BackpackExtension extension = BackpackExtension.NO.get();
 	
@@ -67,7 +67,7 @@ public class BackpackScreen extends AbstractScrollableContainerScreen<BackpackMe
 		this.extensionScreens.add(new CraftingExtensionScreen(this, this.extensions));
 		this.extensionScreens.add(new FurnaceExtensionScreen(this, this.extensions));
 		this.extensionScreens.add(new AnvilExtensionScreen(this, this.extensions));
-		this.extensionScreens.add(new EnchantingTableExtensionScreen(this, this.extensions));
+		this.extensionScreens.add(new EnchantmentTableExtensionScreen(this, this.extensions));
 		this.extensionScreens.add(new StonecutterExtensionScreen(this, this.extensions));
 		this.extensionScreens.add(new BrewingStandExtensionScreen(this, this.extensions));
 		this.extensionScreens.add(new GrindstoneExtensionScreen(this, this.extensions));
@@ -192,6 +192,10 @@ public class BackpackScreen extends AbstractScrollableContainerScreen<BackpackMe
 				this.updateExtension(extension);
 				break;
 			}
+		}
+		AbstractExtensionScreen extensionScreen = this.getExtensionScreen(this.extension);
+		if (extensionScreen != null && extensionScreen.mouseClicked(mouseX, mouseY, button)) {
+			return true;
 		}
 		return super.mouseClicked(mouseX, mouseY, button);
 	}
