@@ -2,16 +2,23 @@ package net.luis.xbackpack.world.inventory.extension;
 
 import java.util.function.Consumer;
 
+import net.luis.xbackpack.BackpackConstans;
+import net.luis.xbackpack.world.capability.IBackpack;
 import net.luis.xbackpack.world.capability.XBackpackCapabilities;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.inventory.BackpackMenu;
-import net.luis.xbackpack.world.inventory.extension.slot.FurnaceExtensionFuelSlot;
-import net.luis.xbackpack.world.inventory.extension.slot.FurnaceExtensionInputSlot;
+import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
 import net.luis.xbackpack.world.inventory.extension.slot.FurnaceExtensionResultSlot;
-import net.luis.xbackpack.world.inventory.extension.slot.FurnaceExtensionResultStorageSlot;
-import net.luis.xbackpack.world.inventory.handler.FurnaceCraftingHandler;
+import net.luis.xbackpack.world.inventory.handler.SmeltingHandler;
+import net.luis.xbackpack.world.inventory.handler.progress.ProgressHandler;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.AbstractCookingRecipe;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraftforge.common.ForgeHooks;
 
 /**
  * 
@@ -21,24 +28,76 @@ import net.minecraft.world.inventory.Slot;
 
 public class FurnaceExtensionMenu extends AbstractExtensionMenu {
 	
-	private final FurnaceCraftingHandler handler;
+	private final SmeltingHandler handler;
+	private final ProgressHandler progressHandler;
 	
 	public FurnaceExtensionMenu(BackpackMenu menu, Player player) {
 		super(menu, player, BackpackExtension.FURNACE.get());
-		this.handler = this.player.getCapability(XBackpackCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new).getFurnaceHandler();
+		IBackpack backpack = this.player.getCapability(XBackpackCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new);
+		this.handler = backpack.getSmeltingHandler();
+		this.progressHandler = backpack.getSmeltHandler();
 	}
-
+	
+	@Override
+	public void open() {
+		this.progressHandler.broadcastChanges();
+	}
+	
 	@Override
 	public void addSlots(Consumer<Slot> consumer) {
 		for (int i = 0; i < 4; i++) {
-			consumer.accept(new FurnaceExtensionInputSlot(this, this.player, this.handler.getInputStorageHandler(), i, 225 + i * 18, 49));
+			consumer.accept(new ExtensionSlot(this, this.handler.getInputStorageHandler(), i, 225 + i * 18, 49) {
+				@Override
+				public boolean mayPlace(ItemStack stack) {
+					return FurnaceExtensionMenu.this.canSmelt(stack);
+				}
+			});
 		}
-		consumer.accept(new FurnaceExtensionInputSlot(this, this.player, this.handler.getInputHandler(), 0, 225, 71));
-		consumer.accept(new FurnaceExtensionFuelSlot(this, this.handler.getFuelHandler(), 0, 225, 107));
+		consumer.accept(new ExtensionSlot(this, this.handler.getInputHandler(), 0, 225, 71) {
+			@Override
+			public boolean mayPlace(ItemStack stack) {
+				return FurnaceExtensionMenu.this.canSmelt(stack);
+			}
+		});
+		consumer.accept(new ExtensionSlot(this, this.handler.getFuelHandler(), 0, 225, 107) {
+			@Override
+			public boolean mayPlace(ItemStack stack) {
+				return FurnaceExtensionMenu.this.isFuel(stack) || stack.is(Items.BUCKET);
+			}
+			
+			@Override
+			public int getMaxStackSize(ItemStack stack) {
+				return stack.is(Items.BUCKET) ? 1 : super.getMaxStackSize(stack);
+			}
+		});
 		consumer.accept(new FurnaceExtensionResultSlot(this, this.player, this.handler.getResultHandler(), 0, 275, 89));
 		for (int i = 0; i < 4; i++) {
-			consumer.accept(new FurnaceExtensionResultStorageSlot(this, this.handler.getResultStorageHandler(), i, 225 + i * 18, 129));
+			consumer.accept(new ExtensionSlot(this, this.handler.getResultStorageHandler(), i, 225 + i * 18, 129) {
+				@Override
+				public boolean mayPlace(ItemStack stack) {
+					return false;
+				}
+			});
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	private boolean canSmelt(ItemStack stack) {
+		for (RecipeType<? extends AbstractCookingRecipe> recipeType : BackpackConstans.FURNACE_RECIPE_TYPES) {
+			if (this.player.level.getRecipeManager().getRecipeFor((RecipeType<AbstractCookingRecipe>) recipeType, new SimpleContainer(stack), this.player.level).isPresent()) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private boolean isFuel(ItemStack stack) {
+		for (RecipeType<? extends AbstractCookingRecipe> recipeType : BackpackConstans.FURNACE_RECIPE_TYPES) {
+			if (ForgeHooks.getBurnTime(stack, recipeType) > 0) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

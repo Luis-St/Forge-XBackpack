@@ -8,9 +8,8 @@ import net.luis.xbackpack.network.packet.extension.UpdateEnchantmentTableExtensi
 import net.luis.xbackpack.world.capability.XBackpackCapabilities;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.inventory.BackpackMenu;
-import net.luis.xbackpack.world.inventory.extension.slot.EnchantmentTableExtensionFuelSlot;
-import net.luis.xbackpack.world.inventory.extension.slot.EnchantmentTableExtensionInputSlot;
-import net.luis.xbackpack.world.inventory.extension.slot.EnchantmentTableExtensionPowerSlot;
+import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
+import net.luis.xbackpack.world.inventory.handler.EnchantingHandler;
 import net.minecraft.Util;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.nbt.CompoundTag;
@@ -25,13 +24,14 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.BookItem;
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -45,7 +45,7 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 	
 	public static final ResourceLocation EMPTY_ENCHANTMENT = new ResourceLocation("enchantment_empty");
 	
-	private final ItemStackHandler handler;
+	private final EnchantingHandler handler;
 	private final RandomSource rng = RandomSource.create();
 	private final ResourceLocation[] enchantments = new ResourceLocation[] {
 			EMPTY_ENCHANTMENT, EMPTY_ENCHANTMENT, EMPTY_ENCHANTMENT
@@ -71,14 +71,48 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 	
 	@Override
 	public void addSlots(Consumer<Slot> consumer) {
-		consumer.accept(new EnchantmentTableExtensionPowerSlot(this, this.handler, 0, 235, 108));
-		consumer.accept(new EnchantmentTableExtensionInputSlot(this, this.handler, 1, 225, 130));
-		consumer.accept(new EnchantmentTableExtensionFuelSlot(this, this.handler, 2, 245, 130));
+		consumer.accept(new ExtensionSlot(this, this.handler.getPowerHandler(), 0, 235, 108) {
+			@Override
+			public boolean mayPlace(ItemStack stack) {
+				return stack.is(Tags.Items.BOOKSHELVES) || stack.getItem() instanceof BookItem;
+			}
+			
+			@Override
+			public int getMaxStackSize(ItemStack stack) {
+				return EnchantmentTableExtensionMenu.this.getMaxStackSize(stack);
+			}
+		});
+		consumer.accept(new ExtensionSlot(this, this.handler.getInputHandler(), 0, 225, 130) {
+			@Override
+			public boolean mayPlace(ItemStack stack) {
+				return stack.isEnchantable() || stack.getItem() instanceof BookItem;
+			}
+			
+			@Override
+			public int getMaxStackSize() {
+				return 1;
+			}
+		});
+		consumer.accept(new ExtensionSlot(this, this.handler.getFuelHandler(), 0, 245, 130) {
+			@Override
+			public boolean mayPlace(ItemStack stack) {
+				return stack.is(Tags.Items.ENCHANTING_FUELS);
+			}
+		});
+	}
+	
+	private int getMaxStackSize(ItemStack stack) {
+		if (stack.is(Tags.Items.BOOKSHELVES)) {
+			return 15;
+		} else if (stack.getItem() instanceof BookItem) {
+			return 45;
+		}
+		return 0;
 	}
 	
 	@Override
 	public void slotsChanged() {
-		ItemStack inputStack = this.handler.getStackInSlot(1);
+		ItemStack inputStack = this.handler.getInputHandler().getStackInSlot(0);
 		if (!inputStack.isEmpty() && inputStack.isEnchantable()) {
 			int power = this.calculatePower();
 			this.rng.setSeed((long) this.enchantmentSeed);
@@ -114,7 +148,7 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	private int calculatePower() {
-		ItemStack stack = this.handler.getStackInSlot(0);
+		ItemStack stack = this.handler.getPowerHandler().getStackInSlot(0);
 		if (stack.isEmpty()) {
 			return 0;
 		} else if (stack.is(Items.BOOKSHELF)) {
@@ -128,8 +162,8 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 	@Override
 	public boolean clickMenuButton(Player player, int button) {
 		if (2 >= button && button >= 0) {
-			ItemStack inputStack = this.handler.getStackInSlot(1);
-			ItemStack fuelStack = this.handler.getStackInSlot(2);
+			ItemStack inputStack = this.handler.getInputHandler().getStackInSlot(0);
+			ItemStack fuelStack = this.handler.getFuelHandler().getStackInSlot(0);
 			int requiredFuel = button + 1;
 			if ((fuelStack.isEmpty() || fuelStack.getCount() < requiredFuel) && !player.getAbilities().instabuild) {
 				return false;
@@ -147,7 +181,7 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 						if (tag != null) {
 							resultStack.setTag(tag.copy());
 						}
-						this.handler.setStackInSlot(1, resultStack);
+						this.handler.getInputHandler().setStackInSlot(0, resultStack);
 					}
 					for (int j = 0; j < enchantments.size(); ++j) {
 						EnchantmentInstance enchantment = enchantments.get(j);
@@ -160,7 +194,7 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 					if (!player.getAbilities().instabuild) {
 						fuelStack.shrink(requiredFuel);
 						if (fuelStack.isEmpty()) {
-							this.handler.setStackInSlot(2, ItemStack.EMPTY);
+							this.handler.getFuelHandler().setStackInSlot(0, ItemStack.EMPTY);
 						}
 					}
 					player.awardStat(Stats.ENCHANT_ITEM);

@@ -1,10 +1,11 @@
-package net.luis.xbackpack.world.inventory.handler;
+package net.luis.xbackpack.world.inventory.handler.progress;
 
 import java.util.List;
 import java.util.Optional;
 
 import net.luis.xbackpack.network.XBackpackNetworkHandler;
 import net.luis.xbackpack.network.packet.extension.UpdateFurnaceExtension;
+import net.luis.xbackpack.world.inventory.handler.SmeltingHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
@@ -25,10 +26,10 @@ import net.minecraftforge.network.PacketDistributor;
  *
  */
 
-public class FurnaceSmeltHandler implements ProgressHandler {
+public class SmeltingProgressHandler implements ProgressHandler {
 	
 	private final Player player;
-	private final FurnaceCraftingHandler handler;
+	private final SmeltingHandler handler;
 	private final List<RecipeType<? extends AbstractCookingRecipe>> recipeTypes;
 	private int cookingProgress;
 	private int cookingTime;
@@ -36,7 +37,7 @@ public class FurnaceSmeltHandler implements ProgressHandler {
 	private int fuelTime;
 	private int maxFuel;
 	
-	public FurnaceSmeltHandler(Player player, FurnaceCraftingHandler handler, List<RecipeType<? extends AbstractCookingRecipe>> recipeTypes) {
+	public SmeltingProgressHandler(Player player, SmeltingHandler handler, List<RecipeType<? extends AbstractCookingRecipe>> recipeTypes) {
 		this.player = player;
 		this.handler = handler;
 		this.recipeTypes = recipeTypes;
@@ -266,7 +267,8 @@ public class FurnaceSmeltHandler implements ProgressHandler {
 		return this.fuelTime * 13 / maxFuel;
 	}
 	
-	private void broadcastChanges() {
+	@Override
+	public void broadcastChanges() {
 		if (this.player instanceof ServerPlayer player) {
 			XBackpackNetworkHandler.getChannel().send(PacketDistributor.PLAYER.with(() -> player), new UpdateFurnaceExtension(this.getCookingProgress(), this.getFuelProgress()));
 		}

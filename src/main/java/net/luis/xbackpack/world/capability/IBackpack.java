@@ -1,9 +1,10 @@
 package net.luis.xbackpack.world.capability;
 
-import net.luis.xbackpack.world.inventory.handler.BrewingStandCraftingHandler;
+import net.luis.xbackpack.world.inventory.handler.BrewingCraftingHandler;
 import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
-import net.luis.xbackpack.world.inventory.handler.FurnaceCraftingHandler;
-import net.luis.xbackpack.world.inventory.handler.ProgressHandler;
+import net.luis.xbackpack.world.inventory.handler.EnchantingHandler;
+import net.luis.xbackpack.world.inventory.handler.SmeltingHandler;
+import net.luis.xbackpack.world.inventory.handler.progress.ProgressHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.items.ItemStackHandler;
@@ -24,17 +25,17 @@ public interface IBackpack {
 	
 	ItemStackHandler getCraftingHandler();
 	
-	FurnaceCraftingHandler getFurnaceHandler();
+	SmeltingHandler getSmeltingHandler();
 	
 	ProgressHandler getSmeltHandler();
 	
 	CraftingHandler getAnvilHandler();
 	
-	ItemStackHandler getEnchantingHandler();
+	EnchantingHandler getEnchantingHandler();
 	
-	ItemStackHandler getStonecutterHandler();
+	CraftingHandler getStonecutterHandler();
 	
-	BrewingStandCraftingHandler getBrewingHandler();
+	BrewingCraftingHandler getBrewingHandler();
 	
 	ProgressHandler getBrewHandler();
 	

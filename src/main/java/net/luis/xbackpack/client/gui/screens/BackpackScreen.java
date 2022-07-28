@@ -31,7 +31,6 @@ import net.luis.xbackpack.network.XBackpackNetworkHandler;
 import net.luis.xbackpack.network.packet.extension.UpdateBackpackExtension;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.inventory.BackpackMenu;
-import net.luis.xbackpack.world.inventory.extension.slot.AnvilExtensionResultSlot;
 import net.luis.xbackpack.world.inventory.extension.slot.ExtensionResultSlot;
 import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
 import net.luis.xbackpack.world.inventory.slot.MoveableSlot;
@@ -90,8 +89,6 @@ public class BackpackScreen extends AbstractScrollableContainerScreen<BackpackMe
 		} else if (slot instanceof ExtensionSlot extensionSlot) {
 			return this.extension == extensionSlot.getExtension();
 		} else if (slot instanceof ExtensionResultSlot extensionSlot) {
-			return this.extension == extensionSlot.getExtension();
-		} else if (slot instanceof AnvilExtensionResultSlot extensionSlot) {
 			return this.extension == extensionSlot.getExtension();
 		}
 		return slot.isActive();

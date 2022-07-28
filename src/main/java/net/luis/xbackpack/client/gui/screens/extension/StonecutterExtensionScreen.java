@@ -10,6 +10,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.luis.xbackpack.client.gui.screens.BackpackScreen;
 import net.luis.xbackpack.world.capability.XBackpackCapabilities;
 import net.luis.xbackpack.world.extension.BackpackExtension;
+import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.sounds.SoundEvents;
@@ -28,6 +29,7 @@ import net.minecraft.world.item.crafting.StonecutterRecipe;
 public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 	
 	private final List<StonecutterRecipe> recipes = Lists.newArrayList();
+	private CraftingHandler handler;
 	private double scrollOffset = 0.0F;
 	private boolean scrolling = false;
 	private int startIndex = 0;
@@ -35,6 +37,11 @@ public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 	
 	public StonecutterExtensionScreen(BackpackScreen screen, List<BackpackExtension> extensions) {
 		super(screen, BackpackExtension.STONECUTTER.get(), extensions);
+	}
+	
+	@Override
+	protected void init() {
+		this.handler = this.minecraft.player.getCapability(XBackpackCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new).getStonecutterHandler();
 	}
 	
 	@Override
@@ -133,15 +140,15 @@ public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
 		if (this.isScrollBarActive()) {
-			double f = delta / (double) this.getOffscreenRows();
-			this.scrollOffset = Mth.clamp(this.scrollOffset - f, 0.0F, 1.0F);
+			double offset = delta / (double) this.getOffscreenRows();
+			this.scrollOffset = Mth.clamp(this.scrollOffset - offset, 0.0F, 1.0F);
 			this.startIndex = (int) (this.scrollOffset * (double) this.getOffscreenRows() + 0.5) * 4;
 		}
 		return true;
 	}
 	
 	private ItemStack getInputStack() {
-		return this.minecraft.player.getCapability(XBackpackCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new).getStonecutterHandler().getStackInSlot(0);
+		return this.handler.getInputHandler().getStackInSlot(0);
 	}
 	
 	private boolean shouldDisplayRecipes() {

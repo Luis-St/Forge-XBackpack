@@ -8,7 +8,6 @@ import net.luis.xbackpack.network.packet.extension.UpdateAnvilExtension;
 import net.luis.xbackpack.world.capability.XBackpackCapabilities;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.inventory.BackpackMenu;
-import net.luis.xbackpack.world.inventory.extension.slot.AnvilExtensionResultSlot;
 import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
 import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
@@ -56,33 +55,52 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 	public void addSlots(Consumer<Slot> consumer) {
 		consumer.accept(new ExtensionSlot(this, this.handler.getInputHandler(), 0, 225, 73));
 		consumer.accept(new ExtensionSlot(this, this.handler.getInputHandler(), 1, 260, 73));
-		consumer.accept(new AnvilExtensionResultSlot(this, this.handler.getResultHandler(), 0, 304, 73));
+		consumer.accept(new ExtensionSlot(this, this.handler.getResultHandler(), 0, 304, 73) {
+			@Override
+			public boolean mayPlace(ItemStack stack) {
+				return false;
+			}
+			
+			@Override
+			public boolean mayPickup(Player player) {
+				return AnvilExtensionMenu.this.mayPickup(player);
+			}
+			
+			@Override
+			public void onTake(Player player, ItemStack stack) {
+				AnvilExtensionMenu.this.onTake(player, stack);
+				super.onTake(player, stack);
+			}
+		});
 	}
 	
-	public boolean mayPickup(Player player, boolean hasResult) {
+	public boolean mayPickup(Player player) {
 		return (player.getAbilities().instabuild || player.experienceLevel >= this.cost) && this.cost > 0;
 	}
 	
-	public void onTake(Player player, ItemStack stack) {
-		if (!player.getAbilities().instabuild) {
-			player.giveExperienceLevels(-this.cost);
-		}
-		this.handler.getInputHandler().setStackInSlot(0, ItemStack.EMPTY);
-		if (this.repairItemCountCost > 0) {
-			ItemStack rigthStack = this.handler.getInputHandler().getStackInSlot(1);
-			if (!rigthStack.isEmpty() && rigthStack.getCount() > this.repairItemCountCost) {
-				rigthStack.shrink(this.repairItemCountCost);
-				this.handler.getInputHandler().setStackInSlot(1, rigthStack);
+	private void onTake(Player player, ItemStack stack) {
+		if (player instanceof ServerPlayer serverPlayer) {
+			if (!serverPlayer.getAbilities().instabuild) {
+				serverPlayer.giveExperienceLevels(-this.cost);
+			}
+			this.handler.getInputHandler().setStackInSlot(0, ItemStack.EMPTY);
+			if (this.repairItemCountCost > 0) {
+				ItemStack rigthStack = this.handler.getInputHandler().getStackInSlot(1);
+				if (!rigthStack.isEmpty() && rigthStack.getCount() > this.repairItemCountCost) {
+					rigthStack.shrink(this.repairItemCountCost);
+					this.handler.getInputHandler().setStackInSlot(1, rigthStack);
+				} else {
+					this.handler.getInputHandler().setStackInSlot(1, ItemStack.EMPTY);
+				}
 			} else {
 				this.handler.getInputHandler().setStackInSlot(1, ItemStack.EMPTY);
 			}
-		} else {
-			this.handler.getInputHandler().setStackInSlot(1, ItemStack.EMPTY);
-		}
-		this.cost = 0;
-		if (player instanceof ServerPlayer serverPlayer) {
+			this.cost = 0;
 			this.playSound(serverPlayer, serverPlayer.getLevel());
 		}
+		this.menu.broadcastChanges();
+		this.broadcastChanges();
+		this.createResult();
 	}
 	
 	private void playSound(ServerPlayer player, ServerLevel level) {
@@ -103,7 +121,7 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 		if (leftStack.isEmpty()) {
 			this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);
 			this.cost = 0;
-			this.broadcastCost();
+			this.broadcastChanges();
 		} else {
 			ItemStack resultStack = leftStack.copy();
 			ItemStack rightStack = this.handler.getInputHandler().getStackInSlot(1);
@@ -121,7 +139,7 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 					if (damage <= 0) {
 						this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);
 						this.cost = 0;
-						this.broadcastCost();
+						this.broadcastChanges();
 						return;
 					}
 					int currentRepairCost;
@@ -136,7 +154,7 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 					if (!enchantedBook && (!resultStack.is(rightStack.getItem()) || !resultStack.isDamageableItem())) {
 						this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);
 						this.cost = 0;
-						this.broadcastCost();
+						this.broadcastChanges();
 						return;
 					}
 					if (resultStack.isDamageableItem() && !enchantedBook) {
@@ -206,7 +224,7 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 					if (survival && !canEnchant) {
 						this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);
 						this.cost = 0;
-						this.broadcastCost();
+						this.broadcastChanges();
 						return;
 					}
 				}
@@ -237,11 +255,11 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 			}
 			this.handler.getResultHandler().setStackInSlot(0, resultStack);
 			this.menu.broadcastChanges();
-			this.broadcastCost();
+			this.broadcastChanges();
 		}
 	}
 	
-	private void broadcastCost() {
+	private void broadcastChanges() {
 		if (this.player instanceof ServerPlayer player) {
 			XBackpackNetworkHandler.getChannel().send(PacketDistributor.PLAYER.with(() -> player), new UpdateAnvilExtension(this.cost));
 		}

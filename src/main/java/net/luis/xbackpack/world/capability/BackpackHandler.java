@@ -2,12 +2,13 @@ package net.luis.xbackpack.world.capability;
 
 import net.luis.xbackpack.BackpackConstans;
 import net.luis.xbackpack.XBackpack;
-import net.luis.xbackpack.world.inventory.handler.BrewingStandBrewHandler;
-import net.luis.xbackpack.world.inventory.handler.BrewingStandCraftingHandler;
+import net.luis.xbackpack.world.inventory.handler.BrewingCraftingHandler;
 import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
-import net.luis.xbackpack.world.inventory.handler.FurnaceCraftingHandler;
-import net.luis.xbackpack.world.inventory.handler.FurnaceSmeltHandler;
-import net.luis.xbackpack.world.inventory.handler.ProgressHandler;
+import net.luis.xbackpack.world.inventory.handler.EnchantingHandler;
+import net.luis.xbackpack.world.inventory.handler.SmeltingHandler;
+import net.luis.xbackpack.world.inventory.handler.progress.BrewingProgressHandler;
+import net.luis.xbackpack.world.inventory.handler.progress.ProgressHandler;
+import net.luis.xbackpack.world.inventory.handler.progress.SmeltingProgressHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -27,20 +28,20 @@ public class BackpackHandler implements IBackpack {
 	private final ItemStackHandler backpackHandler = new ItemStackHandler(873);
 	private final ItemStackHandler toolHandler = new ItemStackHandler(3);
 	private final ItemStackHandler craftingHandler = new ItemStackHandler(9);
-	private final FurnaceCraftingHandler furnaceHandler = new FurnaceCraftingHandler(1, 4, 4);
-	private final FurnaceSmeltHandler smeltHandler;
+	private final SmeltingHandler furnaceHandler = new SmeltingHandler(1, 4, 4);
+	private final SmeltingProgressHandler smeltHandler;
 	private final CraftingHandler anvilHandler = new CraftingHandler(2, 1);
-	private final ItemStackHandler enchantingHandler = new ItemStackHandler(3);
-	private final ItemStackHandler stonecutterHandler = new ItemStackHandler(2);
-	private final BrewingStandCraftingHandler brewingHandler = new BrewingStandCraftingHandler(1, 3);
-	private final BrewingStandBrewHandler brewHandler;
+	private final EnchantingHandler enchantingHandler = new EnchantingHandler(1, 1, 1);
+	private final CraftingHandler stonecutterHandler = new CraftingHandler(1, 1);
+	private final BrewingCraftingHandler brewingHandler = new BrewingCraftingHandler(1, 3);
+	private final BrewingProgressHandler brewHandler;
 	private final ItemStackHandler grindstoneHandler = new ItemStackHandler(3);
 	private final ItemStackHandler smithingHandler = new ItemStackHandler(3);
 	
 	public BackpackHandler(Player player) {
 		this.player = player;
-		this.smeltHandler = new FurnaceSmeltHandler(this.player, this.furnaceHandler, BackpackConstans.FURNACE_RECIPE_TYPES);
-		this.brewHandler = new BrewingStandBrewHandler(this.player, this.brewingHandler);
+		this.smeltHandler = new SmeltingProgressHandler(this.player, this.furnaceHandler, BackpackConstans.FURNACE_RECIPE_TYPES);
+		this.brewHandler = new BrewingProgressHandler(this.player, this.brewingHandler);
 	}
 	
 	@Override
@@ -64,7 +65,7 @@ public class BackpackHandler implements IBackpack {
 	}
 
 	@Override
-	public FurnaceCraftingHandler getFurnaceHandler() {
+	public SmeltingHandler getSmeltingHandler() {
 		return this.furnaceHandler;
 	}
 	
@@ -79,17 +80,17 @@ public class BackpackHandler implements IBackpack {
 	}
 
 	@Override
-	public ItemStackHandler getEnchantingHandler() {
+	public EnchantingHandler getEnchantingHandler() {
 		return this.enchantingHandler;
 	}
 
 	@Override
-	public ItemStackHandler getStonecutterHandler() {
+	public CraftingHandler getStonecutterHandler() {
 		return this.stonecutterHandler;
 	}
 
 	@Override
-	public BrewingStandCraftingHandler getBrewingHandler() {
+	public BrewingCraftingHandler getBrewingHandler() {
 		return this.brewingHandler;
 	}
 	
@@ -123,8 +124,8 @@ public class BackpackHandler implements IBackpack {
 		tag.put("furnace_handler", this.furnaceHandler.serialize());
 		tag.put("smelt_handler", this.smeltHandler.serialize());
 		tag.put("anvil_handler", this.anvilHandler.serialize());
-		tag.put("enchanting_handler", this.enchantingHandler.serializeNBT());
-		tag.put("stonecutter_handler", this.stonecutterHandler.serializeNBT());
+		tag.put("enchanting_handler", this.enchantingHandler.serialize());
+		tag.put("stonecutter_handler", this.stonecutterHandler.serialize());
 		tag.put("brewing_handler", this.brewingHandler.serialize());
 		tag.put("brew_handler", this.brewHandler.serialize());
 		tag.put("grindstone_handler", this.grindstoneHandler.serializeNBT());
@@ -143,8 +144,8 @@ public class BackpackHandler implements IBackpack {
 			this.furnaceHandler.deserialize(tag.getCompound("furnace_handler"));
 			this.smeltHandler.deserialize(tag.getCompound("smelt_handler"));
 			this.anvilHandler.deserialize(tag.getCompound("anvil_handler"));
-			this.enchantingHandler.deserializeNBT(tag.getCompound("enchanting_handler"));
-			this.stonecutterHandler.deserializeNBT(tag.getCompound("stonecutter_handler"));
+			this.enchantingHandler.deserialize(tag.getCompound("enchanting_handler"));
+			this.stonecutterHandler.deserialize(tag.getCompound("stonecutter_handler"));
 			this.brewingHandler.deserialize(tag.getCompound("brewing_handler"));
 			this.brewHandler.deserialize(tag.getCompound("brew_handler"));
 			this.grindstoneHandler.deserializeNBT(tag.getCompound("grindstone_handler"));

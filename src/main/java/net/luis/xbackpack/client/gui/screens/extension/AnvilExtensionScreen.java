@@ -46,10 +46,6 @@ public class AnvilExtensionScreen extends AbstractExtensionScreen {
 		return false;
 	}
 	
-	public void setCost(int cost) {
-		this.cost = cost;
-	}
-	
 	private void renderLabels(PoseStack stack) {
 		CraftingHandler handler = this.minecraft.player.getCapability(XBackpackCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new).getAnvilHandler();
 		RenderSystem.disableBlend();
@@ -64,7 +60,7 @@ public class AnvilExtensionScreen extends AbstractExtensionScreen {
 					component = null;
 				} else if (this.minecraft != null) {
 					component = Component.translatable("xbackpack.backpack_extension.anvil.cost", this.cost);
-					if (!this.screen.getMenu().getSlot(940).mayPickup(this.minecraft.player)) {
+					if (!menu.mayPickup(this.minecraft.player)) {
 						color = 16736352;
 					}
 				}
@@ -82,5 +78,9 @@ public class AnvilExtensionScreen extends AbstractExtensionScreen {
 			}
 		}
 	}
-
+	
+	public void update(int cost) {
+		this.cost = cost;
+	}
+	
 }

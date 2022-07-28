@@ -9,23 +9,23 @@ import net.minecraftforge.items.ItemStackHandler;
  *
  */
 
-public class BrewingStandCraftingHandler extends CraftingHandler {
+public class BrewingCraftingHandler extends CraftingHandler {
 	
 	private final ItemStackHandler fuelHandler;
 	
-	public BrewingStandCraftingHandler(int input, int result) {
+	public BrewingCraftingHandler(int input, int result) {
 		this(new ItemStackHandler(input), new ItemStackHandler(result));
 	}
 	
-	public BrewingStandCraftingHandler(ItemStackHandler inputHandler, ItemStackHandler resultHandler) {
+	public BrewingCraftingHandler(ItemStackHandler inputHandler, ItemStackHandler resultHandler) {
 		this(inputHandler, new ItemStackHandler(1), resultHandler);
 	}
 	
-	public BrewingStandCraftingHandler(int input, int fuel, int result) {
+	public BrewingCraftingHandler(int input, int fuel, int result) {
 		this(new ItemStackHandler(input), new ItemStackHandler(fuel), new ItemStackHandler(result));
 	}
 	
-	public BrewingStandCraftingHandler(ItemStackHandler inputHandler, ItemStackHandler fuelHandler, ItemStackHandler resultHandler) {
+	public BrewingCraftingHandler(ItemStackHandler inputHandler, ItemStackHandler fuelHandler, ItemStackHandler resultHandler) {
 		super(inputHandler, resultHandler);
 		this.fuelHandler = fuelHandler;
 	}

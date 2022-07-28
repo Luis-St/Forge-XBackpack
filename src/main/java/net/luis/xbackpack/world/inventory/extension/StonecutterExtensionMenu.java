@@ -12,7 +12,7 @@ import net.luis.xbackpack.world.capability.XBackpackCapabilities;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.inventory.BackpackMenu;
 import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
-import net.luis.xbackpack.world.inventory.extension.slot.StonecutterExtensionResultSlot;
+import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -24,7 +24,6 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.StonecutterRecipe;
-import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.network.PacketDistributor;
 
 /**
@@ -35,7 +34,7 @@ import net.minecraftforge.network.PacketDistributor;
 
 public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 	
-	private final ItemStackHandler handler;
+	private final CraftingHandler handler;
 	private final List<StonecutterRecipe> recipes = Lists.newArrayList();
 	private ItemStack input = ItemStack.EMPTY;
 	private int selectedRecipe = -1;
@@ -53,17 +52,28 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 	
 	@Override
 	public void addSlots(Consumer<Slot> consumer) {
-		consumer.accept(new ExtensionSlot(this, this.handler, 0, 249, 121));
-		consumer.accept(new StonecutterExtensionResultSlot(this, this.handler, 1, 249, 207));
+		consumer.accept(new ExtensionSlot(this, this.handler.getInputHandler(), 0, 249, 121));
+		consumer.accept(new ExtensionSlot(this, this.handler.getResultHandler(), 0, 249, 207) {
+			@Override
+			public boolean mayPlace(ItemStack stack) {
+				return false;
+			}
+			
+			@Override
+			public void onTake(Player player, ItemStack stack) {
+				StonecutterExtensionMenu.this.onTake(player, stack);
+				super.onTake(player, stack);
+			}
+		});
 	}
 	
-	public void onTake(Player player, ItemStack stack) {
+	private void onTake(Player player, ItemStack stack) {
 		stack.onCraftedBy(player.level, player, stack.getCount());
 		if (this.recipe != null && !this.recipe.isSpecial()) {
 			player.awardRecipes(Collections.singleton(this.recipe));
 		}
-		ItemStack inputStack = this.handler.extractItem(0, 1, false);
-		if (!inputStack.isEmpty() && !this.handler.getStackInSlot(0).isEmpty()) {
+		ItemStack inputStack = this.handler.getInputHandler().extractItem(0, 1, false);
+		if (!inputStack.isEmpty() && !this.handler.getInputHandler().getStackInSlot(0).isEmpty()) {
 			this.setupResult();
 		}
 		this.menu.broadcastChanges();
@@ -78,7 +88,7 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 	
 	@Override
 	public void slotsChanged() {
-		ItemStack stack = this.handler.getStackInSlot(0);
+		ItemStack stack = this.handler.getInputHandler().getStackInSlot(0);
 		if (!stack.is(this.input.getItem())) {
 			this.input = stack.copy();
 			this.setupRecipes(stack);
@@ -90,7 +100,7 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 	private void setupRecipes(ItemStack stack) {
 		this.recipes.clear();
 		this.selectedRecipe = -1;
-		this.handler.setStackInSlot(1, ItemStack.EMPTY);
+		this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);
 		this.recipes.addAll(this.player.level.getRecipeManager().getRecipesFor(RecipeType.STONECUTTING, new SimpleContainer(stack), this.player.level));
 		if (this.player instanceof ServerPlayer player) {
 			XBackpackNetworkHandler.getChannel().send(PacketDistributor.PLAYER.with(() -> player), new UpdateStonecutterExtension(true));
@@ -110,10 +120,10 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 	private void setupResult() {
 		if (!this.recipes.isEmpty() && this.isValidIndex(this.selectedRecipe)) {
 			StonecutterRecipe recipe = this.recipes.get(this.selectedRecipe);
-			this.handler.setStackInSlot(1, recipe.assemble(new SimpleContainer(this.handler.getStackInSlot(0))));
+			this.handler.getResultHandler().setStackInSlot(0, recipe.assemble(new SimpleContainer(this.handler.getInputHandler().getStackInSlot(0))));
 			this.recipe = recipe;
 		} else {
-			this.handler.setStackInSlot(1, ItemStack.EMPTY);
+			this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);
 		}
 		this.menu.broadcastChanges();
 	}

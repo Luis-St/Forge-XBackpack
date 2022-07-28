@@ -1,11 +1,16 @@
-package net.luis.xbackpack.world.inventory.handler;
+package net.luis.xbackpack.world.inventory.handler.progress;
 
 import net.luis.xbackpack.network.XBackpackNetworkHandler;
 import net.luis.xbackpack.network.packet.extension.UpdateBrewingStandExtension;
+import net.luis.xbackpack.world.inventory.handler.BrewingCraftingHandler;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -25,15 +30,15 @@ import net.minecraftforge.registries.ForgeRegistries;
  *
  */
 
-public class BrewingStandBrewHandler implements ProgressHandler {
+public class BrewingProgressHandler implements ProgressHandler {
 	
 	private final Player player;
-	private final BrewingStandCraftingHandler handler;
+	private final BrewingCraftingHandler handler;
 	private Item input;
 	private int fuel;
 	private int brewTime;
 	
-	public BrewingStandBrewHandler(Player player, BrewingStandCraftingHandler handler) {
+	public BrewingProgressHandler(Player player, BrewingCraftingHandler handler) {
 		this.player = player;
 		this.handler = handler;
 	}
@@ -82,6 +87,9 @@ public class BrewingStandBrewHandler implements ProgressHandler {
 				this.getResultHandler().setStackInSlot(i, BrewingRecipeRegistry.getOutput(this.getResultHandler().getStackInSlot(i), inputStack));
 			}
 			this.onPotionBrewed(this.asList());
+			if (this.player instanceof ServerPlayer player) {
+				this.playSound(player, player.getLevel());
+			}
 			if (inputStack.hasCraftingRemainingItem()) {
 				ItemStack remainingStack = inputStack.getCraftingRemainingItem();
 				inputStack.shrink(1);
@@ -117,6 +125,10 @@ public class BrewingStandBrewHandler implements ProgressHandler {
 		return this.handler.getResultHandler();
 	}
 	
+	private void playSound(ServerPlayer player, ServerLevel level) {
+		player.connection.send(new ClientboundSoundPacket(SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, player.getX(), player.getY(), player.getZ(), 1.0F, level.random.nextFloat() * 0.1F + 0.9F, level.random.nextLong()));
+	}
+	
 	private NonNullList<ItemStack> asList() {
 		NonNullList<ItemStack> stacks = NonNullList.withSize(5, ItemStack.EMPTY);
 		for (int i = 0; i < 3; i++) {
@@ -149,7 +161,8 @@ public class BrewingStandBrewHandler implements ProgressHandler {
 		ForgeEventFactory.onPotionBrewed(stacks);
 	}
 	
-	private void broadcastChanges() {
+	@Override
+	public void broadcastChanges() {
 		if (this.player instanceof ServerPlayer player) {
 			XBackpackNetworkHandler.getChannel().send(PacketDistributor.PLAYER.with(() -> player), new UpdateBrewingStandExtension(this.fuel, this.brewTime));
 		}

@@ -35,14 +35,13 @@ public class XBackpackClientPacketHandler {
 	
 	public static void updateFurnaceExtension(int cookingProgress, int fuelProgress) {
 		if (getExtensionScreen(BackpackExtension.FURNACE.get()) instanceof FurnaceExtensionScreen furnaceExtension) {
-			furnaceExtension.setCookingProgress(cookingProgress);
-			furnaceExtension.setFuelProgress(fuelProgress);
+			furnaceExtension.update(cookingProgress, fuelProgress);
 		}
 	}
 	
 	public static void updateAnvilExtension(int cost) {
 		if (getExtensionScreen(BackpackExtension.ANVIL.get()) instanceof AnvilExtensionScreen anvilExtension) {
-			anvilExtension.setCost(cost);
+			anvilExtension.update(cost);
 		}
 	}
 	

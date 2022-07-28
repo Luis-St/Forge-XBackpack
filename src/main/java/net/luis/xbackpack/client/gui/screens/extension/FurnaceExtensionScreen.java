@@ -32,11 +32,8 @@ public class FurnaceExtensionScreen extends AbstractExtensionScreen {
 		}
 	}
 	
-	public void setCookingProgress(int cookingProgress) {
+	public void update(int cookingProgress, int fuelProgress) {
 		this.cookingProgress = cookingProgress;
-	}
-	
-	public void setFuelProgress(int fuelProgress) {
 		this.fuelProgress = fuelProgress;
 	}
 

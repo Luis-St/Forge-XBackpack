@@ -1,4 +1,4 @@
-package net.luis.xbackpack.world.inventory.handler;
+package net.luis.xbackpack.world.inventory.handler.progress;
 
 import net.minecraft.nbt.CompoundTag;
 
@@ -11,6 +11,8 @@ import net.minecraft.nbt.CompoundTag;
 public interface ProgressHandler {
 	
 	void tick();
+	
+	void broadcastChanges();
 	
 	CompoundTag serialize();
 	

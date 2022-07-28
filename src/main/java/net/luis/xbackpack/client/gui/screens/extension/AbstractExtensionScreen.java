@@ -41,7 +41,7 @@ public abstract class AbstractExtensionScreen {
 		this.extensions = extensions;
 	}
 	
-	public void init(Minecraft minecraft, ItemRenderer itemRenderer, Font font, int imageWidth, int imageHeight, int leftPos, int topPos) {
+	public final void init(Minecraft minecraft, ItemRenderer itemRenderer, Font font, int imageWidth, int imageHeight, int leftPos, int topPos) {
 		this.minecraft = minecraft;
 		this.itemRenderer = itemRenderer;
 		this.font = font;
@@ -49,6 +49,13 @@ public abstract class AbstractExtensionScreen {
 		this.imageHeight = imageHeight;
 		this.leftPos = leftPos;
 		this.topPos = topPos;
+		if (this.minecraft != null) {
+			this.init();
+		}
+	}
+	
+	protected void init() {
+		
 	}
 	
 	protected int getExtensionOffset(BackpackExtension extension) {

@@ -1,6 +1,7 @@
 package net.luis.xbackpack.client.gui.screens.extension;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -9,6 +10,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.luis.xbackpack.client.gui.screens.BackpackScreen;
 import net.luis.xbackpack.world.capability.XBackpackCapabilities;
 import net.luis.xbackpack.world.extension.BackpackExtension;
+import net.luis.xbackpack.world.inventory.handler.EnchantingHandler;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.inventory.EnchantmentNames;
 import net.minecraft.client.player.LocalPlayer;
@@ -17,6 +19,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -31,6 +34,7 @@ public class EnchantmentTableExtensionScreen extends AbstractExtensionScreen {
 	private final Enchantment[] enchantments = new Enchantment[3];
 	private final int[] enchantmentLevels = new int[3];
 	private final int[] enchantingCosts = new int[3];
+	private EnchantingHandler handler;
 	private int enchantmentSeed = 0;
 	
 	public EnchantmentTableExtensionScreen(BackpackScreen screen, List<BackpackExtension> extensions) {
@@ -38,14 +42,15 @@ public class EnchantmentTableExtensionScreen extends AbstractExtensionScreen {
 	}
 	
 	@Override
+	protected void init() {
+		this.handler = this.minecraft.player.getCapability(XBackpackCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new).getEnchantingHandler();
+	}
+	
+	@Override
 	protected void renderAdditional(PoseStack stack, float partialTicks, int mouseX, int mouseY, boolean open) {
 		if (open) {
-			LocalPlayer player = this.minecraft.player;
 			for (int row = 0; row < 3; row++) {
-				this.renderRow(stack, mouseX, mouseY, row, player, this.enchantments[row], this.enchantmentLevels[row], this.enchantingCosts[row]);
-			}
-			for (int row = 0; row < 3; row++) {
-				this.renderTooltip(stack, mouseX, mouseY, row, player, this.enchantments[row], this.enchantmentLevels[row], this.enchantingCosts[row]);
+				this.renderRow(stack, mouseX, mouseY, row, this.minecraft.player, this.enchantments[row], this.enchantmentLevels[row], this.enchantingCosts[row]);
 			}
 		}
 	}
@@ -55,7 +60,7 @@ public class EnchantmentTableExtensionScreen extends AbstractExtensionScreen {
 			int costColor = 0;
 			int enchantmentColor = 0;
 			RenderSystem.setShaderTexture(0, this.getTexture());
-			if ((player.experienceLevel >= enchantingCost || player.getAbilities().instabuild) && this.hasFuel(row)) {
+			if ((player.experienceLevel >= enchantingCost && this.hasFuel(row)) || player.getAbilities().instabuild) {
 				if (this.isHoveringRow(row, mouseX, mouseY)) {
 					this.screen.blit(stack, this.leftPos + this.imageWidth + 47, this.topPos + 97 + row * 19, 136, 38, 78, 19);
 				} else {
@@ -91,6 +96,13 @@ public class EnchantmentTableExtensionScreen extends AbstractExtensionScreen {
 		EnchantmentNames.getInstance().initSeed(this.enchantmentSeed + row);
 		FormattedText enchantmentName = EnchantmentNames.getInstance().getRandomName(this.font, length);
 		this.font.drawWordWrap(enchantmentName, this.leftPos + this.imageWidth + 67, this.topPos + 99 + 19 * row, length, enchantmentColor);
+	}
+	
+	@Override
+	public void renderTooltip(PoseStack stack, int mouseX, int mouseY, Consumer<ItemStack> tooltipRenderer) {
+		for (int row = 0; row < 3; row++) {
+			this.renderTooltip(stack, mouseX, mouseY, row, this.minecraft.player, this.enchantments[row], this.enchantmentLevels[row], this.enchantingCosts[row]);
+		}
 	}
 	
 	private void renderTooltip(PoseStack stack, int mouseX, int mouseY, int row, LocalPlayer player, Enchantment enchantment, int enchantmentLevel, int enchantingCost) {
@@ -146,7 +158,7 @@ public class EnchantmentTableExtensionScreen extends AbstractExtensionScreen {
 	}
 	
 	private int getFuel() {
-		return this.minecraft.player.getCapability(XBackpackCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new).getEnchantingHandler().getStackInSlot(2).getCount();
+		return this.handler.getFuelHandler().getStackInSlot(0).getCount();
 	}
 	
 	private boolean hasFuel(int row) {
