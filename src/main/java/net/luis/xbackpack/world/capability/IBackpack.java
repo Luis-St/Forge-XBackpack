@@ -41,7 +41,7 @@ public interface IBackpack {
 	
 	CraftingHandler getGrindstoneHandler();
 	
-	ItemStackHandler getSmithingHandler();
+	CraftingHandler getSmithingHandler();
 	
 	void tick();
 	

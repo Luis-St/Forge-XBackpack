@@ -36,7 +36,7 @@ public class BackpackHandler implements IBackpack {
 	private final BrewingCraftingHandler brewingHandler = new BrewingCraftingHandler(1, 3);
 	private final BrewingProgressHandler brewHandler;
 	private final CraftingHandler grindstoneHandler = new CraftingHandler(2, 1);
-	private final ItemStackHandler smithingHandler = new ItemStackHandler(3);
+	private final CraftingHandler smithingHandler = new CraftingHandler(2, 1);
 	
 	public BackpackHandler(Player player) {
 		this.player = player;
@@ -105,7 +105,7 @@ public class BackpackHandler implements IBackpack {
 	}
 
 	@Override
-	public ItemStackHandler getSmithingHandler() {
+	public CraftingHandler getSmithingHandler() {
 		return this.smithingHandler;
 	}
 	
@@ -129,7 +129,7 @@ public class BackpackHandler implements IBackpack {
 		tag.put("brewing_handler", this.brewingHandler.serialize());
 		tag.put("brew_handler", this.brewHandler.serialize());
 		tag.put("grindstone_handler", this.grindstoneHandler.serialize());
-		tag.put("smithing_handler", this.smithingHandler.serializeNBT());
+		tag.put("smithing_handler", this.smithingHandler.serialize());
 		return tag;
 	}
 	
@@ -149,7 +149,7 @@ public class BackpackHandler implements IBackpack {
 			this.brewingHandler.deserialize(tag.getCompound("brewing_handler"));
 			this.brewHandler.deserialize(tag.getCompound("brew_handler"));
 			this.grindstoneHandler.deserialize(tag.getCompound("grindstone_handler"));
-			this.smithingHandler.deserializeNBT(tag.getCompound("smithing_handler"));
+			this.smithingHandler.deserialize(tag.getCompound("smithing_handler"));
 		}
 	}
 	

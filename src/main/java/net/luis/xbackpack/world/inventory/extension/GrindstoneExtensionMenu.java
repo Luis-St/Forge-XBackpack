@@ -39,7 +39,12 @@ public class GrindstoneExtensionMenu extends AbstractExtensionMenu {
 		super(menu, player, BackpackExtension.GRINDSTONE.get());
 		this.handler = this.player.getCapability(XBackpackCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new).getGrindstoneHandler();
 	}
-
+	
+	@Override
+	public void open() {
+		this.createResult();
+	}
+	
 	@Override
 	public void addSlots(Consumer<Slot> consumer) {
 		consumer.accept(new ExtensionSlot(this, this.handler.getInputHandler(), 0, 243, 172) {
