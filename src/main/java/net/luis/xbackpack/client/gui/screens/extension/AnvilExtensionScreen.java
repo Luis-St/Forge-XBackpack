@@ -21,10 +21,16 @@ import net.minecraft.network.chat.Component;
 
 public class AnvilExtensionScreen extends AbstractExtensionScreen {
 	
+	private CraftingHandler handler;
 	private int cost;
 	
 	public AnvilExtensionScreen(BackpackScreen screen, List<BackpackExtension> extensions) {
 		super(screen, BackpackExtension.ANVIL.get(), extensions);
+	}
+	
+	@Override
+	protected void init() {
+		this.handler = this.minecraft.player.getCapability(XBackpackCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new).getAnvilHandler();
 	}
 	
 	@Override
@@ -39,15 +45,13 @@ public class AnvilExtensionScreen extends AbstractExtensionScreen {
 	}
 	
 	private boolean shouldRenderCanceled() {
-		CraftingHandler handler = this.minecraft.player.getCapability(XBackpackCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new).getAnvilHandler();
-		if (!handler.getInputHandler().getStackInSlot(0).isEmpty() || !handler.getInputHandler().getStackInSlot(1).isEmpty()) {
-			return handler.getResultHandler().getStackInSlot(0).isEmpty();
+		if (!this.handler.getInputHandler().getStackInSlot(0).isEmpty() || !this.handler.getInputHandler().getStackInSlot(1).isEmpty()) {
+			return this.handler.getResultHandler().getStackInSlot(0).isEmpty();
 		}
 		return false;
 	}
 	
 	private void renderLabels(PoseStack stack) {
-		CraftingHandler handler = this.minecraft.player.getCapability(XBackpackCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new).getAnvilHandler();
 		RenderSystem.disableBlend();
 		if (this.screen.getMenu().getExtensionMenu(this.extension) instanceof AnvilExtensionMenu menu) {
 			if (this.cost > 0) {
@@ -56,7 +60,7 @@ public class AnvilExtensionScreen extends AbstractExtensionScreen {
 				if (this.cost >= 40 && !this.minecraft.player.getAbilities().instabuild) {
 					component = Component.translatable("xbackpack.backpack_extension.anvil.cost", "X");
 					color = 16736352;
-				} else if (handler.getResultHandler().getStackInSlot(0).isEmpty()) {
+				} else if (this.handler.getResultHandler().getStackInSlot(0).isEmpty()) {
 					component = null;
 				} else if (this.minecraft != null) {
 					component = Component.translatable("xbackpack.backpack_extension.anvil.cost", this.cost);

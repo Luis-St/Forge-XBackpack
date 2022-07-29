@@ -18,10 +18,16 @@ import net.minecraftforge.items.SlotItemHandler;
 public class ExtensionSlot extends SlotItemHandler {
 	
 	private final AbstractExtensionMenu extensionMenu;
+	private final boolean sendChanges;
 	
 	public ExtensionSlot(AbstractExtensionMenu extensionMenu, IItemHandler itemHandler, int index, int xPosition, int yPosition) {
+		this(extensionMenu, itemHandler, index, xPosition, yPosition, true);
+	}
+	
+	public ExtensionSlot(AbstractExtensionMenu extensionMenu, IItemHandler itemHandler, int index, int xPosition, int yPosition, boolean sendChanges) {
 		super(itemHandler, index, xPosition, yPosition);
 		this.extensionMenu = extensionMenu;
+		this.sendChanges = sendChanges;
 	}
 	
 	public AbstractExtensionMenu getMenu() {
@@ -35,26 +41,34 @@ public class ExtensionSlot extends SlotItemHandler {
 	@Override
 	public void set(ItemStack stack) {
 		super.set(stack);
-		this.extensionMenu.slotsChanged();
+		if (sendChanges) {
+			this.extensionMenu.slotsChanged();
+		}
 	}
 	
 	@Override
 	public void initialize(ItemStack stack) {
 		super.initialize(stack);
-		this.extensionMenu.slotsChanged();
+		if (sendChanges) {
+			this.extensionMenu.slotsChanged();
+		}
 	}
 	
 	@Override
 	public Optional<ItemStack> tryRemove(int minAmount, int maxAmount, Player player) {
 		Optional<ItemStack> optional = super.tryRemove(minAmount, maxAmount, player);
-		this.extensionMenu.slotsChanged();
+		if (sendChanges) {
+			this.extensionMenu.slotsChanged();
+		}
 		return optional;
 	}
 	
 	@Override
 	public ItemStack safeInsert(ItemStack stack, int count) {
 		ItemStack remainingStack = super.safeInsert(stack, count);
-		this.extensionMenu.slotsChanged();
+		if (sendChanges) {
+			this.extensionMenu.slotsChanged();
+		}
 		return remainingStack;
 	}
 	

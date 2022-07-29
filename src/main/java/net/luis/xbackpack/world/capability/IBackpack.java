@@ -39,7 +39,7 @@ public interface IBackpack {
 	
 	ProgressHandler getBrewHandler();
 	
-	ItemStackHandler getGrindstoneHandler();
+	CraftingHandler getGrindstoneHandler();
 	
 	ItemStackHandler getSmithingHandler();
 	
