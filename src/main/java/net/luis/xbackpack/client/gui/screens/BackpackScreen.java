@@ -35,8 +35,10 @@ import net.luis.xbackpack.world.inventory.extension.slot.ExtensionResultSlot;
 import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
 import net.luis.xbackpack.world.inventory.slot.MoveableSlot;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
@@ -242,12 +244,40 @@ public class BackpackScreen extends AbstractScrollableContainerScreen<BackpackMe
 	}
 	
 	private void updateExtension(BackpackExtension extension) {
+		this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 		if (this.extension == extension || extension == null) {
 			this.extension = BackpackExtension.NO.get();
 		} else {
 			this.extension = extension;
 		}
 		XBackpackNetworkHandler.getChannel().sendToServer(new UpdateBackpackExtension(this.extension));
+	}
+	
+	@Override
+	protected boolean hasClickedOutside(double mouseX, double mouseY, int leftPos, int topPos, int button) {
+		int buttonOffset = 21;
+		if (this.extension == BackpackExtension.NO.get()) {
+			this.imageWidth += buttonOffset;
+			boolean flag = super.hasClickedOutside(mouseX, mouseY, leftPos, topPos, button);
+			this.imageWidth -= buttonOffset;
+			return flag;
+		} else if (leftPos > mouseX)  {
+			return true;
+		} else if (topPos > mouseY) {
+			return true;
+		} else if (mouseY > topPos + this.imageHeight && leftPos + this.imageWidth > mouseX) {
+			return true;
+		} else if (mouseX > leftPos + this.imageWidth) {
+			int extensionOffset = this.getExtensionOffset(this.extension);
+			if (topPos + extensionOffset > mouseY) {
+				return true;
+			} else if (mouseX > leftPos + this.imageWidth + this.extension.imageWidth()) {
+				return true;
+			} else if (mouseY > topPos + extensionOffset + this.extension.imageHeight()) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override
