@@ -7,7 +7,7 @@ import net.luis.xbackpack.world.capability.XBackpackCapabilities;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.inventory.BackpackMenu;
 import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
-import net.luis.xbackpack.world.inventory.handler.BrewingCraftingHandler;
+import net.luis.xbackpack.world.inventory.handler.BrewingHandler;
 import net.luis.xbackpack.world.inventory.handler.progress.ProgressHandler;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.server.level.ServerPlayer;
@@ -28,7 +28,7 @@ import net.minecraftforge.event.ForgeEventFactory;
 
 public class BrewingStandExtensionMenu extends AbstractExtensionMenu {
 	
-	private final BrewingCraftingHandler handler;
+	private final BrewingHandler handler;
 	private final ProgressHandler progressHandler;
 	
 	public BrewingStandExtensionMenu(BackpackMenu menu, Player player) {
@@ -85,5 +85,5 @@ public class BrewingStandExtensionMenu extends AbstractExtensionMenu {
 			CriteriaTriggers.BREWED_POTION.trigger(serverPlayer, potion);
 		}
 	}
-
+	
 }

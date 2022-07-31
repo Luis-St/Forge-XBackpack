@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.world.capability.XBackpackCapabilities;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.inventory.BackpackMenu;
@@ -23,7 +22,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.ForgeRegistries;
 
 /**
  * 
@@ -120,17 +118,14 @@ public class GrindstoneExtensionMenu extends AbstractExtensionMenu {
 		boolean hasInput = !topStack.isEmpty() || !bottomStack.isEmpty();
 		boolean hasInputs = !topStack.isEmpty() && !bottomStack.isEmpty();
 		if (!hasInput) {
-			XBackpack.LOGGER.debug("no input");
 			this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);
 		} else {
 			boolean hasEnchantedBook = !topStack.isEmpty() && !topStack.is(Items.ENCHANTED_BOOK) && !topStack.isEnchanted() || !bottomStack.isEmpty() && !bottomStack.is(Items.ENCHANTED_BOOK) && !bottomStack.isEnchanted();
 			if (topStack.getCount() > 1 || bottomStack.getCount() > 1) {
-				XBackpack.LOGGER.debug("count of stacks > 1");
 				this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);
 				this.menu.broadcastChanges();
 				return;
 			} else if (!hasInputs && hasEnchantedBook) {
-				XBackpack.LOGGER.debug("single input and enchanted book");
 				this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);
 				this.menu.broadcastChanges();
 				return;
@@ -139,9 +134,7 @@ public class GrindstoneExtensionMenu extends AbstractExtensionMenu {
 			int damageValue;
 			ItemStack resultStack;
 			if (hasInputs) {
-				XBackpack.LOGGER.debug("has input stacks");
 				if (!topStack.is(bottomStack.getItem())) {
-					XBackpack.LOGGER.debug("top bottom not same item");
 					this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);
 					this.menu.broadcastChanges();
 					return;
@@ -152,12 +145,10 @@ public class GrindstoneExtensionMenu extends AbstractExtensionMenu {
 				damageValue = Math.max(topStack.getMaxDamage() - i1, 0);
 				resultStack = this.mergeEnchants(topStack, bottomStack);
 				if (!resultStack.isRepairable()) {
-					XBackpack.LOGGER.debug("not repairable");
 					damageValue = topStack.getDamageValue();
 				}
 				if (!resultStack.isDamageableItem() || !resultStack.isRepairable()) {
 					if (!ItemStack.matches(topStack, bottomStack)) {
-						XBackpack.LOGGER.debug("top bottom not match");
 						this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);
 						this.menu.broadcastChanges();
 						return;
@@ -165,7 +156,6 @@ public class GrindstoneExtensionMenu extends AbstractExtensionMenu {
 					count = 2;
 				}
 			} else {
-				XBackpack.LOGGER.debug("single input");
 				boolean topEmpty = !topStack.isEmpty();
 				damageValue = topEmpty ? topStack.getDamageValue() : bottomStack.getDamageValue();
 				resultStack = topEmpty ? topStack : bottomStack;
@@ -202,7 +192,6 @@ public class GrindstoneExtensionMenu extends AbstractExtensionMenu {
 			return entry.getKey().isCurse();
 		}).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 		EnchantmentHelper.setEnchantments(enchantments, resultStack);
-		XBackpack.LOGGER.debug("result enchanted {} -> {}", resultStack.isEnchanted(), EnchantmentHelper.getEnchantments(resultStack).keySet().stream().map(ForgeRegistries.ENCHANTMENTS::getKey).toList());
 		resultStack.setRepairCost(0);
 		if (resultStack.is(Items.ENCHANTED_BOOK) && enchantments.size() == 0) {
 			resultStack = new ItemStack(Items.BOOK);

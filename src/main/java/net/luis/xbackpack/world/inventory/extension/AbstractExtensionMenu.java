@@ -32,6 +32,10 @@ public abstract class AbstractExtensionMenu {
 	
 	public abstract void addSlots(Consumer<Slot> consumer);
 	
+	public boolean requiresTickUpdate() {
+		return false;
+	}
+	
 	public void slotsChanged(Container container) {
 		
 	}

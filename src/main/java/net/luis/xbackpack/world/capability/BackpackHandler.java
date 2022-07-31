@@ -2,7 +2,7 @@ package net.luis.xbackpack.world.capability;
 
 import net.luis.xbackpack.BackpackConstans;
 import net.luis.xbackpack.XBackpack;
-import net.luis.xbackpack.world.inventory.handler.BrewingCraftingHandler;
+import net.luis.xbackpack.world.inventory.handler.BrewingHandler;
 import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
 import net.luis.xbackpack.world.inventory.handler.EnchantingHandler;
 import net.luis.xbackpack.world.inventory.handler.SmeltingHandler;
@@ -33,7 +33,7 @@ public class BackpackHandler implements IBackpack {
 	private final CraftingHandler anvilHandler = new CraftingHandler(2, 1);
 	private final EnchantingHandler enchantingHandler = new EnchantingHandler(1, 1, 1);
 	private final CraftingHandler stonecutterHandler = new CraftingHandler(1, 1);
-	private final BrewingCraftingHandler brewingHandler = new BrewingCraftingHandler(1, 3);
+	private final BrewingHandler brewingHandler = new BrewingHandler(1, 3);
 	private final BrewingProgressHandler brewHandler;
 	private final CraftingHandler grindstoneHandler = new CraftingHandler(2, 1);
 	private final CraftingHandler smithingHandler = new CraftingHandler(2, 1);
@@ -90,7 +90,7 @@ public class BackpackHandler implements IBackpack {
 	}
 
 	@Override
-	public BrewingCraftingHandler getBrewingHandler() {
+	public BrewingHandler getBrewingHandler() {
 		return this.brewingHandler;
 	}
 	

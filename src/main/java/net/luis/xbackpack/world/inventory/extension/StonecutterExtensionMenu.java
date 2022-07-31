@@ -87,6 +87,16 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	@Override
+	public boolean requiresTickUpdate() {
+		ItemStack input = this.handler.getInputHandler().getStackInSlot(0);
+		ItemStack result = this.handler.getResultHandler().getStackInSlot(0);
+		if (result.isEmpty() && !this.recipes.isEmpty()) {
+			return true;
+		}
+		return !input.isEmpty() && this.recipes.isEmpty();
+	}
+	
+	@Override
 	public void slotsChanged() {
 		ItemStack stack = this.handler.getInputHandler().getStackInSlot(0);
 		if (!stack.is(this.input.getItem())) {

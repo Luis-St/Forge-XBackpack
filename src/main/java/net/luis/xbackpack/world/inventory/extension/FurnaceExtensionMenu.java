@@ -49,20 +49,20 @@ public class FurnaceExtensionMenu extends AbstractExtensionMenu {
 			consumer.accept(new ExtensionSlot(this, this.handler.getInputStorageHandler(), i, 225 + i * 18, 49) {
 				@Override
 				public boolean mayPlace(ItemStack stack) {
-					return FurnaceExtensionMenu.this.canSmelt(stack);
+					return FurnaceExtensionMenu.canSmelt(FurnaceExtensionMenu.this.player, stack);
 				}
 			});
 		}
 		consumer.accept(new ExtensionSlot(this, this.handler.getInputHandler(), 0, 225, 71) {
 			@Override
 			public boolean mayPlace(ItemStack stack) {
-				return FurnaceExtensionMenu.this.canSmelt(stack);
+				return FurnaceExtensionMenu.canSmelt(FurnaceExtensionMenu.this.player, stack);
 			}
 		});
 		consumer.accept(new ExtensionSlot(this, this.handler.getFuelHandler(), 0, 225, 107) {
 			@Override
 			public boolean mayPlace(ItemStack stack) {
-				return FurnaceExtensionMenu.this.isFuel(stack) || stack.is(Items.BUCKET);
+				return FurnaceExtensionMenu.isFuel(stack) || stack.is(Items.BUCKET);
 			}
 			
 			@Override
@@ -82,16 +82,16 @@ public class FurnaceExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private boolean canSmelt(ItemStack stack) {
+	public static boolean canSmelt(Player player, ItemStack stack) {
 		for (RecipeType<? extends AbstractCookingRecipe> recipeType : BackpackConstans.FURNACE_RECIPE_TYPES) {
-			if (this.player.level.getRecipeManager().getRecipeFor((RecipeType<AbstractCookingRecipe>) recipeType, new SimpleContainer(stack), this.player.level).isPresent()) {
+			if (player.level.getRecipeManager().getRecipeFor((RecipeType<AbstractCookingRecipe>) recipeType, new SimpleContainer(stack), player.level).isPresent()) {
 				return true;
 			}
 		}
 		return false;
 	}
 	
-	private boolean isFuel(ItemStack stack) {
+	public static boolean isFuel(ItemStack stack) {
 		for (RecipeType<? extends AbstractCookingRecipe> recipeType : BackpackConstans.FURNACE_RECIPE_TYPES) {
 			if (ForgeHooks.getBurnTime(stack, recipeType) > 0) {
 				return true;

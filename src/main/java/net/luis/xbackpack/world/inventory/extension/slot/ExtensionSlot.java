@@ -41,7 +41,7 @@ public class ExtensionSlot extends SlotItemHandler {
 	@Override
 	public void set(ItemStack stack) {
 		super.set(stack);
-		if (sendChanges) {
+		if (this.sendChanges) {
 			this.extensionMenu.slotsChanged();
 		}
 	}
@@ -49,7 +49,7 @@ public class ExtensionSlot extends SlotItemHandler {
 	@Override
 	public void initialize(ItemStack stack) {
 		super.initialize(stack);
-		if (sendChanges) {
+		if (this.sendChanges) {
 			this.extensionMenu.slotsChanged();
 		}
 	}
@@ -57,7 +57,7 @@ public class ExtensionSlot extends SlotItemHandler {
 	@Override
 	public Optional<ItemStack> tryRemove(int minAmount, int maxAmount, Player player) {
 		Optional<ItemStack> optional = super.tryRemove(minAmount, maxAmount, player);
-		if (sendChanges) {
+		if (this.sendChanges) {
 			this.extensionMenu.slotsChanged();
 		}
 		return optional;
@@ -66,7 +66,7 @@ public class ExtensionSlot extends SlotItemHandler {
 	@Override
 	public ItemStack safeInsert(ItemStack stack, int count) {
 		ItemStack remainingStack = super.safeInsert(stack, count);
-		if (sendChanges) {
+		if (this.sendChanges) {
 			this.extensionMenu.slotsChanged();
 		}
 		return remainingStack;

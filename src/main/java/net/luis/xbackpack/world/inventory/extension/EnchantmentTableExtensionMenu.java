@@ -76,11 +76,6 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 			public boolean mayPlace(ItemStack stack) {
 				return stack.is(Tags.Items.BOOKSHELVES) || stack.getItem() instanceof BookItem;
 			}
-			
-			@Override
-			public int getMaxStackSize(ItemStack stack) {
-				return EnchantmentTableExtensionMenu.this.getMaxStackSize(stack);
-			}
 		});
 		consumer.accept(new ExtensionSlot(this, this.handler.getInputHandler(), 0, 225, 130) {
 			@Override
@@ -99,15 +94,6 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 				return stack.is(Tags.Items.ENCHANTING_FUELS);
 			}
 		});
-	}
-	
-	private int getMaxStackSize(ItemStack stack) {
-		if (stack.is(Tags.Items.BOOKSHELVES)) {
-			return 15;
-		} else if (stack.getItem() instanceof BookItem) {
-			return 45;
-		}
-		return 0;
 	}
 	
 	@Override
