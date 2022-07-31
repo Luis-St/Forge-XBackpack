@@ -9,8 +9,10 @@ import net.luis.xbackpack.client.gui.screens.extension.BrewingStandExtensionScre
 import net.luis.xbackpack.client.gui.screens.extension.EnchantmentTableExtensionScreen;
 import net.luis.xbackpack.client.gui.screens.extension.FurnaceExtensionScreen;
 import net.luis.xbackpack.client.gui.screens.extension.StonecutterExtensionScreen;
+import net.luis.xbackpack.world.capability.XBackpackCapabilities;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.minecraft.client.Minecraft;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 
 /**
@@ -20,6 +22,11 @@ import net.minecraft.resources.ResourceLocation;
  */
 
 public class XBackpackClientPacketHandler {
+	
+	public static void updateBackpack(CompoundTag tag) {
+		Minecraft minecraft = Minecraft.getInstance();
+		minecraft.player.getCapability(XBackpackCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new).deserialize(tag);
+	}
 	
 	@Nullable
 	private static AbstractExtensionScreen getExtensionScreen(BackpackExtension extension) {

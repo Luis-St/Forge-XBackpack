@@ -36,9 +36,11 @@ public class BackpackOpen {
 	public void handle(Supplier<Context> context) {
 		ServerPlayer player = context.get().getSender();
 		context.get().enqueueWork(() -> {
-			NetworkHooks.openScreen(player, new SimpleMenuProvider((id, inventory, playerIn) -> {
-				return new BackpackMenu(id, inventory);
-			}, CONTAINER_NAME));
+			if (player.containerMenu == player.inventoryMenu) {
+				NetworkHooks.openScreen(player, new SimpleMenuProvider((id, inventory, playerIn) -> {
+					return new BackpackMenu(id, inventory);
+				}, CONTAINER_NAME));
+			}
 		});
 	}
 	

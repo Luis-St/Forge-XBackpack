@@ -1,4 +1,4 @@
-package net.luis.xbackpack.event.player;
+package net.luis.xbackpack.event.entity.player;
 
 import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.world.capability.IBackpack;

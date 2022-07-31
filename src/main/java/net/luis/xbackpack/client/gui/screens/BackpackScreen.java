@@ -11,6 +11,8 @@ import static net.luis.xbackpack.world.extension.BackpackExtension.STONECUTTER;
 
 import java.util.List;
 
+import org.lwjgl.glfw.GLFW;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;

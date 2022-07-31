@@ -172,5 +172,17 @@ public class BackpackHandler implements IBackpack {
 			}
 		}
 	}
+	
+	@Override
+	public CompoundTag serializeNetwork() {
+		CompoundTag tag = new CompoundTag();
+		tag.put("tool_handler", this.toolHandler.serializeNBT());
+		return tag;
+	}
+
+	@Override
+	public void deserializeNetwork(CompoundTag tag) {
+		this.toolHandler.deserializeNBT(tag.getCompound("tool_handler"));
+	}
 
 }

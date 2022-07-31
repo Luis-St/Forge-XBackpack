@@ -2,6 +2,7 @@ package net.luis.xbackpack.network;
 
 import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.network.packet.BackpackOpen;
+import net.luis.xbackpack.network.packet.UpdateBackpack;
 import net.luis.xbackpack.network.packet.extension.UpdateAnvilExtension;
 import net.luis.xbackpack.network.packet.extension.UpdateBackpackExtension;
 import net.luis.xbackpack.network.packet.extension.UpdateBrewingStandExtension;
@@ -27,7 +28,7 @@ import net.minecraftforge.network.simple.SimpleChannel;
 
 public class XBackpackNetworkHandler {
 	
-	private static final String VERSION = "2";
+	private static final String VERSION = "3";
 	
 	private static int id = 0;
 	
@@ -36,6 +37,7 @@ public class XBackpackNetworkHandler {
 	public static void init() {
 		simpleChannel = NetworkRegistry.newSimpleChannel(new ResourceLocation(XBackpack.MOD_ID, "simple_chnanel"), () -> VERSION, VERSION::equals, VERSION::equals);
 		simpleChannel.messageBuilder(BackpackOpen.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(BackpackOpen::encode).decoder(BackpackOpen::new).consumerMainThread(BackpackOpen::handle).add();
+		simpleChannel.messageBuilder(UpdateBackpack.class, id++, NetworkDirection.PLAY_TO_CLIENT).encoder(UpdateBackpack::encode).decoder(UpdateBackpack::new).consumerMainThread(UpdateBackpack::handle).add();
 		simpleChannel.messageBuilder(BackpackNextTool.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(BackpackNextTool::encode).decoder(BackpackNextTool::new).consumerMainThread(BackpackNextTool::handle).add();
 		simpleChannel.messageBuilder(BackpackToolTop.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(BackpackToolTop::encode).decoder(BackpackToolTop::new).consumerMainThread(BackpackToolTop::handle).add();
 		simpleChannel.messageBuilder(BackpackToolMid.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(BackpackToolMid::encode).decoder(BackpackToolMid::new).consumerMainThread(BackpackToolMid::handle).add();

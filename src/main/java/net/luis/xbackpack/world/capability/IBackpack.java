@@ -49,4 +49,8 @@ public interface IBackpack {
 	
 	void deserialize(CompoundTag tag);
 	
+	CompoundTag serializeNetwork();
+	
+	void deserializeNetwork(CompoundTag tag);
+	
 }
