@@ -4,7 +4,7 @@ import java.util.function.Supplier;
 
 import net.luis.xbackpack.BackpackConstans;
 import net.luis.xbackpack.world.capability.IBackpack;
-import net.luis.xbackpack.world.capability.XBackpackCapabilities;
+import net.luis.xbackpack.world.capability.XBCapabilities;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -34,7 +34,7 @@ public class BackpackToolMid {
 	public void handle(Supplier<Context> context) {
 		ServerPlayer player = context.get().getSender();
 		context.get().enqueueWork(() -> {
-			IBackpack backpack = player.getCapability(XBackpackCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new);
+			IBackpack backpack = player.getCapability(XBCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new);
 			ItemStack main = player.getMainHandItem().copy();
 			ItemStack down = backpack.getToolHandler().getStackInSlot(1).copy();
 			if (BackpackConstans.VALID_TOOL_SLOT_ITEMS.contains(main.getItem())) {

@@ -27,7 +27,7 @@ import net.luis.xbackpack.client.gui.screens.extension.FurnaceExtensionScreen;
 import net.luis.xbackpack.client.gui.screens.extension.GrindstoneExtensionScreen;
 import net.luis.xbackpack.client.gui.screens.extension.SmithingTableExtensionScreen;
 import net.luis.xbackpack.client.gui.screens.extension.StonecutterExtensionScreen;
-import net.luis.xbackpack.network.XBackpackNetworkHandler;
+import net.luis.xbackpack.network.XBNetworkHandler;
 import net.luis.xbackpack.network.packet.extension.UpdateBackpackExtension;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.inventory.BackpackMenu;
@@ -250,7 +250,7 @@ public class BackpackScreen extends AbstractScrollableContainerScreen<BackpackMe
 		} else {
 			this.extension = extension;
 		}
-		XBackpackNetworkHandler.getChannel().sendToServer(new UpdateBackpackExtension(this.extension));
+		XBNetworkHandler.getChannel().sendToServer(new UpdateBackpackExtension(this.extension));
 	}
 	
 	@Override

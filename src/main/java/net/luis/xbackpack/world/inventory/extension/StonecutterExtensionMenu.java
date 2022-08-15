@@ -6,9 +6,9 @@ import java.util.function.Consumer;
 
 import com.google.common.collect.Lists;
 
-import net.luis.xbackpack.network.XBackpackNetworkHandler;
+import net.luis.xbackpack.network.XBNetworkHandler;
 import net.luis.xbackpack.network.packet.extension.UpdateStonecutterExtension;
-import net.luis.xbackpack.world.capability.XBackpackCapabilities;
+import net.luis.xbackpack.world.capability.XBCapabilities;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.inventory.BackpackMenu;
 import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
@@ -42,7 +42,7 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 	
 	public StonecutterExtensionMenu(BackpackMenu menu, Player player) {
 		super(menu, player, BackpackExtension.STONECUTTER.get());
-		this.handler = player.getCapability(XBackpackCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new).getStonecutterHandler();
+		this.handler = player.getCapability(XBCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new).getStonecutterHandler();
 	}
 	
 	@Override
@@ -103,7 +103,7 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 			this.input = stack.copy();
 			this.setupRecipes(stack);
 		} else if (this.player instanceof ServerPlayer player) {
-			XBackpackNetworkHandler.getChannel().send(PacketDistributor.PLAYER.with(() -> player), new UpdateStonecutterExtension(false));
+			XBNetworkHandler.getChannel().send(PacketDistributor.PLAYER.with(() -> player), new UpdateStonecutterExtension(false));
 		}
 	}
 	
@@ -113,7 +113,7 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 		this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);
 		this.recipes.addAll(this.player.level.getRecipeManager().getRecipesFor(RecipeType.STONECUTTING, new SimpleContainer(stack), this.player.level));
 		if (this.player instanceof ServerPlayer player) {
-			XBackpackNetworkHandler.getChannel().send(PacketDistributor.PLAYER.with(() -> player), new UpdateStonecutterExtension(true));
+			XBNetworkHandler.getChannel().send(PacketDistributor.PLAYER.with(() -> player), new UpdateStonecutterExtension(true));
 		}
 	}
 	

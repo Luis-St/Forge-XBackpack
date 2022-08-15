@@ -6,7 +6,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.luis.xbackpack.client.gui.screens.BackpackScreen;
-import net.luis.xbackpack.world.capability.XBackpackCapabilities;
+import net.luis.xbackpack.world.capability.XBCapabilities;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
 import net.minecraftforge.items.ItemStackHandler;
@@ -27,7 +27,7 @@ public class GrindstoneExtensionScreen extends AbstractExtensionScreen {
 	
 	@Override
 	protected void init() {
-		this.handler = this.minecraft.player.getCapability(XBackpackCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new).getGrindstoneHandler();
+		this.handler = this.minecraft.player.getCapability(XBCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new).getGrindstoneHandler();
 	}
 	
 	@Override

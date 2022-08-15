@@ -2,7 +2,7 @@ package net.luis.xbackpack.network.packet.extension;
 
 import java.util.function.Supplier;
 
-import net.luis.xbackpack.client.XBackpackClientPacketHandler;
+import net.luis.xbackpack.client.XBClientPacketHandler;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
@@ -31,7 +31,7 @@ public class UpdateBrewingStandExtension {
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-				XBackpackClientPacketHandler.updateBrewingStandExtension(this.fuel, this.brewTime);
+				XBClientPacketHandler.updateBrewingStandExtension(this.fuel, this.brewTime);
 			});
 		});
 	}

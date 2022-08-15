@@ -26,7 +26,7 @@ import net.minecraftforge.network.simple.SimpleChannel;
  *
  */
 
-public class XBackpackNetworkHandler {
+public class XBNetworkHandler {
 	
 	private static final String VERSION = "3";
 	
@@ -34,7 +34,7 @@ public class XBackpackNetworkHandler {
 	
 	private static SimpleChannel simpleChannel;
 	
-	public static void init() {
+	public static void register() {
 		simpleChannel = NetworkRegistry.newSimpleChannel(new ResourceLocation(XBackpack.MOD_ID, "simple_chnanel"), () -> VERSION, VERSION::equals, VERSION::equals);
 		simpleChannel.messageBuilder(BackpackOpen.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(BackpackOpen::encode).decoder(BackpackOpen::new).consumerMainThread(BackpackOpen::handle).add();
 		simpleChannel.messageBuilder(UpdateBackpack.class, id++, NetworkDirection.PLAY_TO_CLIENT).encoder(UpdateBackpack::encode).decoder(UpdateBackpack::new).consumerMainThread(UpdateBackpack::handle).add();

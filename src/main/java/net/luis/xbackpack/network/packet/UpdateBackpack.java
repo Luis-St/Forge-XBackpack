@@ -2,7 +2,7 @@ package net.luis.xbackpack.network.packet;
 
 import java.util.function.Supplier;
 
-import net.luis.xbackpack.client.XBackpackClientPacketHandler;
+import net.luis.xbackpack.client.XBClientPacketHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent.Context;
@@ -31,7 +31,7 @@ public class UpdateBackpack {
 	
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
-			XBackpackClientPacketHandler.updateBackpack(this.tag);
+			XBClientPacketHandler.updateBackpack(this.tag);
 		});
 	}
 	

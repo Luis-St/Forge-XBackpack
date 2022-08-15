@@ -8,7 +8,7 @@ import com.google.common.collect.Lists;
 import net.luis.xbackpack.BackpackConstans;
 import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.world.capability.IBackpack;
-import net.luis.xbackpack.world.capability.XBackpackCapabilities;
+import net.luis.xbackpack.world.capability.XBCapabilities;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.inventory.extension.AbstractExtensionMenu;
 import net.luis.xbackpack.world.inventory.extension.AnvilExtensionMenu;
@@ -58,9 +58,9 @@ public class BackpackMenu extends AbstractContainerMenu implements ExtensionMenu
 	}
 	
 	public BackpackMenu(int id, Inventory inventory) {
-		super(XBackpackMenuTypes.BACKPACK_MENU.get(), id);
+		super(XBMenuTypes.BACKPACK_MENU.get(), id);
 		Player player = inventory.player;
-		IBackpack backpack = player.getCapability(XBackpackCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new);
+		IBackpack backpack = player.getCapability(XBCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new);
 		ItemStackHandler handler = backpack.getBackpackHandler();
 		for (int i = 0; i < handler.getSlots() / 9; i++) {
 			for (int j = 0; j < 9; j++) {
@@ -376,7 +376,7 @@ public class BackpackMenu extends AbstractContainerMenu implements ExtensionMenu
 	}
 	
 	private boolean canQuickMoveBook(Player player) {
-		EnchantingHandler handler = player.getCapability(XBackpackCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new).getEnchantingHandler();
+		EnchantingHandler handler = player.getCapability(XBCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new).getEnchantingHandler();
 		if (!handler.getInputHandler().getStackInSlot(0).isEmpty()) {
 			ItemStack stack = handler.getPowerHandler().getStackInSlot(0);
 			return stack.isEmpty() || (stack.is(Items.BOOK) && stack.getMaxStackSize() > stack.getCount());
@@ -385,7 +385,7 @@ public class BackpackMenu extends AbstractContainerMenu implements ExtensionMenu
 	}
 	
 	private boolean canQuickMovePowder(Player player) {
-		BrewingHandler handler = player.getCapability(XBackpackCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new).getBrewingHandler();
+		BrewingHandler handler = player.getCapability(XBCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new).getBrewingHandler();
 		ItemStack stack = handler.getFuelHandler().getStackInSlot(0);
 		return stack.isEmpty() || (stack.is(Items.BLAZE_POWDER) && stack.getMaxStackSize() > stack.getCount());
 	}

@@ -1,7 +1,7 @@
 package net.luis.xbackpack.event.client;
 
 import net.luis.xbackpack.XBackpack;
-import net.luis.xbackpack.client.XBackpackKeyMappings;
+import net.luis.xbackpack.client.XBKeyMappings;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -19,11 +19,11 @@ public class OnRegisterKeyMappingsEvent {
 	
 	@SubscribeEvent
 	public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
-		event.register(XBackpackKeyMappings.BACKPACK_OPEN);
-		event.register(XBackpackKeyMappings.BACKPACK_NEXT);
-		event.register(XBackpackKeyMappings.BACKPACK_SLOT_TOP);
-		event.register(XBackpackKeyMappings.BACKPACK_SLOT_MID);
-		event.register(XBackpackKeyMappings.BACKPACK_SLOT_DOWN);
+		event.register(XBKeyMappings.BACKPACK_OPEN);
+		event.register(XBKeyMappings.BACKPACK_NEXT);
+		event.register(XBKeyMappings.BACKPACK_SLOT_TOP);
+		event.register(XBKeyMappings.BACKPACK_SLOT_MID);
+		event.register(XBKeyMappings.BACKPACK_SLOT_DOWN);
 	}
 	
 }

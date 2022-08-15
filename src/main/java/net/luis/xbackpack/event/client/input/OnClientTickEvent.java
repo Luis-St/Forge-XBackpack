@@ -1,8 +1,8 @@
 package net.luis.xbackpack.event.client.input;
 
 import net.luis.xbackpack.XBackpack;
-import net.luis.xbackpack.client.XBackpackKeyMappings;
-import net.luis.xbackpack.network.XBackpackNetworkHandler;
+import net.luis.xbackpack.client.XBKeyMappings;
+import net.luis.xbackpack.network.XBNetworkHandler;
 import net.luis.xbackpack.network.packet.BackpackOpen;
 import net.luis.xbackpack.network.packet.tool.BackpackNextTool;
 import net.luis.xbackpack.network.packet.tool.BackpackToolDown;
@@ -29,20 +29,20 @@ public class OnClientTickEvent {
 	public static void clientTick(TickEvent.ClientTickEvent event) {
 		if (event.phase == Phase.START) {
 			if (0 >= lastPacket) {
-				if (XBackpackKeyMappings.BACKPACK_OPEN.isDown()) {
-					XBackpackNetworkHandler.getChannel().sendToServer(new BackpackOpen());
+				if (XBKeyMappings.BACKPACK_OPEN.isDown()) {
+					XBNetworkHandler.getChannel().sendToServer(new BackpackOpen());
 					lastPacket = 4;
-				} else if (XBackpackKeyMappings.BACKPACK_NEXT.isDown()) {
-					XBackpackNetworkHandler.getChannel().sendToServer(new BackpackNextTool());
+				} else if (XBKeyMappings.BACKPACK_NEXT.isDown()) {
+					XBNetworkHandler.getChannel().sendToServer(new BackpackNextTool());
 					lastPacket = 4;
-				} else if (XBackpackKeyMappings.BACKPACK_SLOT_TOP.isDown()) {
-					XBackpackNetworkHandler.getChannel().sendToServer(new BackpackToolTop());
+				} else if (XBKeyMappings.BACKPACK_SLOT_TOP.isDown()) {
+					XBNetworkHandler.getChannel().sendToServer(new BackpackToolTop());
 					lastPacket = 4;
-				} else if (XBackpackKeyMappings.BACKPACK_SLOT_MID.isDown()) {
-					XBackpackNetworkHandler.getChannel().sendToServer(new BackpackToolMid());
+				} else if (XBKeyMappings.BACKPACK_SLOT_MID.isDown()) {
+					XBNetworkHandler.getChannel().sendToServer(new BackpackToolMid());
 					lastPacket = 4;
-				} else if (XBackpackKeyMappings.BACKPACK_SLOT_DOWN.isDown()) {
-					XBackpackNetworkHandler.getChannel().sendToServer(new BackpackToolDown());
+				} else if (XBKeyMappings.BACKPACK_SLOT_DOWN.isDown()) {
+					XBNetworkHandler.getChannel().sendToServer(new BackpackToolDown());
 					lastPacket = 4;
 				}
 			} else {

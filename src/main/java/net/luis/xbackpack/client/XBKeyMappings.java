@@ -11,7 +11,7 @@ import net.minecraft.client.KeyMapping;
  *
  */
 
-public class XBackpackKeyMappings {
+public class XBKeyMappings {
 	
 	public static final String BACKPACK_CATEGORY = XBackpack.MOD_ID + ".key.categories.backpack";
 	

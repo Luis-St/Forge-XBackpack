@@ -3,7 +3,7 @@ package net.luis.xbackpack.world.inventory.handler.progress;
 import java.util.List;
 import java.util.Optional;
 
-import net.luis.xbackpack.network.XBackpackNetworkHandler;
+import net.luis.xbackpack.network.XBNetworkHandler;
 import net.luis.xbackpack.network.packet.extension.UpdateFurnaceExtension;
 import net.luis.xbackpack.world.inventory.handler.SmeltingHandler;
 import net.minecraft.nbt.CompoundTag;
@@ -270,7 +270,7 @@ public class SmeltingProgressHandler implements ProgressHandler {
 	@Override
 	public void broadcastChanges() {
 		if (this.player instanceof ServerPlayer player) {
-			XBackpackNetworkHandler.getChannel().send(PacketDistributor.PLAYER.with(() -> player), new UpdateFurnaceExtension(this.getCookingProgress(), this.getFuelProgress()));
+			XBNetworkHandler.getChannel().send(PacketDistributor.PLAYER.with(() -> player), new UpdateFurnaceExtension(this.getCookingProgress(), this.getFuelProgress()));
 		}
 	}
 	

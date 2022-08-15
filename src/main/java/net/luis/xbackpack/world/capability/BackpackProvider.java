@@ -27,7 +27,7 @@ public class BackpackProvider implements ICapabilitySerializable<CompoundTag> {
 	
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction side) {
-		return XBackpackCapabilities.BACKPACK.orEmpty(capability, this.optional);
+		return XBCapabilities.BACKPACK.orEmpty(capability, this.optional);
 	}
 	
 	@Override

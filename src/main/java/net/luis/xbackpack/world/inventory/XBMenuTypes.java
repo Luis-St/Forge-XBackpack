@@ -13,7 +13,7 @@ import net.minecraftforge.registries.RegistryObject;
  * 
  */
 
-public class XBackpackMenuTypes {
+public class XBMenuTypes {
 	
 	public static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(ForgeRegistries.MENU_TYPES, XBackpack.MOD_ID);
 	

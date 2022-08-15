@@ -2,7 +2,7 @@ package net.luis.xbackpack.network.packet.extension;
 
 import java.util.function.Supplier;
 
-import net.luis.xbackpack.client.XBackpackClientPacketHandler;
+import net.luis.xbackpack.client.XBClientPacketHandler;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
@@ -37,7 +37,7 @@ public class UpdateFurnaceExtension {
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-				XBackpackClientPacketHandler.updateFurnaceExtension(this.cookingProgress, this.fuelProgress);
+				XBClientPacketHandler.updateFurnaceExtension(this.cookingProgress, this.fuelProgress);
 			});
 		});
 	}

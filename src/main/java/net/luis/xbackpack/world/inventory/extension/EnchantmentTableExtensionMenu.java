@@ -3,9 +3,9 @@ package net.luis.xbackpack.world.inventory.extension;
 import java.util.List;
 import java.util.function.Consumer;
 
-import net.luis.xbackpack.network.XBackpackNetworkHandler;
+import net.luis.xbackpack.network.XBNetworkHandler;
 import net.luis.xbackpack.network.packet.extension.UpdateEnchantmentTableExtension;
-import net.luis.xbackpack.world.capability.XBackpackCapabilities;
+import net.luis.xbackpack.world.capability.XBCapabilities;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.inventory.BackpackMenu;
 import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
@@ -60,7 +60,7 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 	
 	public EnchantmentTableExtensionMenu(BackpackMenu menu, Player player) {
 		super(menu, player, BackpackExtension.ENCHANTMENT_TABLE.get());
-		this.handler = this.player.getCapability(XBackpackCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new).getEnchantingHandler();
+		this.handler = this.player.getCapability(XBCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new).getEnchantingHandler();
 		this.enchantmentSeed = player.getEnchantmentSeed();
 	}
 	
@@ -129,7 +129,7 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 			}
 		}
 		if (this.player instanceof ServerPlayer player) {
-			XBackpackNetworkHandler.getChannel().send(PacketDistributor.PLAYER.with(() -> player), new UpdateEnchantmentTableExtension(this.enchantments, this.enchantmentLevels, this.enchantingCosts, this.enchantmentSeed));
+			XBNetworkHandler.getChannel().send(PacketDistributor.PLAYER.with(() -> player), new UpdateEnchantmentTableExtension(this.enchantments, this.enchantmentLevels, this.enchantingCosts, this.enchantmentSeed));
 		}
 	}
 	

@@ -2,7 +2,7 @@ package net.luis.xbackpack.network.packet.extension;
 
 import java.util.function.Supplier;
 
-import net.luis.xbackpack.client.XBackpackClientPacketHandler;
+import net.luis.xbackpack.client.XBClientPacketHandler;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -52,7 +52,7 @@ public class UpdateEnchantmentTableExtension {
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-				XBackpackClientPacketHandler.updateEnchantmentTableExtension(this.enchantments, this.enchantmentLevels, this.enchantingCosts, this.enchantmentSeed);
+				XBClientPacketHandler.updateEnchantmentTableExtension(this.enchantments, this.enchantmentLevels, this.enchantingCosts, this.enchantmentSeed);
 			});
 		});
 	}

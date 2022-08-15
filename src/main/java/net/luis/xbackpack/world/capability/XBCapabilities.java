@@ -10,7 +10,7 @@ import net.minecraftforge.common.capabilities.CapabilityToken;
  * 
  */
 
-public class XBackpackCapabilities {
+public class XBCapabilities {
 	
 	public static final Capability<IBackpack> BACKPACK = CapabilityManager.get(new CapabilityToken<IBackpack>() {});
 	
