@@ -5,8 +5,8 @@ import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.network.XBNetworkHandler;
 import net.luis.xbackpack.network.packet.tool.BackpackNextToolDown;
 import net.luis.xbackpack.network.packet.tool.BackpackNextToolTop;
+import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.capability.IBackpack;
-import net.luis.xbackpack.world.capability.XBCapabilities;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -33,16 +33,16 @@ public class OnMouseScrollEvent {
 		if (player.isShiftKeyDown() && minecraft.gameMode.getPlayerMode() != GameType.SPECTATOR) {
 			ItemStack main = player.getMainHandItem();
 			if (BackpackConstans.VALID_TOOL_SLOT_ITEMS.contains(main.getItem())) {
-				IBackpack backpack = player.getCapability(XBCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new);
+				IBackpack backpack = BackpackProvider.get(player);
 				ItemStack top = backpack.getToolHandler().getStackInSlot(0).copy();
 				ItemStack down = backpack.getToolHandler().getStackInSlot(2).copy();
 				if (!top.isEmpty() && !down.isEmpty()) {
 					if (delta > 0) {
 						event.setCanceled(true);
-						XBNetworkHandler.getChannel().sendToServer(new BackpackNextToolTop());
+						XBNetworkHandler.sendToServer(new BackpackNextToolTop());
 					} else if (delta < 0) {
 						event.setCanceled(true);
-						XBNetworkHandler.getChannel().sendToServer(new BackpackNextToolDown());
+						XBNetworkHandler.sendToServer(new BackpackNextToolDown());
 					}
 				}
 			}

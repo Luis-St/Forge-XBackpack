@@ -4,6 +4,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 
@@ -14,6 +16,8 @@ import net.minecraftforge.common.util.LazyOptional;
  */
 
 public class BackpackProvider implements ICapabilitySerializable<CompoundTag> {
+	
+	public static final Capability<IBackpack> BACKPACK = CapabilityManager.get(new CapabilityToken<IBackpack>() {});
 	
 	private final Player player;
 	private final BackpackHandler handler;
@@ -27,7 +31,7 @@ public class BackpackProvider implements ICapabilitySerializable<CompoundTag> {
 	
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction side) {
-		return XBCapabilities.BACKPACK.orEmpty(capability, this.optional);
+		return BACKPACK.orEmpty(capability, this.optional);
 	}
 	
 	@Override
@@ -39,5 +43,9 @@ public class BackpackProvider implements ICapabilitySerializable<CompoundTag> {
 	public void deserializeNBT(CompoundTag tag) {
 		this.handler.deserialize(tag);
 	}
-
+	
+	public static IBackpack get(Player player) {
+		return player.getCapability(BACKPACK, null).orElseThrow(NullPointerException::new);
+	}
+	
 }

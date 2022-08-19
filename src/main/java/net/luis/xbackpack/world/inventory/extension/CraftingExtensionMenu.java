@@ -3,7 +3,7 @@ package net.luis.xbackpack.world.inventory.extension;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import net.luis.xbackpack.world.capability.XBCapabilities;
+import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.inventory.BackpackMenu;
 import net.luis.xbackpack.world.inventory.extension.slot.ExtensionResultSlot;
@@ -32,7 +32,7 @@ public class CraftingExtensionMenu extends AbstractExtensionMenu {
 	
 	public CraftingExtensionMenu(BackpackMenu menu, Player player) {
 		super(menu, player, BackpackExtension.CRAFTING_TABLE.get());	
-		this.craftingWrapper = new CraftingContainerWrapper(this.menu, this.player.getCapability(XBCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new).getCraftingHandler(), 3, 3);
+		this.craftingWrapper = new CraftingContainerWrapper(this.menu, BackpackProvider.get(this.player).getCraftingHandler(), 3, 3);
 		this.resultWrapper = new ResultContainer();
 	}
 

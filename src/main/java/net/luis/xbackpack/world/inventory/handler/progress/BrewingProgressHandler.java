@@ -21,7 +21,6 @@ import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.brewing.PotionBrewEvent;
 import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
 
 /**
@@ -164,7 +163,7 @@ public class BrewingProgressHandler implements ProgressHandler {
 	@Override
 	public void broadcastChanges() {
 		if (this.player instanceof ServerPlayer player) {
-			XBNetworkHandler.getChannel().send(PacketDistributor.PLAYER.with(() -> player), new UpdateBrewingStandExtension(this.fuel, this.brewTime));
+			XBNetworkHandler.sendToPlayer(player, new UpdateBrewingStandExtension(this.fuel, this.brewTime));
 		}
 	}
 	

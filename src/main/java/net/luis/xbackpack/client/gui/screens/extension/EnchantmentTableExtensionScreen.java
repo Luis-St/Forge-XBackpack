@@ -8,7 +8,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.luis.xbackpack.client.gui.screens.BackpackScreen;
-import net.luis.xbackpack.world.capability.XBCapabilities;
+import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.inventory.handler.EnchantingHandler;
 import net.minecraft.ChatFormatting;
@@ -43,7 +43,7 @@ public class EnchantmentTableExtensionScreen extends AbstractExtensionScreen {
 	
 	@Override
 	protected void init() {
-		this.handler = this.minecraft.player.getCapability(XBCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new).getEnchantingHandler();
+		this.handler = BackpackProvider.get(this.minecraft.player).getEnchantingHandler();
 	}
 	
 	@Override

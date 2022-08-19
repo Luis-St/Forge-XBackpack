@@ -2,8 +2,8 @@ package net.luis.xbackpack.world.inventory.extension;
 
 import java.util.function.Consumer;
 
+import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.capability.IBackpack;
-import net.luis.xbackpack.world.capability.XBCapabilities;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.inventory.BackpackMenu;
 import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
@@ -33,7 +33,7 @@ public class BrewingStandExtensionMenu extends AbstractExtensionMenu {
 	
 	public BrewingStandExtensionMenu(BackpackMenu menu, Player player) {
 		super(menu, player, BackpackExtension.BREWING_STAND.get());
-		IBackpack backpack = this.player.getCapability(XBCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new);
+		IBackpack backpack = BackpackProvider.get(player);
 		this.handler = backpack.getBrewingHandler();
 		this.progressHandler = backpack.getBrewHandler();
 	}

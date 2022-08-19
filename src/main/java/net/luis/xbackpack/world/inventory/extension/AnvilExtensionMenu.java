@@ -5,7 +5,7 @@ import java.util.function.Consumer;
 
 import net.luis.xbackpack.network.XBNetworkHandler;
 import net.luis.xbackpack.network.packet.extension.UpdateAnvilExtension;
-import net.luis.xbackpack.world.capability.XBCapabilities;
+import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.inventory.BackpackMenu;
 import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
@@ -24,7 +24,6 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AnvilUpdateEvent;
-import net.minecraftforge.network.PacketDistributor;
 
 /**
  * 
@@ -40,7 +39,7 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 	
 	public AnvilExtensionMenu(BackpackMenu menu, Player player) {
 		super(menu, player, BackpackExtension.ANVIL.get());
-		this.handler = this.player.getCapability(XBCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new).getAnvilHandler();
+		this.handler = BackpackProvider.get(this.player).getAnvilHandler();
 	}
 	
 	@Override
@@ -261,7 +260,7 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 	
 	private void broadcastChanges() {
 		if (this.player instanceof ServerPlayer player) {
-			XBNetworkHandler.getChannel().send(PacketDistributor.PLAYER.with(() -> player), new UpdateAnvilExtension(this.cost));
+			XBNetworkHandler.sendToPlayer(player, new UpdateAnvilExtension(this.cost));
 		}
 	}
 	

@@ -16,8 +16,10 @@ import net.luis.xbackpack.network.packet.tool.BackpackToolDown;
 import net.luis.xbackpack.network.packet.tool.BackpackToolMid;
 import net.luis.xbackpack.network.packet.tool.BackpackToolTop;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 
 /**
@@ -55,8 +57,16 @@ public class XBNetworkHandler {
 				.consumerMainThread(UpdateBrewingStandExtension::handle).add();
 	}
 	
-	public static SimpleChannel getChannel() {
+	private static SimpleChannel getChannel() {
 		return simpleChannel;
+	}
+	
+	public static <P> void sendToServer(P packet) {
+		getChannel().sendToServer(packet);
+	}
+	
+	public static <P> void sendToPlayer(ServerPlayer player, P packet) {
+		getChannel().send(PacketDistributor.PLAYER.with(() -> player), packet);
 	}
 
 }

@@ -18,7 +18,6 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.network.PacketDistributor;
 
 /**
  * 
@@ -270,7 +269,7 @@ public class SmeltingProgressHandler implements ProgressHandler {
 	@Override
 	public void broadcastChanges() {
 		if (this.player instanceof ServerPlayer player) {
-			XBNetworkHandler.getChannel().send(PacketDistributor.PLAYER.with(() -> player), new UpdateFurnaceExtension(this.getCookingProgress(), this.getFuelProgress()));
+			XBNetworkHandler.sendToPlayer(player, new UpdateFurnaceExtension(this.getCookingProgress(), this.getFuelProgress()));
 		}
 	}
 	

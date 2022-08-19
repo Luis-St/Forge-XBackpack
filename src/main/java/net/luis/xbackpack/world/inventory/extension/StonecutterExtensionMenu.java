@@ -8,7 +8,7 @@ import com.google.common.collect.Lists;
 
 import net.luis.xbackpack.network.XBNetworkHandler;
 import net.luis.xbackpack.network.packet.extension.UpdateStonecutterExtension;
-import net.luis.xbackpack.world.capability.XBCapabilities;
+import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.inventory.BackpackMenu;
 import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
@@ -24,7 +24,6 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.StonecutterRecipe;
-import net.minecraftforge.network.PacketDistributor;
 
 /**
  * 
@@ -42,7 +41,7 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 	
 	public StonecutterExtensionMenu(BackpackMenu menu, Player player) {
 		super(menu, player, BackpackExtension.STONECUTTER.get());
-		this.handler = player.getCapability(XBCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new).getStonecutterHandler();
+		this.handler = BackpackProvider.get(this.player).getStonecutterHandler();
 	}
 	
 	@Override
@@ -103,7 +102,7 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 			this.input = stack.copy();
 			this.setupRecipes(stack);
 		} else if (this.player instanceof ServerPlayer player) {
-			XBNetworkHandler.getChannel().send(PacketDistributor.PLAYER.with(() -> player), new UpdateStonecutterExtension(false));
+			XBNetworkHandler.sendToPlayer(player, new UpdateStonecutterExtension(false));
 		}
 	}
 	
@@ -113,7 +112,7 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 		this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);
 		this.recipes.addAll(this.player.level.getRecipeManager().getRecipesFor(RecipeType.STONECUTTING, new SimpleContainer(stack), this.player.level));
 		if (this.player instanceof ServerPlayer player) {
-			XBNetworkHandler.getChannel().send(PacketDistributor.PLAYER.with(() -> player), new UpdateStonecutterExtension(true));
+			XBNetworkHandler.sendToPlayer(player, new UpdateStonecutterExtension(true));
 		}
 	}
 	

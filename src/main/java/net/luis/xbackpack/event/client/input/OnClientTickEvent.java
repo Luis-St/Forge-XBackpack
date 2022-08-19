@@ -30,19 +30,19 @@ public class OnClientTickEvent {
 		if (event.phase == Phase.START) {
 			if (0 >= lastPacket) {
 				if (XBKeyMappings.BACKPACK_OPEN.isDown()) {
-					XBNetworkHandler.getChannel().sendToServer(new BackpackOpen());
+					XBNetworkHandler.sendToServer(new BackpackOpen());
 					lastPacket = 4;
 				} else if (XBKeyMappings.BACKPACK_NEXT.isDown()) {
-					XBNetworkHandler.getChannel().sendToServer(new BackpackNextTool());
+					XBNetworkHandler.sendToServer(new BackpackNextTool());
 					lastPacket = 4;
 				} else if (XBKeyMappings.BACKPACK_SLOT_TOP.isDown()) {
-					XBNetworkHandler.getChannel().sendToServer(new BackpackToolTop());
+					XBNetworkHandler.sendToServer(new BackpackToolTop());
 					lastPacket = 4;
 				} else if (XBKeyMappings.BACKPACK_SLOT_MID.isDown()) {
-					XBNetworkHandler.getChannel().sendToServer(new BackpackToolMid());
+					XBNetworkHandler.sendToServer(new BackpackToolMid());
 					lastPacket = 4;
 				} else if (XBKeyMappings.BACKPACK_SLOT_DOWN.isDown()) {
-					XBNetworkHandler.getChannel().sendToServer(new BackpackToolDown());
+					XBNetworkHandler.sendToServer(new BackpackToolDown());
 					lastPacket = 4;
 				}
 			} else {

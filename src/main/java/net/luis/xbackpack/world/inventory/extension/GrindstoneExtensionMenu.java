@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import net.luis.xbackpack.world.capability.XBCapabilities;
+import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.inventory.BackpackMenu;
 import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
@@ -35,7 +35,7 @@ public class GrindstoneExtensionMenu extends AbstractExtensionMenu {
 	
 	public GrindstoneExtensionMenu(BackpackMenu menu, Player player) {
 		super(menu, player, BackpackExtension.GRINDSTONE.get());
-		this.handler = this.player.getCapability(XBCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new).getGrindstoneHandler();
+		this.handler = BackpackProvider.get(this.player).getGrindstoneHandler();
 	}
 	
 	@Override

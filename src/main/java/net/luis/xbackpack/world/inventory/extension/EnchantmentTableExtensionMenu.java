@@ -5,7 +5,7 @@ import java.util.function.Consumer;
 
 import net.luis.xbackpack.network.XBNetworkHandler;
 import net.luis.xbackpack.network.packet.extension.UpdateEnchantmentTableExtension;
-import net.luis.xbackpack.world.capability.XBCapabilities;
+import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.inventory.BackpackMenu;
 import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
@@ -32,7 +32,6 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
 
 /**
@@ -60,7 +59,7 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 	
 	public EnchantmentTableExtensionMenu(BackpackMenu menu, Player player) {
 		super(menu, player, BackpackExtension.ENCHANTMENT_TABLE.get());
-		this.handler = this.player.getCapability(XBCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new).getEnchantingHandler();
+		this.handler = BackpackProvider.get(this.player).getEnchantingHandler();
 		this.enchantmentSeed = player.getEnchantmentSeed();
 	}
 	
@@ -129,7 +128,7 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 			}
 		}
 		if (this.player instanceof ServerPlayer player) {
-			XBNetworkHandler.getChannel().send(PacketDistributor.PLAYER.with(() -> player), new UpdateEnchantmentTableExtension(this.enchantments, this.enchantmentLevels, this.enchantingCosts, this.enchantmentSeed));
+			XBNetworkHandler.sendToPlayer(player, new UpdateEnchantmentTableExtension(this.enchantments, this.enchantmentLevels, this.enchantingCosts, this.enchantmentSeed));
 		}
 	}
 	

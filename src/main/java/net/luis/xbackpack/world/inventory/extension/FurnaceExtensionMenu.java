@@ -3,8 +3,8 @@ package net.luis.xbackpack.world.inventory.extension;
 import java.util.function.Consumer;
 
 import net.luis.xbackpack.BackpackConstans;
+import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.capability.IBackpack;
-import net.luis.xbackpack.world.capability.XBCapabilities;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.inventory.BackpackMenu;
 import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
@@ -33,7 +33,7 @@ public class FurnaceExtensionMenu extends AbstractExtensionMenu {
 	
 	public FurnaceExtensionMenu(BackpackMenu menu, Player player) {
 		super(menu, player, BackpackExtension.FURNACE.get());
-		IBackpack backpack = this.player.getCapability(XBCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new);
+		IBackpack backpack = BackpackProvider.get(this.player);
 		this.handler = backpack.getSmeltingHandler();
 		this.progressHandler = backpack.getSmeltHandler();
 	}

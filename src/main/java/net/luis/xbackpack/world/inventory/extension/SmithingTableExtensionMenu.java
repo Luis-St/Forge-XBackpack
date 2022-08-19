@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
-import net.luis.xbackpack.world.capability.XBCapabilities;
+import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.inventory.BackpackMenu;
 import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
@@ -30,7 +30,7 @@ public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 	
 	public SmithingTableExtensionMenu(BackpackMenu menu, Player player) {
 		super(menu, player, BackpackExtension.SMITHING_TABLE.get());
-		this.handler = this.player.getCapability(XBCapabilities.BACKPACK, null).orElseThrow(NullPointerException::new).getSmithingHandler();
+		this.handler = BackpackProvider.get(this.player).getSmithingHandler();
 		this.level = this.player.level;
 	}
 	
