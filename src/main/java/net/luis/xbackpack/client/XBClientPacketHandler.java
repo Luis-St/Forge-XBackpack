@@ -1,5 +1,7 @@
 package net.luis.xbackpack.client;
 
+import java.util.List;
+
 import org.jetbrains.annotations.Nullable;
 
 import net.luis.xbackpack.client.gui.screens.BackpackScreen;
@@ -10,6 +12,7 @@ import net.luis.xbackpack.client.gui.screens.extension.EnchantmentTableExtension
 import net.luis.xbackpack.client.gui.screens.extension.FurnaceExtensionScreen;
 import net.luis.xbackpack.client.gui.screens.extension.StonecutterExtensionScreen;
 import net.luis.xbackpack.world.capability.BackpackProvider;
+import net.luis.xbackpack.world.capability.IBackpack;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
@@ -23,9 +26,11 @@ import net.minecraft.resources.ResourceLocation;
 
 public class XBClientPacketHandler {
 	
-	public static void updateBackpack(CompoundTag tag) {
+	public static void updateBackpack(CompoundTag tag, List<BackpackExtension> usableExtensions) {
 		Minecraft minecraft = Minecraft.getInstance();
-		BackpackProvider.get(minecraft.player).deserialize(tag);
+		IBackpack backpack = BackpackProvider.get(minecraft.player);
+		backpack.deserialize(tag);
+		backpack.setUsableExtensions(usableExtensions);
 	}
 	
 	@Nullable

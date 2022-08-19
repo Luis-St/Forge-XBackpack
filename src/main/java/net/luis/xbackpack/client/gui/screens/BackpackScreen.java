@@ -10,6 +10,7 @@ import static net.luis.xbackpack.world.extension.BackpackExtension.SMITHING_TABL
 import static net.luis.xbackpack.world.extension.BackpackExtension.STONECUTTER;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -29,6 +30,7 @@ import net.luis.xbackpack.client.gui.screens.extension.SmithingTableExtensionScr
 import net.luis.xbackpack.client.gui.screens.extension.StonecutterExtensionScreen;
 import net.luis.xbackpack.network.XBNetworkHandler;
 import net.luis.xbackpack.network.packet.extension.UpdateBackpackExtension;
+import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.inventory.BackpackMenu;
 import net.luis.xbackpack.world.inventory.extension.slot.ExtensionResultSlot;
@@ -118,12 +120,16 @@ public class BackpackScreen extends AbstractScrollableContainerScreen<BackpackMe
 		for (BackpackExtension extension : this.extensions) {
 			AbstractExtensionScreen extensionScreen = this.getExtensionScreen(extension);
 			if (extensionScreen != null) {
-				if (this.extension == extension && this.extension != BackpackExtension.NO.get()) {
-					extensionScreen.renderOpened(stack, partialTicks, mouseX, mouseY);
-				} else if (this.isExtensionRenderable(extension)) {
-					extensionScreen.render(stack, partialTicks, mouseX, mouseY);
-				}
+				this.renderExtension(stack, partialTicks, mouseX, mouseY, extension, extensionScreen);
 			}
+		}
+	}
+	
+	private void renderExtension(PoseStack stack, float partialTicks, int mouseX, int mouseY, BackpackExtension extension, AbstractExtensionScreen extensionScreen) {
+		if (this.extension == extension && this.extension != BackpackExtension.NO.get()) {
+			extensionScreen.renderOpened(stack, partialTicks, mouseX, mouseY);
+		} else if (this.isExtensionRenderable(extension)) {
+			extensionScreen.render(stack, partialTicks, mouseX, mouseY);
 		}
 	}
 	
@@ -138,8 +144,14 @@ public class BackpackScreen extends AbstractScrollableContainerScreen<BackpackMe
 		}
 	}
 	
+	private boolean canUseExtension(BackpackExtension extension) {
+		return BackpackProvider.get(this.minecraft.player).canUseExtension(extension);
+	}
+	
 	private boolean isExtensionRenderable(BackpackExtension extension) {
-		if (this.extension == BackpackExtension.NO.get()) {
+		if (!this.canUseExtension(extension)) {
+			return false;
+		} else if (this.extension == BackpackExtension.NO.get()) {
 			return true;
 		} else if (this.extensions.indexOf(this.extension) > this.extensions.indexOf(extension)) {
 			return true;
@@ -250,13 +262,15 @@ public class BackpackScreen extends AbstractScrollableContainerScreen<BackpackMe
 		} else {
 			this.extension = extension;
 		}
-		XBNetworkHandler.getChannel().sendToServer(new UpdateBackpackExtension(this.extension));
+		XBNetworkHandler.sendToServer(new UpdateBackpackExtension(this.extension));
 	}
 	
 	@Override
 	protected boolean hasClickedOutside(double mouseX, double mouseY, int leftPos, int topPos, int button) {
 		int buttonOffset = 21;
-		if (this.extension == BackpackExtension.NO.get()) {
+		if (this.extensions.stream().filter(this::canUseExtension).collect(Collectors.toList()).isEmpty()) {
+			return super.hasClickedOutside(mouseX, mouseY, leftPos, topPos, button);
+		} else if (this.extension == BackpackExtension.NO.get()) {
 			this.imageWidth += buttonOffset;
 			boolean flag = super.hasClickedOutside(mouseX, mouseY, leftPos, topPos, button);
 			this.imageWidth -= buttonOffset;

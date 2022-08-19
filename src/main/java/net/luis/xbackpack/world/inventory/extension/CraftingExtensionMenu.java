@@ -65,6 +65,7 @@ public class CraftingExtensionMenu extends AbstractExtensionMenu {
 				}
 			}
 			this.resultWrapper.setItem(0, stack);
+			BackpackProvider.get(this.player).broadcastChanges();
 		}
 	}
 

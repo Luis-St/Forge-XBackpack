@@ -1,7 +1,14 @@
 package net.luis.xbackpack.world.capability;
 
+import java.util.List;
+
+import com.google.common.collect.Lists;
+
 import net.luis.xbackpack.BackpackConstans;
 import net.luis.xbackpack.XBackpack;
+import net.luis.xbackpack.network.XBNetworkHandler;
+import net.luis.xbackpack.network.packet.UpdateBackpack;
+import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.inventory.handler.BrewingHandler;
 import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
 import net.luis.xbackpack.world.inventory.handler.EnchantingHandler;
@@ -12,9 +19,12 @@ import net.luis.xbackpack.world.inventory.handler.progress.SmeltingProgressHandl
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.stats.Stats;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.registries.RegistryObject;
 
 /**
  * 
@@ -27,6 +37,7 @@ public class BackpackHandler implements IBackpack {
 	private final Player player;
 	private final ItemStackHandler backpackHandler = new ItemStackHandler(873);
 	private final ItemStackHandler toolHandler = new ItemStackHandler(3);
+	private final List<BackpackExtension> usableExtensions = Lists.newArrayList();
 	private final ItemStackHandler craftingHandler = new ItemStackHandler(9);
 	private final SmeltingHandler furnaceHandler = new SmeltingHandler(1, 4, 4);
 	private final SmeltingProgressHandler smeltHandler;
@@ -57,6 +68,36 @@ public class BackpackHandler implements IBackpack {
 	@Override
 	public ItemStackHandler getToolHandler() {
 		return this.toolHandler;
+	}
+	
+	@Override
+	public boolean canUseExtension(BackpackExtension extension) {
+		if (this.player instanceof ServerPlayer player) {
+			int count = player.getStats().getValue(Stats.ITEM_CRAFTED, extension.icon().getItem());
+			if (count > 0) {
+				this.usableExtensions.add(extension);
+				return true;
+			}
+		}
+		return this.usableExtensions.contains(extension);
+	}
+	
+	private void updateUsableExtensions() {
+		if (!this.player.level.isClientSide) {
+			BackpackExtension.BACKPACK_EXTENSIONS.getEntries().stream().map(RegistryObject::get).forEach(this::canUseExtension);
+		} else {
+			XBackpack.LOGGER.warn("Can not update usable extensions on the client");
+		}
+	}
+	
+	@Override
+	public boolean setUsableExtensions(List<BackpackExtension> usableExtensions) {
+		if (this.player.level.isClientSide) {
+			this.usableExtensions.clear();
+			this.usableExtensions.addAll(usableExtensions);
+			return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -116,6 +157,17 @@ public class BackpackHandler implements IBackpack {
 	}
 	
 	@Override
+	public boolean broadcastChanges() {
+		if (this.player instanceof ServerPlayer player) {
+			this.updateUsableExtensions();
+			XBNetworkHandler.sendToPlayer(player, new UpdateBackpack(this.serialize(), this.usableExtensions));
+			return true;
+		}
+		XBackpack.LOGGER.warn("Can not broadcast changes on the client");
+		return false;
+	}
+	
+	@Override
 	public CompoundTag serialize() {
 		CompoundTag tag = new CompoundTag();
 		tag.put("backpack_handler", this.backpackHandler.serializeNBT());
@@ -171,18 +223,6 @@ public class BackpackHandler implements IBackpack {
 				}
 			}
 		}
-	}
-	
-	@Override
-	public CompoundTag serializeNetwork() {
-		CompoundTag tag = new CompoundTag();
-		tag.put("tool_handler", this.toolHandler.serializeNBT());
-		return tag;
-	}
-
-	@Override
-	public void deserializeNetwork(CompoundTag tag) {
-		this.toolHandler.deserializeNBT(tag.getCompound("tool_handler"));
 	}
 
 }
