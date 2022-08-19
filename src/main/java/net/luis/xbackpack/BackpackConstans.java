@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
+import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.CrossbowItem;
@@ -33,7 +34,7 @@ public class BackpackConstans {
 	private static final List<Item> ITEM = ImmutableList.copyOf(ForgeRegistries.ITEMS.getValues());
 	
 	/**
-	 * add items to this list in {@link FMLCommonSetupEvent},<br>
+	 * Add items to this list in {@link FMLCommonSetupEvent},<br>
 	 * if you want to add valid items for the tool slot
 	 */
 	public static final List<Item> VALID_TOOL_SLOT_ITEMS = ITEM.stream().filter(item -> {
@@ -41,7 +42,7 @@ public class BackpackConstans {
 	}).collect(Collectors.toList());
 	
 	/**
-	 * add items to this list in {@link FMLCommonSetupEvent},<br>
+	 * Add items to this list in {@link FMLCommonSetupEvent},<br>
 	 * if you want to add valid items for the armor slot<br>
 	 * <br>
 	 * note: the item can only be place in the Slot if {@link IForgeItem#canEquip()} returns {@code true}
@@ -51,7 +52,7 @@ public class BackpackConstans {
 	}).collect(Collectors.toList());
 	
 	/**
-	 * add items to this list in {@link FMLCommonSetupEvent},<br> 
+	 * Add items to this list in {@link FMLCommonSetupEvent},<br> 
 	 * if you want to quick move the item via shift into the offhand slot
 	 */
 	public static final List<Item> SHIFTABLE_OFFHAND_SLOT_ITEMS = ITEM.stream().filter(item -> {
@@ -59,6 +60,10 @@ public class BackpackConstans {
 	}).collect(Collectors.toList());
 	
 	
+	/**
+	 * Add recipe types to this list in {@link FMLCommonSetupEvent},<br>  
+	 * if you want to allow the recipe type in the {@link BackpackExtension#FURNACE Furnace Extension}
+	 */
 	public static final List<RecipeType<? extends AbstractCookingRecipe>> FURNACE_RECIPE_TYPES = Lists.newArrayList(RecipeType.SMELTING, RecipeType.BLASTING, RecipeType.SMOKING);
 	
 }
