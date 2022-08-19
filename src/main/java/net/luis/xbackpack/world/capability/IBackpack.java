@@ -7,6 +7,7 @@ import net.luis.xbackpack.world.inventory.handler.SmeltingHandler;
 import net.luis.xbackpack.world.inventory.handler.progress.ProgressHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 import net.minecraftforge.items.ItemStackHandler;
 
 /**
@@ -15,6 +16,7 @@ import net.minecraftforge.items.ItemStackHandler;
  * 
  */
 
+@AutoRegisterCapability
 public interface IBackpack {
 	
 	Player getPlayer();

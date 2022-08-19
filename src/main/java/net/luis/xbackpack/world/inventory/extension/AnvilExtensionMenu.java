@@ -129,10 +129,10 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 			repairCost += leftStack.getBaseRepairCost() + (rightStack.isEmpty() ? 0 : rightStack.getBaseRepairCost());
 			this.repairItemCountCost = 0;
 			boolean enchantedBook = false;
+			if (!this.onAnvilUpdate(leftStack, rightStack, repairCost)) {
+				return;
+			}
 			if (!rightStack.isEmpty()) {
-				if (!this.onAnvilUpdate(leftStack, rightStack, repairCost)) {
-					return;
-				}
 				enchantedBook = rightStack.getItem() == Items.ENCHANTED_BOOK && !EnchantedBookItem.getEnchantments(rightStack).isEmpty();
 				if (resultStack.isDamageableItem() && resultStack.getItem().isValidRepairItem(leftStack, rightStack)) {
 					int damage = Math.min(resultStack.getDamageValue(), resultStack.getMaxDamage() / 4);
