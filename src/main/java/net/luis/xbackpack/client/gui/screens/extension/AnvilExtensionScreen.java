@@ -57,10 +57,7 @@ public class AnvilExtensionScreen extends AbstractExtensionScreen {
 			if (this.cost > 0) {
 				int color = 8453920;
 				Component component = null;
-				if (this.cost >= 40 && !this.minecraft.player.getAbilities().instabuild) {
-					component = Component.translatable("xbackpack.backpack_extension.anvil.cost", "X");
-					color = 16736352;
-				} else if (this.handler.getResultHandler().getStackInSlot(0).isEmpty()) {
+				if (this.handler.getResultHandler().getStackInSlot(0).isEmpty()) {
 					component = null;
 				} else if (this.minecraft != null) {
 					component = Component.translatable("xbackpack.backpack_extension.anvil.cost", this.cost);
