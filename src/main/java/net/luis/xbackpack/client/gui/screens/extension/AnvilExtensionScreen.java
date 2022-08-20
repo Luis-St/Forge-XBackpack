@@ -69,12 +69,15 @@ public class AnvilExtensionScreen extends AbstractExtensionScreen {
 				if (component != null) {
 					int x = this.leftPos + this.imageWidth + 64;
 					int y = this.topPos + 9 + this.getExtensionOffset(this.extension);
-					if (this.cost >= 40 || 10 > this.cost) {
-						GuiComponent.fill(stack, x - 2, y - 2, x + this.font.width(component) + 2, y + 10, 1325400064);
-						this.font.drawShadow(stack, component, x, y, color);
+					if (10 > this.cost) {
+						GuiComponent.fill(stack, x - 1, y - 2, x + this.font.width(component) + 3, y + 10, 1325400064);
+						this.font.drawShadow(stack, component, x + 1, y, color);
+					} else if (100 > this.cost && this.cost >= 10) {
+						GuiComponent.fill(stack, x - 7, y - 2, x + this.font.width(component) - 3, y + 10, 1325400064);
+						this.font.drawShadow(stack, component, x - 5, y, color);
 					} else {
-						GuiComponent.fill(stack, x - 8, y - 2, x + this.font.width(component) - 4, y + 10, 1325400064);
-						this.font.drawShadow(stack, component, x - 6, y, color);
+						GuiComponent.fill(stack, x - 13, y - 2, x + this.font.width(component) - 9, y + 10, 1325400064);
+						this.font.drawShadow(stack, component, x - 11, y, color);
 					}
 				}
 			}

@@ -6,7 +6,6 @@ import java.util.function.Consumer;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.client.gui.screens.BackpackScreen;
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtension;
@@ -116,7 +115,6 @@ public abstract class AbstractExtensionScreen {
 		RenderSystem.setShaderTexture(0, this.getTexture());
 		this.screen.blit(stack, this.leftPos + this.imageWidth - 3, this.topPos + offset, 0, 0, this.extension.getImageWidth(), this.extension.getImageHeight());
 		this.itemRenderer.renderAndDecorateItem(this.extension.getIcon(), this.leftPos + this.imageWidth + 1, this.topPos + 4 + offset);
-		XBackpack.LOGGER.debug(this.extension.getTitle());
 		this.font.draw(stack, this.extension.getTitle(), this.leftPos + this.imageWidth + 19, this.topPos + 9 + offset, 4210752);
 		if (this.minecraft != null) {
 			this.renderAdditional(stack, partialTicks, mouseX, mouseY, true);
@@ -129,7 +127,6 @@ public abstract class AbstractExtensionScreen {
 	
 	public void renderTooltip(PoseStack stack, int mouseX, int mouseY, boolean open, Consumer<ItemStack> tooltipRenderer) {
 		if (this.isInExtension(this.extension, mouseX, mouseY) && !open) {
-			XBackpack.LOGGER.debug(this.extension.getTooltip());
 			this.screen.renderTooltip(stack, this.extension.getTooltip(), mouseX, mouseY);
 		}
 	}

@@ -44,7 +44,7 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 	
 	@Override
 	public void open() {
-		if (!this.handler.getInputHandler().getStackInSlot(0).isEmpty() && !this.handler.getInputHandler().getStackInSlot(1).isEmpty()) {
+		if (!this.handler.getInputHandler().getStackInSlot(0).isEmpty() || !this.handler.getInputHandler().getStackInSlot(1).isEmpty()) {
 			this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);
 			this.createResult();
 		}
@@ -282,6 +282,7 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 		this.handler.getResultHandler().setStackInSlot(0, event.getOutput());
 		this.cost = event.getCost();
 		this.repairItemCountCost = event.getMaterialCost();
+		this.broadcastChanges();
 		return false;
 	}
 	
