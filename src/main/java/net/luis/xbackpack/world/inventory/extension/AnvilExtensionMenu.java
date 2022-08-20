@@ -282,7 +282,7 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 		this.handler.getResultHandler().setStackInSlot(0, event.getOutput());
 		this.cost = event.getCost();
 		this.repairItemCountCost = event.getMaterialCost();
-		return true;
+		return false;
 	}
 	
 	@Override
