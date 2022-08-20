@@ -8,8 +8,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.client.gui.screens.BackpackScreen;
+import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
+import net.luis.xbackpack.world.extension.ExtensionState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
@@ -58,6 +60,10 @@ public abstract class AbstractExtensionScreen {
 	
 	protected void init() {
 		
+	}
+	
+	protected boolean canUseExtension(BackpackExtension extension) {
+		return BackpackProvider.get(this.minecraft.player).getConfig().getWithState(ExtensionState.UNLOCKED).contains(extension);
 	}
 	
 	protected int getExtensionOffset(BackpackExtension extension) {
