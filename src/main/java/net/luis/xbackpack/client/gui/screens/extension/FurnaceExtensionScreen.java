@@ -7,6 +7,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.luis.xbackpack.client.gui.screens.BackpackScreen;
 import net.luis.xbackpack.world.extension.BackpackExtension;
+import net.luis.xbackpack.world.extension.BackpackExtensions;
 
 /**
  * 
@@ -20,7 +21,7 @@ public class FurnaceExtensionScreen extends AbstractExtensionScreen {
 	private int fuelProgress;
 	
 	public FurnaceExtensionScreen(BackpackScreen screen, List<BackpackExtension> extensions) {
-		super(screen, BackpackExtension.FURNACE.get(), extensions);
+		super(screen, BackpackExtensions.FURNACE.get(), extensions);
 	}
 	
 	@Override

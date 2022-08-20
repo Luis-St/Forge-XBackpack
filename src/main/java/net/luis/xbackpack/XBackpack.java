@@ -3,8 +3,9 @@ package net.luis.xbackpack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.luis.xbackpack.commands.XBCommandArgumentTypes;
 import net.luis.xbackpack.network.XBNetworkHandler;
-import net.luis.xbackpack.world.extension.BackpackExtension;
+import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.luis.xbackpack.world.inventory.XBMenuTypes;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -26,7 +27,8 @@ public class XBackpack {
 	public XBackpack() {
 		IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 		XBMenuTypes.MENU_TYPES.register(modEventBus);
-		BackpackExtension.BACKPACK_EXTENSIONS.register(modEventBus);
+		BackpackExtensions.BACKPACK_EXTENSIONS.register(modEventBus);
+		XBCommandArgumentTypes.COMMAND_ARGUMENT_TYPES.register(modEventBus);
 		XBNetworkHandler.register();
 	}
 	

@@ -6,7 +6,7 @@ import java.util.function.Consumer;
 import net.luis.xbackpack.network.XBNetworkHandler;
 import net.luis.xbackpack.network.packet.extension.UpdateEnchantmentTableExtension;
 import net.luis.xbackpack.world.capability.BackpackProvider;
-import net.luis.xbackpack.world.extension.BackpackExtension;
+import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.luis.xbackpack.world.inventory.BackpackMenu;
 import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
 import net.luis.xbackpack.world.inventory.handler.EnchantingHandler;
@@ -58,7 +58,7 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 	private int enchantmentSeed;
 	
 	public EnchantmentTableExtensionMenu(BackpackMenu menu, Player player) {
-		super(menu, player, BackpackExtension.ENCHANTMENT_TABLE.get());
+		super(menu, player, BackpackExtensions.ENCHANTMENT_TABLE.get());
 		this.handler = BackpackProvider.get(this.player).getEnchantingHandler();
 		this.enchantmentSeed = player.getEnchantmentSeed();
 	}

@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.luis.xbackpack.client.gui.screens.BackpackScreen;
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtension;
+import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.luis.xbackpack.world.inventory.extension.AnvilExtensionMenu;
 import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
 import net.minecraft.client.gui.GuiComponent;
@@ -25,7 +26,7 @@ public class AnvilExtensionScreen extends AbstractExtensionScreen {
 	private int cost;
 	
 	public AnvilExtensionScreen(BackpackScreen screen, List<BackpackExtension> extensions) {
-		super(screen, BackpackExtension.ANVIL.get(), extensions);
+		super(screen, BackpackExtensions.ANVIL.get(), extensions);
 	}
 	
 	@Override

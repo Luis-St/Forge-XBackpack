@@ -6,6 +6,7 @@ import com.google.common.collect.Maps;
 
 import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.world.extension.BackpackExtension;
+import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.luis.xbackpack.world.inventory.BackpackMenu;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -30,7 +31,7 @@ public class ExtensionMenuRegistry {
 	 */
 	public static void registerOverride(BackpackExtension extension, String modid, ExtensionMenuFactory factory) {
 		if (EXTENSION_FACTORIES.containsKey(extension)) {
-			XBackpack.LOGGER.error("Fail to register Extension Menu override for Mod {} of type {}, since there is already a Extension Menu present", modid, BackpackExtension.REGISTRY.get().getKey(extension));
+			XBackpack.LOGGER.error("Fail to register Extension Menu override for Mod {} of type {}, since there is already a Extension Menu present", modid, BackpackExtensions.REGISTRY.get().getKey(extension));
 		} else {
 			EXTENSION_FACTORIES.put(extension, factory);
 		}

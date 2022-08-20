@@ -4,7 +4,7 @@ import java.util.function.Consumer;
 
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.capability.IBackpack;
-import net.luis.xbackpack.world.extension.BackpackExtension;
+import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.luis.xbackpack.world.inventory.BackpackMenu;
 import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
 import net.luis.xbackpack.world.inventory.handler.BrewingHandler;
@@ -32,7 +32,7 @@ public class BrewingStandExtensionMenu extends AbstractExtensionMenu {
 	private final ProgressHandler progressHandler;
 	
 	public BrewingStandExtensionMenu(BackpackMenu menu, Player player) {
-		super(menu, player, BackpackExtension.BREWING_STAND.get());
+		super(menu, player, BackpackExtensions.BREWING_STAND.get());
 		IBackpack backpack = BackpackProvider.get(player);
 		this.handler = backpack.getBrewingHandler();
 		this.progressHandler = backpack.getBrewHandler();

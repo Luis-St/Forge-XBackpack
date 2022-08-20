@@ -3,6 +3,7 @@ package net.luis.xbackpack.network.packet.extension;
 import java.util.function.Supplier;
 
 import net.luis.xbackpack.world.extension.BackpackExtension;
+import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.luis.xbackpack.world.inventory.BackpackMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -23,11 +24,11 @@ public class UpdateBackpackExtension {
 	}
 	
 	public UpdateBackpackExtension(FriendlyByteBuf buffer) {
-		this.extension = BackpackExtension.REGISTRY.get().getValue(buffer.readResourceLocation());
+		this.extension = BackpackExtensions.REGISTRY.get().getValue(buffer.readResourceLocation());
 	}
 	
 	public void encode(FriendlyByteBuf buffer) {
-		buffer.writeResourceLocation(BackpackExtension.REGISTRY.get().getKey(this.extension));
+		buffer.writeResourceLocation(BackpackExtensions.REGISTRY.get().getKey(this.extension));
 	}
 	
 	public void handle(Supplier<Context> context) {

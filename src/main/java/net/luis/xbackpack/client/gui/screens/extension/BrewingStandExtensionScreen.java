@@ -7,6 +7,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.luis.xbackpack.client.gui.screens.BackpackScreen;
 import net.luis.xbackpack.world.extension.BackpackExtension;
+import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.minecraft.util.Mth;
 
 /**
@@ -24,7 +25,7 @@ public class BrewingStandExtensionScreen extends AbstractExtensionScreen {
 	private int brewTime;
 	
 	public BrewingStandExtensionScreen(BackpackScreen screen, List<BackpackExtension> extensions) {
-		super(screen, BackpackExtension.BREWING_STAND.get(), extensions);
+		super(screen, BackpackExtensions.BREWING_STAND.get(), extensions);
 	}
 	
 	@Override

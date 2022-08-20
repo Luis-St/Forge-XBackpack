@@ -1,8 +1,5 @@
 package net.luis.xbackpack.world.capability;
 
-import java.util.List;
-
-import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.inventory.handler.BrewingHandler;
 import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
 import net.luis.xbackpack.world.inventory.handler.EnchantingHandler;
@@ -24,13 +21,11 @@ public interface IBackpack {
 	
 	Player getPlayer();
 	
+	BackpackConfig getConfig();
+	
 	ItemStackHandler getBackpackHandler();
 	
 	ItemStackHandler getToolHandler();
-	
-	boolean canUseExtension(BackpackExtension extension);
-	
-	boolean setUsableExtensions(List<BackpackExtension> usableExtensions);
 	
 	ItemStackHandler getCraftingHandler();
 	

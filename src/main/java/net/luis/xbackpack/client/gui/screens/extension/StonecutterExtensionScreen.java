@@ -10,6 +10,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.luis.xbackpack.client.gui.screens.BackpackScreen;
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtension;
+import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -36,7 +37,7 @@ public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 	private int selectedRecipe = -1;
 	
 	public StonecutterExtensionScreen(BackpackScreen screen, List<BackpackExtension> extensions) {
-		super(screen, BackpackExtension.STONECUTTER.get(), extensions);
+		super(screen, BackpackExtensions.STONECUTTER.get(), extensions);
 	}
 	
 	@Override
@@ -80,14 +81,17 @@ public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 	}
 	
 	@Override
-	public void renderTooltip(PoseStack stack, int mouseX, int mouseY, Consumer<ItemStack> tooltipRenderer) {
-		if (this.shouldDisplayRecipes()) {
-			for (int index = this.startIndex; index < this.startIndex + 12 && index < this.recipes.size(); ++index) {
-				int i = index - this.startIndex;
-				double x = mouseX - (double) (this.leftPos + 225 + i % 4 * 16);
-				double y = mouseY - (double) (this.topPos + 142 + i / 4 * 18);
-				if (x >= 0.0 && y >= 0.0 && x < 16.0 && y < 18.0) {
-					tooltipRenderer.accept(this.recipes.get(index).getResultItem());
+	public void renderTooltip(PoseStack stack, int mouseX, int mouseY, boolean open, Consumer<ItemStack> tooltipRenderer) {
+		super.renderTooltip(stack, mouseX, mouseY, open, tooltipRenderer);
+		if (open) {
+			if (this.shouldDisplayRecipes()) {
+				for (int index = this.startIndex; index < this.startIndex + 12 && index < this.recipes.size(); ++index) {
+					int i = index - this.startIndex;
+					double x = mouseX - (double) (this.leftPos + 225 + i % 4 * 16);
+					double y = mouseY - (double) (this.topPos + 142 + i / 4 * 18);
+					if (x >= 0.0 && y >= 0.0 && x < 16.0 && y < 18.0) {
+						tooltipRenderer.accept(this.recipes.get(index).getResultItem());
+					}
 				}
 			}
 		}

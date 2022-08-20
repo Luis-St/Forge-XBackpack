@@ -9,7 +9,7 @@ import com.google.common.collect.Lists;
 import net.luis.xbackpack.network.XBNetworkHandler;
 import net.luis.xbackpack.network.packet.extension.UpdateStonecutterExtension;
 import net.luis.xbackpack.world.capability.BackpackProvider;
-import net.luis.xbackpack.world.extension.BackpackExtension;
+import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.luis.xbackpack.world.inventory.BackpackMenu;
 import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
 import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
@@ -40,7 +40,7 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 	private StonecutterRecipe recipe;
 	
 	public StonecutterExtensionMenu(BackpackMenu menu, Player player) {
-		super(menu, player, BackpackExtension.STONECUTTER.get());
+		super(menu, player, BackpackExtensions.STONECUTTER.get());
 		this.handler = BackpackProvider.get(this.player).getStonecutterHandler();
 	}
 	

@@ -6,7 +6,7 @@ import java.util.function.Consumer;
 import net.luis.xbackpack.network.XBNetworkHandler;
 import net.luis.xbackpack.network.packet.extension.UpdateAnvilExtension;
 import net.luis.xbackpack.world.capability.BackpackProvider;
-import net.luis.xbackpack.world.extension.BackpackExtension;
+import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.luis.xbackpack.world.inventory.BackpackMenu;
 import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
 import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
@@ -38,7 +38,7 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 	private int cost;
 	
 	public AnvilExtensionMenu(BackpackMenu menu, Player player) {
-		super(menu, player, BackpackExtension.ANVIL.get());
+		super(menu, player, BackpackExtensions.ANVIL.get());
 		this.handler = BackpackProvider.get(this.player).getAnvilHandler();
 	}
 	

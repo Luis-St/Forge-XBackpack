@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.luis.xbackpack.client.gui.screens.BackpackScreen;
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtension;
+import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -22,7 +23,7 @@ public class SmithingTableExtensionScreen extends AbstractExtensionScreen {
 	private CraftingHandler handler;
 	
 	public SmithingTableExtensionScreen(BackpackScreen screen, List<BackpackExtension> extensions) {
-		super(screen, BackpackExtension.SMITHING_TABLE.get(), extensions);
+		super(screen, BackpackExtensions.SMITHING_TABLE.get(), extensions);
 	}
 	
 	@Override

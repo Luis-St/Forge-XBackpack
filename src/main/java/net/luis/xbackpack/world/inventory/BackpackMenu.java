@@ -10,6 +10,7 @@ import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.capability.IBackpack;
 import net.luis.xbackpack.world.extension.BackpackExtension;
+import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.luis.xbackpack.world.inventory.extension.AbstractExtensionMenu;
 import net.luis.xbackpack.world.inventory.extension.AnvilExtensionMenu;
 import net.luis.xbackpack.world.inventory.extension.BrewingStandExtensionMenu;
@@ -52,7 +53,7 @@ import net.minecraftforge.items.ItemStackHandler;
 public class BackpackMenu extends AbstractContainerMenu implements ExtensionMenuHolder {
 	
 	private final List<AbstractExtensionMenu> extensionMenus = Lists.newArrayList();
-	private BackpackExtension extension = BackpackExtension.NO.get();
+	private BackpackExtension extension = BackpackExtensions.NO.get();
 	
 	public BackpackMenu(int id, Inventory inventory, FriendlyByteBuf byteBuf) {
 		this(id, inventory);
@@ -84,14 +85,14 @@ public class BackpackMenu extends AbstractContainerMenu implements ExtensionMenu
 		this.addSlot(new BackpackArmorSlot(inventory, EquipmentSlot.LEGS, 37, 8, 54));
 		this.addSlot(new BackpackArmorSlot(inventory, EquipmentSlot.FEET, 36, 8, 72));
 		this.addSlot(new BackpackOffhandSlot(inventory, 40, 8, 196));
-		this.extensionMenus.add(ExtensionMenuRegistry.getExtensionMenu(BackpackExtension.CRAFTING_TABLE.get(), this, player, CraftingExtensionMenu::new));
-		this.extensionMenus.add(ExtensionMenuRegistry.getExtensionMenu(BackpackExtension.FURNACE.get(), this, player, FurnaceExtensionMenu::new));
-		this.extensionMenus.add(ExtensionMenuRegistry.getExtensionMenu(BackpackExtension.ANVIL.get(), this, player, AnvilExtensionMenu::new));
-		this.extensionMenus.add(ExtensionMenuRegistry.getExtensionMenu(BackpackExtension.ENCHANTMENT_TABLE.get(), this, player, EnchantmentTableExtensionMenu::new));
-		this.extensionMenus.add(ExtensionMenuRegistry.getExtensionMenu(BackpackExtension.STONECUTTER.get(), this, player, StonecutterExtensionMenu::new));
-		this.extensionMenus.add(ExtensionMenuRegistry.getExtensionMenu(BackpackExtension.BREWING_STAND.get(), this, player, BrewingStandExtensionMenu::new));
-		this.extensionMenus.add(ExtensionMenuRegistry.getExtensionMenu(BackpackExtension.GRINDSTONE.get(), this, player, GrindstoneExtensionMenu::new));
-		this.extensionMenus.add(ExtensionMenuRegistry.getExtensionMenu(BackpackExtension.SMITHING_TABLE.get(), this, player, SmithingTableExtensionMenu::new));
+		this.extensionMenus.add(ExtensionMenuRegistry.getExtensionMenu(BackpackExtensions.CRAFTING_TABLE.get(), this, player, CraftingExtensionMenu::new));
+		this.extensionMenus.add(ExtensionMenuRegistry.getExtensionMenu(BackpackExtensions.FURNACE.get(), this, player, FurnaceExtensionMenu::new));
+		this.extensionMenus.add(ExtensionMenuRegistry.getExtensionMenu(BackpackExtensions.ANVIL.get(), this, player, AnvilExtensionMenu::new));
+		this.extensionMenus.add(ExtensionMenuRegistry.getExtensionMenu(BackpackExtensions.ENCHANTMENT_TABLE.get(), this, player, EnchantmentTableExtensionMenu::new));
+		this.extensionMenus.add(ExtensionMenuRegistry.getExtensionMenu(BackpackExtensions.STONECUTTER.get(), this, player, StonecutterExtensionMenu::new));
+		this.extensionMenus.add(ExtensionMenuRegistry.getExtensionMenu(BackpackExtensions.BREWING_STAND.get(), this, player, BrewingStandExtensionMenu::new));
+		this.extensionMenus.add(ExtensionMenuRegistry.getExtensionMenu(BackpackExtensions.GRINDSTONE.get(), this, player, GrindstoneExtensionMenu::new));
+		this.extensionMenus.add(ExtensionMenuRegistry.getExtensionMenu(BackpackExtensions.SMITHING_TABLE.get(), this, player, SmithingTableExtensionMenu::new));
 		this.extensionMenus.forEach((extensionMenu) -> {
 			extensionMenu.addSlots(this::addSlot);
 		});
@@ -110,13 +111,13 @@ public class BackpackMenu extends AbstractContainerMenu implements ExtensionMenu
 			ItemStack slotStack = slot.getItem();
 			if (872 >= index && index >= 0) { // from menu
 				stack = slotStack.copy();
-				if (this.extension == BackpackExtension.CRAFTING_TABLE.get()) {
+				if (this.extension == BackpackExtensions.CRAFTING_TABLE.get()) {
 					if (!this.moveItemStackTo(slotStack, 917, 927, false)) { // into crafting table
 						if (!this.moveInventory(slotStack)) { // into inventory
 							return ItemStack.EMPTY;
 						}
 					}
-				} else if (this.extension == BackpackExtension.FURNACE.get()) {
+				} else if (this.extension == BackpackExtensions.FURNACE.get()) {
 					if (FurnaceExtensionMenu.canSmelt(player, slotStack)) {
 						if (!this.moveItemStackTo(slotStack, 931, 932, false)) { // into furnace input
 							if (!this.moveItemStackTo(slotStack, 927, 931, false)) { // into furnace input storage
@@ -132,13 +133,13 @@ public class BackpackMenu extends AbstractContainerMenu implements ExtensionMenu
 							}
 						}
 					}
-				} else if (this.extension == BackpackExtension.ANVIL.get()) {
+				} else if (this.extension == BackpackExtensions.ANVIL.get()) {
 					if (!this.moveItemStackTo(slotStack, 938, 940, false)) { // into anvil input
 						if (!this.moveInventory(slotStack)) { // into inventory
 							return ItemStack.EMPTY;
 						}
 					}
-				} else if (this.extension == BackpackExtension.ENCHANTMENT_TABLE.get()) {
+				} else if (this.extension == BackpackExtensions.ENCHANTMENT_TABLE.get()) {
 					if (slotStack.is(Tags.Items.BOOKSHELVES) || (this.canQuickMoveBook(player) && slotStack.getItem() instanceof BookItem)) {
 						if (!this.moveItemStackTo(slotStack, 941, 942, false)) { // into enchantment table power
 							if (!this.moveInventory(slotStack)) { // into inventory
@@ -158,7 +159,7 @@ public class BackpackMenu extends AbstractContainerMenu implements ExtensionMenu
 							}
 						}
 					}
-				} else if (this.extension == BackpackExtension.STONECUTTER.get()) {
+				} else if (this.extension == BackpackExtensions.STONECUTTER.get()) {
 					if (player.level.getRecipeManager().getRecipeFor(RecipeType.STONECUTTING, new SimpleContainer(slotStack), player.level).isPresent()) {
 						if (!this.moveItemStackTo(slotStack, 944, 945, false)) { // into stonecutter input
 							if (!this.moveInventory(slotStack)) { // into inventory
@@ -166,8 +167,7 @@ public class BackpackMenu extends AbstractContainerMenu implements ExtensionMenu
 							}
 						}
 					}
-				} else if (this.extension == BackpackExtension.BREWING_STAND.get()) {
-					XBackpack.LOGGER.info("extension is brewing stand");
+				} else if (this.extension == BackpackExtensions.BREWING_STAND.get()) {
 					if (slotStack.is(Items.BLAZE_POWDER) && this.canQuickMovePowder(player)) {
 						if (!this.moveItemStackTo(slotStack, 947, 948, false)) { // into brewing stand fuel
 							if (!this.moveInventory(slotStack)) { // into inventory
@@ -181,14 +181,13 @@ public class BackpackMenu extends AbstractContainerMenu implements ExtensionMenu
 							}
 						}
 					} else if (BrewingRecipeRegistry.isValidInput(slotStack)) {
-						XBackpack.LOGGER.info("isValidInput");
 						if (!this.moveItemStackTo(slotStack, 948, 451, false)) { // into brewing stand result
 							if (!this.moveInventory(slotStack)) { // into inventoryentory
 								return ItemStack.EMPTY;
 							}
 						}
 					}
-				} else if (this.extension == BackpackExtension.GRINDSTONE.get()) {
+				} else if (this.extension == BackpackExtensions.GRINDSTONE.get()) {
 					if (slotStack.isDamageableItem() || slotStack.is(Items.ENCHANTED_BOOK) || slotStack.isEnchanted()) {
 						if (!this.moveItemStackTo(slotStack, 951, 953, false)) { // into grindstone input
 							if (!this.moveInventory(slotStack)) { // into inventory
@@ -196,7 +195,7 @@ public class BackpackMenu extends AbstractContainerMenu implements ExtensionMenu
 							}
 						}
 					}
-				} else if (this.extension == BackpackExtension.SMITHING_TABLE.get()) {
+				} else if (this.extension == BackpackExtensions.SMITHING_TABLE.get()) {
 					if (this.canQuickMoveIngredient(player, slotStack)) {
 						if (!this.moveItemStackTo(slotStack, 955, 956, false)) { // into smithing table addition
 							if (!this.moveInventory(slotStack)) { // into inventory
@@ -233,13 +232,13 @@ public class BackpackMenu extends AbstractContainerMenu implements ExtensionMenu
 							return ItemStack.EMPTY;
 						}
 					}
-				} else if (this.extension == BackpackExtension.CRAFTING_TABLE.get()) {
+				} else if (this.extension == BackpackExtensions.CRAFTING_TABLE.get()) {
 					if (!this.moveItemStackTo(slotStack, 917, 927, false)) { // into crafting table
 						if (!this.moveItemStackTo(slotStack, 0, 873, false)) { // into menu
 							return ItemStack.EMPTY;
 						}
 					}
-				} else if (this.extension == BackpackExtension.FURNACE.get()) {
+				} else if (this.extension == BackpackExtensions.FURNACE.get()) {
 					if (FurnaceExtensionMenu.canSmelt(player, slotStack)) {
 						if (!this.moveItemStackTo(slotStack, 931, 932, false)) { // into furnace input
 							if (!this.moveItemStackTo(slotStack, 927, 931, false)) { // into furnace input storage
@@ -255,13 +254,13 @@ public class BackpackMenu extends AbstractContainerMenu implements ExtensionMenu
 							}
 						}
 					}
-				} else if (this.extension == BackpackExtension.ANVIL.get()) {
+				} else if (this.extension == BackpackExtensions.ANVIL.get()) {
 					if (!this.moveItemStackTo(slotStack, 938, 940, false)) { // into anvil input
 						if (!this.moveItemStackTo(slotStack, 0, 873, false)) { // into menu
 							return ItemStack.EMPTY;
 						}
 					}
-				} else if (this.extension == BackpackExtension.ENCHANTMENT_TABLE.get()) {
+				} else if (this.extension == BackpackExtensions.ENCHANTMENT_TABLE.get()) {
 					if (slotStack.is(Tags.Items.BOOKSHELVES) || (this.canQuickMoveBook(player) && slotStack.getItem() instanceof BookItem)) {
 						if (!this.moveItemStackTo(slotStack, 941, 942, false)) { // into enchantment table power
 							if (!this.moveItemStackTo(slotStack, 0, 873, false)) { // into menu
@@ -281,7 +280,7 @@ public class BackpackMenu extends AbstractContainerMenu implements ExtensionMenu
 							}
 						}
 					}
-				} else if (this.extension == BackpackExtension.STONECUTTER.get()) {
+				} else if (this.extension == BackpackExtensions.STONECUTTER.get()) {
 					if (player.level.getRecipeManager().getRecipeFor(RecipeType.STONECUTTING, new SimpleContainer(slotStack), player.level).isPresent()) {
 						if (!this.moveItemStackTo(slotStack, 944, 945, false)) { // into stonecutter input
 							if (!this.moveItemStackTo(slotStack, 0, 873, false)) { // into menu
@@ -289,8 +288,7 @@ public class BackpackMenu extends AbstractContainerMenu implements ExtensionMenu
 							}
 						}
 					}
-				} else if (this.extension == BackpackExtension.BREWING_STAND.get()) {
-					XBackpack.LOGGER.info("extension is brewing stand");
+				} else if (this.extension == BackpackExtensions.BREWING_STAND.get()) {
 					if (slotStack.is(Items.BLAZE_POWDER) && this.canQuickMovePowder(player)) {
 						if (!this.moveItemStackTo(slotStack, 947, 948, false)) { // into brewing stand fuel
 							if (!this.moveItemStackTo(slotStack, 0, 873, false)) { // into menu
@@ -311,7 +309,7 @@ public class BackpackMenu extends AbstractContainerMenu implements ExtensionMenu
 							}
 						}
 					}
-				} else if (this.extension == BackpackExtension.GRINDSTONE.get()) {
+				} else if (this.extension == BackpackExtensions.GRINDSTONE.get()) {
 					if (slotStack.isDamageableItem() || slotStack.is(Items.ENCHANTED_BOOK) || slotStack.isEnchanted()) {
 						if (!this.moveItemStackTo(slotStack, 951, 953, false)) { // into grindstone input
 							if (!this.moveItemStackTo(slotStack, 0, 873, false)) { // into menu
@@ -319,7 +317,7 @@ public class BackpackMenu extends AbstractContainerMenu implements ExtensionMenu
 							}
 						}
 					}
-				} else if (this.extension == BackpackExtension.SMITHING_TABLE.get()) {
+				} else if (this.extension == BackpackExtensions.SMITHING_TABLE.get()) {
 					if (this.canQuickMoveIngredient(player, slotStack)) {
 						if (!this.moveItemStackTo(slotStack, 955, 956, false)) { // into smithing table addition
 							if (!this.moveItemStackTo(slotStack, 0, 873, false)) { // into menu

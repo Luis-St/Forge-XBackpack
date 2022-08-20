@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import net.luis.xbackpack.world.capability.BackpackProvider;
-import net.luis.xbackpack.world.extension.BackpackExtension;
+import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.luis.xbackpack.world.inventory.BackpackMenu;
 import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
 import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
@@ -29,7 +29,7 @@ public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 	private UpgradeRecipe selectedRecipe;
 	
 	public SmithingTableExtensionMenu(BackpackMenu menu, Player player) {
-		super(menu, player, BackpackExtension.SMITHING_TABLE.get());
+		super(menu, player, BackpackExtensions.SMITHING_TABLE.get());
 		this.handler = BackpackProvider.get(this.player).getSmithingHandler();
 		this.level = this.player.level;
 	}

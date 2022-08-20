@@ -1,14 +1,9 @@
 package net.luis.xbackpack.world.capability;
 
-import java.util.List;
-
-import com.google.common.collect.Lists;
-
 import net.luis.xbackpack.BackpackConstans;
 import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.network.XBNetworkHandler;
 import net.luis.xbackpack.network.packet.UpdateBackpack;
-import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.inventory.handler.BrewingHandler;
 import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
 import net.luis.xbackpack.world.inventory.handler.EnchantingHandler;
@@ -20,11 +15,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.stats.Stats;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.registries.RegistryObject;
 
 /**
  * 
@@ -35,9 +28,9 @@ import net.minecraftforge.registries.RegistryObject;
 public class BackpackHandler implements IBackpack {
 	
 	private final Player player;
+	private final BackpackConfig config;
 	private final ItemStackHandler backpackHandler = new ItemStackHandler(873);
 	private final ItemStackHandler toolHandler = new ItemStackHandler(3);
-	private final List<BackpackExtension> usableExtensions = Lists.newArrayList();
 	private final ItemStackHandler craftingHandler = new ItemStackHandler(9);
 	private final SmeltingHandler furnaceHandler = new SmeltingHandler(1, 4, 4);
 	private final SmeltingProgressHandler smeltHandler;
@@ -51,6 +44,7 @@ public class BackpackHandler implements IBackpack {
 	
 	public BackpackHandler(Player player) {
 		this.player = player;
+		this.config = new BackpackConfig(this.player);
 		this.smeltHandler = new SmeltingProgressHandler(this.player, this.furnaceHandler, BackpackConstans.FURNACE_RECIPE_TYPES);
 		this.brewHandler = new BrewingProgressHandler(this.player, this.brewingHandler);
 	}
@@ -61,6 +55,11 @@ public class BackpackHandler implements IBackpack {
 	}
 	
 	@Override
+	public BackpackConfig getConfig() {
+		return this.config;
+	}
+	
+	@Override
 	public ItemStackHandler getBackpackHandler() {
 		return this.backpackHandler;
 	}
@@ -68,36 +67,6 @@ public class BackpackHandler implements IBackpack {
 	@Override
 	public ItemStackHandler getToolHandler() {
 		return this.toolHandler;
-	}
-	
-	@Override
-	public boolean canUseExtension(BackpackExtension extension) {
-		if (this.player instanceof ServerPlayer player) {
-			int count = player.getStats().getValue(Stats.ITEM_CRAFTED, extension.icon().getItem());
-			if (count > 0) {
-				this.usableExtensions.add(extension);
-				return true;
-			}
-		}
-		return this.usableExtensions.contains(extension);
-	}
-	
-	private void updateUsableExtensions() {
-		if (!this.player.level.isClientSide) {
-			BackpackExtension.BACKPACK_EXTENSIONS.getEntries().stream().map(RegistryObject::get).forEach(this::canUseExtension);
-		} else {
-			XBackpack.LOGGER.warn("Can not update usable extensions on the client");
-		}
-	}
-	
-	@Override
-	public boolean setUsableExtensions(List<BackpackExtension> usableExtensions) {
-		if (this.player.level.isClientSide) {
-			this.usableExtensions.clear();
-			this.usableExtensions.addAll(usableExtensions);
-			return true;
-		}
-		return false;
 	}
 
 	@Override
@@ -159,8 +128,8 @@ public class BackpackHandler implements IBackpack {
 	@Override
 	public boolean broadcastChanges() {
 		if (this.player instanceof ServerPlayer player) {
-			this.updateUsableExtensions();
-			XBNetworkHandler.sendToPlayer(player, new UpdateBackpack(this.serialize(), this.usableExtensions));
+			this.config.updateServer();
+			XBNetworkHandler.sendToPlayer(player, new UpdateBackpack(this.serialize()));
 			return true;
 		}
 		XBackpack.LOGGER.warn("Can not broadcast changes on the client");
@@ -170,6 +139,7 @@ public class BackpackHandler implements IBackpack {
 	@Override
 	public CompoundTag serialize() {
 		CompoundTag tag = new CompoundTag();
+		tag.put("backpack_config", this.config.serialize());
 		tag.put("backpack_handler", this.backpackHandler.serializeNBT());
 		tag.put("tool_handler", this.toolHandler.serializeNBT());
 		tag.put("crafting_handler", this.craftingHandler.serializeNBT());
@@ -190,6 +160,9 @@ public class BackpackHandler implements IBackpack {
 		if (tag.contains("Size") && tag.contains("Items")) {
 			this.deserializeOld(tag);
 		} else {
+			if (tag.contains("backpack_config")) {
+				this.config.deserialize(tag.getCompound("backpack_config"));
+			}
 			this.backpackHandler.deserializeNBT(tag.getCompound("backpack_handler"));
 			this.toolHandler.deserializeNBT(tag.getCompound("tool_handler"));
 			this.craftingHandler.deserializeNBT(tag.getCompound("crafting_handler"));

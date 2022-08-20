@@ -1,7 +1,5 @@
 package net.luis.xbackpack.client;
 
-import java.util.List;
-
 import org.jetbrains.annotations.Nullable;
 
 import net.luis.xbackpack.client.gui.screens.BackpackScreen;
@@ -12,8 +10,8 @@ import net.luis.xbackpack.client.gui.screens.extension.EnchantmentTableExtension
 import net.luis.xbackpack.client.gui.screens.extension.FurnaceExtensionScreen;
 import net.luis.xbackpack.client.gui.screens.extension.StonecutterExtensionScreen;
 import net.luis.xbackpack.world.capability.BackpackProvider;
-import net.luis.xbackpack.world.capability.IBackpack;
 import net.luis.xbackpack.world.extension.BackpackExtension;
+import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -26,11 +24,9 @@ import net.minecraft.resources.ResourceLocation;
 
 public class XBClientPacketHandler {
 	
-	public static void updateBackpack(CompoundTag tag, List<BackpackExtension> usableExtensions) {
+	public static void updateBackpack(CompoundTag tag) {
 		Minecraft minecraft = Minecraft.getInstance();
-		IBackpack backpack = BackpackProvider.get(minecraft.player);
-		backpack.deserialize(tag);
-		backpack.setUsableExtensions(usableExtensions);
+		BackpackProvider.get(minecraft.player).deserialize(tag);
 	}
 	
 	@Nullable
@@ -46,31 +42,31 @@ public class XBClientPacketHandler {
 	}
 	
 	public static void updateFurnaceExtension(int cookingProgress, int fuelProgress) {
-		if (getExtensionScreen(BackpackExtension.FURNACE.get()) instanceof FurnaceExtensionScreen furnaceExtension) {
+		if (getExtensionScreen(BackpackExtensions.FURNACE.get()) instanceof FurnaceExtensionScreen furnaceExtension) {
 			furnaceExtension.update(cookingProgress, fuelProgress);
 		}
 	}
 	
 	public static void updateAnvilExtension(int cost) {
-		if (getExtensionScreen(BackpackExtension.ANVIL.get()) instanceof AnvilExtensionScreen anvilExtension) {
+		if (getExtensionScreen(BackpackExtensions.ANVIL.get()) instanceof AnvilExtensionScreen anvilExtension) {
 			anvilExtension.update(cost);
 		}
 	}
 	
 	public static void updateEnchantmentTableExtension(ResourceLocation[] enchantments, int[] enchantmentLevels, int[] enchantingCosts, int enchantmentSeed) {
-		if (getExtensionScreen(BackpackExtension.ENCHANTMENT_TABLE.get()) instanceof EnchantmentTableExtensionScreen enchantmentTableExtension) {
+		if (getExtensionScreen(BackpackExtensions.ENCHANTMENT_TABLE.get()) instanceof EnchantmentTableExtensionScreen enchantmentTableExtension) {
 			enchantmentTableExtension.update(enchantments, enchantmentLevels, enchantingCosts, enchantmentSeed);
 		}
 	}
 	
 	public static void updateStonecutterExtension(boolean resetSelected) {
-		if (getExtensionScreen(BackpackExtension.STONECUTTER.get()) instanceof StonecutterExtensionScreen stonecutterScreen) {
+		if (getExtensionScreen(BackpackExtensions.STONECUTTER.get()) instanceof StonecutterExtensionScreen stonecutterScreen) {
 			stonecutterScreen.updateRecipes(resetSelected);
 		}
 	}
 	
 	public static void updateBrewingStandExtension(int fuel, int brewTime) {
-		if (getExtensionScreen(BackpackExtension.BREWING_STAND.get()) instanceof BrewingStandExtensionScreen brewingStandScreen) {
+		if (getExtensionScreen(BackpackExtensions.BREWING_STAND.get()) instanceof BrewingStandExtensionScreen brewingStandScreen) {
 			brewingStandScreen.update(fuel, brewTime);
 		}
 	}

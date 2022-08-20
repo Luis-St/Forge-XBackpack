@@ -22,5 +22,10 @@
   "xbackpack.backpack_extension.grindstone.title": "Disenchanting",
   "xbackpack.backpack_extension.grindstone.tooltip": "Disenchanting",
   "xbackpack.backpack_extension.smithing_table.title": "Smithing",
-  "xbackpack.backpack_extension.smithing_table.tooltip": "Smithing"
+  "xbackpack.backpack_extension.smithing_table.tooltip": "Smithing",
+  "xbackpack.commands.arguments.extension.invalid": "Unknown backpack extension {0}",
+  "xbackpack.commands.arguments.state.invalid": "Unknown extension state {0}",
+  "xbackpack.commands.backpack.get_failure": "Can not get the backpack extension of multiple players",
+  "xbackpack.commands.backpack.get_success": "Backpack extension {0} of player {1} has state {2}",
+  "xbackpack.commands.backpack.set_success": "Set successfully the state of backpack extension {0} of {1} players to {2}"
 }
