@@ -12,7 +12,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.InputEvent.MouseScrollingEvent;
+import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -26,7 +26,7 @@ import net.minecraftforge.fml.common.Mod;
 public class OnMouseScrollEvent {
 	
 	@SubscribeEvent
-	public static void mouseScroll(MouseScrollingEvent event) {
+	public static void mouseScroll(InputEvent.MouseScrollEvent event) {
 		double delta = event.getScrollDelta();
 		Minecraft minecraft = Minecraft.getInstance();
 		LocalPlayer player = minecraft.player;

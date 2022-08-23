@@ -11,11 +11,10 @@ import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.capability.IBackpack;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.extension.ExtensionState;
-import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
-import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 
 /**
@@ -26,7 +25,7 @@ import net.minecraft.server.level.ServerPlayer;
 
 public class BackpackCommand {
 	
-	public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext context) {
+	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
 		dispatcher.register(Commands.literal("backpack").requires((source) -> {
 			return source.hasPermission(2);
 		}).then(Commands.argument("players", EntityArgument.players()).then(Commands.argument("extension", BackpackExtensionArgument.extension()).then(Commands.literal("get").executes((command) -> {
@@ -38,10 +37,10 @@ public class BackpackCommand {
 	
 	private static int getExtensionState(CommandSourceStack source, List<ServerPlayer> players, BackpackExtension extension) {
 		if (players.size() > 1) {
-			source.sendFailure(Component.translatable("xbackpack.commands.backpack.get_failure"));
+			source.sendFailure(new TranslatableComponent("xbackpack.commands.backpack.get_failure"));
 		} else {
 			ServerPlayer player = players.get(0);
-			source.sendSuccess(Component.translatable("xbackpack.commands.backpack.get_success", extension, player.getName().getString(), BackpackProvider.get(player).getConfig().getState(extension).getName()), false);
+			source.sendSuccess(new TranslatableComponent("xbackpack.commands.backpack.get_success", extension, player.getName().getString(), BackpackProvider.get(player).getConfig().getState(extension).getName()), false);
 		}
 		return 1;
 	}
@@ -56,7 +55,7 @@ public class BackpackCommand {
 			backpack.broadcastChanges();
 		}
 		if (players.size() > 0) {
-			source.sendSuccess(Component.translatable("xbackpack.commands.backpack.set_success", extension, i, state.getName()), false);
+			source.sendSuccess(new TranslatableComponent("xbackpack.commands.backpack.set_success", extension, i, state.getName()), false);
 		}
 		return 1;
 	}

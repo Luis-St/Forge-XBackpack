@@ -4,7 +4,7 @@ plugins {
     id 'net.minecraftforge.gradle' version '5.1.+'
 }
 
-version = '1.19.2-2.6'
+version = '1.18.2-2.6'
 group = 'net.luis.xbackpack'
 archivesBaseName = 'XBackpack'
 
@@ -12,7 +12,7 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 minecraft {
-	mappings channel: 'official', version: '1.19.2'
+	mappings channel: 'official', version: '1.18.2'
 
 	accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 	
@@ -82,14 +82,14 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
-	minecraft 'net.minecraftforge:forge:1.19.2-43.1.1'
+	minecraft 'net.minecraftforge:forge:1.18.2-40.1.73'
 }
 
 jar {
 	manifest {
 		attributes([
 			"Specification-Title"     : "XBackpack",
-			"Specification-Version"   : "1.19.2-2.6",
+			"Specification-Version"   : "1.18.2-2.6",
 			"Implementation-Title"    : project.name,
 			"Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
 		])

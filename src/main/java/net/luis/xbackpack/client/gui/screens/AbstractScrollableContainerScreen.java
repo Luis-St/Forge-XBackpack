@@ -44,7 +44,7 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 	@Override
 	public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		this.renderBg(stack, partialTicks, mouseX, mouseY);
-		MinecraftForge.EVENT_BUS.post(new ContainerScreenEvent.Render.Background(this, stack, mouseX, mouseY));
+		MinecraftForge.EVENT_BUS.post(new ContainerScreenEvent.DrawBackground(this, stack, mouseX, mouseY));
 		RenderSystem.disableDepthTest();
 		for (Widget widget : this.renderables) {
 			widget.render(stack, mouseX, mouseY, partialTicks);
@@ -72,7 +72,7 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 			}
 		}
 		this.renderLabels(stack, mouseX, mouseY);
-		MinecraftForge.EVENT_BUS.post(new ContainerScreenEvent.Render.Foreground(this, stack, mouseX, mouseY));
+		MinecraftForge.EVENT_BUS.post(new ContainerScreenEvent.DrawForeground(this, stack, mouseX, mouseY));
 		ItemStack mouseStack = this.draggingItem.isEmpty() ? this.menu.getCarried() : this.draggingItem;
 		if (!mouseStack.isEmpty()) {
 			int renderOffset = this.draggingItem.isEmpty() ? 8 : 16;

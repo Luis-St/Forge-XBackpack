@@ -104,7 +104,7 @@ public class GrindstoneExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	private void playSound(ServerPlayer player, ServerLevel level) {
-		player.connection.send(new ClientboundSoundPacket(SoundEvents.GRINDSTONE_USE, SoundSource.BLOCKS, player.getX(), player.getY(), player.getZ(), 1.0F, level.random.nextFloat() * 0.1F + 0.9F, level.random.nextLong()));
+		player.connection.send(new ClientboundSoundPacket(SoundEvents.GRINDSTONE_USE, SoundSource.BLOCKS, player.getX(), player.getY(), player.getZ(), 1.0F, level.random.nextFloat() * 0.1F + 0.9F));
 	}
 	
 	@Override
@@ -170,7 +170,7 @@ public class GrindstoneExtensionMenu extends AbstractExtensionMenu {
 		Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(secondStack);
 		for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
 			Enchantment enchantment = entry.getKey();
-			if (!enchantment.isCurse() || EnchantmentHelper.getTagEnchantmentLevel(enchantment, resultStack) == 0) {
+			if (!enchantment.isCurse() || EnchantmentHelper.getItemEnchantmentLevel(enchantment, resultStack) == 0) {
 				resultStack.enchant(enchantment, entry.getValue());
 			}
 		}

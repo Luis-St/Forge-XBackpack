@@ -23,7 +23,7 @@ public class BackpackExtensions {
 	
 	public static final ResourceKey<Registry<BackpackExtension>> REGISTRY_KEY = ResourceKey.createRegistryKey(new ResourceLocation(XBackpack.MOD_ID, "backpack_extension"));
 	public static final DeferredRegister<BackpackExtension> BACKPACK_EXTENSIONS = DeferredRegister.create(REGISTRY_KEY, XBackpack.MOD_ID);
-	public static final Supplier<IForgeRegistry<BackpackExtension>> REGISTRY = BACKPACK_EXTENSIONS.makeRegistry(RegistryBuilder::new);
+	public static final Supplier<IForgeRegistry<BackpackExtension>> REGISTRY = BACKPACK_EXTENSIONS.makeRegistry(BackpackExtension.class, RegistryBuilder::new);
 	
 	public static final RegistryObject<BackpackExtension> NO = BACKPACK_EXTENSIONS.register("no", () -> {
 		return new BackpackExtension(ItemStack.EMPTY, 0, 0, 0, 0);

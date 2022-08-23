@@ -38,23 +38,23 @@ public class XBNetworkHandler {
 	
 	public static void register() {
 		simpleChannel = NetworkRegistry.newSimpleChannel(new ResourceLocation(XBackpack.MOD_ID, "simple_chnanel"), () -> VERSION, VERSION::equals, VERSION::equals);
-		simpleChannel.messageBuilder(BackpackOpen.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(BackpackOpen::encode).decoder(BackpackOpen::new).consumerMainThread(BackpackOpen::handle).add();
-		simpleChannel.messageBuilder(UpdateBackpack.class, id++, NetworkDirection.PLAY_TO_CLIENT).encoder(UpdateBackpack::encode).decoder(UpdateBackpack::new).consumerMainThread(UpdateBackpack::handle).add();
-		simpleChannel.messageBuilder(BackpackNextTool.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(BackpackNextTool::encode).decoder(BackpackNextTool::new).consumerMainThread(BackpackNextTool::handle).add();
-		simpleChannel.messageBuilder(BackpackToolTop.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(BackpackToolTop::encode).decoder(BackpackToolTop::new).consumerMainThread(BackpackToolTop::handle).add();
-		simpleChannel.messageBuilder(BackpackToolMid.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(BackpackToolMid::encode).decoder(BackpackToolMid::new).consumerMainThread(BackpackToolMid::handle).add();
-		simpleChannel.messageBuilder(BackpackToolDown.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(BackpackToolDown::encode).decoder(BackpackToolDown::new).consumerMainThread(BackpackToolDown::handle).add();
-		simpleChannel.messageBuilder(BackpackNextToolTop.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(BackpackNextToolTop::encode).decoder(BackpackNextToolTop::new).consumerMainThread(BackpackNextToolTop::handle).add();
-		simpleChannel.messageBuilder(BackpackNextToolDown.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(BackpackNextToolDown::encode).decoder(BackpackNextToolDown::new).consumerMainThread(BackpackNextToolDown::handle).add();
-		simpleChannel.messageBuilder(UpdateBackpackExtension.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(UpdateBackpackExtension::encode).decoder(UpdateBackpackExtension::new).consumerMainThread(UpdateBackpackExtension::handle).add();
-		simpleChannel.messageBuilder(UpdateFurnaceExtension.class, id++, NetworkDirection.PLAY_TO_CLIENT).encoder(UpdateFurnaceExtension::encode).decoder(UpdateFurnaceExtension::new).consumerMainThread(UpdateFurnaceExtension::handle).add();
-		simpleChannel.messageBuilder(UpdateAnvilExtension.class, id++, NetworkDirection.PLAY_TO_CLIENT).encoder(UpdateAnvilExtension::encode).decoder(UpdateAnvilExtension::new).consumerMainThread(UpdateAnvilExtension::handle).add();
+		simpleChannel.messageBuilder(BackpackOpen.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(BackpackOpen::encode).decoder(BackpackOpen::new).consumer(BackpackOpen::handle).add();
+		simpleChannel.messageBuilder(UpdateBackpack.class, id++, NetworkDirection.PLAY_TO_CLIENT).encoder(UpdateBackpack::encode).decoder(UpdateBackpack::new).consumer(UpdateBackpack::handle).add();
+		simpleChannel.messageBuilder(BackpackNextTool.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(BackpackNextTool::encode).decoder(BackpackNextTool::new).consumer(BackpackNextTool::handle).add();
+		simpleChannel.messageBuilder(BackpackToolTop.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(BackpackToolTop::encode).decoder(BackpackToolTop::new).consumer(BackpackToolTop::handle).add();
+		simpleChannel.messageBuilder(BackpackToolMid.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(BackpackToolMid::encode).decoder(BackpackToolMid::new).consumer(BackpackToolMid::handle).add();
+		simpleChannel.messageBuilder(BackpackToolDown.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(BackpackToolDown::encode).decoder(BackpackToolDown::new).consumer(BackpackToolDown::handle).add();
+		simpleChannel.messageBuilder(BackpackNextToolTop.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(BackpackNextToolTop::encode).decoder(BackpackNextToolTop::new).consumer(BackpackNextToolTop::handle).add();
+		simpleChannel.messageBuilder(BackpackNextToolDown.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(BackpackNextToolDown::encode).decoder(BackpackNextToolDown::new).consumer(BackpackNextToolDown::handle).add();
+		simpleChannel.messageBuilder(UpdateBackpackExtension.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(UpdateBackpackExtension::encode).decoder(UpdateBackpackExtension::new).consumer(UpdateBackpackExtension::handle).add();
+		simpleChannel.messageBuilder(UpdateFurnaceExtension.class, id++, NetworkDirection.PLAY_TO_CLIENT).encoder(UpdateFurnaceExtension::encode).decoder(UpdateFurnaceExtension::new).consumer(UpdateFurnaceExtension::handle).add();
+		simpleChannel.messageBuilder(UpdateAnvilExtension.class, id++, NetworkDirection.PLAY_TO_CLIENT).encoder(UpdateAnvilExtension::encode).decoder(UpdateAnvilExtension::new).consumer(UpdateAnvilExtension::handle).add();
 		simpleChannel.messageBuilder(UpdateEnchantmentTableExtension.class, id++, NetworkDirection.PLAY_TO_CLIENT).encoder(UpdateEnchantmentTableExtension::encode).decoder(UpdateEnchantmentTableExtension::new)
-				.consumerMainThread(UpdateEnchantmentTableExtension::handle).add();
+				.consumer(UpdateEnchantmentTableExtension::handle).add();
 		simpleChannel.messageBuilder(UpdateStonecutterExtension.class, id++, NetworkDirection.PLAY_TO_CLIENT).encoder(UpdateStonecutterExtension::encode).decoder(UpdateStonecutterExtension::new)
-				.consumerMainThread(UpdateStonecutterExtension::handle).add();
+				.consumer(UpdateStonecutterExtension::handle).add();
 		simpleChannel.messageBuilder(UpdateBrewingStandExtension.class, id++, NetworkDirection.PLAY_TO_CLIENT).encoder(UpdateBrewingStandExtension::encode).decoder(UpdateBrewingStandExtension::new)
-				.consumerMainThread(UpdateBrewingStandExtension::handle).add();
+				.consumer(UpdateBrewingStandExtension::handle).add();
 	}
 	
 	private static SimpleChannel getChannel() {

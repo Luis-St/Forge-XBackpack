@@ -103,7 +103,7 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	private void playSound(ServerPlayer player, ServerLevel level) {
-		player.connection.send(new ClientboundSoundPacket(SoundEvents.ANVIL_USE, SoundSource.BLOCKS, player.getX(), player.getY(), player.getZ(), 1.0F, level.random.nextFloat() * 0.1F + 0.9F, level.random.nextLong()));
+		player.connection.send(new ClientboundSoundPacket(SoundEvents.ANVIL_USE, SoundSource.BLOCKS, player.getX(), player.getY(), player.getZ(), 1.0F, level.random.nextFloat() * 0.1F + 0.9F));
 	}
 	
 	@Override

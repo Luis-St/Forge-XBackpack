@@ -1,8 +1,10 @@
 package net.luis.xbackpack.world.extension;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.registries.ForgeRegistryEntry;
 
 /**
  * 
@@ -10,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
  *
  */
 
-public class BackpackExtension {
+public class BackpackExtension extends ForgeRegistryEntry<BackpackExtension> {
 	
 	private final ItemStack unlockItem;
 	private final ItemStack icon;
@@ -42,12 +44,12 @@ public class BackpackExtension {
 
 	public Component getTitle() {
 		ResourceLocation location = BackpackExtensions.REGISTRY.get().getKey(this);
-		return Component.translatable(location.getNamespace() + ".backpack_extension." + location.getPath() + ".title");
+		return new TranslatableComponent(location.getNamespace() + ".backpack_extension." + location.getPath() + ".title");
 	}
 
 	public Component getTooltip() {
 		ResourceLocation location = BackpackExtensions.REGISTRY.get().getKey(this);
-		return Component.translatable(location.getNamespace() + ".backpack_extension." + location.getPath() + ".tooltip");
+		return new TranslatableComponent(location.getNamespace() + ".backpack_extension." + location.getPath() + ".tooltip");
 	}
 
 	public int getIconWidth() {

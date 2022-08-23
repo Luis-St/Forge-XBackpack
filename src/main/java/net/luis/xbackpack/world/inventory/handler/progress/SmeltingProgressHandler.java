@@ -2,13 +2,13 @@ package net.luis.xbackpack.world.inventory.handler.progress;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 import net.luis.xbackpack.network.XBNetworkHandler;
 import net.luis.xbackpack.network.packet.extension.UpdateFurnaceExtension;
 import net.luis.xbackpack.world.inventory.handler.SmeltingHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -172,8 +172,8 @@ public class SmeltingProgressHandler implements ProgressHandler {
 	private void consumeFuel(int fuelTime) {
 		ItemStack stack = this.handler.getFuelHandler().extractItem(0, 1, false);
 		if (!stack.isEmpty()) {
-			if (this.getFuelItem().isEmpty() && stack.hasCraftingRemainingItem()) {
-				this.handler.getFuelHandler().insertItem(0, stack.getCraftingRemainingItem(), false);
+			if (this.getFuelItem().isEmpty() && stack.hasContainerItem()) {
+				this.handler.getFuelHandler().insertItem(0, stack.getContainerItem(), false);
 			}
 			this.maxFuel = fuelTime;
 			this.fuelTime = fuelTime;
@@ -181,7 +181,7 @@ public class SmeltingProgressHandler implements ProgressHandler {
 	}
 	
 	private void giveExperience() {
-		RandomSource rng = this.player.getRandom();
+		Random rng = this.player.getRandom();
 		float experience;
 		if (this.progressingRecipe != null) {
 			experience = this.progressingRecipe.getExperience();

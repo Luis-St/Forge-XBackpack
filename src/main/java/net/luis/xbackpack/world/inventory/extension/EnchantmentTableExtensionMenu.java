@@ -1,6 +1,7 @@
 package net.luis.xbackpack.world.inventory.extension;
 
 import java.util.List;
+import java.util.Random;
 import java.util.function.Consumer;
 
 import net.luis.xbackpack.network.XBNetworkHandler;
@@ -21,7 +22,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.BookItem;
@@ -45,7 +45,7 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 	public static final ResourceLocation EMPTY_ENCHANTMENT = new ResourceLocation("enchantment_empty");
 	
 	private final EnchantingHandler handler;
-	private final RandomSource rng = RandomSource.create();
+	private final Random rng = new Random();
 	private final ResourceLocation[] enchantments = new ResourceLocation[] {
 			EMPTY_ENCHANTMENT, EMPTY_ENCHANTMENT, EMPTY_ENCHANTMENT
 	};
@@ -208,7 +208,7 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	private void playSound(ServerPlayer player, ServerLevel level) {
-		player.connection.send(new ClientboundSoundPacket(SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS, player.getX(), player.getY(), player.getZ(), 1.0F, level.random.nextFloat() * 0.1F + 0.9F, level.random.nextLong()));
+		player.connection.send(new ClientboundSoundPacket(SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS, player.getX(), player.getY(), player.getZ(), 1.0F, level.random.nextFloat() * 0.1F + 0.9F));
 	}
 
 }

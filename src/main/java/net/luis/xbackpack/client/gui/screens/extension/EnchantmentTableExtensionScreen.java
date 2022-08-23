@@ -15,10 +15,11 @@ import net.luis.xbackpack.world.inventory.handler.EnchantingHandler;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.inventory.EnchantmentNames;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -114,27 +115,27 @@ public class EnchantmentTableExtensionScreen extends AbstractExtensionScreen {
 		int rowIndex = row + 1;
 		if (this.isHoveringRow(row, mouseX, mouseY) && enchantingCost > 0) {
 			List<Component> components = Lists.newArrayList();
-			components.add((Component.translatable("container.enchant.clue", enchantment == null ? "" : enchantment.getFullname(enchantmentLevel))).withStyle(ChatFormatting.WHITE));
+			components.add((new TranslatableComponent("container.enchant.clue", enchantment == null ? "" : enchantment.getFullname(enchantmentLevel))).withStyle(ChatFormatting.WHITE));
 			if (enchantment == null) {
-				components.add(CommonComponents.EMPTY);
-				components.add(Component.translatable("forge.container.enchant.limitedEnchantability").withStyle(ChatFormatting.RED));
+				components.add(new TextComponent(""));
+				components.add(new TranslatableComponent("forge.container.enchant.limitedEnchantability").withStyle(ChatFormatting.RED));
 			} else if (!player.getAbilities().instabuild) {
-				components.add(CommonComponents.EMPTY);
+				components.add(new TextComponent(""));
 				if (enchantmentLevel >= player.experienceLevel) {
-					components.add(Component.translatable("container.enchant.level.requirement", enchantmentLevel).withStyle(ChatFormatting.RED));
+					components.add(new TranslatableComponent("container.enchant.level.requirement", enchantmentLevel).withStyle(ChatFormatting.RED));
 				} else {
 					MutableComponent mutablecomponent;
 					if (rowIndex == 1) {
-						mutablecomponent = Component.translatable("container.enchant.lapis.one");
+						mutablecomponent = new TranslatableComponent("container.enchant.lapis.one");
 					} else {
-						mutablecomponent = Component.translatable("container.enchant.lapis.many", rowIndex);
+						mutablecomponent = new TranslatableComponent("container.enchant.lapis.many", rowIndex);
 					}
 					components.add(mutablecomponent.withStyle(fuel >= rowIndex ? ChatFormatting.GRAY : ChatFormatting.RED));
 					MutableComponent mutablecomponent1;
 					if (rowIndex == 1) {
-						mutablecomponent1 = Component.translatable("container.enchant.level.one");
+						mutablecomponent1 = new TranslatableComponent("container.enchant.level.one");
 					} else {
-						mutablecomponent1 = Component.translatable("container.enchant.level.many", rowIndex);
+						mutablecomponent1 = new TranslatableComponent("container.enchant.level.many", rowIndex);
 					}
 					components.add(mutablecomponent1.withStyle(ChatFormatting.GRAY));
 				}

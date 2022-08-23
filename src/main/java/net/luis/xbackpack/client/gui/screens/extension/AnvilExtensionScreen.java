@@ -13,6 +13,7 @@ import net.luis.xbackpack.world.inventory.extension.AnvilExtensionMenu;
 import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 
 /**
  * 
@@ -61,7 +62,7 @@ public class AnvilExtensionScreen extends AbstractExtensionScreen {
 				if (this.handler.getResultHandler().getStackInSlot(0).isEmpty()) {
 					component = null;
 				} else if (this.minecraft != null) {
-					component = Component.translatable("xbackpack.backpack_extension.anvil.cost", this.cost);
+					component = new TranslatableComponent("xbackpack.backpack_extension.anvil.cost", this.cost);
 					if (!menu.mayPickup(this.minecraft.player)) {
 						color = 16736352;
 					}

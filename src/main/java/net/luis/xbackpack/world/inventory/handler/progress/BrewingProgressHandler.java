@@ -89,8 +89,8 @@ public class BrewingProgressHandler implements ProgressHandler {
 			if (this.player instanceof ServerPlayer player) {
 				this.playSound(player, player.getLevel());
 			}
-			if (inputStack.hasCraftingRemainingItem()) {
-				ItemStack remainingStack = inputStack.getCraftingRemainingItem();
+			if (inputStack.hasContainerItem()) {
+				ItemStack remainingStack = inputStack.getContainerItem();
 				inputStack.shrink(1);
 				if (inputStack.isEmpty()) {
 					inputStack = remainingStack;
@@ -125,7 +125,7 @@ public class BrewingProgressHandler implements ProgressHandler {
 	}
 	
 	private void playSound(ServerPlayer player, ServerLevel level) {
-		player.connection.send(new ClientboundSoundPacket(SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, player.getX(), player.getY(), player.getZ(), 1.0F, level.random.nextFloat() * 0.1F + 0.9F, level.random.nextLong()));
+		player.connection.send(new ClientboundSoundPacket(SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, player.getX(), player.getY(), player.getZ(), 1.0F, level.random.nextFloat() * 0.1F + 0.9F));
 	}
 	
 	private NonNullList<ItemStack> asList() {

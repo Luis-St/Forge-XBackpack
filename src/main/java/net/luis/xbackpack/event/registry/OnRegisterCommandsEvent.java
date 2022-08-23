@@ -17,7 +17,7 @@ public class OnRegisterCommandsEvent {
 	
 	@SubscribeEvent
 	public static void registerCommands(RegisterCommandsEvent event) {
-		BackpackCommand.register(event.getDispatcher(), event.getBuildContext());
+		BackpackCommand.register(event.getDispatcher());
 	}
 
 }
