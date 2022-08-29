@@ -4,7 +4,7 @@ license="All rights reserved"
 
 [[mods]] #mandatory
 modId="xbackpack" #mandatory
-version="1.19.2-2.6" #mandatory
+version="1.19.2-2.7" #mandatory
 displayName="XBackpack" #mandatory
 credits="Thanks for downloading my Mod" #optional
 authors="Luis" #optional
