@@ -161,7 +161,7 @@ public class BackpackScreen extends AbstractScrollableContainerScreen<BackpackMe
 		return false;
 	}
 	
-	private int getExtensionOffset(BackpackExtension extension) {
+	public int getExtensionOffset(BackpackExtension extension) {
 		int offset = 3;
 		for (BackpackExtension backpackExtension : this.extensions) {
 			if (backpackExtension == extension) {
@@ -292,6 +292,11 @@ public class BackpackScreen extends AbstractScrollableContainerScreen<BackpackMe
 			}
 		}
 		return false;
+	}
+	
+	@Override
+	public BackpackExtension getExtension() {
+		return this.extension;
 	}
 
 	@Override

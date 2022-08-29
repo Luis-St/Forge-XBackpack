@@ -12,6 +12,8 @@ import net.luis.xbackpack.world.extension.BackpackExtension;
 
 public interface ExtensionMenuHolder {
 	
+	BackpackExtension getExtension();
+	
 	List<AbstractExtensionMenu> getExtensionMenus();
 	
 	AbstractExtensionMenu getExtensionMenu(BackpackExtension extension);

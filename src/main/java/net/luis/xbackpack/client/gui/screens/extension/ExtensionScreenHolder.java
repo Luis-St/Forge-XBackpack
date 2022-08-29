@@ -12,6 +12,8 @@ import net.luis.xbackpack.world.extension.BackpackExtension;
 
 public interface ExtensionScreenHolder {
 	
+	BackpackExtension getExtension();
+	
 	List<AbstractExtensionScreen> getExtensionScreens();
 	
 	AbstractExtensionScreen getExtensionScreen(BackpackExtension extension);

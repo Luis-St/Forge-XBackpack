@@ -420,6 +420,7 @@ public class BackpackMenu extends AbstractContainerMenu implements ExtensionMenu
 		return super.clickMenuButton(player, button);
 	}
 	
+	@Override
 	public BackpackExtension getExtension() {
 		return this.extension;
 	}
