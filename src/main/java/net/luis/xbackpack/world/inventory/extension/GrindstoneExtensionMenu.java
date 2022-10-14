@@ -22,6 +22,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.GrindstoneEvent;
 
 /**
  * 
@@ -32,6 +34,7 @@ import net.minecraft.world.level.Level;
 public class GrindstoneExtensionMenu extends AbstractExtensionMenu {
 	
 	private final CraftingHandler handler;
+	private int xp = -1;
 	
 	public GrindstoneExtensionMenu(BackpackMenu menu, Player player) {
 		super(menu, player, BackpackExtensions.GRINDSTONE.get());
@@ -48,13 +51,13 @@ public class GrindstoneExtensionMenu extends AbstractExtensionMenu {
 		consumer.accept(new ExtensionSlot(this, this.handler.getInputHandler(), 0, 243, 172) {
 			@Override
 			public boolean mayPlace(ItemStack stack) {
-				return stack.isDamageableItem() || stack.is(Items.ENCHANTED_BOOK) || stack.isEnchanted();
+				return true;
 			}
 		});
 		consumer.accept(new ExtensionSlot(this, this.handler.getInputHandler(), 1, 243, 193) {
 			@Override
 			public boolean mayPlace(ItemStack stack) {
-				return stack.isDamageableItem() || stack.is(Items.ENCHANTED_BOOK) || stack.isEnchanted();
+				return true;
 			}
 		});
 		consumer.accept(new ExtensionSlot(this, this.handler.getResultHandler(), 0, 305, 187, false) {
@@ -72,14 +75,22 @@ public class GrindstoneExtensionMenu extends AbstractExtensionMenu {
 	
 	private void onTake(Player player, ItemStack stack) {
 		if (player instanceof ServerPlayer serverPlayer) {
-			player.giveExperiencePoints(this.getExperienceAmount(player.level));
+			GrindstoneEvent.OnTakeItem event = new GrindstoneEvent.OnTakeItem(this.handler.getInputHandler().getStackInSlot(0), this.handler.getInputHandler().getStackInSlot(1), this.getExperienceAmount(player.level));
+			if (MinecraftForge.EVENT_BUS.post(event)) {
+				return;
+			}
+			player.giveExperiencePoints(event.getXp());
 			this.playSound(serverPlayer, serverPlayer.getLevel());
+			this.handler.getInputHandler().setStackInSlot(0, event.getNewTopItem());
+			this.handler.getInputHandler().setStackInSlot(1, event.getNewBottomItem());
 		}
-		this.handler.getInputHandler().setStackInSlot(0, ItemStack.EMPTY);
-		this.handler.getInputHandler().setStackInSlot(1, ItemStack.EMPTY);
+		this.menu.broadcastChanges();
 	}
 
 	private int getExperienceAmount(Level level) {
+		if (this.xp > -1) {
+			return this.xp;
+		}
 		int amount = 0;
 		amount += this.getExperienceFromItem(this.handler.getInputHandler().getStackInSlot(0));
 		amount += this.getExperienceFromItem(this.handler.getInputHandler().getStackInSlot(1));
@@ -117,6 +128,10 @@ public class GrindstoneExtensionMenu extends AbstractExtensionMenu {
 		ItemStack bottomStack = this.handler.getInputHandler().getStackInSlot(1);
 		boolean hasInput = !topStack.isEmpty() || !bottomStack.isEmpty();
 		boolean hasInputs = !topStack.isEmpty() && !bottomStack.isEmpty();
+		this.xp = this.onGrindstoneChange(topStack, bottomStack, this.xp);
+		if (this.xp != Integer.MIN_VALUE) {
+			return;
+		}
 		if (!hasInput) {
 			this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);
 		} else {
@@ -203,6 +218,18 @@ public class GrindstoneExtensionMenu extends AbstractExtensionMenu {
 			resultStack.setRepairCost(AnvilMenu.calculateIncreasedRepairCost(resultStack.getBaseRepairCost()));
 		}
 		return resultStack;
+	}
+	
+	private int onGrindstoneChange(ItemStack topStack, ItemStack bottomStack, int xp) {
+		GrindstoneEvent.OnplaceItem event = new GrindstoneEvent.OnplaceItem(topStack, bottomStack, xp);
+		if (MinecraftForge.EVENT_BUS.post(event)) {
+			return event.getXp();
+		}
+		if (event.getOutput().isEmpty()) {
+			return Integer.MIN_VALUE;
+		}
+		this.handler.getResultHandler().setStackInSlot(0, event.getOutput());
+		return event.getXp();
 	}
 	
 }
