@@ -41,7 +41,7 @@ public class BackpackCommand {
 	
 	private static int getExtensionState(CommandSourceStack source, ServerPlayer player, List<BackpackExtension> extensions) {
 		if (extensions.size() > 1) {
-			source.sendFailure(Component.translatable("xbackpack.commands.backpack.get_failure", player.getName().getString()));
+			source.sendFailure(Component.translatable("xbackpack.commands.backpack.get_failure"));
 		} else {
 			source.sendSuccess(Component.translatable("xbackpack.commands.backpack.get_success", getName(extensions.get(0)), player.getName().getString(), BackpackProvider.get(player).getConfig().getState(extensions.get(0)).getName()), false);	
 		}
