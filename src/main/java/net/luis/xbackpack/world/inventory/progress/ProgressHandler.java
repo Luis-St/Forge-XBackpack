@@ -1,4 +1,4 @@
-package net.luis.xbackpack.world.inventory.handler.progress;
+package net.luis.xbackpack.world.inventory.progress;
 
 import net.minecraft.nbt.CompoundTag;
 

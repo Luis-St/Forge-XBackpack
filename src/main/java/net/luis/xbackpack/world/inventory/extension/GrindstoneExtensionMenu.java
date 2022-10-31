@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
-import net.luis.xbackpack.world.inventory.BackpackMenu;
+import net.luis.xbackpack.world.inventory.AbstractExtensionContainerMenu;
 import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
 import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
@@ -36,7 +36,7 @@ public class GrindstoneExtensionMenu extends AbstractExtensionMenu {
 	private final CraftingHandler handler;
 	private int xp = -1;
 	
-	public GrindstoneExtensionMenu(BackpackMenu menu, Player player) {
+	public GrindstoneExtensionMenu(AbstractExtensionContainerMenu menu, Player player) {
 		super(menu, player, BackpackExtensions.GRINDSTONE.get());
 		this.handler = BackpackProvider.get(this.player).getGrindstoneHandler();
 	}
@@ -230,6 +230,22 @@ public class GrindstoneExtensionMenu extends AbstractExtensionMenu {
 		}
 		this.handler.getResultHandler().setStackInSlot(0, event.getOutput());
 		return event.getXp();
+	}
+	
+	@Override
+	public boolean quickMoveStack(ItemStack slotStack, int index) {
+		if (908 >= index && index >= 0) { // from container
+			if (slotStack.isDamageableItem() || slotStack.is(Items.ENCHANTED_BOOK) || slotStack.isEnchanted()) {
+				if (this.menu.moveItemStackTo(slotStack, 951, 953, false)) { // into input
+					return true;
+				}
+			}
+		} else if (index == 953) { // from result
+			if (this.movePreferredMenu(slotStack)) { // into container
+				return true;
+			}
+		}
+		return false;
 	}
 	
 }

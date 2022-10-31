@@ -5,7 +5,7 @@ import java.util.List;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.luis.xbackpack.client.gui.screens.BackpackScreen;
+import net.luis.xbackpack.client.gui.screens.AbstractExtensionContainerScreen;
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
@@ -22,7 +22,7 @@ public class SmithingTableExtensionScreen extends AbstractExtensionScreen {
 	
 	private CraftingHandler handler;
 	
-	public SmithingTableExtensionScreen(BackpackScreen screen, List<BackpackExtension> extensions) {
+	public SmithingTableExtensionScreen(AbstractExtensionContainerScreen<?> screen, List<BackpackExtension> extensions) {
 		super(screen, BackpackExtensions.SMITHING_TABLE.get(), extensions);
 	}
 	

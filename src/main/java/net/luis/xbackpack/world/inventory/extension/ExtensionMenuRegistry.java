@@ -7,7 +7,7 @@ import com.google.common.collect.Maps;
 import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
-import net.luis.xbackpack.world.inventory.BackpackMenu;
+import net.luis.xbackpack.world.inventory.AbstractExtensionContainerMenu;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
@@ -21,7 +21,7 @@ public class ExtensionMenuRegistry {
 	
 	private static final Map<BackpackExtension, ExtensionMenuFactory> EXTENSION_FACTORIES = Maps.newHashMap();
 	
-	public static AbstractExtensionMenu getExtensionMenu(BackpackExtension extension, BackpackMenu menu, Player player, ExtensionMenuFactory fallbackFactory) {
+	public static AbstractExtensionMenu getExtensionMenu(BackpackExtension extension, AbstractExtensionContainerMenu menu, Player player, ExtensionMenuFactory fallbackFactory) {
 		return EXTENSION_FACTORIES.getOrDefault(extension, fallbackFactory).create(menu, player);
 	}
 	

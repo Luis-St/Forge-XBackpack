@@ -5,7 +5,7 @@ import java.util.List;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.luis.xbackpack.client.gui.screens.BackpackScreen;
+import net.luis.xbackpack.client.gui.screens.AbstractExtensionContainerScreen;
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
@@ -25,7 +25,7 @@ public class AnvilExtensionScreen extends AbstractExtensionScreen {
 	private CraftingHandler handler;
 	private int cost;
 	
-	public AnvilExtensionScreen(BackpackScreen screen, List<BackpackExtension> extensions) {
+	public AnvilExtensionScreen(AbstractExtensionContainerScreen<?> screen, List<BackpackExtension> extensions) {
 		super(screen, BackpackExtensions.ANVIL.get(), extensions);
 	}
 	

@@ -1,51 +1,36 @@
 package net.luis.xbackpack.client.gui.screens;
 
-import static net.luis.xbackpack.world.extension.BackpackExtensions.ANVIL;
-import static net.luis.xbackpack.world.extension.BackpackExtensions.BREWING_STAND;
-import static net.luis.xbackpack.world.extension.BackpackExtensions.CRAFTING_TABLE;
-import static net.luis.xbackpack.world.extension.BackpackExtensions.ENCHANTMENT_TABLE;
-import static net.luis.xbackpack.world.extension.BackpackExtensions.FURNACE;
-import static net.luis.xbackpack.world.extension.BackpackExtensions.GRINDSTONE;
-import static net.luis.xbackpack.world.extension.BackpackExtensions.NO;
-import static net.luis.xbackpack.world.extension.BackpackExtensions.SMITHING_TABLE;
-import static net.luis.xbackpack.world.extension.BackpackExtensions.STONECUTTER;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.luis.xbackpack.XBackpack;
-import net.luis.xbackpack.client.gui.screens.extension.AbstractExtensionScreen;
+import net.luis.xbackpack.client.gui.components.RenderData;
 import net.luis.xbackpack.client.gui.screens.extension.AnvilExtensionScreen;
 import net.luis.xbackpack.client.gui.screens.extension.BrewingStandExtensionScreen;
 import net.luis.xbackpack.client.gui.screens.extension.CraftingExtensionScreen;
 import net.luis.xbackpack.client.gui.screens.extension.EnchantmentTableExtensionScreen;
-import net.luis.xbackpack.client.gui.screens.extension.ExtensionScreenHolder;
 import net.luis.xbackpack.client.gui.screens.extension.FurnaceExtensionScreen;
 import net.luis.xbackpack.client.gui.screens.extension.GrindstoneExtensionScreen;
 import net.luis.xbackpack.client.gui.screens.extension.SmithingTableExtensionScreen;
 import net.luis.xbackpack.client.gui.screens.extension.StonecutterExtensionScreen;
 import net.luis.xbackpack.network.XBNetworkHandler;
-import net.luis.xbackpack.network.packet.extension.UpdateBackpackExtension;
+import net.luis.xbackpack.network.packet.modifier.ResetBackpackItemModifier;
+import net.luis.xbackpack.network.packet.modifier.UpdateBackpackSearchTerm;
 import net.luis.xbackpack.world.capability.BackpackProvider;
-import net.luis.xbackpack.world.extension.BackpackExtension;
-import net.luis.xbackpack.world.extension.ExtensionState;
 import net.luis.xbackpack.world.inventory.BackpackMenu;
-import net.luis.xbackpack.world.inventory.extension.slot.ExtensionResultSlot;
-import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
+import net.luis.xbackpack.world.inventory.extension.slot.ExtensionMenuSlot;
+import net.luis.xbackpack.world.inventory.modifier.ItemModifierType;
+import net.luis.xbackpack.world.inventory.modifier.filter.ItemFilters;
+import net.luis.xbackpack.world.inventory.modifier.sorter.ItemSorters;
+import net.luis.xbackpack.world.inventory.slot.BackpackSlot;
 import net.luis.xbackpack.world.inventory.slot.MoveableSlot;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.TooltipFlag;
 
 /**
  * 
@@ -53,14 +38,15 @@ import net.minecraft.world.inventory.Slot;
  *
  */
 
-public class BackpackScreen extends AbstractScrollableContainerScreen<BackpackMenu> implements ExtensionScreenHolder {
-
-	private static final ResourceLocation BACKPACK = new ResourceLocation(XBackpack.MOD_ID, "textures/gui/container/backpack.png");
-	public static final ResourceLocation ICONS = new ResourceLocation(XBackpack.MOD_ID, "textures/gui/container/backpack_icons.png");
+public class BackpackScreen extends AbstractModifiableContainerScreen<BackpackMenu> {
 	
-	private final List<BackpackExtension> extensions = List.of(CRAFTING_TABLE.get(), FURNACE.get(), ANVIL.get(), ENCHANTMENT_TABLE.get(), STONECUTTER.get(), BREWING_STAND.get(), GRINDSTONE.get(), SMITHING_TABLE.get());
-	private final List<AbstractExtensionScreen> extensionScreens = Lists.newArrayList();
-	private BackpackExtension extension = NO.get();
+	private static final ResourceLocation BACKPACK = new ResourceLocation(XBackpack.MOD_ID, "textures/gui/container/backpack.png");
+	private static final ResourceLocation ICONS = new ResourceLocation(XBackpack.MOD_ID, "textures/gui/container/backpack_icons.png");
+	
+	private RenderData searchData;
+	private RenderData filterData;
+	private RenderData sorterData;
+	private RenderData mergerData;
 	
 	public BackpackScreen(BackpackMenu menu, Inventory inventory, Component titleComponent) {
 		super(menu, inventory, titleComponent);
@@ -69,119 +55,61 @@ public class BackpackScreen extends AbstractScrollableContainerScreen<BackpackMe
 		this.imageHeight = 220;
 		this.inventoryLabelX += 22;
 		this.inventoryLabelY = 127;
-		this.extensionScreens.add(new CraftingExtensionScreen(this, this.extensions));
-		this.extensionScreens.add(new FurnaceExtensionScreen(this, this.extensions));
-		this.extensionScreens.add(new AnvilExtensionScreen(this, this.extensions));
-		this.extensionScreens.add(new EnchantmentTableExtensionScreen(this, this.extensions));
-		this.extensionScreens.add(new StonecutterExtensionScreen(this, this.extensions));
-		this.extensionScreens.add(new BrewingStandExtensionScreen(this, this.extensions));
-		this.extensionScreens.add(new GrindstoneExtensionScreen(this, this.extensions));
-		this.extensionScreens.add(new SmithingTableExtensionScreen(this, this.extensions));
+		this.addExtensionScreen(CraftingExtensionScreen::new);
+		this.addExtensionScreen(FurnaceExtensionScreen::new);
+		this.addExtensionScreen(AnvilExtensionScreen::new);
+		this.addExtensionScreen(EnchantmentTableExtensionScreen::new);
+		this.addExtensionScreen(StonecutterExtensionScreen::new);
+		this.addExtensionScreen(BrewingStandExtensionScreen::new);
+		this.addExtensionScreen(GrindstoneExtensionScreen::new);
+		this.addExtensionScreen(SmithingTableExtensionScreen::new);
 	}
 	
 	@Override
-	protected void init() {
-		super.init();
-		this.extensionScreens.forEach((extensionScreen) -> {
-			extensionScreen.init(this.minecraft, this.itemRenderer, this.font, this.imageWidth, this.imageHeight, this.leftPos, this.topPos);
-		});
-	}
-	
-	@Override
-	protected boolean isSlotActive(Slot slot) {
-		if (slot instanceof MoveableSlot moveableSlot) {
-			int y = moveableSlot.getY(this.scrollOffset);
-			return slot.isActive() && 174 >= slot.x && slot.x >= 30 && 108 >= y && y >= 18;
-		} else if (slot instanceof ExtensionSlot extensionSlot) {
-			return this.extension == extensionSlot.getExtension();
-		} else if (slot instanceof ExtensionResultSlot extensionSlot) {
-			return this.extension == extensionSlot.getExtension();
+	protected SlotRenderType getSlotRenderType(Slot slot) {
+		if (slot instanceof ExtensionMenuSlot extensionSlot) {
+			return this.getExtension() == extensionSlot.getExtension() ? SlotRenderType.DEFAULT : SlotRenderType.SKIP;
+		} else if (slot instanceof BackpackSlot) {
+			int y = slot instanceof MoveableSlot moveableSlot ? moveableSlot.getY(this.scrollOffset) : slot.y;
+			if (174 >= slot.x && slot.x >= 30 && 108 >= y && y >= 18) {
+				return SlotRenderType.DEFAULT;
+			} else {
+				return SlotRenderType.SKIP;
+			}
 		}
-		return slot.isActive();
+		return super.getSlotRenderType(slot);
 	}
 	
 	@Override
-	public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-		super.render(stack, mouseX, mouseY, partialTicks);
-		this.renderTooltip(stack, mouseX, mouseY);
+	protected void renderScreen(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+		super.renderScreen(stack, mouseX, mouseY, partialTicks);
+		RenderSystem.setShaderTexture(0, ICONS);
+		this.blit(stack, this.leftPos + 75, this.topPos + 6, 32, 0, 8, 8);
+		GuiComponent.blit(stack, this.leftPos + 89, this.topPos + 6, 8, 8, 46, 0, 14, 14, 256, 256);
+		if (this.menu.getFilter() == ItemFilters.NONE && this.menu.getSorter() == ItemSorters.NONE) {
+			GuiComponent.blit(stack, this.leftPos + 200, this.topPos + 6, 8, 8, 40, 0, 6, 6, 256, 256);
+		}
 	}
 	
 	@Override
 	protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
-		this.renderBackground(stack);
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		this.renderExtensions(stack, partialTicks, mouseX, mouseY);
-		RenderSystem.setShaderTexture(0, BACKPACK);	
-		this.blit(stack, this.leftPos, this.topPos, 0, 0, 238, 220);
+		super.renderBg(stack, partialTicks, mouseX, mouseY);
+		RenderSystem.setShaderTexture(0, BACKPACK);
+		this.blit(stack, this.leftPos, this.topPos, 0, 0, 220, 220);
 		int scrollPosition = this.topPos + 18 + this.scrollOffset;
 		this.blit(stack, this.leftPos + 198, scrollPosition, 244, 0, 12, 15);
-	}
-	
-	private void renderExtensions(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
-		for (BackpackExtension extension : this.extensions) {
-			AbstractExtensionScreen extensionScreen = this.getExtensionScreen(extension);
-			if (extensionScreen != null) {
-				if (this.extension == extension && this.extension != NO.get()) {
-					extensionScreen.renderOpened(stack, partialTicks, mouseX, mouseY);
-				} else if (this.isExtensionRenderable(extension)) {
-					extensionScreen.render(stack, partialTicks, mouseX, mouseY);
-				}
-			}
-		}
-	}
-	
-	@Override
-	protected void renderTooltip(PoseStack stack, int mouseX, int mouseY) {
-		super.renderTooltip(stack, mouseX, mouseY);
-		for (BackpackExtension extension : this.extensions) {
-			AbstractExtensionScreen extensionScreen = this.getExtensionScreen(extension);
-			if (extensionScreen != null && this.canUseExtension(extension)) {
-				extensionScreen.renderTooltip(stack, mouseX, mouseY, this.extension == extension && this.extension != NO.get(), (itemStack) -> {
-					this.renderTooltip(stack, itemStack, mouseX, mouseY);
-				});
-			}
-		}
-	}
-	
-	private boolean canUseExtension(BackpackExtension extension) {
-		return BackpackProvider.get(this.minecraft.player).getConfig().getWithState(ExtensionState.UNLOCKED).contains(extension);
-	}
-	
-	private boolean isExtensionRenderable(BackpackExtension extension) {
-		if (!this.canUseExtension(extension)) {
-			return false;
-		} else if (this.extension == NO.get()) {
-			return true;
-		} else if (this.extensions.indexOf(this.extension) > this.extensions.indexOf(extension)) {
-			return true;
-		} else if (this.getExtensionOffset(extension) > this.getExtensionOffset(this.extension) + this.extension.getImageHeight()) {
-			return true;
-		}
-		return false;
-	}
-	
-	public int getExtensionOffset(BackpackExtension extension) {
-		int offset = 3;
-		for (BackpackExtension backpackExtension : this.extensions) {
-			if (backpackExtension == extension) {
-				break;
-			}
-			offset += extension.getIconHeight() + 2;
-		}
-		return offset;
 	}
 	
 	@Override
 	protected int getScrollbarWidth() {
 		return 14;
 	}
-
+	
 	@Override
 	protected int getScrollbarHeight() {
 		return 108;
 	}
-
+	
 	@Override
 	protected boolean isInScrollbar(double mouseX, double mouseY) {
 		double topX = this.leftPos + 198.0;
@@ -202,116 +130,61 @@ public class BackpackScreen extends AbstractScrollableContainerScreen<BackpackMe
 		return Mth.clamp((int) (this.scrollOffset - delta), 0, this.getScrollbarHeight() - 17);
 	}
 	
-	private boolean isInExtension(BackpackExtension extension, double mouseX, double mouseY) {
-		if (this.extension == extension || this.isExtensionRenderable(extension)) {
-			double topX = this.leftPos + this.imageWidth;
-			double topY = this.topPos + this.getExtensionOffset(extension);
-			if (topX + extension.getIconWidth() >= mouseX && mouseX >= topX && topY + extension.getIconHeight() >= mouseY && mouseY >= topY) {
-				return true;
-			}
-		}
-		return false;
+	@Override
+	public Slot findSlot(double mouseX, double mouseY) {
+		return super.findSlot(mouseX, mouseY);
 	}
 	
 	@Override
-	public boolean mouseClicked(double mouseX, double mouseY, int button) {
-		for (BackpackExtension extension : this.extensions) {
-			if (this.isInExtension(extension, mouseX, mouseY)) {
-				this.updateExtension(extension);
-				break;
-			}
+	protected RenderData getSearchData() {
+		if (this.searchData == null) {
+			this.searchData = new RenderData(true, this.leftPos + 103, this.topPos + 6, 86, 9);
 		}
-		AbstractExtensionScreen extensionScreen = this.getExtensionScreen(this.extension);
-		if (extensionScreen != null && extensionScreen.mouseClicked(mouseX, mouseY, button)) {
-			return true;
-		}
-		return super.mouseClicked(mouseX, mouseY, button);
+		return new RenderData(true, this.leftPos + 103, this.topPos + 6, 86, 9);
 	}
 	
 	@Override
-	public boolean mouseReleased(double mouseX, double mouseY, int button) {
-		AbstractExtensionScreen extensionScreen = this.getExtensionScreen(this.extension);
-		if (extensionScreen != null && extensionScreen.mouseReleased(mouseX, mouseY, button)) {
-			return true;
-		}
-		return super.mouseReleased(mouseX, mouseY, button);
+	protected int getMaxSearchLength() {
+		return 50;
 	}
 	
 	@Override
-	public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-		AbstractExtensionScreen extensionScreen = this.getExtensionScreen(this.extension);
-		if (extensionScreen != null && extensionScreen.mouseDragged(mouseX, mouseY, button, dragX, dragY)) {
-			return true;
+	protected RenderData getFilterData() {
+		if (this.filterData == null) {
+			this.filterData = new RenderData(true, this.leftPos + 73, this.topPos + 4, 12, 12);
 		}
-		return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+		return new RenderData(true, this.leftPos + 73, this.topPos + 4, 12, 12);
 	}
 	
 	@Override
-	public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-		AbstractExtensionScreen extensionScreen = this.getExtensionScreen(this.extension);
-		if (extensionScreen != null && extensionScreen.mouseScrolled(mouseX, mouseY, delta)) {
-			return true;
+	protected RenderData getSorterData() {
+		if (this.sorterData == null) {
+			this.sorterData = new RenderData(true, this.leftPos + 87, this.topPos + 4, 12, 12);
 		}
-		return super.mouseScrolled(mouseX, mouseY, delta);
-	}
-	
-	private void updateExtension(BackpackExtension extension) {
-		this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-		if (this.extension == extension || extension == null) {
-			this.extension = NO.get();
-		} else {
-			this.extension = extension;
-		}
-		XBNetworkHandler.sendToServer(new UpdateBackpackExtension(this.extension));
+		return new RenderData(true, this.leftPos + 87, this.topPos + 4, 12, 12);
 	}
 	
 	@Override
-	protected boolean hasClickedOutside(double mouseX, double mouseY, int leftPos, int topPos, int button) {
-		int buttonOffset = 21;
-		if (this.extensions.stream().filter(this::canUseExtension).collect(Collectors.toList()).isEmpty()) {
-			return super.hasClickedOutside(mouseX, mouseY, leftPos, topPos, button);
-		} else if (this.extension == NO.get()) {
-			this.imageWidth += buttonOffset;
-			boolean flag = super.hasClickedOutside(mouseX, mouseY, leftPos, topPos, button);
-			this.imageWidth -= buttonOffset;
-			return flag;
-		} else if (leftPos > mouseX)  {
-			return true;
-		} else if (topPos > mouseY) {
-			return true;
-		} else if (mouseY > topPos + this.imageHeight && leftPos + this.imageWidth > mouseX) {
-			return true;
-		} else if (mouseX > leftPos + this.imageWidth) {
-			int extensionOffset = this.getExtensionOffset(this.extension);
-			if (topPos + extensionOffset > mouseY) {
-				return true;
-			} else if (mouseX > leftPos + this.imageWidth + this.extension.getImageWidth()) {
-				return true;
-			} else if (mouseY > topPos + extensionOffset + this.extension.getImageHeight()) {
-				return true;
-			}
+	protected RenderData getMergerData() {
+		if (this.mergerData == null) {
+			this.mergerData = new RenderData(true, this.leftPos + 198, this.topPos + 4, 12, 12);
 		}
-		return false;
+		return new RenderData(true, this.leftPos + 198, this.topPos + 4, 12, 12);
 	}
 	
 	@Override
-	public BackpackExtension getExtension() {
-		return this.extension;
+	protected TooltipFlag getTooltipFlag() {
+		return BackpackProvider.get(this.minecraft.player).getConfig().shouldShowModifierInfo() ? TooltipFlag.Default.ADVANCED : TooltipFlag.Default.NORMAL;
 	}
-
+	
 	@Override
-	public List<AbstractExtensionScreen> getExtensionScreens() {
-		return ImmutableList.copyOf(this.extensionScreens);
+	protected void updateSearchTerm(String searchBoxValue) {
+		XBNetworkHandler.sendToServer(new UpdateBackpackSearchTerm(searchBoxValue));
 	}
-
+	
 	@Override
-	public AbstractExtensionScreen getExtensionScreen(BackpackExtension extension) {
-		for (AbstractExtensionScreen extensionScreen : this.extensionScreens) {
-			if (extensionScreen.getExtension() == extension) {
-				return extensionScreen;
-			}
-		}
-		return null;
+	protected void updateItemModifier(ItemModifierType modifierType) {
+		XBNetworkHandler.sendToServer(new ResetBackpackItemModifier(modifierType));
 	}
 	
 }

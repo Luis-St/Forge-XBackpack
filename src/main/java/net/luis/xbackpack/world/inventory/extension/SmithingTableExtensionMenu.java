@@ -6,7 +6,7 @@ import java.util.function.Consumer;
 
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
-import net.luis.xbackpack.world.inventory.BackpackMenu;
+import net.luis.xbackpack.world.inventory.AbstractExtensionContainerMenu;
 import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
 import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
@@ -28,7 +28,7 @@ public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 	private final Level level;
 	private UpgradeRecipe selectedRecipe;
 	
-	public SmithingTableExtensionMenu(BackpackMenu menu, Player player) {
+	public SmithingTableExtensionMenu(AbstractExtensionContainerMenu menu, Player player) {
 		super(menu, player, BackpackExtensions.SMITHING_TABLE.get());
 		this.handler = BackpackProvider.get(this.player).getSmithingHandler();
 		this.level = this.player.level;
@@ -107,6 +107,30 @@ public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 	
 	private SimpleContainer asContainer() {
 		return new SimpleContainer(this.handler.getInputHandler().getStackInSlot(0), this.handler.getInputHandler().getStackInSlot(1));
+	}
+	
+	@Override
+	public boolean quickMoveStack(ItemStack slotStack, int index) {
+		if (908 >= index && index >= 0) { // from container
+			if (this.canQuickMoveIngredient(slotStack)) {
+				if (this.menu.moveItemStackTo(slotStack, 955, 956, false)) { // into addition
+					return true;
+				}
+			} else if (this.menu.moveItemStackTo(slotStack, 954, 955, false)) { // into input
+				return true;
+			}
+		} else if (index == 956) { // from result
+			if (this.movePreferredMenu(slotStack)) { // into container
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private boolean canQuickMoveIngredient(ItemStack stack) {
+		return this.player.level.getRecipeManager().getAllRecipesFor(RecipeType.SMITHING).stream().anyMatch((recipe) -> {
+			return recipe.isAdditionIngredient(stack);
+		});
 	}
 
 }

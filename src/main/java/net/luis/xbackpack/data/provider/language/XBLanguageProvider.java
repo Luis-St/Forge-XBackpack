@@ -11,11 +11,11 @@ import net.minecraftforge.common.data.LanguageProvider;
  */
 
 public class XBLanguageProvider extends LanguageProvider {
-
+	
 	public XBLanguageProvider(DataGenerator generator) {
 		super(generator, XBackpack.MOD_ID, "en_us");
 	}
-
+	
 	@Override
 	protected void addTranslations() {
 		this.add("xbackpack.container.backpack", "Backpack");
@@ -48,6 +48,52 @@ public class XBLanguageProvider extends LanguageProvider {
 		this.add("xbackpack.commands.backpack.get_success", "Backpack extension {0} of player {1} has state {2}");
 		this.add("xbackpack.commands.backpack.set_success.single", "Set successfully the state of backpack extension {0} of player {1} to state {2}");
 		this.add("xbackpack.commands.backpack.set_success.multiple", "Set successfully the state of {0} backpack extensions of player {1} to state {2}");
+		this.add("xbackpack.commands.backpack.tooltip_success_true", "The item modification information was enabled");
+		this.add("xbackpack.commands.backpack.tooltip_success_false", "The item modification information was disabled");
+		this.add("xbackpack.commands.backpack.tooltip_failure", "The command can be executed only by a player");
+		this.add("xbackpack.backpack_action.filter.none", "No Filter");
+		this.add("xbackpack.backpack_action.filter.none.info.0", "No item filter active");
+		this.add("xbackpack.backpack_action.filter.none.info.1", "All items are displayed");
+		this.add("xbackpack.backpack_action.filter.name_search", "Name Filter");
+		this.add("xbackpack.backpack_action.filter.name_search.info.0", "Only items that match the search term will be displayed");
+		this.add("xbackpack.backpack_action.filter.count_search", "Count Filter");
+		this.add("xbackpack.backpack_action.filter.count_search.info.0", "Only items that correspond to the entered number are displayed");
+		this.add("xbackpack.backpack_action.filter.max_count", "Max Count Filter");
+		this.add("xbackpack.backpack_action.filter.max_count.info.0", "Only items that have the maximum stack size are displayed");
+		this.add("xbackpack.backpack_action.filter.enchantable", "Enchantable Filter");
+		this.add("xbackpack.backpack_action.filter.enchantable.info.0", "Only items that can be enchanted are displayed");
+		this.add("xbackpack.backpack_action.filter.enchanted", "Enchanted Filter");
+		this.add("xbackpack.backpack_action.filter.enchanted.info.0", "Only items that are enchanted are displayed");
+		this.add("xbackpack.backpack_action.filter.damageable", "Damageable Filter");
+		this.add("xbackpack.backpack_action.filter.damageable.info.0", "Only items that can be damaged are displayed");
+		this.add("xbackpack.backpack_action.filter.damaged", "Damaged Filter");
+		this.add("xbackpack.backpack_action.filter.damaged.info.0", "Only items that are damaged are displayed");
+		this.add("xbackpack.backpack_action.filter.edible", "Edible Filter");
+		this.add("xbackpack.backpack_action.filter.edible.info.0", "Only items that are edible are displayed");
+		this.add("xbackpack.backpack_action.filter.weapon", "Weapon Filter");
+		this.add("xbackpack.backpack_action.filter.weapon.info.0", "Only weapons are displayed");
+		this.add("xbackpack.backpack_action.filter.tool", "Tool Filter");
+		this.add("xbackpack.backpack_action.filter.tool.info.0", "Only tools are displayed");
+		this.add("xbackpack.backpack_action.filter.armor", "Armor Filter");
+		this.add("xbackpack.backpack_action.filter.armor.info.0", "Only armor is displayed");
+		this.add("xbackpack.backpack_action.sorter.none", "No Sorter");
+		this.add("xbackpack.backpack_action.sorter.none.info.0", "No item sorter active");
+		this.add("xbackpack.backpack_action.sorter.none.info.1", "All items are displayed randomly");
+		this.add("xbackpack.backpack_action.sorter.name_search", "Name Sorter");
+		this.add("xbackpack.backpack_action.sorter.name_search.info.0", "The items are sorted by the search term");
+		this.add("xbackpack.backpack_action.sorter.name_search.info.1", "The item that most matches the search term comes first");
+		this.add("xbackpack.backpack_action.sorter.count_search", "Count Sorter");
+		this.add("xbackpack.backpack_action.sorter.count_search.info.0", "The items are sorted by the searched count");
+		this.add("xbackpack.backpack_action.sorter.alphabetically", "Alphabetical Sorter");
+		this.add("xbackpack.backpack_action.sorter.alphabetically.info.0", "The items are sorted alphabetically");
+		this.add("xbackpack.backpack_action.sorter.count_downwards", "Count Downwards Sorter");
+		this.add("xbackpack.backpack_action.sorter.count_downwards.info.0", "The items are sorted by the stack size");
+		this.add("xbackpack.backpack_action.sorter.count_downwards.info.1", "The item with the largest stack size comes first");
+		this.add("xbackpack.backpack_action.sorter.count_upwards", "Count Upwards Sorter");
+		this.add("xbackpack.backpack_action.sorter.count_upwards.info.0", "The items are sorted by the stack size");
+		this.add("xbackpack.backpack_action.sorter.count_upwards.info.1", "The item with the smallest stack size comes first");
+		this.add("xbackpack.backpack_action.item_merger", "Item Merger");
+		this.add("xbackpack.backpack_action.item_merger.info", "Tried to merge all items that are not maximally stacked");
 	}
 	
 }

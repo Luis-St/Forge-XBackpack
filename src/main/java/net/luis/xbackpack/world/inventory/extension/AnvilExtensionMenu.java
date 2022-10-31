@@ -7,7 +7,7 @@ import net.luis.xbackpack.network.XBNetworkHandler;
 import net.luis.xbackpack.network.packet.extension.UpdateAnvilExtension;
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
-import net.luis.xbackpack.world.inventory.BackpackMenu;
+import net.luis.xbackpack.world.inventory.AbstractExtensionContainerMenu;
 import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
 import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
@@ -37,7 +37,7 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 	private int repairItemCountCost;
 	private int cost;
 	
-	public AnvilExtensionMenu(BackpackMenu menu, Player player) {
+	public AnvilExtensionMenu(AbstractExtensionContainerMenu menu, Player player) {
 		super(menu, player, BackpackExtensions.ANVIL.get());
 		this.handler = BackpackProvider.get(this.player).getAnvilHandler();
 	}
@@ -283,6 +283,20 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 		this.cost = event.getCost();
 		this.repairItemCountCost = event.getMaterialCost();
 		this.broadcastChanges();
+		return false;
+	}
+	
+	@Override
+	public boolean quickMoveStack(ItemStack slotStack, int index) {
+		if (908 >= index && index >= 0) { // from container
+			if (this.menu.moveItemStackTo(slotStack, 938, 940, false)) { // into input
+				return true;
+			}
+		} else if (index == 940) { // from result
+			if (this.movePreferredMenu(slotStack)) { // into container
+				return true;
+			}
+		}
 		return false;
 	}
 	

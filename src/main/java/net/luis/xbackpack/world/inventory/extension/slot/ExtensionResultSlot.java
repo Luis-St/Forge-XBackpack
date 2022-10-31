@@ -13,7 +13,7 @@ import net.minecraft.world.inventory.ResultSlot;
  *
  */
 
-public class ExtensionResultSlot extends ResultSlot {
+public class ExtensionResultSlot extends ResultSlot implements ExtensionMenuSlot {
 	
 	private final AbstractExtensionMenu extensionMenu;
 	
@@ -22,6 +22,12 @@ public class ExtensionResultSlot extends ResultSlot {
 		this.extensionMenu = extensionMenu;
 	}
 	
+	@Override
+	public AbstractExtensionMenu getMenu() {
+		return this.extensionMenu;
+	}
+	
+	@Override
 	public BackpackExtension getExtension() {
 		return this.extensionMenu.getExtension();
 	}

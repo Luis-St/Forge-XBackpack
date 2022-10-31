@@ -6,11 +6,12 @@ import java.util.function.Consumer;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.luis.xbackpack.client.gui.screens.BackpackScreen;
+import net.luis.xbackpack.XBackpack;
+import net.luis.xbackpack.client.gui.screens.AbstractExtensionContainerScreen;
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtension;
+import net.luis.xbackpack.world.extension.BackpackExtensionState;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
-import net.luis.xbackpack.world.extension.ExtensionState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
@@ -26,8 +27,9 @@ import net.minecraft.world.item.ItemStack;
 
 public abstract class AbstractExtensionScreen {
 	
-	protected final BackpackScreen screen;
+	protected static final ResourceLocation ICONS = new ResourceLocation(XBackpack.MOD_ID, "textures/gui/container/backpack_icons.png");
 	
+	protected final AbstractExtensionContainerScreen<?> screen;
 	protected final BackpackExtension extension;
 	protected final List<BackpackExtension> extensions;
 	protected Minecraft minecraft;
@@ -38,7 +40,7 @@ public abstract class AbstractExtensionScreen {
 	protected int leftPos;
 	protected int topPos;
 	
-	protected AbstractExtensionScreen(BackpackScreen screen, BackpackExtension extension, List<BackpackExtension> extensions) {
+	protected AbstractExtensionScreen(AbstractExtensionContainerScreen<?> screen, BackpackExtension extension, List<BackpackExtension> extensions) {
 		this.screen = screen;
 		this.extension = extension;
 		this.extensions = extensions;
@@ -62,7 +64,7 @@ public abstract class AbstractExtensionScreen {
 	}
 	
 	protected boolean canUseExtension(BackpackExtension extension) {
-		return BackpackProvider.get(this.minecraft.player).getConfig().getWithState(ExtensionState.UNLOCKED).contains(extension);
+		return BackpackProvider.get(this.minecraft.player).getConfig().getExtensionConfig().getWithState(BackpackExtensionState.UNLOCKED).contains(extension);
 	}
 	
 	protected int getExtensionOffset(BackpackExtension extension) {
@@ -105,7 +107,7 @@ public abstract class AbstractExtensionScreen {
 	
 	public void render(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 		int offset = this.getExtensionOffset(this.extension);
-		RenderSystem.setShaderTexture(0, BackpackScreen.ICONS);
+		RenderSystem.setShaderTexture(0, ICONS);
 		GuiComponent.blit(stack, this.leftPos + this.imageWidth, this.topPos + offset, this.extension.getIconWidth(), this.extension.getIconHeight(), 0, 0, 32, 32, 256, 256);
 		this.itemRenderer.renderAndDecorateItem(this.extension.getIcon(), this.leftPos + this.imageWidth + 1, this.topPos + 3 + offset);
 	}
@@ -125,8 +127,8 @@ public abstract class AbstractExtensionScreen {
 		
 	}
 	
-	public void renderTooltip(PoseStack stack, int mouseX, int mouseY, boolean open, Consumer<ItemStack> tooltipRenderer) {
-		if (this.isInExtension(this.extension, mouseX, mouseY) && !open) {
+	public void renderTooltip(PoseStack stack, int mouseX, int mouseY, boolean open, boolean renderable, Consumer<ItemStack> tooltipRenderer) {
+		if (this.isInExtension(this.extension, mouseX, mouseY) && !open && renderable) {
 			this.screen.renderTooltip(stack, this.extension.getTooltip(), mouseX, mouseY);
 		}
 	}

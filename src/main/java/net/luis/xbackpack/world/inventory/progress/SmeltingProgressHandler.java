@@ -1,4 +1,4 @@
-package net.luis.xbackpack.world.inventory.handler.progress;
+package net.luis.xbackpack.world.inventory.progress;
 
 import java.util.List;
 import java.util.Optional;

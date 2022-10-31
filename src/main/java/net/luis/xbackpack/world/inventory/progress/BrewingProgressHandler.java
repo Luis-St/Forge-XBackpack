@@ -1,8 +1,8 @@
-package net.luis.xbackpack.world.inventory.handler.progress;
+package net.luis.xbackpack.world.inventory.progress;
 
 import net.luis.xbackpack.network.XBNetworkHandler;
 import net.luis.xbackpack.network.packet.extension.UpdateBrewingStandExtension;
-import net.luis.xbackpack.world.inventory.handler.BrewingHandler;
+import net.luis.xbackpack.world.inventory.handler.CraftingFuelHandler;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
@@ -32,12 +32,12 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class BrewingProgressHandler implements ProgressHandler {
 	
 	private final Player player;
-	private final BrewingHandler handler;
+	private final CraftingFuelHandler handler;
 	private Item input;
 	private int fuel;
 	private int brewTime;
 	
-	public BrewingProgressHandler(Player player, BrewingHandler handler) {
+	public BrewingProgressHandler(Player player, CraftingFuelHandler handler) {
 		this.player = player;
 		this.handler = handler;
 	}

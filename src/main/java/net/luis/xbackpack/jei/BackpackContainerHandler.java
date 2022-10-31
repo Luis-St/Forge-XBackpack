@@ -8,8 +8,8 @@ import mezz.jei.api.gui.handlers.IGuiContainerHandler;
 import net.luis.xbackpack.client.gui.screens.BackpackScreen;
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtension;
+import net.luis.xbackpack.world.extension.BackpackExtensionState;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
-import net.luis.xbackpack.world.extension.ExtensionState;
 import net.minecraft.client.renderer.Rect2i;
 
 /**
@@ -23,7 +23,7 @@ public class BackpackContainerHandler implements IGuiContainerHandler<BackpackSc
 	@Override
 	@SuppressWarnings("resource")
 	public List<Rect2i> getGuiExtraAreas(BackpackScreen screen) {
-		if (BackpackProvider.get(screen.getMinecraft().player).getConfig().getWithState(ExtensionState.UNLOCKED).size() > 0) {
+		if (BackpackProvider.get(screen.getMinecraft().player).getConfig().getExtensionConfig().getWithState(BackpackExtensionState.UNLOCKED).size() > 0) {
 			List<Rect2i> extraAreas = Lists.newArrayList(new Rect2i(screen.getGuiLeft() + screen.getXSize(), screen.getGuiTop(), 30, screen.getYSize()));
 			BackpackExtension extension = screen.getExtension();
 			if (extension != BackpackExtensions.NO.get()) {

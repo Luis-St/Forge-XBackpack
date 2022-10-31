@@ -15,7 +15,7 @@ import net.minecraftforge.items.SlotItemHandler;
  *
  */
 
-public class ExtensionSlot extends SlotItemHandler {
+public class ExtensionSlot extends SlotItemHandler implements ExtensionMenuSlot {
 	
 	private final AbstractExtensionMenu extensionMenu;
 	private final boolean sendChanges;
@@ -30,10 +30,12 @@ public class ExtensionSlot extends SlotItemHandler {
 		this.sendChanges = sendChanges;
 	}
 	
+	@Override
 	public AbstractExtensionMenu getMenu() {
 		return this.extensionMenu;
 	}
 	
+	@Override
 	public BackpackExtension getExtension() {
 		return this.extensionMenu.getExtension();
 	}

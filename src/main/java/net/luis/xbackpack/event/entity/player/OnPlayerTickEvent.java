@@ -24,9 +24,7 @@ public class OnPlayerTickEvent {
 		if (event.phase == Phase.START && event.side == LogicalSide.SERVER) {
 			event.player.getCapability(BackpackProvider.BACKPACK, null).ifPresent(IBackpack::tick);
 			if (event.player.containerMenu instanceof BackpackMenu menu) {
-				if (menu.requiresTickUpdate()) {
-					menu.tick();
-				}
+				menu.tick();
 			}
 		}
 	}

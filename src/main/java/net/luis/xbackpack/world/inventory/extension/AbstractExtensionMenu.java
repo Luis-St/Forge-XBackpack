@@ -3,10 +3,11 @@ package net.luis.xbackpack.world.inventory.extension;
 import java.util.function.Consumer;
 
 import net.luis.xbackpack.world.extension.BackpackExtension;
-import net.luis.xbackpack.world.inventory.BackpackMenu;
+import net.luis.xbackpack.world.inventory.AbstractExtensionContainerMenu;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * 
@@ -16,11 +17,11 @@ import net.minecraft.world.inventory.Slot;
 
 public abstract class AbstractExtensionMenu {
 	
-	protected final BackpackMenu menu;
+	protected final AbstractExtensionContainerMenu menu;
 	protected final Player player;
 	private final BackpackExtension extension;
 	
-	protected AbstractExtensionMenu(BackpackMenu menu, Player player, BackpackExtension extension) {
+	protected AbstractExtensionMenu(AbstractExtensionContainerMenu menu, Player player, BackpackExtension extension) {
 		this.menu = menu;
 		this.player = player;
 		this.extension = extension;
@@ -48,11 +49,35 @@ public abstract class AbstractExtensionMenu {
 		return true;
 	}
 	
+	public abstract boolean quickMoveStack(ItemStack slotStack, int index);
+	
+	protected boolean movePreferredMenu(ItemStack slotStack) {
+		if (!this.menu.moveItemStackTo(slotStack, 0, 873, false)) { // into menu
+			if (!this.menu.moveItemStackTo(slotStack, 900, 909, false)) { // into hotbar
+				if (!this.menu.moveItemStackTo(slotStack, 873, 900, false)) { // into inventory
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	
+	protected boolean movePreferredInventory(ItemStack slotStack) {
+		if (!this.menu.moveItemStackTo(slotStack, 900, 909, false)) { // into hotbar
+			if (!this.menu.moveItemStackTo(slotStack, 873, 900, false)) { // into inventory
+				if (!this.menu.moveItemStackTo(slotStack, 0, 873, false)) { // into menu
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	
 	public void close() {
 		
 	}
 	
-	public BackpackMenu getMenu() {
+	public AbstractExtensionContainerMenu getMenu() {
 		return this.menu;
 	}
 	

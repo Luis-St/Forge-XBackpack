@@ -7,7 +7,7 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.luis.xbackpack.client.gui.screens.BackpackScreen;
+import net.luis.xbackpack.client.gui.screens.AbstractExtensionContainerScreen;
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
@@ -38,7 +38,7 @@ public class EnchantmentTableExtensionScreen extends AbstractExtensionScreen {
 	private EnchantingHandler handler;
 	private int enchantmentSeed = 0;
 	
-	public EnchantmentTableExtensionScreen(BackpackScreen screen, List<BackpackExtension> extensions) {
+	public EnchantmentTableExtensionScreen(AbstractExtensionContainerScreen<?> screen, List<BackpackExtension> extensions) {
 		super(screen, BackpackExtensions.ENCHANTMENT_TABLE.get(), extensions);
 	}
 	
@@ -100,8 +100,8 @@ public class EnchantmentTableExtensionScreen extends AbstractExtensionScreen {
 	}
 	
 	@Override
-	public void renderTooltip(PoseStack stack, int mouseX, int mouseY, boolean open, Consumer<ItemStack> tooltipRenderer) {
-		super.renderTooltip(stack, mouseX, mouseY, open, tooltipRenderer);
+	public void renderTooltip(PoseStack stack, int mouseX, int mouseY, boolean open, boolean renderable, Consumer<ItemStack> tooltipRenderer) {
+		super.renderTooltip(stack, mouseX, mouseY, open, renderable, tooltipRenderer);
 		if (open) {
 			for (int row = 0; row < 3; row++) {
 				this.renderTooltip(stack, mouseX, mouseY, row, this.minecraft.player, this.enchantments[row], this.enchantmentLevels[row], this.enchantingCosts[row]);

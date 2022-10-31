@@ -10,7 +10,7 @@ import net.luis.xbackpack.network.XBNetworkHandler;
 import net.luis.xbackpack.network.packet.extension.UpdateStonecutterExtension;
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
-import net.luis.xbackpack.world.inventory.BackpackMenu;
+import net.luis.xbackpack.world.inventory.AbstractExtensionContainerMenu;
 import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
 import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
@@ -39,7 +39,7 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 	private int selectedRecipe = -1;
 	private StonecutterRecipe recipe;
 	
-	public StonecutterExtensionMenu(BackpackMenu menu, Player player) {
+	public StonecutterExtensionMenu(AbstractExtensionContainerMenu menu, Player player) {
 		super(menu, player, BackpackExtensions.STONECUTTER.get());
 		this.handler = BackpackProvider.get(this.player).getStonecutterHandler();
 	}
@@ -85,7 +85,6 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 		player.connection.send(new ClientboundSoundPacket(SoundEvents.UI_STONECUTTER_TAKE_RESULT, SoundSource.BLOCKS, player.getX(), player.getY(), player.getZ(), 1.0F, level.random.nextFloat() * 0.1F + 0.9F, level.random.nextLong()));
 	}
 	
-	@Override
 	public boolean requiresTickUpdate() {
 		ItemStack input = this.handler.getInputHandler().getStackInSlot(0);
 		ItemStack result = this.handler.getResultHandler().getStackInSlot(0);
@@ -139,6 +138,20 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 	
 	private boolean isValidIndex(int index) {
 		return this.recipes.size() > index && index >= 0;
+	}
+	
+	@Override
+	public boolean quickMoveStack(ItemStack slotStack, int index) {
+		if (908 >= index && index >= 0) { // from container
+			if (this.menu.moveItemStackTo(slotStack, 944, 945, false)) { // into input
+				return true;
+			}
+		} else if (index == 945) { // from result
+			if (this.movePreferredMenu(slotStack)) { // into container
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

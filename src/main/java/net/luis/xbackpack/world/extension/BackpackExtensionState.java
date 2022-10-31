@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
  *
  */
 
-public enum ExtensionState {
+public enum BackpackExtensionState {
 	
 	BLOCKED("blocked"),
 	UNLOCKED("unlocked"),
@@ -18,7 +18,7 @@ public enum ExtensionState {
 	
 	private final String name;
 
-	private ExtensionState(String name) {
+	private BackpackExtensionState(String name) {
 		this.name = name;
 	}
 	
@@ -32,8 +32,8 @@ public enum ExtensionState {
 	}
 	
 	@Nullable
-	public static ExtensionState fromString(String string) {
-		for (ExtensionState state : values()) {
+	public static BackpackExtensionState fromString(String string) {
+		for (BackpackExtensionState state : values()) {
 			if (state.getName().equals(string)) {
 				return state;
 			}
@@ -42,8 +42,8 @@ public enum ExtensionState {
 	}
 	
 	@NotNull
-	public static ExtensionState fromString(String string, ExtensionState fallbackState) {
-		ExtensionState state = fromString(string);
+	public static BackpackExtensionState fromString(String string, BackpackExtensionState fallbackState) {
+		BackpackExtensionState state = fromString(string);
 		return state != null ? state : fallbackState; 
 	}
 	

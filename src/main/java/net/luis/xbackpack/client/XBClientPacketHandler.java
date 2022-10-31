@@ -12,6 +12,9 @@ import net.luis.xbackpack.client.gui.screens.extension.StonecutterExtensionScree
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
+import net.luis.xbackpack.world.inventory.modifier.ModifiableMenu.UpdateType;
+import net.luis.xbackpack.world.inventory.modifier.filter.ItemFilter;
+import net.luis.xbackpack.world.inventory.modifier.sorter.ItemSorter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -68,6 +71,14 @@ public class XBClientPacketHandler {
 	public static void updateBrewingStandExtension(int fuel, int brewTime) {
 		if (getExtensionScreen(BackpackExtensions.BREWING_STAND.get()) instanceof BrewingStandExtensionScreen brewingStandScreen) {
 			brewingStandScreen.update(fuel, brewTime);
+		}
+	}
+	
+	public static void updateBackpackItemModifiers(ItemFilter filter, ItemSorter sorter) {
+		Minecraft minecraft = Minecraft.getInstance();
+		if (minecraft.screen instanceof BackpackScreen screen) {
+			screen.getMenu().updateFilter(filter, UpdateType.SET_NO_UPDATE, null);
+			screen.getMenu().updateSorter(sorter, UpdateType.SET_NO_UPDATE, null);
 		}
 	}
 	

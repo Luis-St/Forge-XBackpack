@@ -5,7 +5,7 @@ import java.util.List;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.luis.xbackpack.client.gui.screens.BackpackScreen;
+import net.luis.xbackpack.client.gui.screens.AbstractExtensionContainerScreen;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
 
@@ -20,7 +20,7 @@ public class FurnaceExtensionScreen extends AbstractExtensionScreen {
 	private int cookingProgress;
 	private int fuelProgress;
 	
-	public FurnaceExtensionScreen(BackpackScreen screen, List<BackpackExtension> extensions) {
+	public FurnaceExtensionScreen(AbstractExtensionContainerScreen<?> screen, List<BackpackExtension> extensions) {
 		super(screen, BackpackExtensions.FURNACE.get(), extensions);
 	}
 	

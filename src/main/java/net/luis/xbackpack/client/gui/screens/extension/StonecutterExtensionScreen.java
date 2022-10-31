@@ -7,7 +7,7 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.luis.xbackpack.client.gui.screens.BackpackScreen;
+import net.luis.xbackpack.client.gui.screens.AbstractExtensionContainerScreen;
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
@@ -36,7 +36,7 @@ public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 	private int startIndex = 0;
 	private int selectedRecipe = -1;
 	
-	public StonecutterExtensionScreen(BackpackScreen screen, List<BackpackExtension> extensions) {
+	public StonecutterExtensionScreen(AbstractExtensionContainerScreen<?> screen, List<BackpackExtension> extensions) {
 		super(screen, BackpackExtensions.STONECUTTER.get(), extensions);
 	}
 	
@@ -81,8 +81,8 @@ public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 	}
 	
 	@Override
-	public void renderTooltip(PoseStack stack, int mouseX, int mouseY, boolean open, Consumer<ItemStack> tooltipRenderer) {
-		super.renderTooltip(stack, mouseX, mouseY, open, tooltipRenderer);
+	public void renderTooltip(PoseStack stack, int mouseX, int mouseY, boolean open, boolean renderable, Consumer<ItemStack> tooltipRenderer) {
+		super.renderTooltip(stack, mouseX, mouseY, open, renderable, tooltipRenderer);
 		if (open) {
 			if (this.shouldDisplayRecipes()) {
 				for (int index = this.startIndex; index < this.startIndex + 12 && index < this.recipes.size(); ++index) {

@@ -5,7 +5,7 @@ import java.util.function.Consumer;
 
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
-import net.luis.xbackpack.world.inventory.BackpackMenu;
+import net.luis.xbackpack.world.inventory.AbstractExtensionContainerMenu;
 import net.luis.xbackpack.world.inventory.extension.slot.ExtensionResultSlot;
 import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
 import net.luis.xbackpack.world.inventory.wrapper.CraftingContainerWrapper;
@@ -30,10 +30,15 @@ public class CraftingExtensionMenu extends AbstractExtensionMenu {
 	private final CraftingContainerWrapper craftingWrapper;
 	private final ResultContainer resultWrapper;
 	
-	public CraftingExtensionMenu(BackpackMenu menu, Player player) {
+	public CraftingExtensionMenu(AbstractExtensionContainerMenu menu, Player player) {
 		super(menu, player, BackpackExtensions.CRAFTING_TABLE.get());	
 		this.craftingWrapper = new CraftingContainerWrapper(this.menu, BackpackProvider.get(this.player).getCraftingHandler(), 3, 3);
 		this.resultWrapper = new ResultContainer();
+	}
+	
+	@Override
+	public void open() {
+		this.slotChangedCraftingGrid();
 	}
 
 	@Override
@@ -67,6 +72,20 @@ public class CraftingExtensionMenu extends AbstractExtensionMenu {
 			this.resultWrapper.setItem(0, stack);
 			BackpackProvider.get(this.player).broadcastChanges();
 		}
+	}
+	
+	@Override
+	public boolean quickMoveStack(ItemStack slotStack, int index) {
+		if (908 >= index && index >= 0) { // from container
+			if (this.menu.moveItemStackTo(slotStack, 917, 926, false)) { // into input
+				return true;
+			}
+		} else if (index == 926) { // from result
+			if (this.movePreferredMenu(slotStack)) { // into container
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

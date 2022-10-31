@@ -14,7 +14,7 @@ import com.mojang.brigadier.exceptions.Dynamic2CommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 
-import net.luis.xbackpack.world.extension.ExtensionState;
+import net.luis.xbackpack.world.extension.BackpackExtensionState;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
@@ -27,27 +27,27 @@ import net.minecraft.network.chat.Component;
  *
  */
 
-public class ExtensionStateArgument implements ArgumentType<ExtensionState> {
+public class BackpackExtensionStateArgument implements ArgumentType<BackpackExtensionState> {
 	
 	private static final Dynamic2CommandExceptionType INVALID_EXTENSION_STATE = new Dynamic2CommandExceptionType((name, dummyObject) -> {
 		return Component.translatable("xbackpack.commands.arguments.state.invalid", name);
 	});
 	
-	private ExtensionStateArgument() {
+	private BackpackExtensionStateArgument() {
 		
 	}
 	
-	public static ExtensionStateArgument state() {
-		return new ExtensionStateArgument();
+	public static BackpackExtensionStateArgument state() {
+		return new BackpackExtensionStateArgument();
 	}
 	
-	public static <S> ExtensionState get(CommandContext<S> context, String name) {
-		return context.getArgument(name, ExtensionState.class);
+	public static <S> BackpackExtensionState get(CommandContext<S> context, String name) {
+		return context.getArgument(name, BackpackExtensionState.class);
 	}
 	
 	@Override
-	public ExtensionState parse(StringReader reader) throws CommandSyntaxException {
-		ExtensionState state = ExtensionState.fromString(reader.readUnquotedString());
+	public BackpackExtensionState parse(StringReader reader) throws CommandSyntaxException {
+		BackpackExtensionState state = BackpackExtensionState.fromString(reader.readUnquotedString());
 		if (state != null) {
 			return state;
 		}
@@ -56,15 +56,15 @@ public class ExtensionStateArgument implements ArgumentType<ExtensionState> {
 	
 	@Override
 	public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-		return SharedSuggestionProvider.suggest(Lists.newArrayList(ExtensionState.values()).stream().map(ExtensionState::getName), builder);
+		return SharedSuggestionProvider.suggest(Lists.newArrayList(BackpackExtensionState.values()).stream().map(BackpackExtensionState::getName), builder);
 	}
 	
 	@Override
 	public Collection<String> getExamples() {
-		return Lists.newArrayList(ExtensionState.values()).stream().map(ExtensionState::getName).collect(Collectors.toList());
+		return Lists.newArrayList(BackpackExtensionState.values()).stream().map(BackpackExtensionState::getName).collect(Collectors.toList());
 	}
 	
-	public static class Info implements ArgumentTypeInfo<ExtensionStateArgument, Info.Template> {
+	public static class Info implements ArgumentTypeInfo<BackpackExtensionStateArgument, Info.Template> {
 		
 		@Override
 		public void serializeToNetwork(Template template, FriendlyByteBuf buffer) {
@@ -73,7 +73,7 @@ public class ExtensionStateArgument implements ArgumentType<ExtensionState> {
 		
 		@Override
 		public Template deserializeFromNetwork(FriendlyByteBuf buffer) {
-			return new Template(new ExtensionStateArgument());
+			return new Template(new BackpackExtensionStateArgument());
 		}
 		
 		@Override
@@ -82,25 +82,25 @@ public class ExtensionStateArgument implements ArgumentType<ExtensionState> {
 		}
 		
 		@Override
-		public Template unpack(ExtensionStateArgument argument) {
+		public Template unpack(BackpackExtensionStateArgument argument) {
 			return new Template(argument);
 		}
 		
-		public class Template implements ArgumentTypeInfo.Template<ExtensionStateArgument> {
+		public class Template implements ArgumentTypeInfo.Template<BackpackExtensionStateArgument> {
 			
-			private final ExtensionStateArgument argument;
+			private final BackpackExtensionStateArgument argument;
 			
-			public Template(ExtensionStateArgument argument) {
+			public Template(BackpackExtensionStateArgument argument) {
 				this.argument = argument;
 			}
 			
 			@Override
-			public ExtensionStateArgument instantiate(CommandBuildContext context) {
+			public BackpackExtensionStateArgument instantiate(CommandBuildContext context) {
 				return this.argument;
 			}
 			
 			@Override
-			public ArgumentTypeInfo<ExtensionStateArgument, ?> type() {
+			public ArgumentTypeInfo<BackpackExtensionStateArgument, ?> type() {
 				return Info.this;
 			}
 			

@@ -1,6 +1,6 @@
 package net.luis.xbackpack.world.inventory.slot;
 
-import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.SlotItemHandler;
 
 /**
@@ -10,8 +10,8 @@ import net.minecraftforge.items.SlotItemHandler;
  */
 
 public class BackpackSlot extends SlotItemHandler implements MoveableSlot {
-
-	public BackpackSlot(IItemHandler itemHandler, int index, int xPosition, int yPosition) {
+	
+	public BackpackSlot(IItemHandlerModifiable itemHandler, int index, int xPosition, int yPosition) {
 		super(itemHandler, index, xPosition, yPosition);
 	}
 	

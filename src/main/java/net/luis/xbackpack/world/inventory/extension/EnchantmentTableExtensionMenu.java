@@ -7,7 +7,7 @@ import net.luis.xbackpack.network.XBNetworkHandler;
 import net.luis.xbackpack.network.packet.extension.UpdateEnchantmentTableExtension;
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
-import net.luis.xbackpack.world.inventory.BackpackMenu;
+import net.luis.xbackpack.world.inventory.AbstractExtensionContainerMenu;
 import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
 import net.luis.xbackpack.world.inventory.handler.EnchantingHandler;
 import net.minecraft.Util;
@@ -57,7 +57,7 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 	};
 	private int enchantmentSeed;
 	
-	public EnchantmentTableExtensionMenu(BackpackMenu menu, Player player) {
+	public EnchantmentTableExtensionMenu(AbstractExtensionContainerMenu menu, Player player) {
 		super(menu, player, BackpackExtensions.ENCHANTMENT_TABLE.get());
 		this.handler = BackpackProvider.get(this.player).getEnchantingHandler();
 		this.enchantmentSeed = player.getEnchantmentSeed();
@@ -209,6 +209,38 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 	
 	private void playSound(ServerPlayer player, ServerLevel level) {
 		player.connection.send(new ClientboundSoundPacket(SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS, player.getX(), player.getY(), player.getZ(), 1.0F, level.random.nextFloat() * 0.1F + 0.9F, level.random.nextLong()));
+	}
+	
+	@Override
+	public boolean quickMoveStack(ItemStack slotStack, int index) {
+		if (908 >= index && index >= 0) { // from container
+			if (slotStack.is(Tags.Items.BOOKSHELVES) || this.canQuickMoveBook()) {
+				if (this.menu.moveItemStackTo(slotStack, 941, 942, false)) { // into power
+					return true;
+				}
+			} else if (slotStack.isEnchantable() || slotStack.getItem() instanceof BookItem) {
+				if (this.menu.moveItemStackTo(slotStack, 942, 943, false)) { // into input
+					return true;
+				}
+			} else if (slotStack.is(Tags.Items.ENCHANTING_FUELS)) {
+				if (this.menu.moveItemStackTo(slotStack, 943, 944, false)) { // into fuel
+					return true;
+				}
+			}
+		} else if (index >= 943 && index >= 941) { // from extension
+			if (this.movePreferredMenu(slotStack)) { // into container
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private boolean canQuickMoveBook() {
+		if (!this.handler.getInputHandler().getStackInSlot(0).isEmpty()) {
+			ItemStack stack = this.handler.getPowerHandler().getStackInSlot(0);
+			return stack.isEmpty() || (stack.is(Items.BOOK) && stack.getMaxStackSize() > stack.getCount());
+		}
+		return false;
 	}
 
 }

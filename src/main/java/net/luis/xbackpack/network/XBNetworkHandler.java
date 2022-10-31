@@ -9,6 +9,9 @@ import net.luis.xbackpack.network.packet.extension.UpdateBrewingStandExtension;
 import net.luis.xbackpack.network.packet.extension.UpdateEnchantmentTableExtension;
 import net.luis.xbackpack.network.packet.extension.UpdateFurnaceExtension;
 import net.luis.xbackpack.network.packet.extension.UpdateStonecutterExtension;
+import net.luis.xbackpack.network.packet.modifier.ResetBackpackItemModifier;
+import net.luis.xbackpack.network.packet.modifier.UpdateBackpackItemModifiers;
+import net.luis.xbackpack.network.packet.modifier.UpdateBackpackSearchTerm;
 import net.luis.xbackpack.network.packet.tool.BackpackNextTool;
 import net.luis.xbackpack.network.packet.tool.BackpackNextToolDown;
 import net.luis.xbackpack.network.packet.tool.BackpackNextToolTop;
@@ -30,7 +33,7 @@ import net.minecraftforge.network.simple.SimpleChannel;
 
 public class XBNetworkHandler {
 	
-	private static final String VERSION = "3";
+	private static final String VERSION = "4";
 	
 	private static int id = 0;
 	
@@ -50,11 +53,16 @@ public class XBNetworkHandler {
 		simpleChannel.messageBuilder(UpdateFurnaceExtension.class, id++, NetworkDirection.PLAY_TO_CLIENT).encoder(UpdateFurnaceExtension::encode).decoder(UpdateFurnaceExtension::new).consumerMainThread(UpdateFurnaceExtension::handle).add();
 		simpleChannel.messageBuilder(UpdateAnvilExtension.class, id++, NetworkDirection.PLAY_TO_CLIENT).encoder(UpdateAnvilExtension::encode).decoder(UpdateAnvilExtension::new).consumerMainThread(UpdateAnvilExtension::handle).add();
 		simpleChannel.messageBuilder(UpdateEnchantmentTableExtension.class, id++, NetworkDirection.PLAY_TO_CLIENT).encoder(UpdateEnchantmentTableExtension::encode).decoder(UpdateEnchantmentTableExtension::new)
-				.consumerMainThread(UpdateEnchantmentTableExtension::handle).add();
-		simpleChannel.messageBuilder(UpdateStonecutterExtension.class, id++, NetworkDirection.PLAY_TO_CLIENT).encoder(UpdateStonecutterExtension::encode).decoder(UpdateStonecutterExtension::new)
-				.consumerMainThread(UpdateStonecutterExtension::handle).add();
+			.consumerMainThread(UpdateEnchantmentTableExtension::handle).add();
+		simpleChannel.messageBuilder(UpdateStonecutterExtension.class, id++, NetworkDirection.PLAY_TO_CLIENT).encoder(UpdateStonecutterExtension::encode).decoder(UpdateStonecutterExtension::new).consumerMainThread(UpdateStonecutterExtension::handle)
+			.add();
 		simpleChannel.messageBuilder(UpdateBrewingStandExtension.class, id++, NetworkDirection.PLAY_TO_CLIENT).encoder(UpdateBrewingStandExtension::encode).decoder(UpdateBrewingStandExtension::new)
-				.consumerMainThread(UpdateBrewingStandExtension::handle).add();
+			.consumerMainThread(UpdateBrewingStandExtension::handle).add();
+		simpleChannel.messageBuilder(UpdateBackpackSearchTerm.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(UpdateBackpackSearchTerm::encode).decoder(UpdateBackpackSearchTerm::new).consumerMainThread(UpdateBackpackSearchTerm::handle).add();
+		simpleChannel.messageBuilder(UpdateBackpackItemModifiers.class, id++, NetworkDirection.PLAY_TO_CLIENT).encoder(UpdateBackpackItemModifiers::encode).decoder(UpdateBackpackItemModifiers::new)
+			.consumerMainThread(UpdateBackpackItemModifiers::handle).add();
+		simpleChannel.messageBuilder(ResetBackpackItemModifier.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(ResetBackpackItemModifier::encode).decoder(ResetBackpackItemModifier::new).consumerMainThread(ResetBackpackItemModifier::handle)
+			.add();
 	}
 	
 	private static SimpleChannel getChannel() {
@@ -68,5 +76,5 @@ public class XBNetworkHandler {
 	public static <P> void sendToPlayer(ServerPlayer player, P packet) {
 		getChannel().send(PacketDistributor.PLAYER.with(() -> player), packet);
 	}
-
+	
 }

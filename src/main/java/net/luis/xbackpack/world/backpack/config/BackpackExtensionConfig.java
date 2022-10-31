@@ -1,4 +1,4 @@
-package net.luis.xbackpack.world.capability;
+package net.luis.xbackpack.world.backpack.config;
 
 import java.util.List;
 import java.util.Map;
@@ -7,17 +7,15 @@ import java.util.stream.Collectors;
 
 import com.google.common.collect.Maps;
 
-import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.world.extension.BackpackExtension;
+import net.luis.xbackpack.world.extension.BackpackExtensionState;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
-import net.luis.xbackpack.world.extension.ExtensionState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
-import net.minecraft.world.entity.player.Player;
 
 /**
  *
@@ -25,58 +23,46 @@ import net.minecraft.world.entity.player.Player;
  *
  */
 
-public class BackpackConfig {
+public class BackpackExtensionConfig {
 	
-	private final Player player;
 	private final Map<BackpackExtension, Data> states = Maps.newHashMap();
 	
-	public BackpackConfig(Player player) {
-		this.player = player;
+	public BackpackExtensionConfig() {
 		for (BackpackExtension extension : BackpackExtensions.REGISTRY.get().getValues()) {
-			this.states.put(extension, new Data(ExtensionState.LOCKED, 0));
+			this.states.put(extension, new Data(BackpackExtensionState.LOCKED, 0));
 		}
 	}
 	
 	private Data getData(BackpackExtension extension) {
-		return this.states.getOrDefault(extension, new Data(ExtensionState.LOCKED, 0));
+		return this.states.getOrDefault(extension, new Data(BackpackExtensionState.LOCKED, 0));
 	}
 	
-	public ExtensionState getState(BackpackExtension extension) {
+	public BackpackExtensionState getState(BackpackExtension extension) {
 		return this.getData(extension).state();
 	}
 	
-	public List<BackpackExtension> getWithState(ExtensionState state) {
+	public List<BackpackExtension> getWithState(BackpackExtensionState state) {
 		return this.states.entrySet().stream().filter((entry) -> {
 			return entry.getValue().state() == state;
 		}).map(Entry::getKey).collect(Collectors.toList());
 	}
 	
-	public boolean setState(BackpackExtension extension, ExtensionState state) {
-		if (this.player instanceof ServerPlayer player) {
-			this.states.put(extension, new Data(state, player.getStats().getValue(Stats.ITEM_CRAFTED, extension.getUnlockItem().getItem())));
-			return true;
-		} else {
-			XBackpack.LOGGER.warn("Can not set the state of a BackpackExtension from the client");
-			return false;
-		}
+	public void setState(ServerPlayer player, BackpackExtension extension, BackpackExtensionState state) {
+		this.states.put(extension, new Data(state, player.getStats().getValue(Stats.ITEM_CRAFTED, extension.getUnlockItem().getItem())));
 	}
 	
-	public void updateServer() {
-		if (this.player instanceof ServerPlayer player) {
-			for (BackpackExtension extension : BackpackExtensions.REGISTRY.get().getValues()) {
-				Data data = this.getData(extension);
-				ExtensionState state = data.state();
-				if (state != ExtensionState.BLOCKED) {
-					int count = player.getStats().getValue(Stats.ITEM_CRAFTED, extension.getUnlockItem().getItem());
-					if (0 >= data.unlockCount() && count > 0) {
-						this.setState(extension, ExtensionState.UNLOCKED);
-					} else if (data.unlockCount() > 0 && count > data.unlockCount()) {
-						this.setState(extension, ExtensionState.UNLOCKED);
-					}
+	public void update(ServerPlayer player) {
+		for (BackpackExtension extension : BackpackExtensions.REGISTRY.get().getValues()) {
+			Data data = this.getData(extension);
+			BackpackExtensionState state = data.state();
+			if (state != BackpackExtensionState.BLOCKED) {
+				int count = player.getStats().getValue(Stats.ITEM_CRAFTED, extension.getUnlockItem().getItem());
+				if (0 >= data.unlockCount() && count > 0) {
+					this.setState(player, extension, BackpackExtensionState.UNLOCKED);
+				} else if (data.unlockCount() > 0 && count > data.unlockCount()) {
+					this.setState(player, extension, BackpackExtensionState.UNLOCKED);
 				}
 			}
-		} else {
-			XBackpack.LOGGER.warn("Can not update the BackpackConfig from the client");
 		}
 	}
 	
@@ -99,7 +85,7 @@ public class BackpackConfig {
 		for (int i = 0; i < statesTag.size(); i++) {
 			CompoundTag stateTag = statesTag.getCompound(i);
 			BackpackExtension extension = BackpackExtensions.REGISTRY.get().getValue(ResourceLocation.tryParse(stateTag.getString("key")));
-			ExtensionState state = ExtensionState.fromString(stateTag.getString("value"), ExtensionState.LOCKED);
+			BackpackExtensionState state = BackpackExtensionState.fromString(stateTag.getString("value"), BackpackExtensionState.LOCKED);
 			int unlockCount = stateTag.getInt("unlock_count");
 			if (extension != null) {
 				this.states.put(extension, new Data(state, unlockCount));
@@ -107,7 +93,7 @@ public class BackpackConfig {
 		}
 	}
 	
-	public static record Data(ExtensionState state, int unlockCount) {
+	private static record Data(BackpackExtensionState state, int unlockCount) {
 		
 	}
 	

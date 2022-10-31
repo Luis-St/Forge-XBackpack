@@ -5,10 +5,10 @@ import java.util.function.Consumer;
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.capability.IBackpack;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
-import net.luis.xbackpack.world.inventory.BackpackMenu;
+import net.luis.xbackpack.world.inventory.AbstractExtensionContainerMenu;
 import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
-import net.luis.xbackpack.world.inventory.handler.BrewingHandler;
-import net.luis.xbackpack.world.inventory.handler.progress.ProgressHandler;
+import net.luis.xbackpack.world.inventory.handler.CraftingFuelHandler;
+import net.luis.xbackpack.world.inventory.progress.ProgressHandler;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -28,10 +28,10 @@ import net.minecraftforge.event.ForgeEventFactory;
 
 public class BrewingStandExtensionMenu extends AbstractExtensionMenu {
 	
-	private final BrewingHandler handler;
+	private final CraftingFuelHandler handler;
 	private final ProgressHandler progressHandler;
 	
-	public BrewingStandExtensionMenu(BackpackMenu menu, Player player) {
+	public BrewingStandExtensionMenu(AbstractExtensionContainerMenu menu, Player player) {
 		super(menu, player, BackpackExtensions.BREWING_STAND.get());
 		IBackpack backpack = BackpackProvider.get(player);
 		this.handler = backpack.getBrewingHandler();
@@ -84,6 +84,35 @@ public class BrewingStandExtensionMenu extends AbstractExtensionMenu {
 			ForgeEventFactory.onPlayerBrewedPotion(player, stack);
 			CriteriaTriggers.BREWED_POTION.trigger(serverPlayer, potion);
 		}
+	}
+	
+	@Override
+	public boolean quickMoveStack(ItemStack slotStack, int index) {
+		if (908 >= index && index >= 0) { // from container
+			if (slotStack.is(Items.BLAZE_POWDER) && this.canQuickMovePowder()) {
+				if (this.menu.moveItemStackTo(slotStack, 947, 948, false)) { // into fuel
+					return true;
+				}
+			} else if (BrewingRecipeRegistry.isValidIngredient(slotStack)) {
+				if (this.menu.moveItemStackTo(slotStack, 946, 947, false)) { // into input
+					return true;
+				}
+			} else if (BrewingRecipeRegistry.isValidInput(slotStack)) {
+				if (this.menu.moveItemStackTo(slotStack, 948, 451, false)) { // into result
+					return true;
+				}
+			}
+		} else if (450 >= index && index >= 946) { // from extension
+			if (this.movePreferredMenu(slotStack)) { // into container
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private boolean canQuickMovePowder() {
+		ItemStack stack = this.handler.getFuelHandler().getStackInSlot(0);
+		return stack.isEmpty() || (stack.is(Items.BLAZE_POWDER) && stack.getMaxStackSize() > stack.getCount());
 	}
 	
 }
