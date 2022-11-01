@@ -14,11 +14,8 @@ import net.luis.xbackpack.world.inventory.progress.BrewingProgressHandler;
 import net.luis.xbackpack.world.inventory.progress.ProgressHandler;
 import net.luis.xbackpack.world.inventory.progress.SmeltingProgressHandler;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
 
 /**
@@ -28,6 +25,8 @@ import net.minecraftforge.items.ItemStackHandler;
  */
 
 public class BackpackHandler implements IBackpack {
+	
+	public static final int DATA_VERSION = 1;
 	
 	private final Player player;
 	private final BackpackConfig config;
@@ -141,6 +140,7 @@ public class BackpackHandler implements IBackpack {
 	@Override
 	public CompoundTag serialize() {
 		CompoundTag tag = new CompoundTag();
+		tag.putInt("data_version", DATA_VERSION);
 		tag.put("backpack_config", this.config.serialize());
 		tag.put("backpack_handler", this.backpackHandler.serializeNBT());
 		tag.put("tool_handler", this.toolHandler.serializeNBT());
@@ -159,12 +159,12 @@ public class BackpackHandler implements IBackpack {
 	
 	@Override
 	public void deserialize(CompoundTag tag) {
-		if (tag.contains("Size") && tag.contains("Items")) {
-			this.deserializeOld(tag);
-		} else {
-			if (tag.contains("backpack_config")) {
-				this.config.deserialize(tag.getCompound("backpack_config"));
-			}
+		int dataVersion = 0;
+		if (tag.contains("data_version")) {
+			dataVersion = tag.getInt("data_version");
+		}
+		if (dataVersion == DATA_VERSION) {
+			this.config.deserialize(tag.getCompound("backpack_config"));
 			this.backpackHandler.deserializeNBT(tag.getCompound("backpack_handler"));
 			this.toolHandler.deserializeNBT(tag.getCompound("tool_handler"));
 			this.craftingHandler.deserializeNBT(tag.getCompound("crafting_handler"));
@@ -177,26 +177,10 @@ public class BackpackHandler implements IBackpack {
 			this.brewHandler.deserialize(tag.getCompound("brew_handler"));
 			this.grindstoneHandler.deserialize(tag.getCompound("grindstone_handler"));
 			this.smithingHandler.deserialize(tag.getCompound("smithing_handler"));
-		}
-	}
-	
-	private void deserializeOld(CompoundTag tag) {
-		XBackpack.LOGGER.info("Convert the old disk format into new format");
-		ListTag items = tag.getList("Items", Tag.TAG_COMPOUND);
-		for (int i = 0; i < items.size(); i++) {
-			CompoundTag item = items.getCompound(i);
-			int slot = item.getInt("Slot");
-			ItemStack stack = ItemStack.of(item);
-			if (slot >= 0 && slot < this.backpackHandler.getSlots()) {
-				this.backpackHandler.setStackInSlot(slot, stack);
-			} else {
-				int toolSlot = slot - 873;
-				if (2 >= toolSlot && toolSlot >= 0) {
-					this.toolHandler.setStackInSlot(toolSlot, stack);
-				} else if (!stack.isEmpty()) {
-					XBackpack.LOGGER.error("Fail to convert slot {} with item {} into the new disk format, the item will be destroyed!", slot, stack.getItem());
-				}
-			}
+		} else {
+			XBackpack.LOGGER.error("The data version has changed, to prevent the loss of the backpack inventory, the game will be terminated");
+			XBackpack.LOGGER.info("If you want to know how to update the data version, check out the linked wiki on CurseForge");
+			System.exit(0);
 		}
 	}
 	

@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.arguments.BoolArgumentType;
 
 import net.luis.xbackpack.server.commands.arguments.BackpackExtensionArgument;
 import net.luis.xbackpack.server.commands.arguments.BackpackExtensionStateArgument;
@@ -29,9 +28,7 @@ import net.minecraft.server.level.ServerPlayer;
 public class BackpackCommand {
 	
 	public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext context) {
-		dispatcher.register(Commands.literal("backpack").then(Commands.literal("tooltip").then(Commands.argument("value", BoolArgumentType.bool()).executes((command) -> {
-			return setTooltipVisibility(command.getSource(), BoolArgumentType.getBool(command, "value"));
-		}))).requires((source) -> {
+		dispatcher.register(Commands.literal("backpack").requires((source) -> {
 			return source.hasPermission(2);
 		}).then(Commands.argument("player", EntityArgument.player()).then(Commands.literal("*").then(Commands.argument("state", BackpackExtensionStateArgument.state()).executes((command) -> {
 			return setExtensionState(command.getSource(), EntityArgument.getPlayer(command, "player"), Lists.newArrayList(BackpackExtensions.REGISTRY.get().getValues()), BackpackExtensionStateArgument.get(command, "state"));
@@ -42,28 +39,11 @@ public class BackpackCommand {
 		})))));
 	}
 	
-	private static int setTooltipVisibility(CommandSourceStack source, boolean value) {
-		if (source.getEntity() instanceof ServerPlayer player) {
-			IBackpack backpack = BackpackProvider.get(player);
-			backpack.getConfig().setShowModifierInfo(value);
-			if (value) {
-				source.sendSuccess(Component.translatable("xbackpack.commands.backpack.tooltip_success_true"), false);
-			} else {
-				source.sendSuccess(Component.translatable("xbackpack.commands.backpack.tooltip_success_false"), false);
-			}
-			backpack.broadcastChanges();
-		} else {
-			source.sendFailure(Component.translatable("xbackpack.commands.backpack.tooltip_failure"));
-		}
-		return 1;
-	}
-	
 	private static int getExtensionState(CommandSourceStack source, ServerPlayer player, List<BackpackExtension> extensions) {
 		if (extensions.size() > 1) {
-			source.sendFailure(Component.translatable("xbackpack.commands.backpack.get_failure"));
+			source.sendFailure(Component.translatable("xbackpack.commands.backpack.get.failure"));
 		} else {
-			
-			source.sendSuccess(Component.translatable("xbackpack.commands.backpack.get_success", getName(extensions.get(0)), player.getName().getString(), BackpackProvider.get(player).getConfig().getExtensionConfig().getState(extensions.get(0)).getName()), false);	
+			source.sendSuccess(Component.translatable("xbackpack.commands.backpack.get.success", getName(extensions.get(0)), player.getName().getString(), BackpackProvider.get(player).getConfig().getExtensionConfig().getState(extensions.get(0)).getName()), false);
 		}
 		return 1;
 	}
@@ -77,14 +57,14 @@ public class BackpackCommand {
 		}
 		backpack.broadcastChanges();
 		if (i == 1) {
-			source.sendSuccess(Component.translatable("xbackpack.commands.backpack.set_success.single", getName(extensions.get(0)), player.getName().getString(), state.getName()), false);
+			source.sendSuccess(Component.translatable("xbackpack.commands.backpack.set.success.single", getName(extensions.get(0)), player.getName().getString(), state.getName()), false);
 		} else if (i > 1) {
-			source.sendSuccess(Component.translatable("xbackpack.commands.backpack.set_success.multiple", i, player.getName().getString(), state.getName()), false);
+			source.sendSuccess(Component.translatable("xbackpack.commands.backpack.set.success.multiple", i, player.getName().getString(), state.getName()), false);
 		}
 		return 1;
 	}
 	
-	private static String getName(BackpackExtension extension) { 
+	private static String getName(BackpackExtension extension) {
 		String[] nameParts = BackpackExtensions.REGISTRY.get().getKey(extension).getPath().split("_");
 		String name = "";
 		for (String namePart : nameParts) {

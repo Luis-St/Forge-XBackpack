@@ -3,6 +3,7 @@ package net.luis.xbackpack.event.client;
 import net.luis.xbackpack.BackpackConstans;
 import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.client.XBKeyMappings;
+import net.luis.xbackpack.client.commands.TooltipCommand;
 import net.luis.xbackpack.network.XBNetworkHandler;
 import net.luis.xbackpack.network.packet.OpenBackpackPacket;
 import net.luis.xbackpack.network.packet.tool.direct.ToolDownPacket;
@@ -18,6 +19,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RegisterClientCommandsEvent;
 import net.minecraftforge.client.event.InputEvent.MouseScrollingEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
@@ -34,6 +36,11 @@ import net.minecraftforge.fml.common.Mod;
 public class ClientEventHandler {
 	
 	public static int lastPacket;
+	
+	@SubscribeEvent
+	public static void registerClientCommands(RegisterClientCommandsEvent event) {
+		TooltipCommand.register(event.getDispatcher());
+	}
 	
 	@SubscribeEvent
 	public static void clientTick(TickEvent.ClientTickEvent event) {

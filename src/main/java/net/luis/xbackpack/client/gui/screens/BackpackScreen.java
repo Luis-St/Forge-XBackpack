@@ -174,7 +174,7 @@ public class BackpackScreen extends AbstractModifiableContainerScreen<BackpackMe
 	
 	@Override
 	protected TooltipFlag getTooltipFlag() {
-		return BackpackProvider.get(this.minecraft.player).getConfig().shouldShowModifierInfo() ? TooltipFlag.Default.ADVANCED : TooltipFlag.Default.NORMAL;
+		return BackpackProvider.get(this.minecraft.player).getConfig().getClientConfig().shouldShowModifierInfo() ? TooltipFlag.Default.ADVANCED : TooltipFlag.Default.NORMAL;
 	}
 	
 	@Override

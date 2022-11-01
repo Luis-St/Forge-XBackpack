@@ -1,6 +1,7 @@
 package net.luis.xbackpack.world.backpack.config;
 
 import net.luis.xbackpack.XBackpack;
+import net.luis.xbackpack.world.backpack.config.client.BackpackClientConfig;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -14,24 +15,27 @@ import net.minecraft.world.entity.player.Player;
 public class BackpackConfig {
 	
 	private final Player player;
+	private final boolean isClientSide;
+	private final BackpackClientConfig clientConfig;
 	private final BackpackExtensionConfig extensionConfig;
-	private boolean showModifierInfo = true;
 	
 	public BackpackConfig(Player player) {
 		this.player = player;
+		this.isClientSide = this.player.level.isClientSide;
+		this.clientConfig = new BackpackClientConfig();
 		this.extensionConfig = new BackpackExtensionConfig();
+	}
+	
+	public BackpackClientConfig getClientConfig() {
+		if (!this.isClientSide) {
+			XBackpack.LOGGER.warn("The backpack client config is not accessible from the server");
+			return null;
+		}
+		return this.clientConfig;
 	}
 	
 	public BackpackExtensionConfig getExtensionConfig() {
 		return this.extensionConfig;
-	}
-	
-	public boolean shouldShowModifierInfo() {
-		return this.showModifierInfo;
-	}
-	
-	public void setShowModifierInfo(boolean showModifierInfo) {
-		this.showModifierInfo = showModifierInfo;
 	}
 	
 	public void updateServer() {
@@ -45,13 +49,11 @@ public class BackpackConfig {
 	public CompoundTag serialize() {
 		CompoundTag tag = new CompoundTag();
 		tag.put("extension_config", this.extensionConfig.serialize());
-		tag.putBoolean("show_modifier_info", this.showModifierInfo);
 		return tag;
 	}
 	
 	public void deserialize(CompoundTag tag) {
 		this.extensionConfig.deserialize(tag.getCompound("extension_config"));
-		this.showModifierInfo = tag.contains("show_modifier_info") ? tag.getBoolean("show_modifier_info") : true;
 	}
 	
 }
