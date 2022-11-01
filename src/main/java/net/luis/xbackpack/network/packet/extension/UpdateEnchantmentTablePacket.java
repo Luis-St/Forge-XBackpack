@@ -3,6 +3,7 @@ package net.luis.xbackpack.network.packet.extension;
 import java.util.function.Supplier;
 
 import net.luis.xbackpack.client.XBClientPacketHandler;
+import net.luis.xbackpack.network.NetworkPacket;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -15,21 +16,21 @@ import net.minecraftforge.network.NetworkEvent.Context;
  *
  */
 
-public class UpdateEnchantmentTableExtension {
+public class UpdateEnchantmentTablePacket implements NetworkPacket {
 	
 	private final ResourceLocation[] enchantments;
 	private final int[] enchantmentLevels;
 	private final int[] enchantingCosts;
 	private final int enchantmentSeed;
 	
-	public UpdateEnchantmentTableExtension(ResourceLocation[] enchantments, int[] enchantmentLevels, int[] enchantingCosts, int enchantmentSeed) {
+	public UpdateEnchantmentTablePacket(ResourceLocation[] enchantments, int[] enchantmentLevels, int[] enchantingCosts, int enchantmentSeed) {
 		this.enchantments = enchantments;
 		this.enchantmentLevels = enchantmentLevels;
 		this.enchantingCosts = enchantingCosts;
 		this.enchantmentSeed = enchantmentSeed;
 	}
 	
-	public UpdateEnchantmentTableExtension(FriendlyByteBuf buffer) {
+	public UpdateEnchantmentTablePacket(FriendlyByteBuf buffer) {
 		this.enchantments = new ResourceLocation[buffer.readInt()];
 		for (int i = 0; i < this.enchantments.length; i++) {
 			this.enchantments[i] = buffer.readResourceLocation();
@@ -39,6 +40,7 @@ public class UpdateEnchantmentTableExtension {
 		this.enchantmentSeed = buffer.readInt();
 	}
 	
+	@Override
 	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeInt(this.enchantments.length);
 		for (int i = 0; i < this.enchantments.length; i++) {
@@ -49,6 +51,7 @@ public class UpdateEnchantmentTableExtension {
 		buffer.writeInt(this.enchantmentSeed);
 	}
 	
+	@Override
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {

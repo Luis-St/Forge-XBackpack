@@ -2,6 +2,7 @@ package net.luis.xbackpack.network.packet.extension;
 
 import java.util.function.Supplier;
 
+import net.luis.xbackpack.network.NetworkPacket;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.luis.xbackpack.world.inventory.BackpackMenu;
@@ -15,22 +16,24 @@ import net.minecraftforge.network.NetworkEvent.Context;
  *
  */
 
-public class UpdateBackpackExtension {
+public class UpdateExtensionPacket implements NetworkPacket {
 	
 	private final BackpackExtension extension;
 	
-	public UpdateBackpackExtension(BackpackExtension extension) {
+	public UpdateExtensionPacket(BackpackExtension extension) {
 		this.extension = extension;
 	}
 	
-	public UpdateBackpackExtension(FriendlyByteBuf buffer) {
+	public UpdateExtensionPacket(FriendlyByteBuf buffer) {
 		this.extension = BackpackExtensions.REGISTRY.get().getValue(buffer.readResourceLocation());
 	}
 	
+	@Override
 	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeResourceLocation(BackpackExtensions.REGISTRY.get().getKey(this.extension));
 	}
 	
+	@Override
 	public void handle(Supplier<Context> context) {
 		ServerPlayer player = context.get().getSender();
 		context.get().enqueueWork(() -> {

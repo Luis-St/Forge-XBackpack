@@ -2,6 +2,7 @@ package net.luis.xbackpack.network.packet.modifier;
 
 import java.util.function.Supplier;
 
+import net.luis.xbackpack.network.NetworkPacket;
 import net.luis.xbackpack.world.inventory.BackpackMenu;
 import net.luis.xbackpack.world.inventory.modifier.ItemModifierType;
 import net.luis.xbackpack.world.inventory.modifier.ModifiableMenu.UpdateType;
@@ -15,22 +16,24 @@ import net.minecraftforge.network.NetworkEvent.Context;
  *
  */
 
-public class ResetBackpackItemModifier {
+public class ResetItemModifierPacket implements NetworkPacket {
 	
 	private final ItemModifierType modifierType;
 	
-	public ResetBackpackItemModifier(ItemModifierType modifierType) {
+	public ResetItemModifierPacket(ItemModifierType modifierType) {
 		this.modifierType = modifierType;
 	}
 
-	public ResetBackpackItemModifier(FriendlyByteBuf buffer) {
+	public ResetItemModifierPacket(FriendlyByteBuf buffer) {
 		this.modifierType = ItemModifierType.byId(buffer.readInt());
 	}
 	
+	@Override
 	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeInt(this.modifierType.getId());
 	}
 	
+	@Override
 	public void handle(Supplier<Context> context) {
 		ServerPlayer player = context.get().getSender();
 		context.get().enqueueWork(() -> {

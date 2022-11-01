@@ -14,8 +14,8 @@ import net.luis.xbackpack.client.gui.screens.extension.GrindstoneExtensionScreen
 import net.luis.xbackpack.client.gui.screens.extension.SmithingTableExtensionScreen;
 import net.luis.xbackpack.client.gui.screens.extension.StonecutterExtensionScreen;
 import net.luis.xbackpack.network.XBNetworkHandler;
-import net.luis.xbackpack.network.packet.modifier.ResetBackpackItemModifier;
-import net.luis.xbackpack.network.packet.modifier.UpdateBackpackSearchTerm;
+import net.luis.xbackpack.network.packet.modifier.ResetItemModifierPacket;
+import net.luis.xbackpack.network.packet.modifier.UpdateSearchTermPacket;
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.inventory.BackpackMenu;
 import net.luis.xbackpack.world.inventory.extension.slot.ExtensionMenuSlot;
@@ -179,12 +179,12 @@ public class BackpackScreen extends AbstractModifiableContainerScreen<BackpackMe
 	
 	@Override
 	protected void updateSearchTerm(String searchBoxValue) {
-		XBNetworkHandler.sendToServer(new UpdateBackpackSearchTerm(searchBoxValue));
+		XBNetworkHandler.INSTANCE.sendToServer(new UpdateSearchTermPacket(searchBoxValue));
 	}
 	
 	@Override
 	protected void updateItemModifier(ItemModifierType modifierType) {
-		XBNetworkHandler.sendToServer(new ResetBackpackItemModifier(modifierType));
+		XBNetworkHandler.INSTANCE.sendToServer(new ResetItemModifierPacket(modifierType));
 	}
 	
 }

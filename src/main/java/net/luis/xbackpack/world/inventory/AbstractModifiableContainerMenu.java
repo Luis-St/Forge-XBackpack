@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import com.google.common.collect.Lists;
 
 import net.luis.xbackpack.network.XBNetworkHandler;
-import net.luis.xbackpack.network.packet.modifier.UpdateBackpackItemModifiers;
+import net.luis.xbackpack.network.packet.modifier.UpdateItemModifiersPacket;
 import net.luis.xbackpack.util.Util;
 import net.luis.xbackpack.world.inventory.modifier.ModifiableMenu;
 import net.luis.xbackpack.world.inventory.modifier.filter.ItemFilter;
@@ -125,7 +125,7 @@ public abstract class AbstractModifiableContainerMenu extends AbstractExtensionC
 	
 	private void updateItemModifiers() {
 		if (this.player instanceof ServerPlayer player) {
-			XBNetworkHandler.sendToPlayer(player, new UpdateBackpackItemModifiers(this.filter, this.sorter));
+			XBNetworkHandler.INSTANCE.sendToPlayer(player, new UpdateItemModifiersPacket(this.filter, this.sorter));
 			this.onItemModifiersChanged(player);
 		}
 	}

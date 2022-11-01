@@ -3,6 +3,7 @@ package net.luis.xbackpack.network.packet.extension;
 import java.util.function.Supplier;
 
 import net.luis.xbackpack.client.XBClientPacketHandler;
+import net.luis.xbackpack.network.NetworkPacket;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
@@ -14,30 +15,28 @@ import net.minecraftforge.network.NetworkEvent.Context;
  *
  */
 
-public class UpdateFurnaceExtension {
+public class UpdateStonecutterPacket implements NetworkPacket {
 	
-	private final int cookingProgress;
-	private final int fuelProgress;
+	private final boolean resetSelected;
 	
-	public UpdateFurnaceExtension(int cookingProgress, int fuelProgress) {
-		this.cookingProgress = cookingProgress;
-		this.fuelProgress = fuelProgress;
+	public UpdateStonecutterPacket(boolean resetSelected) {
+		this.resetSelected = resetSelected;
 	}
 	
-	public UpdateFurnaceExtension(FriendlyByteBuf buffer) {
-		this.cookingProgress = buffer.readInt();
-		this.fuelProgress = buffer.readInt();
+	public UpdateStonecutterPacket(FriendlyByteBuf buffer) {
+		this.resetSelected = buffer.readBoolean();
 	}
 	
+	@Override
 	public void encode(FriendlyByteBuf buffer) {
-		buffer.writeInt(this.cookingProgress);
-		buffer.writeInt(this.fuelProgress);
+		buffer.writeBoolean(this.resetSelected);
 	}
 	
+	@Override
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-				XBClientPacketHandler.updateFurnaceExtension(this.cookingProgress, this.fuelProgress);
+				XBClientPacketHandler.updateStonecutterExtension(this.resetSelected);
 			});
 		});
 	}

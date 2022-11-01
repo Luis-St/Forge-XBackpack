@@ -1,7 +1,7 @@
 package net.luis.xbackpack.world.inventory.progress;
 
 import net.luis.xbackpack.network.XBNetworkHandler;
-import net.luis.xbackpack.network.packet.extension.UpdateBrewingStandExtension;
+import net.luis.xbackpack.network.packet.extension.UpdateBrewingStandPacket;
 import net.luis.xbackpack.world.inventory.handler.CraftingFuelHandler;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -162,9 +162,7 @@ public class BrewingProgressHandler implements ProgressHandler {
 	
 	@Override
 	public void broadcastChanges() {
-		if (this.player instanceof ServerPlayer player) {
-			XBNetworkHandler.sendToPlayer(player, new UpdateBrewingStandExtension(this.fuel, this.brewTime));
-		}
+		XBNetworkHandler.INSTANCE.sendToPlayer(this.player, new UpdateBrewingStandPacket(this.fuel, this.brewTime));
 	}
 	
 	@Override

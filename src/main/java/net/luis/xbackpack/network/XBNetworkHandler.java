@@ -1,26 +1,33 @@
 package net.luis.xbackpack.network;
 
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 import net.luis.xbackpack.XBackpack;
-import net.luis.xbackpack.network.packet.BackpackOpen;
-import net.luis.xbackpack.network.packet.UpdateBackpack;
-import net.luis.xbackpack.network.packet.extension.UpdateAnvilExtension;
-import net.luis.xbackpack.network.packet.extension.UpdateBackpackExtension;
-import net.luis.xbackpack.network.packet.extension.UpdateBrewingStandExtension;
-import net.luis.xbackpack.network.packet.extension.UpdateEnchantmentTableExtension;
-import net.luis.xbackpack.network.packet.extension.UpdateFurnaceExtension;
-import net.luis.xbackpack.network.packet.extension.UpdateStonecutterExtension;
-import net.luis.xbackpack.network.packet.modifier.ResetBackpackItemModifier;
-import net.luis.xbackpack.network.packet.modifier.UpdateBackpackItemModifiers;
-import net.luis.xbackpack.network.packet.modifier.UpdateBackpackSearchTerm;
-import net.luis.xbackpack.network.packet.tool.BackpackNextTool;
-import net.luis.xbackpack.network.packet.tool.BackpackNextToolDown;
-import net.luis.xbackpack.network.packet.tool.BackpackNextToolTop;
-import net.luis.xbackpack.network.packet.tool.BackpackToolDown;
-import net.luis.xbackpack.network.packet.tool.BackpackToolMid;
-import net.luis.xbackpack.network.packet.tool.BackpackToolTop;
+import net.luis.xbackpack.network.packet.OpenBackpackPacket;
+import net.luis.xbackpack.network.packet.UpdateBackpackPacket;
+import net.luis.xbackpack.network.packet.extension.UpdateAnvilPacket;
+import net.luis.xbackpack.network.packet.extension.UpdateBrewingStandPacket;
+import net.luis.xbackpack.network.packet.extension.UpdateEnchantmentTablePacket;
+import net.luis.xbackpack.network.packet.extension.UpdateExtensionPacket;
+import net.luis.xbackpack.network.packet.extension.UpdateFurnacePacket;
+import net.luis.xbackpack.network.packet.extension.UpdateStonecutterPacket;
+import net.luis.xbackpack.network.packet.modifier.ResetItemModifierPacket;
+import net.luis.xbackpack.network.packet.modifier.UpdateItemModifiersPacket;
+import net.luis.xbackpack.network.packet.modifier.UpdateSearchTermPacket;
+import net.luis.xbackpack.network.packet.tool.direct.ToolDownPacket;
+import net.luis.xbackpack.network.packet.tool.direct.ToolMidPacket;
+import net.luis.xbackpack.network.packet.tool.direct.ToolTopPacket;
+import net.luis.xbackpack.network.packet.tool.next.NextToolDownPacket;
+import net.luis.xbackpack.network.packet.tool.next.NextToolPacket;
+import net.luis.xbackpack.network.packet.tool.next.NextToolTopPacket;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.network.NetworkDirection;
+import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
@@ -31,50 +38,59 @@ import net.minecraftforge.network.simple.SimpleChannel;
  *
  */
 
-public class XBNetworkHandler {
+public enum XBNetworkHandler {
 	
-	private static final String VERSION = "4";
+	INSTANCE();
 	
-	private static int id = 0;
+	private static final String VERSION = "5";
+	private int id = 0;
 	
-	private static SimpleChannel simpleChannel;
+	private SimpleChannel simpleChannel;
 	
-	public static void register() {
-		simpleChannel = NetworkRegistry.newSimpleChannel(new ResourceLocation(XBackpack.MOD_ID, "simple_chnanel"), () -> VERSION, VERSION::equals, VERSION::equals);
-		simpleChannel.messageBuilder(BackpackOpen.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(BackpackOpen::encode).decoder(BackpackOpen::new).consumerMainThread(BackpackOpen::handle).add();
-		simpleChannel.messageBuilder(UpdateBackpack.class, id++, NetworkDirection.PLAY_TO_CLIENT).encoder(UpdateBackpack::encode).decoder(UpdateBackpack::new).consumerMainThread(UpdateBackpack::handle).add();
-		simpleChannel.messageBuilder(BackpackNextTool.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(BackpackNextTool::encode).decoder(BackpackNextTool::new).consumerMainThread(BackpackNextTool::handle).add();
-		simpleChannel.messageBuilder(BackpackToolTop.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(BackpackToolTop::encode).decoder(BackpackToolTop::new).consumerMainThread(BackpackToolTop::handle).add();
-		simpleChannel.messageBuilder(BackpackToolMid.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(BackpackToolMid::encode).decoder(BackpackToolMid::new).consumerMainThread(BackpackToolMid::handle).add();
-		simpleChannel.messageBuilder(BackpackToolDown.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(BackpackToolDown::encode).decoder(BackpackToolDown::new).consumerMainThread(BackpackToolDown::handle).add();
-		simpleChannel.messageBuilder(BackpackNextToolTop.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(BackpackNextToolTop::encode).decoder(BackpackNextToolTop::new).consumerMainThread(BackpackNextToolTop::handle).add();
-		simpleChannel.messageBuilder(BackpackNextToolDown.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(BackpackNextToolDown::encode).decoder(BackpackNextToolDown::new).consumerMainThread(BackpackNextToolDown::handle).add();
-		simpleChannel.messageBuilder(UpdateBackpackExtension.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(UpdateBackpackExtension::encode).decoder(UpdateBackpackExtension::new).consumerMainThread(UpdateBackpackExtension::handle).add();
-		simpleChannel.messageBuilder(UpdateFurnaceExtension.class, id++, NetworkDirection.PLAY_TO_CLIENT).encoder(UpdateFurnaceExtension::encode).decoder(UpdateFurnaceExtension::new).consumerMainThread(UpdateFurnaceExtension::handle).add();
-		simpleChannel.messageBuilder(UpdateAnvilExtension.class, id++, NetworkDirection.PLAY_TO_CLIENT).encoder(UpdateAnvilExtension::encode).decoder(UpdateAnvilExtension::new).consumerMainThread(UpdateAnvilExtension::handle).add();
-		simpleChannel.messageBuilder(UpdateEnchantmentTableExtension.class, id++, NetworkDirection.PLAY_TO_CLIENT).encoder(UpdateEnchantmentTableExtension::encode).decoder(UpdateEnchantmentTableExtension::new)
-			.consumerMainThread(UpdateEnchantmentTableExtension::handle).add();
-		simpleChannel.messageBuilder(UpdateStonecutterExtension.class, id++, NetworkDirection.PLAY_TO_CLIENT).encoder(UpdateStonecutterExtension::encode).decoder(UpdateStonecutterExtension::new).consumerMainThread(UpdateStonecutterExtension::handle)
-			.add();
-		simpleChannel.messageBuilder(UpdateBrewingStandExtension.class, id++, NetworkDirection.PLAY_TO_CLIENT).encoder(UpdateBrewingStandExtension::encode).decoder(UpdateBrewingStandExtension::new)
-			.consumerMainThread(UpdateBrewingStandExtension::handle).add();
-		simpleChannel.messageBuilder(UpdateBackpackSearchTerm.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(UpdateBackpackSearchTerm::encode).decoder(UpdateBackpackSearchTerm::new).consumerMainThread(UpdateBackpackSearchTerm::handle).add();
-		simpleChannel.messageBuilder(UpdateBackpackItemModifiers.class, id++, NetworkDirection.PLAY_TO_CLIENT).encoder(UpdateBackpackItemModifiers::encode).decoder(UpdateBackpackItemModifiers::new)
-			.consumerMainThread(UpdateBackpackItemModifiers::handle).add();
-		simpleChannel.messageBuilder(ResetBackpackItemModifier.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(ResetBackpackItemModifier::encode).decoder(ResetBackpackItemModifier::new).consumerMainThread(ResetBackpackItemModifier::handle)
-			.add();
+	public void initChannel() {
+		this.simpleChannel = NetworkRegistry.newSimpleChannel(new ResourceLocation(XBackpack.MOD_ID, "simple_chnanel"), () -> VERSION, VERSION::equals, VERSION::equals);
 	}
 	
-	private static SimpleChannel getChannel() {
+	public void registerPackets() {
+		this.registerPacket(OpenBackpackPacket.class, NetworkDirection.PLAY_TO_SERVER, OpenBackpackPacket::encode, OpenBackpackPacket::new, OpenBackpackPacket::handle);
+		this.registerPacket(UpdateBackpackPacket.class, NetworkDirection.PLAY_TO_CLIENT, UpdateBackpackPacket::encode, UpdateBackpackPacket::new, UpdateBackpackPacket::handle);
+		this.registerPacket(NextToolPacket.class, NetworkDirection.PLAY_TO_SERVER, NextToolPacket::encode, NextToolPacket::new, NextToolPacket::handle);
+		this.registerPacket(ToolTopPacket.class, NetworkDirection.PLAY_TO_SERVER, ToolTopPacket::encode, ToolTopPacket::new, ToolTopPacket::handle);
+		this.registerPacket(ToolMidPacket.class, NetworkDirection.PLAY_TO_SERVER, ToolMidPacket::encode, ToolMidPacket::new, ToolMidPacket::handle);
+		this.registerPacket(ToolDownPacket.class, NetworkDirection.PLAY_TO_SERVER, ToolDownPacket::encode, ToolDownPacket::new, ToolDownPacket::handle);
+		this.registerPacket(NextToolTopPacket.class, NetworkDirection.PLAY_TO_SERVER, NextToolTopPacket::encode, NextToolTopPacket::new, NextToolTopPacket::handle);
+		this.registerPacket(NextToolDownPacket.class, NetworkDirection.PLAY_TO_SERVER, NextToolDownPacket::encode, NextToolDownPacket::new, NextToolDownPacket::handle);
+		this.registerPacket(UpdateExtensionPacket.class, NetworkDirection.PLAY_TO_SERVER, UpdateExtensionPacket::encode, UpdateExtensionPacket::new, UpdateExtensionPacket::handle);
+		this.registerPacket(UpdateFurnacePacket.class, NetworkDirection.PLAY_TO_CLIENT, UpdateFurnacePacket::encode, UpdateFurnacePacket::new, UpdateFurnacePacket::handle);
+		this.registerPacket(UpdateAnvilPacket.class, NetworkDirection.PLAY_TO_CLIENT, UpdateAnvilPacket::encode, UpdateAnvilPacket::new, UpdateAnvilPacket::handle);
+		this.registerPacket(UpdateEnchantmentTablePacket.class, NetworkDirection.PLAY_TO_CLIENT, UpdateEnchantmentTablePacket::encode, UpdateEnchantmentTablePacket::new, UpdateEnchantmentTablePacket::handle);
+		this.registerPacket(UpdateStonecutterPacket.class, NetworkDirection.PLAY_TO_CLIENT, UpdateStonecutterPacket::encode, UpdateStonecutterPacket::new, UpdateStonecutterPacket::handle);
+		this.registerPacket(UpdateBrewingStandPacket.class, NetworkDirection.PLAY_TO_CLIENT, UpdateBrewingStandPacket::encode, UpdateBrewingStandPacket::new, UpdateBrewingStandPacket::handle);
+		this.registerPacket(UpdateSearchTermPacket.class, NetworkDirection.PLAY_TO_SERVER, UpdateSearchTermPacket::encode, UpdateSearchTermPacket::new, UpdateSearchTermPacket::handle);
+		this.registerPacket(UpdateItemModifiersPacket.class, NetworkDirection.PLAY_TO_CLIENT, UpdateItemModifiersPacket::encode, UpdateItemModifiersPacket::new, UpdateItemModifiersPacket::handle);
+		this.registerPacket(ResetItemModifierPacket.class, NetworkDirection.PLAY_TO_SERVER, ResetItemModifierPacket::encode, ResetItemModifierPacket::new, ResetItemModifierPacket::handle);
+	}
+	
+	private <T extends NetworkPacket> void registerPacket(Class<T> clazz, NetworkDirection direction, BiConsumer<T, FriendlyByteBuf> encoder, Function<FriendlyByteBuf, T> decoder, BiConsumer<T, Supplier<NetworkEvent.Context>> consumer) {
+		this.simpleChannel.messageBuilder(clazz, id++, direction).encoder(encoder).decoder(decoder).consumerMainThread(consumer).add();
+	}
+	
+	private SimpleChannel getChannel() {
 		return simpleChannel;
 	}
 	
-	public static <P> void sendToServer(P packet) {
-		getChannel().sendToServer(packet);
+	public <T extends NetworkPacket> void sendToServer(T packet) {
+		this.getChannel().sendToServer(packet);
 	}
 	
-	public static <P> void sendToPlayer(ServerPlayer player, P packet) {
-		getChannel().send(PacketDistributor.PLAYER.with(() -> player), packet);
+	public <T extends NetworkPacket> void sendToPlayer(Player player, T packet) {
+		if (player instanceof ServerPlayer serverPlayer) {
+			this.sendToPlayer(serverPlayer, packet);
+		}
+	}
+	
+	public <T extends NetworkPacket> void sendToPlayer(ServerPlayer player, T packet) {
+		this.getChannel().send(PacketDistributor.PLAYER.with(() -> player), packet);
 	}
 	
 }

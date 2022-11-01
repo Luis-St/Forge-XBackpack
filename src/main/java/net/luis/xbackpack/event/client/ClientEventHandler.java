@@ -4,13 +4,13 @@ import net.luis.xbackpack.BackpackConstans;
 import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.client.XBKeyMappings;
 import net.luis.xbackpack.network.XBNetworkHandler;
-import net.luis.xbackpack.network.packet.BackpackOpen;
-import net.luis.xbackpack.network.packet.tool.BackpackNextTool;
-import net.luis.xbackpack.network.packet.tool.BackpackNextToolDown;
-import net.luis.xbackpack.network.packet.tool.BackpackNextToolTop;
-import net.luis.xbackpack.network.packet.tool.BackpackToolDown;
-import net.luis.xbackpack.network.packet.tool.BackpackToolMid;
-import net.luis.xbackpack.network.packet.tool.BackpackToolTop;
+import net.luis.xbackpack.network.packet.OpenBackpackPacket;
+import net.luis.xbackpack.network.packet.tool.direct.ToolDownPacket;
+import net.luis.xbackpack.network.packet.tool.direct.ToolMidPacket;
+import net.luis.xbackpack.network.packet.tool.direct.ToolTopPacket;
+import net.luis.xbackpack.network.packet.tool.next.NextToolDownPacket;
+import net.luis.xbackpack.network.packet.tool.next.NextToolPacket;
+import net.luis.xbackpack.network.packet.tool.next.NextToolTopPacket;
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.capability.IBackpack;
 import net.minecraft.client.Minecraft;
@@ -40,19 +40,19 @@ public class ClientEventHandler {
 		if (event.phase == Phase.START) {
 			if (0 >= lastPacket) {
 				if (XBKeyMappings.BACKPACK_OPEN.isDown()) {
-					XBNetworkHandler.sendToServer(new BackpackOpen());
+					XBNetworkHandler.INSTANCE.sendToServer(new OpenBackpackPacket());
 					lastPacket = 4;
 				} else if (XBKeyMappings.BACKPACK_NEXT.isDown()) {
-					XBNetworkHandler.sendToServer(new BackpackNextTool());
+					XBNetworkHandler.INSTANCE.sendToServer(new NextToolPacket());
 					lastPacket = 4;
 				} else if (XBKeyMappings.BACKPACK_SLOT_TOP.isDown()) {
-					XBNetworkHandler.sendToServer(new BackpackToolTop());
+					XBNetworkHandler.INSTANCE.sendToServer(new ToolTopPacket());
 					lastPacket = 4;
 				} else if (XBKeyMappings.BACKPACK_SLOT_MID.isDown()) {
-					XBNetworkHandler.sendToServer(new BackpackToolMid());
+					XBNetworkHandler.INSTANCE.sendToServer(new ToolMidPacket());
 					lastPacket = 4;
 				} else if (XBKeyMappings.BACKPACK_SLOT_DOWN.isDown()) {
-					XBNetworkHandler.sendToServer(new BackpackToolDown());
+					XBNetworkHandler.INSTANCE.sendToServer(new ToolDownPacket());
 					lastPacket = 4;
 				}
 			} else {
@@ -75,10 +75,10 @@ public class ClientEventHandler {
 				if (!top.isEmpty() && !down.isEmpty()) {
 					if (delta > 0) {
 						event.setCanceled(true);
-						XBNetworkHandler.sendToServer(new BackpackNextToolTop());
+						XBNetworkHandler.INSTANCE.sendToServer(new NextToolTopPacket());
 					} else if (delta < 0) {
 						event.setCanceled(true);
-						XBNetworkHandler.sendToServer(new BackpackNextToolDown());
+						XBNetworkHandler.INSTANCE.sendToServer(new NextToolDownPacket());
 					}
 				}
 			}

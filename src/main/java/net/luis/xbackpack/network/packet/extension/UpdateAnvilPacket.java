@@ -3,35 +3,40 @@ package net.luis.xbackpack.network.packet.extension;
 import java.util.function.Supplier;
 
 import net.luis.xbackpack.client.XBClientPacketHandler;
+import net.luis.xbackpack.network.NetworkPacket;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent.Context;
 
-public class UpdateBrewingStandExtension {
+/**
+ * 
+ * @author Luis-st
+ *
+ */
+
+public class UpdateAnvilPacket implements NetworkPacket {
 	
-	private final int fuel;
-	private final int brewTime;
+	private final int cost;
 	
-	public UpdateBrewingStandExtension(int fuel, int brewTime) {
-		this.fuel = fuel;
-		this.brewTime = brewTime;
+	public UpdateAnvilPacket(int cost) {
+		this.cost = cost;
 	}
 	
-	public UpdateBrewingStandExtension(FriendlyByteBuf buffer) {
-		this.fuel = buffer.readInt();
-		this.brewTime = buffer.readInt();
+	public UpdateAnvilPacket(FriendlyByteBuf buffer) {
+		this.cost = buffer.readInt();
 	}
 	
+	@Override
 	public void encode(FriendlyByteBuf buffer) {
-		buffer.writeInt(this.fuel);
-		buffer.writeInt(this.brewTime);
+		buffer.writeInt(this.cost);
 	}
 	
+	@Override
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-				XBClientPacketHandler.updateBrewingStandExtension(this.fuel, this.brewTime);
+				XBClientPacketHandler.updateAnvilExtension(this.cost);
 			});
 		});
 	}

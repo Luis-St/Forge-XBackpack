@@ -3,7 +3,7 @@ package net.luis.xbackpack.world.backpack;
 import net.luis.xbackpack.BackpackConstans;
 import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.network.XBNetworkHandler;
-import net.luis.xbackpack.network.packet.UpdateBackpack;
+import net.luis.xbackpack.network.packet.UpdateBackpackPacket;
 import net.luis.xbackpack.world.backpack.config.BackpackConfig;
 import net.luis.xbackpack.world.capability.IBackpack;
 import net.luis.xbackpack.world.inventory.handler.CraftingFuelHandler;
@@ -131,7 +131,7 @@ public class BackpackHandler implements IBackpack {
 	public boolean broadcastChanges() {
 		if (this.player instanceof ServerPlayer player) {
 			this.config.updateServer();
-			XBNetworkHandler.sendToPlayer(player, new UpdateBackpack(this.serialize()));
+			XBNetworkHandler.INSTANCE.sendToPlayer(player, new UpdateBackpackPacket(this.serialize()));
 			return true;
 		}
 		XBackpack.LOGGER.warn("Can not broadcast changes on the client");

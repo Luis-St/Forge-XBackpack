@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import net.luis.xbackpack.network.XBNetworkHandler;
-import net.luis.xbackpack.network.packet.extension.UpdateEnchantmentTableExtension;
+import net.luis.xbackpack.network.packet.extension.UpdateEnchantmentTablePacket;
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.luis.xbackpack.world.inventory.AbstractExtensionContainerMenu;
@@ -127,9 +127,7 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 				this.enchantmentLevels[row] = -1;
 			}
 		}
-		if (this.player instanceof ServerPlayer player) {
-			XBNetworkHandler.sendToPlayer(player, new UpdateEnchantmentTableExtension(this.enchantments, this.enchantmentLevels, this.enchantingCosts, this.enchantmentSeed));
-		}
+		XBNetworkHandler.INSTANCE.sendToPlayer(this.player, new UpdateEnchantmentTablePacket(this.enchantments, this.enchantmentLevels, this.enchantingCosts, this.enchantmentSeed));
 	}
 	
 	private int calculatePower() {

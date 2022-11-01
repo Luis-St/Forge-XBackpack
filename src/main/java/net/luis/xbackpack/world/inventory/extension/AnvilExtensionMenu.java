@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import net.luis.xbackpack.network.XBNetworkHandler;
-import net.luis.xbackpack.network.packet.extension.UpdateAnvilExtension;
+import net.luis.xbackpack.network.packet.extension.UpdateAnvilPacket;
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.luis.xbackpack.world.inventory.AbstractExtensionContainerMenu;
@@ -259,12 +259,10 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	private void broadcastChanges() {
-		if (this.player instanceof ServerPlayer player) {
-			XBNetworkHandler.sendToPlayer(player, new UpdateAnvilExtension(this.cost));
-		}
+		XBNetworkHandler.INSTANCE.sendToPlayer(this.player, new UpdateAnvilPacket(this.cost));
 	}
 	
-	private static int calculateIncreasedRepairCost(int cost) {
+	private static int calculateIncreasedRepairCost(int cost) {	
 		return cost * 2 + 1;
 	}
 

@@ -29,7 +29,8 @@ public class XBackpack {
 		XBMenuTypes.MENU_TYPES.register(modEventBus);
 		BackpackExtensions.BACKPACK_EXTENSIONS.register(modEventBus);
 		XBCommandArgumentTypes.COMMAND_ARGUMENT_TYPES.register(modEventBus);
-		XBNetworkHandler.register();
+		XBNetworkHandler.INSTANCE.initChannel();
+		XBNetworkHandler.INSTANCE.registerPackets();
 	}
 	
 }

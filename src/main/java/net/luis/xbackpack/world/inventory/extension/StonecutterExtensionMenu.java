@@ -7,7 +7,7 @@ import java.util.function.Consumer;
 import com.google.common.collect.Lists;
 
 import net.luis.xbackpack.network.XBNetworkHandler;
-import net.luis.xbackpack.network.packet.extension.UpdateStonecutterExtension;
+import net.luis.xbackpack.network.packet.extension.UpdateStonecutterPacket;
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.luis.xbackpack.world.inventory.AbstractExtensionContainerMenu;
@@ -100,8 +100,8 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 		if (!stack.is(this.input.getItem())) {
 			this.input = stack.copy();
 			this.setupRecipes(stack);
-		} else if (this.player instanceof ServerPlayer player) {
-			XBNetworkHandler.sendToPlayer(player, new UpdateStonecutterExtension(false));
+		} else {
+			XBNetworkHandler.INSTANCE.sendToPlayer(this.player, new UpdateStonecutterPacket(false));
 		}
 	}
 	
@@ -110,9 +110,7 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 		this.selectedRecipe = -1;
 		this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);
 		this.recipes.addAll(this.player.level.getRecipeManager().getRecipesFor(RecipeType.STONECUTTING, new SimpleContainer(stack), this.player.level));
-		if (this.player instanceof ServerPlayer player) {
-			XBNetworkHandler.sendToPlayer(player, new UpdateStonecutterExtension(true));
-		}
+		XBNetworkHandler.INSTANCE.sendToPlayer(this.player, new UpdateStonecutterPacket(true));
 	}
 	
 	@Override

@@ -4,10 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import net.luis.xbackpack.network.XBNetworkHandler;
-import net.luis.xbackpack.network.packet.extension.UpdateFurnaceExtension;
+import net.luis.xbackpack.network.packet.extension.UpdateFurnacePacket;
 import net.luis.xbackpack.world.inventory.handler.SmeltingHandler;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -268,9 +267,7 @@ public class SmeltingProgressHandler implements ProgressHandler {
 	
 	@Override
 	public void broadcastChanges() {
-		if (this.player instanceof ServerPlayer player) {
-			XBNetworkHandler.sendToPlayer(player, new UpdateFurnaceExtension(this.getCookingProgress(), this.getFuelProgress()));
-		}
+		XBNetworkHandler.INSTANCE.sendToPlayer(this.player, new UpdateFurnacePacket(this.getCookingProgress(), this.getFuelProgress()));
 	}
 	
 	@Override

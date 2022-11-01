@@ -3,37 +3,38 @@ package net.luis.xbackpack.network.packet.extension;
 import java.util.function.Supplier;
 
 import net.luis.xbackpack.client.XBClientPacketHandler;
+import net.luis.xbackpack.network.NetworkPacket;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent.Context;
 
-/**
- * 
- * @author Luis-st
- *
- */
-
-public class UpdateStonecutterExtension {
+public class UpdateBrewingStandPacket implements NetworkPacket {
 	
-	private final boolean resetSelected;
+	private final int fuel;
+	private final int brewTime;
 	
-	public UpdateStonecutterExtension(boolean resetSelected) {
-		this.resetSelected = resetSelected;
+	public UpdateBrewingStandPacket(int fuel, int brewTime) {
+		this.fuel = fuel;
+		this.brewTime = brewTime;
 	}
 	
-	public UpdateStonecutterExtension(FriendlyByteBuf buffer) {
-		this.resetSelected = buffer.readBoolean();
+	public UpdateBrewingStandPacket(FriendlyByteBuf buffer) {
+		this.fuel = buffer.readInt();
+		this.brewTime = buffer.readInt();
 	}
 	
+	@Override
 	public void encode(FriendlyByteBuf buffer) {
-		buffer.writeBoolean(this.resetSelected);
+		buffer.writeInt(this.fuel);
+		buffer.writeInt(this.brewTime);
 	}
 	
+	@Override
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-				XBClientPacketHandler.updateStonecutterExtension(this.resetSelected);
+				XBClientPacketHandler.updateBrewingStandExtension(this.fuel, this.brewTime);
 			});
 		});
 	}

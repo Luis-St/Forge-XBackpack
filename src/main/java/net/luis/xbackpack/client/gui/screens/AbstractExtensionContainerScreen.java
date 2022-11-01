@@ -25,7 +25,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.luis.xbackpack.client.gui.screens.extension.AbstractExtensionScreen;
 import net.luis.xbackpack.network.XBNetworkHandler;
-import net.luis.xbackpack.network.packet.extension.UpdateBackpackExtension;
+import net.luis.xbackpack.network.packet.extension.UpdateExtensionPacket;
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.extension.BackpackExtensionState;
@@ -246,7 +246,7 @@ public abstract class AbstractExtensionContainerScreen<T extends AbstractExtensi
 		} else {
 			this.extension = extension;
 		}
-		XBNetworkHandler.sendToServer(new UpdateBackpackExtension(this.extension));
+		XBNetworkHandler.INSTANCE.sendToServer(new UpdateExtensionPacket(this.extension));
 	}
 	
 }
