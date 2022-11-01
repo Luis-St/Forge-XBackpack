@@ -97,26 +97,29 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 	protected void renderSlots(PoseStack stack, int mouseX, int mouseY) {
 		for (int i = 0; i < this.menu.slots.size(); ++i) {
 			Slot slot = this.menu.slots.get(i);
-			SlotRenderType renderType = this.getSlotRenderType(slot);
-			if (renderType == SlotRenderType.SKIP) {
+			if (this.getSlotRenderType(slot) == SlotRenderType.SKIP) {
 				continue;
 			} else {
 				int y = slot instanceof MoveableSlot moveableSlot ? moveableSlot.getY(this.scrollOffset) : slot.y;
-				this.renderAndDecorateSlot(stack, mouseX, mouseY, slot, slot.x, y, renderType, this.getSlotColor(i));
+				this.renderAndDecorateSlot(stack, mouseX, mouseY, slot, slot.x, y, this.getSlotColor(i));
 			}
 		}
 	}
 	
-	protected void renderAndDecorateSlot(PoseStack stack, int mouseX, int mouseY, Slot slot, int slotX, int slotY, SlotRenderType renderType, int slotColor) {
+	protected void renderAndDecorateSlot(PoseStack stack, int mouseX, int mouseY, Slot slot, int slotX, int slotY, int slotColor) {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-		this.renderSlot(stack, slot, slotX, slotY, renderType);
+		if (slot.x == slotX && slot.y == slotY) {
+			super.renderSlot(stack, slot);
+		} else {
+			this.renderSlot(stack, slot, slotX, slotY);
+		}
 		if (this.isHovering(slot, mouseX, mouseY)) {
 			this.hoveredSlot = slot;
 			renderSlotHighlight(stack, slotX, slotY, this.getBlitOffset(), slotColor);
 		}
 	}
 	
-	protected void renderSlot(PoseStack stack, Slot slot, int slotX, int slotY, SlotRenderType renderType) {
+	protected void renderSlot(PoseStack stack, Slot slot, int slotX, int slotY) {
 		ItemStack slotStack = slot.getItem();
 		boolean quickReplace = false;
 		boolean clickedSlot = slot == this.clickedSlot && !this.draggingItem.isEmpty() && !this.isSplittingStack;
@@ -145,7 +148,7 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 		}
 		this.setBlitOffset(100);
 		this.itemRenderer.blitOffset = 100.0F;
-		if (slotStack.isEmpty() && renderType != SlotRenderType.SKIP) {
+		if (slotStack.isEmpty()) {
 			Pair<ResourceLocation, ResourceLocation> pair = slot.getNoItemIcon();
 			if (pair != null) {
 				TextureAtlasSprite atlasSprite = this.minecraft.getTextureAtlas(pair.getFirst()).apply(pair.getSecond());
@@ -154,7 +157,7 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 				clickedSlot = true;
 			}
 		}
-		if (!clickedSlot && renderType == SlotRenderType.DEFAULT) {
+		if (!clickedSlot) {
 			if (quickReplace) {
 				fill(stack, slotX, slotY, slotX + 16, slotY + 16, -2130706433);
 			}
