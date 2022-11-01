@@ -108,11 +108,7 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 	
 	protected void renderAndDecorateSlot(PoseStack stack, int mouseX, int mouseY, Slot slot, int slotX, int slotY, int slotColor) {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-		if (slot.x == slotX && slot.y == slotY) {
-			super.renderSlot(stack, slot);
-		} else {
-			this.renderSlot(stack, slot, slotX, slotY);
-		}
+		this.renderSlot(stack, slot, slotX, slotY);
 		if (this.isHovering(slot, mouseX, mouseY)) {
 			this.hoveredSlot = slot;
 			renderSlotHighlight(stack, slotX, slotY, this.getBlitOffset(), slotColor);
@@ -135,7 +131,7 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 			if (AbstractContainerMenu.canItemQuickReplace(slot, carriedStack, true) && this.menu.canDragTo(slot)) {
 				slotStack = carriedStack.copy();
 				quickReplace = true;
-				AbstractContainerMenu.getQuickCraftSlotCount(this.quickCraftSlots, this.quickCraftingType, slotStack, slotStack.isEmpty() ? 0 : slotStack.getCount());
+				AbstractContainerMenu.getQuickCraftSlotCount(this.quickCraftSlots, this.quickCraftingType, slotStack, slot.getItem().isEmpty() ? 0 : slot.getItem().getCount());
 				int count = Math.min(slotStack.getMaxStackSize(), slot.getMaxStackSize(slotStack));
 				if (slotStack.getCount() > count) {
 					stackCount = ChatFormatting.YELLOW.toString() + count;
