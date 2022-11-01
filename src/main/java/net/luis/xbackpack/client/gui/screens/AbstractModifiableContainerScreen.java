@@ -11,7 +11,7 @@ import net.luis.xbackpack.client.XBKeyMappings;
 import net.luis.xbackpack.client.gui.components.ActionButton;
 import net.luis.xbackpack.client.gui.components.ActionButton.ClickType;
 import net.luis.xbackpack.client.gui.components.RenderData;
-import net.luis.xbackpack.event.client.input.OnClientTickEvent;
+import net.luis.xbackpack.event.client.ClientEventHandler;
 import net.luis.xbackpack.world.inventory.AbstractModifiableContainerMenu;
 import net.luis.xbackpack.world.inventory.modifier.ItemModifierType;
 import net.luis.xbackpack.world.inventory.modifier.filter.ItemFilters;
@@ -173,7 +173,7 @@ public abstract class AbstractModifiableContainerScreen<T extends AbstractModifi
 			}
 		} else {
 			if (XBKeyMappings.BACKPACK_OPEN.getKey().getValue() == keyCode) {
-				OnClientTickEvent.lastPacket = 10;
+				ClientEventHandler.lastPacket = 10;
 				this.onClose();
 				return true;
 			} else if (keyCode == 256) {

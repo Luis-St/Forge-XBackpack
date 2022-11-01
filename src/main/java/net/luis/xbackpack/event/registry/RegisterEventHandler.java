@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.Mod;
  */
 
 @Mod.EventBusSubscriber(modid = XBackpack.MOD_ID)
-public class OnRegisterCommandsEvent {
+public class RegisterEventHandler {
 	
 	@SubscribeEvent
 	public static void registerCommands(RegisterCommandsEvent event) {

@@ -17,7 +17,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
  */
 
 @EventBusSubscriber(modid = XBackpack.MOD_ID, bus = Bus.MOD, value = Dist.CLIENT)
-public class OnClientSetupEvent {
+public class ClientSetupEventHandler {
 	
 	@SubscribeEvent
 	public static void clientSetup(FMLClientSetupEvent event) {
