@@ -58,6 +58,10 @@ public class XBLanguageProvider extends LanguageProvider {
 		this.add("xbackpack.backpack_action.filter.none.info.1", "All items are displayed");
 		this.add("xbackpack.backpack_action.filter.name_search", "Name Filter");
 		this.add("xbackpack.backpack_action.filter.name_search.info.0", "Only items that match the search term will be displayed");
+		this.add("xbackpack.backpack_action.filter.namespace_search", "Namespace Filter");
+		this.add("xbackpack.backpack_action.filter.namespace_search.info.0", "Only items are displayed whose namespace corresponds the entered search term");
+		this.add("xbackpack.backpack_action.filter.tag_search", "Tag Filter");
+		this.add("xbackpack.backpack_action.filter.tag_search.info.0", "Only items that are subordinate the entered tag are displayed.");
 		this.add("xbackpack.backpack_action.filter.count_search", "Count Filter");
 		this.add("xbackpack.backpack_action.filter.count_search.info.0", "Only items that correspond to the entered number are displayed");
 		this.add("xbackpack.backpack_action.filter.stackable", "Stackable Filter");
@@ -88,6 +92,10 @@ public class XBLanguageProvider extends LanguageProvider {
 		this.add("xbackpack.backpack_action.sorter.name_search", "Name Sorter");
 		this.add("xbackpack.backpack_action.sorter.name_search.info.0", "The items are sorted by the search term");
 		this.add("xbackpack.backpack_action.sorter.name_search.info.1", "The item that most matches the search term comes first");
+		this.add("xbackpack.backpack_action.sorter.namespace_search", "Namespace Sorter");
+		this.add("xbackpack.backpack_action.sorter.namespace_search.info.0", "The items are sorted by the searched namespace");
+		this.add("xbackpack.backpack_action.sorter.tag_search", "Tag Sorter");
+		this.add("xbackpack.backpack_action.sorter.tag_search.info.0", "The items are sorted by the searched tag");
 		this.add("xbackpack.backpack_action.sorter.count_search", "Count Sorter");
 		this.add("xbackpack.backpack_action.sorter.count_search.info.0", "The items are sorted by the searched count");
 		this.add("xbackpack.backpack_action.sorter.alphabetically", "Alphabetical Sorter");
