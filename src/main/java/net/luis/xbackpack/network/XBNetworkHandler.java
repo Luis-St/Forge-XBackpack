@@ -44,7 +44,6 @@ public enum XBNetworkHandler {
 	
 	private static final String VERSION = "5";
 	private int id = 0;
-	
 	private SimpleChannel simpleChannel;
 	
 	public void initChannel() {
@@ -76,7 +75,7 @@ public enum XBNetworkHandler {
 	}
 	
 	private SimpleChannel getChannel() {
-		return simpleChannel;
+		return this.simpleChannel;
 	}
 	
 	public <T extends NetworkPacket> void sendToServer(T packet) {

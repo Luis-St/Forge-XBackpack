@@ -80,7 +80,7 @@ public class XBLanguageProvider extends LanguageProvider {
 		this.add("xbackpack.backpack_action.filter.armor.info.0", "Only armor is displayed");
 		this.add("xbackpack.backpack_action.sorter.none", "No Sorter");
 		this.add("xbackpack.backpack_action.sorter.none.info.0", "No item sorter active");
-		this.add("xbackpack.backpack_action.sorter.none.info.1", "All items are displayed randomly");
+		this.add("xbackpack.backpack_action.sorter.none.info.1", "All items are displayed in the normal order");
 		this.add("xbackpack.backpack_action.sorter.name_search", "Name Sorter");
 		this.add("xbackpack.backpack_action.sorter.name_search.info.0", "The items are sorted by the search term");
 		this.add("xbackpack.backpack_action.sorter.name_search.info.1", "The item that most matches the search term comes first");
