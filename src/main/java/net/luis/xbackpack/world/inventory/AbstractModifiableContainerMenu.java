@@ -52,8 +52,14 @@ public abstract class AbstractModifiableContainerMenu extends AbstractExtensionC
 		} else if (!this.searchTerm.isEmpty()) {
 			if (this.isNumber(this.searchTerm) && this.sorter != ItemSorters.COUNT_SEARCH) {
 				this.sorter = ItemSorters.COUNT_SEARCH;
-			} else if (!this.isNumber(this.searchTerm) && this.sorter != ItemSorters.NAME_SEARCH) {
-				this.sorter = ItemSorters.NAME_SEARCH;
+			} else if (!this.isNumber(this.searchTerm)) {
+				if (this.searchTerm.startsWith("@") && this.sorter != ItemSorters.NAMESPACE_SEARCH) {
+					this.sorter = ItemSorters.NAMESPACE_SEARCH;
+				} else if (this.searchTerm.startsWith("#") && this.sorter != ItemSorters.TAG_SEARCH) {
+					this.sorter = ItemSorters.TAG_SEARCH;
+				} else if (!this.searchTerm.startsWith("@") && !this.searchTerm.startsWith("#") && this.sorter != ItemSorters.NAME_SEARCH) {
+					this.sorter = ItemSorters.NAME_SEARCH;
+				}
 			}
 		}
 		this.updateItemModifiers();

@@ -1,6 +1,7 @@
 package net.luis.xbackpack.world.inventory.modifier.filter;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -10,6 +11,7 @@ import com.google.common.collect.Lists;
 import net.luis.xbackpack.util.Util;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.CompassItem;
 import net.minecraft.world.item.CrossbowItem;
@@ -21,6 +23,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Wearable;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.tags.ITag;
 
 /**
  *
@@ -35,7 +39,7 @@ public enum ItemFilters implements ItemFilter {
 		public boolean canKeepItem(ItemStack stack, String searchTerm) {
 			return true;
 		}
-
+		
 		@Override
 		public List<MutableComponent> getInfo() {
 			List<MutableComponent> infoTooltip = Lists.newArrayList();
@@ -61,7 +65,66 @@ public enum ItemFilters implements ItemFilter {
 			}
 		}
 	},
-	COUNT_SEARCH("count_search", 2, false) {
+	NAMESPACE_SEARCH("namespace_search", 2, false) {
+		@Override
+		public boolean canKeepItem(ItemStack stack, String searchTerm) {
+			String namespace = ForgeRegistries.ITEMS.getKey(stack.getItem()).getNamespace().trim().toLowerCase();
+			if (searchTerm.isEmpty()) {
+				return true;
+			} else if (!searchTerm.startsWith("@")) {
+				return false;
+			} else {
+				String string = searchTerm.substring(1);
+				if (string.isEmpty()) {
+					return true;
+				} else if (namespace.equals(string)) {
+					return true;
+				} else if (namespace.contains(string)) {
+					return true;
+				} else if (namespace.startsWith(string)) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		}
+	},
+	TAG_SEARCH("tag_search", 3, false) {
+		@Override
+		public boolean canKeepItem(ItemStack stack, String searchTerm) {
+			if (searchTerm.isEmpty()) {
+				return true;
+			} else if (!searchTerm.startsWith("#")) {
+				return false;
+			} else {
+				String string = searchTerm.substring(1);
+				if (string.isEmpty()) {
+					return true;
+				} else {
+					TagKey<Item> tag = this.getTag(string);
+					if (tag == null) {
+						return false;
+					} else {
+						return ForgeRegistries.ITEMS.tags().getTag(tag).contains(stack.getItem());
+					}
+				}
+			}
+		}
+		
+		@Nullable
+		private TagKey<Item> getTag(String searchTerm) {
+			List<TagKey<Item>> tags = ForgeRegistries.ITEMS.tags().stream().filter(ITag::isBound).filter((tag) -> {
+				return !tag.isEmpty();
+			}).map(ITag::getKey).collect(Collectors.toList());
+			for (TagKey<Item> tag : tags) {
+				if (searchTerm.replace(" ", "_").equals(tag.location().getPath())) {
+					return tag;
+				}
+			}
+			return null;
+		}
+	},
+	COUNT_SEARCH("count_search", 4, false) {
 		@Override
 		public boolean canKeepItem(ItemStack stack, String searchTerm) {
 			int count = Util.tryParseInteger(searchTerm, -1);
@@ -76,69 +139,69 @@ public enum ItemFilters implements ItemFilter {
 			}
 		}
 	},
-	STACKABLE("stackable", 3) {
+	STACKABLE("stackable", 5) {
 		@Override
 		public boolean canKeepItem(ItemStack stack, String searchTerm) {
 			return stack.isStackable();
 		}
 	},
-	NONE_STACKABLE("none_stackable", 4) {
+	NONE_STACKABLE("none_stackable", 6) {
 		@Override
 		public boolean canKeepItem(ItemStack stack, String searchTerm) {
 			return !stack.isStackable();
 		}
 	},
-	MAX_COUNT("max_count", 5) {
+	MAX_COUNT("max_count", 7) {
 		@Override
 		public boolean canKeepItem(ItemStack stack, String searchTerm) {
 			return stack.getItem().getMaxStackSize(stack) == stack.getCount();
 		}
 	},
-	ENCHANTABLE("enchantable", 6) {
+	ENCHANTABLE("enchantable", 8) {
 		@Override
 		public boolean canKeepItem(ItemStack stack, String searchTerm) {
 			return stack.isEnchantable();
 		}
 	},
-	ENCHANTED("enchanted", 7) {
+	ENCHANTED("enchanted", 9) {
 		@Override
 		public boolean canKeepItem(ItemStack stack, String searchTerm) {
 			return stack.isEnchanted();
 		}
 	},
-	DAMAGEABLE("damageable", 8) {
+	DAMAGEABLE("damageable", 10) {
 		@Override
 		public boolean canKeepItem(ItemStack stack, String searchTerm) {
 			return stack.isDamageableItem();
 		}
 	},
-	DAMAGED("damaged", 9) {
+	DAMAGED("damaged", 11) {
 		@Override
 		public boolean canKeepItem(ItemStack stack, String searchTerm) {
 			return stack.isDamaged();
 		}
 	},
-	EDIBLE("edible", 10) {
+	EDIBLE("edible", 12) {
 		@Override
 		public boolean canKeepItem(ItemStack stack, String searchTerm) {
 			return stack.isEdible();
 		}
 	},
-	WEAPON("weapon", 11) {
+	WEAPON("weapon", 13) {
 		@Override
 		public boolean canKeepItem(ItemStack stack, String searchTerm) {
 			Item item = stack.getItem();
 			return item instanceof SwordItem || item instanceof BowItem || item instanceof CrossbowItem;
 		}
 	},
-	TOOL("tool", 12) {
+	TOOL("tool", 14) {
 		@Override
 		public boolean canKeepItem(ItemStack stack, String searchTerm) {
 			Item item = stack.getItem();
 			return item instanceof DiggerItem || item instanceof FishingRodItem || item instanceof FlintAndSteelItem || item instanceof CompassItem || item == Items.CLOCK;
 		}
 	},
-	ARMOR("armor", 13) {
+	ARMOR("armor", 15) {
 		@Override
 		public boolean canKeepItem(ItemStack stack, String searchTerm) {
 			return stack.getItem() instanceof Wearable;
@@ -148,22 +211,22 @@ public enum ItemFilters implements ItemFilter {
 	private final String name;
 	private final int id;
 	private final boolean selectable;
-
+	
 	private ItemFilters(String name, int id) {
 		this(name, id, true);
 	}
-
+	
 	private ItemFilters(String name, int id, boolean selectable) {
 		this.name = name;
 		this.id = id;
 		this.selectable = selectable;
 	}
-
+	
 	@Override
 	public String getName() {
 		return this.name;
 	}
-
+	
 	@Override
 	public int getId() {
 		return this.id;
@@ -173,7 +236,7 @@ public enum ItemFilters implements ItemFilter {
 	public boolean isSelectable() {
 		return this.selectable;
 	}
-
+	
 	@Override
 	public abstract boolean canKeepItem(ItemStack stack, String searchTerm);
 	

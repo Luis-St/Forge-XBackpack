@@ -236,6 +236,14 @@ public class BackpackMenu extends AbstractModifiableContainerMenu {
 					stacks.removeIf((stack) -> {
 						return !ItemFilters.NAME_SEARCH.canKeepItem(stack, this.getSearchTerm());
 					});
+				} else if (this.getSorter() == ItemSorters.NAMESPACE_SEARCH) {
+					stacks.removeIf((stack) -> {
+						return !ItemFilters.NAMESPACE_SEARCH.canKeepItem(stack, this.getSearchTerm());
+					});
+				} else if (this.getSorter() == ItemSorters.TAG_SEARCH) {
+					stacks.removeIf((stack) -> {
+						return !ItemFilters.TAG_SEARCH.canKeepItem(stack, this.getSearchTerm());
+					});
 				} else if (this.getSorter() == ItemSorters.COUNT_SEARCH) {
 					stacks.removeIf((stack) -> {
 						return !ItemFilters.COUNT_SEARCH.canKeepItem(stack, this.getSearchTerm());
