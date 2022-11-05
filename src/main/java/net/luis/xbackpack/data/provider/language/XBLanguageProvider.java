@@ -61,13 +61,13 @@ public class XBLanguageProvider extends LanguageProvider {
 		this.add("xbackpack.backpack_action.filter.namespace_search", "Namespace Filter");
 		this.add("xbackpack.backpack_action.filter.namespace_search.info.0", "Only items are displayed whose namespace corresponds the entered search term");
 		this.add("xbackpack.backpack_action.filter.tag_search", "Tag Filter");
-		this.add("xbackpack.backpack_action.filter.tag_search.info.0", "Only items that are subordinate the entered tag are displayed.");
+		this.add("xbackpack.backpack_action.filter.tag_search.info.0", "Only items that are subordinate the entered tag are displayed");
 		this.add("xbackpack.backpack_action.filter.count_search", "Count Filter");
 		this.add("xbackpack.backpack_action.filter.count_search.info.0", "Only items that correspond to the entered number are displayed");
 		this.add("xbackpack.backpack_action.filter.stackable", "Stackable Filter");
-		this.add("xbackpack.backpack_action.filter.stackable.info.0", "Only items that are stackable are displayed.");
+		this.add("xbackpack.backpack_action.filter.stackable.info.0", "Only items that are stackable are displayed");
 		this.add("xbackpack.backpack_action.filter.none_stackable", "None Stackable Filter");
-		this.add("xbackpack.backpack_action.filter.none_stackable.info.0", "Only items that are not stackable are displayed.");
+		this.add("xbackpack.backpack_action.filter.none_stackable.info.0", "Only items that are not stackable are displayed");
 		this.add("xbackpack.backpack_action.filter.max_count", "Max Count Filter");
 		this.add("xbackpack.backpack_action.filter.max_count.info.0", "Only items that have the maximum stack size are displayed");
 		this.add("xbackpack.backpack_action.filter.enchantable", "Enchantable Filter");
