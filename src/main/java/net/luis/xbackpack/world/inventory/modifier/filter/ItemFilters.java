@@ -76,57 +76,69 @@ public enum ItemFilters implements ItemFilter {
 			}
 		}
 	},
-	MAX_COUNT("max_count", 3) {
+	STACKABLE("stackable", 3) {
+		@Override
+		public boolean canKeepItem(ItemStack stack, String searchTerm) {
+			return stack.isStackable();
+		}
+	},
+	NONE_STACKABLE("none_stackable", 4) {
+		@Override
+		public boolean canKeepItem(ItemStack stack, String searchTerm) {
+			return !stack.isStackable();
+		}
+	},
+	MAX_COUNT("max_count", 5) {
 		@Override
 		public boolean canKeepItem(ItemStack stack, String searchTerm) {
 			return stack.getItem().getMaxStackSize(stack) == stack.getCount();
 		}
 	},
-	ENCHANTABLE("enchantable", 4) {
+	ENCHANTABLE("enchantable", 6) {
 		@Override
 		public boolean canKeepItem(ItemStack stack, String searchTerm) {
 			return stack.isEnchantable();
 		}
 	},
-	ENCHANTED("enchanted", 5) {
+	ENCHANTED("enchanted", 7) {
 		@Override
 		public boolean canKeepItem(ItemStack stack, String searchTerm) {
 			return stack.isEnchanted();
 		}
 	},
-	DAMAGEABLE("damageable", 6) {
+	DAMAGEABLE("damageable", 8) {
 		@Override
 		public boolean canKeepItem(ItemStack stack, String searchTerm) {
 			return stack.isDamageableItem();
 		}
 	},
-	DAMAGED("damaged", 7) {
+	DAMAGED("damaged", 9) {
 		@Override
 		public boolean canKeepItem(ItemStack stack, String searchTerm) {
 			return stack.isDamaged();
 		}
 	},
-	EDIBLE("edible", 8) {
+	EDIBLE("edible", 10) {
 		@Override
 		public boolean canKeepItem(ItemStack stack, String searchTerm) {
 			return stack.isEdible();
 		}
 	},
-	WEAPON("weapon", 9) {
+	WEAPON("weapon", 11) {
 		@Override
 		public boolean canKeepItem(ItemStack stack, String searchTerm) {
 			Item item = stack.getItem();
 			return item instanceof SwordItem || item instanceof BowItem || item instanceof CrossbowItem;
 		}
 	},
-	TOOL("tool", 10) {
+	TOOL("tool", 12) {
 		@Override
 		public boolean canKeepItem(ItemStack stack, String searchTerm) {
 			Item item = stack.getItem();
 			return item instanceof DiggerItem || item instanceof FishingRodItem || item instanceof FlintAndSteelItem || item instanceof CompassItem || item == Items.CLOCK;
 		}
 	},
-	ARMOR("armor", 11) {
+	ARMOR("armor", 13) {
 		@Override
 		public boolean canKeepItem(ItemStack stack, String searchTerm) {
 			return stack.getItem() instanceof Wearable;
