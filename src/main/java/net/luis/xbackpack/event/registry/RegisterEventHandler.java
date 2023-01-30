@@ -19,5 +19,5 @@ public class RegisterEventHandler {
 	public static void registerCommands(RegisterCommandsEvent event) {
 		BackpackCommand.register(event.getDispatcher(), event.getBuildContext());
 	}
-
+	
 }

@@ -1,14 +1,7 @@
 package net.luis.xbackpack.client;
 
-import org.jetbrains.annotations.Nullable;
-
 import net.luis.xbackpack.client.gui.screens.BackpackScreen;
-import net.luis.xbackpack.client.gui.screens.extension.AbstractExtensionScreen;
-import net.luis.xbackpack.client.gui.screens.extension.AnvilExtensionScreen;
-import net.luis.xbackpack.client.gui.screens.extension.BrewingStandExtensionScreen;
-import net.luis.xbackpack.client.gui.screens.extension.EnchantmentTableExtensionScreen;
-import net.luis.xbackpack.client.gui.screens.extension.FurnaceExtensionScreen;
-import net.luis.xbackpack.client.gui.screens.extension.StonecutterExtensionScreen;
+import net.luis.xbackpack.client.gui.screens.extension.*;
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
@@ -18,9 +11,12 @@ import net.luis.xbackpack.world.inventory.modifier.sorter.ItemSorter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 /**
- * 
+ *
  * @author Luis-st
  *
  */
@@ -28,18 +24,14 @@ import net.minecraft.resources.ResourceLocation;
 public class XBClientPacketHandler {
 	
 	public static void updateBackpack(CompoundTag tag) {
-		Minecraft minecraft = Minecraft.getInstance();
-		BackpackProvider.get(minecraft.player).deserialize(tag);
+		BackpackProvider.get(Objects.requireNonNull(Minecraft.getInstance().player)).deserialize(tag);
 	}
 	
 	@Nullable
 	private static AbstractExtensionScreen getExtensionScreen(BackpackExtension extension) {
 		Minecraft minecraft = Minecraft.getInstance();
 		if (minecraft.screen instanceof BackpackScreen screen) {
-			AbstractExtensionScreen extensionScreen = screen.getExtensionScreen(extension);
-			if (extensionScreen != null) {
-				return extensionScreen;
-			}
+			return screen.getExtensionScreen(extension);
 		}
 		return null;
 	}

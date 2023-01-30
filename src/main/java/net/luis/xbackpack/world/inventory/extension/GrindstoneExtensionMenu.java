@@ -1,14 +1,11 @@
 package net.luis.xbackpack.world.inventory.extension;
 
-import java.util.Map;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
-
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.luis.xbackpack.world.inventory.AbstractExtensionContainerMenu;
 import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
 import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -24,9 +21,14 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.GrindstoneEvent;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Map;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
- * 
+ *
  * @author Luis-st
  *
  */
@@ -50,24 +52,24 @@ public class GrindstoneExtensionMenu extends AbstractExtensionMenu {
 	public void addSlots(Consumer<Slot> consumer) {
 		consumer.accept(new ExtensionSlot(this, this.handler.getInputHandler(), 0, 243, 172) {
 			@Override
-			public boolean mayPlace(ItemStack stack) {
+			public boolean mayPlace(@NotNull ItemStack stack) {
 				return true;
 			}
 		});
 		consumer.accept(new ExtensionSlot(this, this.handler.getInputHandler(), 1, 243, 193) {
 			@Override
-			public boolean mayPlace(ItemStack stack) {
+			public boolean mayPlace(@NotNull ItemStack stack) {
 				return true;
 			}
 		});
 		consumer.accept(new ExtensionSlot(this, this.handler.getResultHandler(), 0, 305, 187, false) {
 			@Override
-			public boolean mayPlace(ItemStack stack) {
+			public boolean mayPlace(@NotNull ItemStack stack) {
 				return false;
 			}
 			
 			@Override
-			public void onTake(Player player, ItemStack stack) {
+			public void onTake(@NotNull Player player, @NotNull ItemStack stack) {
 				GrindstoneExtensionMenu.this.onTake(player, stack);
 			}
 		});
@@ -86,7 +88,7 @@ public class GrindstoneExtensionMenu extends AbstractExtensionMenu {
 		}
 		this.menu.broadcastChanges();
 	}
-
+	
 	private int getExperienceAmount(Level level) {
 		if (this.xp > -1) {
 			return this.xp;
@@ -101,7 +103,7 @@ public class GrindstoneExtensionMenu extends AbstractExtensionMenu {
 			return 0;
 		}
 	}
-
+	
 	private int getExperienceFromItem(ItemStack stack) {
 		int experience = 0;
 		Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
@@ -115,7 +117,7 @@ public class GrindstoneExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	private void playSound(ServerPlayer player, ServerLevel level) {
-		player.connection.send(new ClientboundSoundPacket(SoundEvents.GRINDSTONE_USE, SoundSource.BLOCKS, player.getX(), player.getY(), player.getZ(), 1.0F, level.random.nextFloat() * 0.1F + 0.9F, level.random.nextLong()));
+		player.connection.send(new ClientboundSoundPacket(BuiltInRegistries.SOUND_EVENT.wrapAsHolder(SoundEvents.GRINDSTONE_USE), SoundSource.BLOCKS, player.getX(), player.getY(), player.getZ(), 1.0F, level.random.nextFloat() * 0.1F + 0.9F, level.random.nextLong()));
 	}
 	
 	@Override
@@ -179,7 +181,7 @@ public class GrindstoneExtensionMenu extends AbstractExtensionMenu {
 		}
 		this.menu.broadcastChanges();
 	}
-
+	
 	private ItemStack mergeEnchants(ItemStack firstStack, ItemStack secondStack) {
 		ItemStack resultStack = firstStack.copy();
 		Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(secondStack);
@@ -191,7 +193,7 @@ public class GrindstoneExtensionMenu extends AbstractExtensionMenu {
 		}
 		return resultStack;
 	}
-
+	
 	private ItemStack removeNonCurses(ItemStack inputStack, int damageValue, int count) {
 		ItemStack resultStack = inputStack.copy();
 		resultStack.removeTagKey("Enchantments");
@@ -236,14 +238,10 @@ public class GrindstoneExtensionMenu extends AbstractExtensionMenu {
 	public boolean quickMoveStack(ItemStack slotStack, int index) {
 		if (908 >= index && index >= 0) { // from container
 			if (slotStack.isDamageableItem() || slotStack.is(Items.ENCHANTED_BOOK) || slotStack.isEnchanted()) {
-				if (this.menu.moveItemStackTo(slotStack, 951, 953, false)) { // into input
-					return true;
-				}
+				return this.menu.moveItemStackTo(slotStack, 951, 953, false); // into input
 			}
 		} else if (index == 953) { // from result
-			if (this.movePreferredMenu(slotStack)) { // into container
-				return true;
-			}
+			return this.movePreferredMenu(slotStack); // into container
 		}
 		return false;
 	}

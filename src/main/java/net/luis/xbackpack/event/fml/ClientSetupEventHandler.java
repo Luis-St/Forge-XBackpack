@@ -11,7 +11,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 /**
- * 
+ *
  * @author Luis-st
  *
  */
@@ -21,9 +21,7 @@ public class ClientSetupEventHandler {
 	
 	@SubscribeEvent
 	public static void clientSetup(FMLClientSetupEvent event) {
-		event.enqueueWork(() -> {
-			MenuScreens.register(XBMenuTypes.BACKPACK_MENU.get(), BackpackScreen::new);
-		});
+		event.enqueueWork(() -> MenuScreens.register(XBMenuTypes.BACKPACK_MENU.get(), BackpackScreen::new));
 	}
-
+	
 }

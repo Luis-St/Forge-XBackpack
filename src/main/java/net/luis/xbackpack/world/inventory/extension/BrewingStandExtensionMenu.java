@@ -1,7 +1,5 @@
 package net.luis.xbackpack.world.inventory.extension;
 
-import java.util.function.Consumer;
-
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.capability.IBackpack;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
@@ -19,9 +17,12 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.event.ForgeEventFactory;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Consumer;
 
 /**
- * 
+ *
  * @author Luis-st
  *
  */
@@ -47,20 +48,20 @@ public class BrewingStandExtensionMenu extends AbstractExtensionMenu {
 	public void addSlots(Consumer<Slot> consumer) {
 		consumer.accept(new ExtensionSlot(this, this.handler.getInputHandler(), 0, 277, 146) {
 			@Override
-			public boolean mayPlace(ItemStack stack) {
+			public boolean mayPlace(@NotNull ItemStack stack) {
 				return BrewingRecipeRegistry.isValidIngredient(stack);
 			}
 		});
 		consumer.accept(new ExtensionSlot(this, this.handler.getFuelHandler(), 0, 225, 146) {
 			@Override
-			public boolean mayPlace(ItemStack stack) {
+			public boolean mayPlace(@NotNull ItemStack stack) {
 				return stack.is(Items.BLAZE_POWDER);
 			}
 		});
 		for (int i = 0; i < 3; i++) {
 			consumer.accept(new ExtensionSlot(this, this.handler.getResultHandler(), i, 254 + i * 23, i == 1 ? 187 : 180) {
 				@Override
-				public boolean mayPlace(ItemStack stack) {
+				public boolean mayPlace(@NotNull ItemStack stack) {
 					return BrewingRecipeRegistry.isValidInput(stack);
 				}
 				
@@ -70,7 +71,7 @@ public class BrewingStandExtensionMenu extends AbstractExtensionMenu {
 				}
 				
 				@Override
-				public void onTake(Player player, ItemStack stack) {
+				public void onTake(@NotNull Player player, @NotNull ItemStack stack) {
 					BrewingStandExtensionMenu.this.onTake(player, stack);
 					super.onTake(player, stack);
 				}
@@ -86,26 +87,18 @@ public class BrewingStandExtensionMenu extends AbstractExtensionMenu {
 		}
 	}
 	
-	@Override
+	@Override // TODO
 	public boolean quickMoveStack(ItemStack slotStack, int index) {
 		if (908 >= index && index >= 0) { // from container
 			if (slotStack.is(Items.BLAZE_POWDER) && this.canQuickMovePowder()) {
-				if (this.menu.moveItemStackTo(slotStack, 947, 948, false)) { // into fuel
-					return true;
-				}
+				return this.menu.moveItemStackTo(slotStack, 947, 948, false); // into fuel
 			} else if (BrewingRecipeRegistry.isValidIngredient(slotStack)) {
-				if (this.menu.moveItemStackTo(slotStack, 946, 947, false)) { // into input
-					return true;
-				}
+				return this.menu.moveItemStackTo(slotStack, 946, 947, false); // into input
 			} else if (BrewingRecipeRegistry.isValidInput(slotStack)) {
-				if (this.menu.moveItemStackTo(slotStack, 948, 451, false)) { // into result
-					return true;
-				}
+				return this.menu.moveItemStackTo(slotStack, 948, 451, false); // into result
 			}
 		} else if (450 >= index && index >= 946) { // from extension
-			if (this.movePreferredMenu(slotStack)) { // into container
-				return true;
-			}
+			return this.movePreferredMenu(slotStack); // into container
 		}
 		return false;
 	}

@@ -1,21 +1,11 @@
 package net.luis.xbackpack.world.inventory;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
-
-import net.luis.xbackpack.BackpackConstans;
+import net.luis.xbackpack.BackpackConstants;
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.capability.IBackpack;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
-import net.luis.xbackpack.world.inventory.extension.AnvilExtensionMenu;
-import net.luis.xbackpack.world.inventory.extension.BrewingStandExtensionMenu;
-import net.luis.xbackpack.world.inventory.extension.CraftingExtensionMenu;
-import net.luis.xbackpack.world.inventory.extension.EnchantmentTableExtensionMenu;
-import net.luis.xbackpack.world.inventory.extension.FurnaceExtensionMenu;
-import net.luis.xbackpack.world.inventory.extension.GrindstoneExtensionMenu;
-import net.luis.xbackpack.world.inventory.extension.SmithingTableExtensionMenu;
-import net.luis.xbackpack.world.inventory.extension.StonecutterExtensionMenu;
+import net.luis.xbackpack.world.inventory.extension.*;
 import net.luis.xbackpack.world.inventory.handler.ModifiableHandler;
 import net.luis.xbackpack.world.inventory.modifier.filter.ItemFilters;
 import net.luis.xbackpack.world.inventory.modifier.sorter.ItemSorters;
@@ -30,9 +20,12 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 /**
- * 
+ *
  * @author Luis-st
  *
  */
@@ -86,15 +79,15 @@ public class BackpackMenu extends AbstractModifiableContainerMenu {
 	}
 	
 	@Override
-	public boolean stillValid(Player player) {
+	public boolean stillValid(@NotNull Player player) {
 		return true;
 	}
 	
 	@Override
-	public ItemStack quickMoveStack(Player player, int index) {
+	public @NotNull ItemStack quickMoveStack(@NotNull Player player, int index) {
 		ItemStack stack = ItemStack.EMPTY;
 		Slot slot = this.getSlot(index);
-		if (slot != null && slot.hasItem()) {
+		if (slot.hasItem()) {
 			ItemStack slotStack = slot.getItem();
 			if (872 >= index && index >= 0) { // from menu
 				stack = slotStack.copy();
@@ -145,32 +138,24 @@ public class BackpackMenu extends AbstractModifiableContainerMenu {
 	
 	private boolean moveInventory(ItemStack slotStack) {
 		if (!this.moveItemStackTo(slotStack, 900, 909, false)) { // into hotbar
-			if (!this.moveItemStackTo(slotStack, 873, 900, false)) { // into inventory
-				return false;
-			}
+			return this.moveItemStackTo(slotStack, 873, 900, false); // into inventory
 		}
 		return true;
 	}
 	
 	private boolean moveSpecial(ItemStack slotStack) {
-		if (BackpackConstans.VALID_TOOL_SLOT_ITEMS.contains(slotStack.getItem())) {
-			if (this.moveItemStackTo(slotStack, 909, 912, false)) { // into tool slot
-				return true;
-			}
-		} else if (BackpackConstans.SHIFTABLE_OFFHAND_SLOT_ITEMS.contains(slotStack.getItem())) {
-			if (this.moveItemStackTo(slotStack, 916, 917, false)) { // into offhand slot
-				return true;
-			}
-		} else if (BackpackConstans.VALID_ARMOR_SLOT_ITEMS.contains(slotStack.getItem())) {
-			if (this.moveItemStackTo(slotStack, 912, 916, false)) { // into armor slot
-				return true;
-			}
+		if (BackpackConstants.VALID_TOOL_SLOT_ITEMS.contains(slotStack.getItem())) {
+			return this.moveItemStackTo(slotStack, 909, 912, false); // into tool slot
+		} else if (BackpackConstants.SHIFTABLE_OFFHAND_SLOT_ITEMS.contains(slotStack.getItem())) {
+			return this.moveItemStackTo(slotStack, 916, 917, false); // into offhand slot
+		} else if (BackpackConstants.VALID_ARMOR_SLOT_ITEMS.contains(slotStack.getItem())) {
+			return this.moveItemStackTo(slotStack, 912, 916, false); // into armor slot
 		}
 		return false;
 	}
 	
 	@Override
-	public boolean clickMenuButton(Player player, int button) {
+	public boolean clickMenuButton(@NotNull Player player, int button) {
 		if (this.getExtensionMenu().isEmpty()) {
 			if (player instanceof ServerPlayer serverPlayer) {
 				if (button == 0) {
@@ -200,9 +185,7 @@ public class BackpackMenu extends AbstractModifiableContainerMenu {
 		this.handler.resetWrappedSlots();
 		for (int i = 0; i < this.handler.getSlots(); i++) {
 			ItemStack stack = this.handler.getStackInSlot(i);
-			if (stack.isEmpty()) {
-				continue;
-			} else {
+			if (!stack.isEmpty()) {
 				stack = handler.insertItem(stack, false);
 				if (!stack.isEmpty()) {
 					failedStacks.add(stack);
@@ -233,26 +216,16 @@ public class BackpackMenu extends AbstractModifiableContainerMenu {
 			List<ItemStack> stacks = this.handler.createModifiableList();
 			if (!this.getSearchTerm().isEmpty()) {
 				if (this.getSorter() == ItemSorters.NAME_SEARCH) {
-					stacks.removeIf((stack) -> {
-						return !ItemFilters.NAME_SEARCH.canKeepItem(stack, this.getSearchTerm());
-					});
+					stacks.removeIf((stack) -> !ItemFilters.NAME_SEARCH.canKeepItem(stack, this.getSearchTerm()));
 				} else if (this.getSorter() == ItemSorters.NAMESPACE_SEARCH) {
-					stacks.removeIf((stack) -> {
-						return !ItemFilters.NAMESPACE_SEARCH.canKeepItem(stack, this.getSearchTerm());
-					});
+					stacks.removeIf((stack) -> !ItemFilters.NAMESPACE_SEARCH.canKeepItem(stack, this.getSearchTerm()));
 				} else if (this.getSorter() == ItemSorters.TAG_SEARCH) {
-					stacks.removeIf((stack) -> {
-						return !ItemFilters.TAG_SEARCH.canKeepItem(stack, this.getSearchTerm());
-					});
+					stacks.removeIf((stack) -> !ItemFilters.TAG_SEARCH.canKeepItem(stack, this.getSearchTerm()));
 				} else if (this.getSorter() == ItemSorters.COUNT_SEARCH) {
-					stacks.removeIf((stack) -> {
-						return !ItemFilters.COUNT_SEARCH.canKeepItem(stack, this.getSearchTerm());
-					});
+					stacks.removeIf((stack) -> !ItemFilters.COUNT_SEARCH.canKeepItem(stack, this.getSearchTerm()));
 				}
 			}
-			stacks.removeIf((stack) -> {
-				return !this.getFilter().canKeepItem(stack, this.getSearchTerm());
-			});
+			stacks.removeIf((stack) -> !this.getFilter().canKeepItem(stack, this.getSearchTerm()));
 			this.handler.applyModifications(this.getSorter().sort(stacks, this.getSearchTerm()));
 		}
 		this.broadcastChanges();

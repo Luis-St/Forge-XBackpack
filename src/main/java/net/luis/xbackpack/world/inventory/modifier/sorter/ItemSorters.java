@@ -1,15 +1,6 @@
 package net.luis.xbackpack.world.inventory.modifier.sorter;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import com.google.common.collect.Lists;
-
 import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.util.Util;
 import net.minecraft.network.chat.Component;
@@ -19,6 +10,15 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.tags.ITag;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  *
@@ -71,7 +71,7 @@ public enum ItemSorters implements ItemSorter {
 	NAMESPACE_SEARCH("namespace_search", 2, false) {
 		@Override
 		public List<ItemStack> sort(List<ItemStack> stacks, String searchTerm) {
-			if (!searchTerm.isEmpty() && searchTerm.startsWith("@")) {
+			if (searchTerm.startsWith("@")) {
 				String string = searchTerm.substring(1);
 				if (!string.isEmpty()) {
 					List<ItemStack> equalsList = Lists.newArrayList();
@@ -80,7 +80,7 @@ public enum ItemSorters implements ItemSorter {
 					Iterator<ItemStack> iterator = stacks.iterator();
 					while (iterator.hasNext()) {
 						ItemStack stack = iterator.next();
-						String namespace = ForgeRegistries.ITEMS.getKey(stack.getItem()).getNamespace();
+						String namespace = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(stack.getItem())).getNamespace();
 						if (namespace.equals(string)) {
 							equalsList.add(stack);
 							iterator.remove();
@@ -94,15 +94,9 @@ public enum ItemSorters implements ItemSorter {
 							XBackpack.LOGGER.error("[Filter Failed] The filtered item list contains an item with the namespace '{}' that does not match the search term '{}' in any form", namespace, string);
 						}
 					}
-					equalsList.sort((firstStack, secondStack) -> {
-						return ForgeRegistries.ITEMS.getKey(firstStack.getItem()).getNamespace().compareTo(ForgeRegistries.ITEMS.getKey(secondStack.getItem()).getNamespace());
-					});
-					startsList.sort((firstStack, secondStack) -> {
-						return ForgeRegistries.ITEMS.getKey(firstStack.getItem()).getNamespace().compareTo(ForgeRegistries.ITEMS.getKey(secondStack.getItem()).getNamespace());
-					});
-					containsList.sort((firstStack, secondStack) -> {
-						return ForgeRegistries.ITEMS.getKey(firstStack.getItem()).getNamespace().compareTo(ForgeRegistries.ITEMS.getKey(secondStack.getItem()).getNamespace());
-					});
+					equalsList.sort(Comparator.comparing(stack -> Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(stack.getItem())).getNamespace()));
+					startsList.sort(Comparator.comparing(stack -> Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(stack.getItem())).getNamespace()));
+					containsList.sort(Comparator.comparing(stack -> Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(stack.getItem())).getNamespace()));
 					return Stream.of(equalsList, startsList, containsList).flatMap(List::stream).collect(Collectors.toList());
 				}
 				return stacks;
@@ -114,12 +108,12 @@ public enum ItemSorters implements ItemSorter {
 	TAG_SEARCH("tag_search", 3, false) {
 		@Override
 		public List<ItemStack> sort(List<ItemStack> stacks, String searchTerm) {
-			if (!searchTerm.isEmpty() && searchTerm.startsWith("#")) {
+			if (searchTerm.startsWith("#")) {
 				TagKey<Item> tag = this.getTag(searchTerm);
 				if (tag != null) {
 					List<ItemStack> returnList = Lists.newArrayList();
 					for (ItemStack stack : stacks) {
-						if (ForgeRegistries.ITEMS.tags().getTag(tag).contains(stack.getItem())) {
+						if (Objects.requireNonNull(ForgeRegistries.ITEMS.tags()).getTag(tag).contains(stack.getItem())) {
 							returnList.add(stack);
 						} else {
 							XBackpack.LOGGER.error("[Filter Failed] The filtered item list contains an item '{}' which is not subordinated to the tag '{}'", stack.getItem(), tag.location());
@@ -135,9 +129,7 @@ public enum ItemSorters implements ItemSorter {
 		
 		@Nullable
 		private TagKey<Item> getTag(String searchTerm) {
-			List<TagKey<Item>> tags = ForgeRegistries.ITEMS.tags().stream().filter(ITag::isBound).filter((tag) -> {
-				return !tag.isEmpty();
-			}).map(ITag::getKey).collect(Collectors.toList());
+			List<TagKey<Item>> tags = Objects.requireNonNull(ForgeRegistries.ITEMS.tags()).stream().filter(ITag::isBound).filter((tag) -> !tag.isEmpty()).map(ITag::getKey).toList();
 			for (TagKey<Item> tag : tags) {
 				if (searchTerm.replace(" ", "_").equals(tag.location().getPath())) {
 					return tag;
@@ -170,9 +162,7 @@ public enum ItemSorters implements ItemSorter {
 	ALPHABETICALLY("alphabetically", 5) {
 		@Override
 		public List<ItemStack> sort(List<ItemStack> stacks, String searchTerm) {
-			stacks.sort((firstStack, secondStack) -> {
-				return firstStack.getDisplayName().getString().toLowerCase().compareTo(secondStack.getDisplayName().getString().toLowerCase());
-			});
+			stacks.sort(Comparator.comparing(stack -> stack.getDisplayName().getString().toLowerCase()));
 			return stacks;
 		}
 		
@@ -186,30 +176,14 @@ public enum ItemSorters implements ItemSorter {
 	COUNT_DOWNWARDS("count_downwards", 6) {
 		@Override
 		public List<ItemStack> sort(List<ItemStack> stacks, String searchTerm) {
-			stacks.sort((firstStack, secondStack) -> {
-				if (secondStack.getCount() > firstStack.getCount()) {
-					return 1;
-				} else if (firstStack.getCount() == secondStack.getCount()) {
-					return 0;
-				} else {
-					return -1;
-				}
-			});
+			stacks.sort((firstStack, secondStack) -> Integer.compare(secondStack.getCount(), firstStack.getCount()));
 			return stacks;
 		}
 	},
 	COUNT_UPWARDS("count_upwards", 7) {
 		@Override
 		public List<ItemStack> sort(List<ItemStack> stacks, String searchTerm) {
-			stacks.sort((firstStack, secondStack) -> {
-				if (secondStack.getCount() > firstStack.getCount()) {
-					return -1;
-				} else if (firstStack.getCount() == secondStack.getCount()) {
-					return 0;
-				} else {
-					return 1;
-				}
-			});
+			stacks.sort(Comparator.comparingInt(ItemStack::getCount));
 			return stacks;
 		}
 	};
@@ -218,14 +192,28 @@ public enum ItemSorters implements ItemSorter {
 	private final int id;
 	private final boolean selectable;
 	
-	private ItemSorters(String name, int id) {
+	ItemSorters(String name, int id) {
 		this(name, id, true);
 	}
 	
-	private ItemSorters(String name, int id, boolean selectable) {
+	ItemSorters(String name, int id, boolean selectable) {
 		this.name = name;
 		this.id = id;
 		this.selectable = selectable;
+	}
+	
+	public static @NotNull ItemSorter byId(int id) {
+		return byId(id, null);
+	}
+	
+	@NotNull
+	public static ItemSorter byId(int id, ItemSorter fallback) {
+		for (ItemSorter sorter : ItemSorters.values()) {
+			if (sorter.getId() == id) {
+				return sorter;
+			}
+		}
+		return fallback;
 	}
 	
 	@Override
@@ -266,21 +254,6 @@ public enum ItemSorters implements ItemSorter {
 	@Override
 	public String toString() {
 		return this.name;
-	}
-	
-	@Nullable
-	public static ItemSorter byId(int id) {
-		return byId(id, null);
-	}
-	
-	@NotNull
-	public static ItemSorter byId(int id, ItemSorter fallback) {
-		for (ItemSorter sorter : ItemSorters.values()) {
-			if (sorter.getId() == id) {
-				return sorter;
-			}
-		}
-		return fallback;
 	}
 	
 }

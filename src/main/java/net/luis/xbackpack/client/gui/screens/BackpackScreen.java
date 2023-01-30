@@ -2,17 +2,9 @@ package net.luis.xbackpack.client.gui.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.client.gui.components.RenderData;
-import net.luis.xbackpack.client.gui.screens.extension.AnvilExtensionScreen;
-import net.luis.xbackpack.client.gui.screens.extension.BrewingStandExtensionScreen;
-import net.luis.xbackpack.client.gui.screens.extension.CraftingExtensionScreen;
-import net.luis.xbackpack.client.gui.screens.extension.EnchantmentTableExtensionScreen;
-import net.luis.xbackpack.client.gui.screens.extension.FurnaceExtensionScreen;
-import net.luis.xbackpack.client.gui.screens.extension.GrindstoneExtensionScreen;
-import net.luis.xbackpack.client.gui.screens.extension.SmithingTableExtensionScreen;
-import net.luis.xbackpack.client.gui.screens.extension.StonecutterExtensionScreen;
+import net.luis.xbackpack.client.gui.screens.extension.*;
 import net.luis.xbackpack.network.XBNetworkHandler;
 import net.luis.xbackpack.network.packet.modifier.ResetItemModifierPacket;
 import net.luis.xbackpack.network.packet.modifier.UpdateSearchTermPacket;
@@ -31,9 +23,12 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.TooltipFlag;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 /**
- * 
+ *
  * @author Luis-st
  *
  */
@@ -66,7 +61,7 @@ public class BackpackScreen extends AbstractModifiableContainerScreen<BackpackMe
 	}
 	
 	@Override
-	protected SlotRenderType getSlotRenderType(Slot slot) {
+	protected @NotNull SlotRenderType getSlotRenderType(Slot slot) {
 		if (slot instanceof ExtensionMenuSlot extensionSlot) {
 			return this.getExtension() == extensionSlot.getExtension() ? SlotRenderType.DEFAULT : SlotRenderType.SKIP;
 		} else if (slot instanceof BackpackSlot) {
@@ -92,7 +87,7 @@ public class BackpackScreen extends AbstractModifiableContainerScreen<BackpackMe
 	}
 	
 	@Override
-	protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
+	protected void renderBg(@NotNull PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 		super.renderBg(stack, partialTicks, mouseX, mouseY);
 		RenderSystem.setShaderTexture(0, BACKPACK);
 		this.blit(stack, this.leftPos, this.topPos, 0, 0, 220, 220);
@@ -114,10 +109,7 @@ public class BackpackScreen extends AbstractModifiableContainerScreen<BackpackMe
 	protected boolean isInScrollbar(double mouseX, double mouseY) {
 		double topX = this.leftPos + 198.0;
 		double topY = this.topPos + 16.0;
-		if (topX + this.getScrollbarWidth() >= mouseX && mouseX >= topX && topY + this.getScrollbarHeight() >= mouseY && mouseY >= topY) {
-			return true;
-		}
-		return false;
+		return topX + this.getScrollbarWidth() >= mouseX && mouseX >= topX && topY + this.getScrollbarHeight() >= mouseY && mouseY >= topY;
 	}
 	
 	@Override
@@ -174,7 +166,7 @@ public class BackpackScreen extends AbstractModifiableContainerScreen<BackpackMe
 	
 	@Override
 	protected TooltipFlag getTooltipFlag() {
-		return BackpackProvider.get(this.minecraft.player).getConfig().getClientConfig().shouldShowModifierInfo() ? TooltipFlag.Default.ADVANCED : TooltipFlag.Default.NORMAL;
+		return BackpackProvider.get(Objects.requireNonNull(Objects.requireNonNull(this.minecraft).player)).getConfig().getClientConfig().shouldShowModifierInfo() ? TooltipFlag.Default.ADVANCED : TooltipFlag.Default.NORMAL;
 	}
 	
 	@Override

@@ -1,15 +1,14 @@
 package net.luis.xbackpack.world.inventory.extension;
 
-import java.util.Map;
-
 import com.google.common.collect.Maps;
-
 import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.luis.xbackpack.world.inventory.AbstractExtensionContainerMenu;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+
+import java.util.Map;
 
 /**
  *

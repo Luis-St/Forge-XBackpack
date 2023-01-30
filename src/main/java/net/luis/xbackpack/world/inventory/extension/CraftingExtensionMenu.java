@@ -1,8 +1,5 @@
 package net.luis.xbackpack.world.inventory.extension;
 
-import java.util.Optional;
-import java.util.function.Consumer;
-
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.luis.xbackpack.world.inventory.AbstractExtensionContainerMenu;
@@ -19,8 +16,12 @@ import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Consumer;
+
 /**
- * 
+ *
  * @author Luis-st
  *
  */
@@ -31,7 +32,7 @@ public class CraftingExtensionMenu extends AbstractExtensionMenu {
 	private final ResultContainer resultWrapper;
 	
 	public CraftingExtensionMenu(AbstractExtensionContainerMenu menu, Player player) {
-		super(menu, player, BackpackExtensions.CRAFTING_TABLE.get());	
+		super(menu, player, BackpackExtensions.CRAFTING_TABLE.get());
 		this.craftingWrapper = new CraftingContainerWrapper(this.menu, BackpackProvider.get(this.player).getCraftingHandler(), 3, 3);
 		this.resultWrapper = new ResultContainer();
 	}
@@ -40,7 +41,7 @@ public class CraftingExtensionMenu extends AbstractExtensionMenu {
 	public void open() {
 		this.slotChangedCraftingGrid();
 	}
-
+	
 	@Override
 	public void addSlots(Consumer<Slot> consumer) {
 		for (int i = 0; i < 3; i++) {
@@ -62,7 +63,7 @@ public class CraftingExtensionMenu extends AbstractExtensionMenu {
 		Level level = this.player.level;
 		if (!level.isClientSide && this.player instanceof ServerPlayer player) {
 			ItemStack stack = ItemStack.EMPTY;
-			Optional<CraftingRecipe> optional = level.getServer().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, this.craftingWrapper, level);
+			Optional<CraftingRecipe> optional = Objects.requireNonNull(level.getServer()).getRecipeManager().getRecipeFor(RecipeType.CRAFTING, this.craftingWrapper, level);
 			if (optional.isPresent()) {
 				CraftingRecipe recipe = optional.get();
 				if (this.resultWrapper.setRecipeUsed(level, player, recipe)) {
@@ -77,15 +78,11 @@ public class CraftingExtensionMenu extends AbstractExtensionMenu {
 	@Override
 	public boolean quickMoveStack(ItemStack slotStack, int index) {
 		if (908 >= index && index >= 0) { // from container
-			if (this.menu.moveItemStackTo(slotStack, 917, 926, false)) { // into input
-				return true;
-			}
+			return this.menu.moveItemStackTo(slotStack, 917, 926, false); // into input
 		} else if (index == 926) { // from result
-			if (this.movePreferredMenu(slotStack)) { // into container
-				return true;
-			}
+			return this.movePreferredMenu(slotStack); // into container
 		}
 		return false;
 	}
-
+	
 }

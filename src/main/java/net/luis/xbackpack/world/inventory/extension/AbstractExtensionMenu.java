@@ -1,7 +1,5 @@
 package net.luis.xbackpack.world.inventory.extension;
 
-import java.util.function.Consumer;
-
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.inventory.AbstractExtensionContainerMenu;
 import net.minecraft.world.Container;
@@ -9,8 +7,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.function.Consumer;
+
 /**
- * 
+ *
  * @author Luis-st
  *
  */
@@ -54,9 +54,7 @@ public abstract class AbstractExtensionMenu {
 	protected boolean movePreferredMenu(ItemStack slotStack) {
 		if (!this.menu.moveItemStackTo(slotStack, 0, 873, false)) { // into menu
 			if (!this.menu.moveItemStackTo(slotStack, 900, 909, false)) { // into hotbar
-				if (!this.menu.moveItemStackTo(slotStack, 873, 900, false)) { // into inventory
-					return false;
-				}
+				return this.menu.moveItemStackTo(slotStack, 873, 900, false); // into inventory
 			}
 		}
 		return true;
@@ -65,9 +63,7 @@ public abstract class AbstractExtensionMenu {
 	protected boolean movePreferredInventory(ItemStack slotStack) {
 		if (!this.menu.moveItemStackTo(slotStack, 900, 909, false)) { // into hotbar
 			if (!this.menu.moveItemStackTo(slotStack, 873, 900, false)) { // into inventory
-				if (!this.menu.moveItemStackTo(slotStack, 0, 873, false)) { // into menu
-					return false;
-				}
+				return this.menu.moveItemStackTo(slotStack, 0, 873, false); // into menu
 			}
 		}
 		return true;

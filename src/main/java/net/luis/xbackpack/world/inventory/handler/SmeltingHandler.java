@@ -4,7 +4,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.items.ItemStackHandler;
 
 /**
- * 
+ *
  * @author Luis-st
  *
  */
@@ -54,5 +54,5 @@ public class SmeltingHandler extends CraftingFuelHandler {
 		this.inputStorageHandler.deserializeNBT(tag.getCompound("input_storage_handler"));
 		this.resultStorageHandler.deserializeNBT(tag.getCompound("result_storage_handler"));
 	}
-
+	
 }

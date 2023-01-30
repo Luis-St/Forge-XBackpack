@@ -1,7 +1,5 @@
 package net.luis.xbackpack.network.packet.modifier;
 
-import java.util.function.Supplier;
-
 import net.luis.xbackpack.network.NetworkPacket;
 import net.luis.xbackpack.world.inventory.BackpackMenu;
 import net.luis.xbackpack.world.inventory.modifier.ItemModifierType;
@@ -9,6 +7,8 @@ import net.luis.xbackpack.world.inventory.modifier.ModifiableMenu.UpdateType;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent.Context;
+
+import java.util.function.Supplier;
 
 /**
  *
@@ -23,7 +23,7 @@ public class ResetItemModifierPacket implements NetworkPacket {
 	public ResetItemModifierPacket(ItemModifierType modifierType) {
 		this.modifierType = modifierType;
 	}
-
+	
 	public ResetItemModifierPacket(FriendlyByteBuf buffer) {
 		this.modifierType = ItemModifierType.byId(buffer.readInt());
 	}

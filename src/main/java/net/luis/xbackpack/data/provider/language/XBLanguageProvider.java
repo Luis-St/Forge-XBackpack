@@ -1,7 +1,7 @@
 package net.luis.xbackpack.data.provider.language;
 
 import net.luis.xbackpack.XBackpack;
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraftforge.common.data.LanguageProvider;
 
 /**
@@ -12,8 +12,8 @@ import net.minecraftforge.common.data.LanguageProvider;
 
 public class XBLanguageProvider extends LanguageProvider {
 	
-	public XBLanguageProvider(DataGenerator generator) {
-		super(generator, XBackpack.MOD_ID, "en_us");
+	public XBLanguageProvider(PackOutput output) {
+		super(output, XBackpack.MOD_ID, "en_us");
 	}
 	
 	@Override

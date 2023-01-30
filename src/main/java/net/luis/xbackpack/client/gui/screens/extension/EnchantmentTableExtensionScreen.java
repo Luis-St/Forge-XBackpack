@@ -1,12 +1,8 @@
 package net.luis.xbackpack.client.gui.screens.extension;
 
-import java.util.List;
-import java.util.function.Consumer;
-
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.luis.xbackpack.client.gui.screens.AbstractExtensionContainerScreen;
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtension;
@@ -24,8 +20,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Consumer;
+
 /**
- * 
+ *
  * @author Luis-st
  *
  */
@@ -44,22 +44,22 @@ public class EnchantmentTableExtensionScreen extends AbstractExtensionScreen {
 	
 	@Override
 	protected void init() {
-		this.handler = BackpackProvider.get(this.minecraft.player).getEnchantingHandler();
+		this.handler = BackpackProvider.get(Objects.requireNonNull(this.minecraft.player)).getEnchantingHandler();
 	}
 	
 	@Override
 	protected void renderAdditional(PoseStack stack, float partialTicks, int mouseX, int mouseY, boolean open) {
 		if (open) {
 			for (int row = 0; row < 3; row++) {
-				this.renderRow(stack, mouseX, mouseY, row, this.minecraft.player, this.enchantments[row], this.enchantmentLevels[row], this.enchantingCosts[row]);
+				this.renderRow(stack, mouseX, mouseY, row, this.minecraft.player, this.enchantments[row], this.enchantingCosts[row]);
 			}
 		}
 	}
 	
-	private void renderRow(PoseStack stack, int mouseX, int mouseY, int row, LocalPlayer player, Enchantment enchantment, int enchantmentLevel, int enchantingCost) {
+	private void renderRow(PoseStack stack, int mouseX, int mouseY, int row, LocalPlayer player, Enchantment enchantment, int enchantingCost) {
 		if (enchantment != null) {
-			int costColor = 0;
-			int enchantmentColor = 0;
+			int costColor;
+			int enchantmentColor;
 			RenderSystem.setShaderTexture(0, this.getTexture());
 			if ((player.experienceLevel >= enchantingCost && this.hasFuel(row)) || player.getAbilities().instabuild) {
 				if (this.isHoveringRow(row, mouseX, mouseY)) {
@@ -130,13 +130,13 @@ public class EnchantmentTableExtensionScreen extends AbstractExtensionScreen {
 						mutablecomponent = Component.translatable("container.enchant.lapis.many", rowIndex);
 					}
 					components.add(mutablecomponent.withStyle(fuel >= rowIndex ? ChatFormatting.GRAY : ChatFormatting.RED));
-					MutableComponent mutablecomponent1;
+					MutableComponent component;
 					if (rowIndex == 1) {
-						mutablecomponent1 = Component.translatable("container.enchant.level.one");
+						component = Component.translatable("container.enchant.level.one");
 					} else {
-						mutablecomponent1 = Component.translatable("container.enchant.level.many", rowIndex);
+						component = Component.translatable("container.enchant.level.many", rowIndex);
 					}
-					components.add(mutablecomponent1.withStyle(ChatFormatting.GRAY));
+					components.add(component.withStyle(ChatFormatting.GRAY));
 				}
 			}
 			this.screen.renderComponentTooltip(stack, components, mouseX, mouseY);
@@ -148,7 +148,7 @@ public class EnchantmentTableExtensionScreen extends AbstractExtensionScreen {
 		if (this.minecraft != null) {
 			for (int row = 0; row < 3; row++) {
 				if (this.isHoveringRow(row, mouseX, mouseY)) {
-					this.minecraft.gameMode.handleInventoryButtonClick(this.screen.getMenu().containerId, row);
+					Objects.requireNonNull(this.minecraft.gameMode).handleInventoryButtonClick(this.screen.getMenu().containerId, row);
 				}
 			}
 		}
@@ -173,13 +173,9 @@ public class EnchantmentTableExtensionScreen extends AbstractExtensionScreen {
 		for (int row = 0; row < this.enchantments.length; row++) {
 			this.enchantments[row] = ForgeRegistries.ENCHANTMENTS.getValue(enchantments[row]);
 		}
-		for (int row = 0; row < this.enchantmentLevels.length; row++) {
-			this.enchantmentLevels[row] = enchantmentLevels[row];
-		}
-		for (int row = 0; row < this.enchantingCosts.length; row++) {
-			this.enchantingCosts[row] = enchantingCosts[row];
-		}
+		System.arraycopy(enchantmentLevels, 0, this.enchantmentLevels, 0, this.enchantmentLevels.length);
+		System.arraycopy(enchantingCosts, 0, this.enchantingCosts, 0, this.enchantingCosts.length);
 		this.enchantmentSeed = enchantmentSeed;
 	}
-
+	
 }

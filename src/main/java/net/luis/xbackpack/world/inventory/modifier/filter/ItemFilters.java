@@ -1,30 +1,18 @@
 package net.luis.xbackpack.world.inventory.modifier.filter;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import com.google.common.collect.Lists;
-
 import net.luis.xbackpack.util.Util;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.BowItem;
-import net.minecraft.world.item.CompassItem;
-import net.minecraft.world.item.CrossbowItem;
-import net.minecraft.world.item.DiggerItem;
-import net.minecraft.world.item.FishingRodItem;
-import net.minecraft.world.item.FlintAndSteelItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.item.Wearable;
+import net.minecraft.world.item.*;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.tags.ITag;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -58,17 +46,13 @@ public enum ItemFilters implements ItemFilter {
 				return true;
 			} else if (itemName.contains(searchTerm)) {
 				return true;
-			} else if (itemName.startsWith(searchTerm)) {
-				return true;
-			} else {
-				return false;
-			}
+			} else return itemName.startsWith(searchTerm);
 		}
 	},
 	NAMESPACE_SEARCH("namespace_search", 2, false) {
 		@Override
 		public boolean canKeepItem(ItemStack stack, String searchTerm) {
-			String namespace = ForgeRegistries.ITEMS.getKey(stack.getItem()).getNamespace().trim().toLowerCase();
+			String namespace = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(stack.getItem())).getNamespace().trim().toLowerCase();
 			if (searchTerm.isEmpty()) {
 				return true;
 			} else if (!searchTerm.startsWith("@")) {
@@ -81,10 +65,8 @@ public enum ItemFilters implements ItemFilter {
 					return true;
 				} else if (namespace.contains(string)) {
 					return true;
-				} else if (namespace.startsWith(string)) {
-					return true;
 				} else {
-					return false;
+					return namespace.startsWith(string);
 				}
 			}
 		}
@@ -105,7 +87,7 @@ public enum ItemFilters implements ItemFilter {
 					if (tag == null) {
 						return false;
 					} else {
-						return ForgeRegistries.ITEMS.tags().getTag(tag).contains(stack.getItem());
+						return Objects.requireNonNull(ForgeRegistries.ITEMS.tags()).getTag(tag).contains(stack.getItem());
 					}
 				}
 			}
@@ -113,9 +95,7 @@ public enum ItemFilters implements ItemFilter {
 		
 		@Nullable
 		private TagKey<Item> getTag(String searchTerm) {
-			List<TagKey<Item>> tags = ForgeRegistries.ITEMS.tags().stream().filter(ITag::isBound).filter((tag) -> {
-				return !tag.isEmpty();
-			}).map(ITag::getKey).collect(Collectors.toList());
+			List<TagKey<Item>> tags = Objects.requireNonNull(ForgeRegistries.ITEMS.tags()).stream().filter(ITag::isBound).filter((tag) -> !tag.isEmpty()).map(ITag::getKey).toList();
 			for (TagKey<Item> tag : tags) {
 				if (searchTerm.replace(" ", "_").equals(tag.location().getPath())) {
 					return tag;
@@ -212,14 +192,28 @@ public enum ItemFilters implements ItemFilter {
 	private final int id;
 	private final boolean selectable;
 	
-	private ItemFilters(String name, int id) {
+	ItemFilters(String name, int id) {
 		this(name, id, true);
 	}
 	
-	private ItemFilters(String name, int id, boolean selectable) {
+	ItemFilters(String name, int id, boolean selectable) {
 		this.name = name;
 		this.id = id;
 		this.selectable = selectable;
+	}
+	
+	public static @NotNull ItemFilter byId(int id) {
+		return byId(id, null);
+	}
+	
+	@NotNull
+	public static ItemFilter byId(int id, ItemFilter fallback) {
+		for (ItemFilter filter : ItemFilters.values()) {
+			if (filter.getId() == id) {
+				return filter;
+			}
+		}
+		return fallback;
 	}
 	
 	@Override
@@ -259,21 +253,6 @@ public enum ItemFilters implements ItemFilter {
 	@Override
 	public String toString() {
 		return this.name;
-	}
-	
-	@Nullable
-	public static ItemFilter byId(int id) {
-		return byId(id, null);
-	}
-	
-	@NotNull
-	public static ItemFilter byId(int id, ItemFilter fallback) {
-		for (ItemFilter filter : ItemFilters.values()) {
-			if (filter.getId() == id) {
-				return filter;
-			}
-		}
-		return fallback;
 	}
 	
 }

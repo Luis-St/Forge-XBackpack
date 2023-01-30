@@ -6,6 +6,7 @@ import mezz.jei.api.registration.IGuiHandlerRegistration;
 import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.client.gui.screens.BackpackScreen;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -23,7 +24,7 @@ public class XBJeiPlugin implements IModPlugin {
 	}
 	
 	@Override
-	public ResourceLocation getPluginUid() {
+	public @NotNull ResourceLocation getPluginUid() {
 		return this.pluginId;
 	}
 	

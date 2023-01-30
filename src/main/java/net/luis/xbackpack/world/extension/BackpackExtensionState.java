@@ -1,8 +1,8 @@
 package net.luis.xbackpack.world.extension;
 
-import javax.annotation.Nullable;
-
 import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nullable;
 
 /**
  *
@@ -17,18 +17,9 @@ public enum BackpackExtensionState {
 	LOCKED("locked");
 	
 	private final String name;
-
-	private BackpackExtensionState(String name) {
+	
+	BackpackExtensionState(String name) {
 		this.name = name;
-	}
-	
-	public String getName() {
-		return this.name;
-	}
-	
-	@Override
-	public String toString() {
-		return this.name;
 	}
 	
 	@Nullable
@@ -44,7 +35,16 @@ public enum BackpackExtensionState {
 	@NotNull
 	public static BackpackExtensionState fromString(String string, BackpackExtensionState fallbackState) {
 		BackpackExtensionState state = fromString(string);
-		return state != null ? state : fallbackState; 
+		return state != null ? state : fallbackState;
+	}
+	
+	public String getName() {
+		return this.name;
+	}
+	
+	@Override
+	public String toString() {
+		return this.name;
 	}
 	
 }

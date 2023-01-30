@@ -1,10 +1,10 @@
 package net.luis.xbackpack.world.inventory.modifier.sorter;
 
-import java.util.List;
-
 import net.luis.xbackpack.world.inventory.modifier.ItemModifier;
 import net.luis.xbackpack.world.inventory.modifier.ItemModifierType;
 import net.minecraft.world.item.ItemStack;
+
+import java.util.List;
 
 /**
  *

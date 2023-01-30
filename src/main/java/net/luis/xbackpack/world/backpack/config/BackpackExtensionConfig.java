@@ -1,12 +1,6 @@
 package net.luis.xbackpack.world.backpack.config;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
-
 import com.google.common.collect.Maps;
-
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.extension.BackpackExtensionState;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
@@ -16,6 +10,11 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -93,7 +92,7 @@ public class BackpackExtensionConfig {
 		}
 	}
 	
-	private static record Data(BackpackExtensionState state, int unlockCount) {
+	private record Data(BackpackExtensionState state, int unlockCount) {
 		
 	}
 	

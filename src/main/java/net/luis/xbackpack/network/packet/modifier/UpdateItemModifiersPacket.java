@@ -1,7 +1,5 @@
 package net.luis.xbackpack.network.packet.modifier;
 
-import java.util.function.Supplier;
-
 import net.luis.xbackpack.client.XBClientPacketHandler;
 import net.luis.xbackpack.network.NetworkPacket;
 import net.luis.xbackpack.world.inventory.modifier.filter.ItemFilter;
@@ -12,6 +10,8 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent.Context;
+
+import java.util.function.Supplier;
 
 /**
  *
@@ -28,7 +28,7 @@ public class UpdateItemModifiersPacket implements NetworkPacket {
 		this.filter = filter;
 		this.sorter = sorter;
 	}
-
+	
 	public UpdateItemModifiersPacket(FriendlyByteBuf buffer) {
 		this.filter = ItemFilters.byId(buffer.readInt(), ItemFilters.NONE);
 		this.sorter = ItemSorters.byId(buffer.readInt(), ItemSorters.NONE);

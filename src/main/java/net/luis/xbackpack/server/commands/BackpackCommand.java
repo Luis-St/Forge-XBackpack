@@ -1,10 +1,7 @@
 package net.luis.xbackpack.server.commands;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
 import com.mojang.brigadier.CommandDispatcher;
-
 import net.luis.xbackpack.server.commands.arguments.BackpackExtensionArgument;
 import net.luis.xbackpack.server.commands.arguments.BackpackExtensionStateArgument;
 import net.luis.xbackpack.world.capability.BackpackProvider;
@@ -18,6 +15,9 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+
+import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -65,13 +65,13 @@ public class BackpackCommand {
 	}
 	
 	private static String getName(BackpackExtension extension) {
-		String[] nameParts = BackpackExtensions.REGISTRY.get().getKey(extension).getPath().split("_");
-		String name = "";
+		String[] nameParts = Objects.requireNonNull(BackpackExtensions.REGISTRY.get().getKey(extension)).getPath().split("_");
+		StringBuilder name = new StringBuilder();
 		for (String namePart : nameParts) {
 			String startChar = namePart.substring(0, 1).toUpperCase();
-			name += startChar + namePart.substring(1, namePart.length()) + " ";
+			name.append(startChar).append(namePart.substring(1)).append(" ");
 		}
-		return name.trim();
+		return name.toString().trim();
 	}
 	
 }

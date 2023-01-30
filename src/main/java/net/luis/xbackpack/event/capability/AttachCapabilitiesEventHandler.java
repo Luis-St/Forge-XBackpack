@@ -10,7 +10,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 /**
- * 
+ *
  * @author Luis-st
  *
  */
@@ -24,5 +24,5 @@ public class AttachCapabilitiesEventHandler {
 			event.addCapability(new ResourceLocation(XBackpack.MOD_ID, "backpack"), new BackpackProvider(player));
 		}
 	}
-
+	
 }

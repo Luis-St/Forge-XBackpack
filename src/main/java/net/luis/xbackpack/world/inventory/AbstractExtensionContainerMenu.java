@@ -1,13 +1,6 @@
 package net.luis.xbackpack.world.inventory;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import com.google.common.collect.Lists;
-
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.luis.xbackpack.world.inventory.extension.AbstractExtensionMenu;
@@ -19,6 +12,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  *
@@ -49,16 +47,13 @@ public abstract class AbstractExtensionContainerMenu extends AbstractContainerMe
 	}
 	
 	@Override
-	public boolean moveItemStackTo(ItemStack stack, int startIndex, int endIndex, boolean addToIndex) {
+	public boolean moveItemStackTo(@NotNull ItemStack stack, int startIndex, int endIndex, boolean addToIndex) {
 		return super.moveItemStackTo(stack, startIndex, endIndex, addToIndex);
 	}
 	
 	protected boolean moveExtension(ItemStack slotStack, int index) {
 		AbstractExtensionMenu extensionMenu = this.getExtensionMenu(this.extension);
-		if (extensionMenu != null && extensionMenu.quickMoveStack(slotStack, index)) {
-			return true;
-		}
-		return false;
+		return extensionMenu != null && extensionMenu.quickMoveStack(slotStack, index);
 	}
 	
 	public void tick() {
@@ -66,7 +61,7 @@ public abstract class AbstractExtensionContainerMenu extends AbstractContainerMe
 	}
 	
 	@Override
-	public void slotsChanged(Container container) {
+	public void slotsChanged(@NotNull Container container) {
 		super.slotsChanged(container);
 		this.extensionMenus.forEach((extensionMenu) -> {
 			extensionMenu.slotsChanged(container);
@@ -74,7 +69,7 @@ public abstract class AbstractExtensionContainerMenu extends AbstractContainerMe
 	}
 	
 	@Override
-	public boolean clickMenuButton(Player player, int button) {
+	public boolean clickMenuButton(@NotNull Player player, int button) {
 		AbstractExtensionMenu extensionMenu = this.getExtensionMenu(this.extension);
 		if (extensionMenu != null) {
 			return extensionMenu.clickMenuButton(player, button);
@@ -95,9 +90,7 @@ public abstract class AbstractExtensionContainerMenu extends AbstractContainerMe
 	
 	@Nullable
 	public AbstractExtensionMenu getExtensionMenu(BackpackExtension extension) {
-		return this.extensionMenus.stream().filter((extensionMenu) -> {
-			return extensionMenu.getExtension() == extension;
-		}).findAny().orElse(null);
+		return this.extensionMenus.stream().filter((extensionMenu) -> extensionMenu.getExtension() == extension).findAny().orElse(null);
 	}
 	
 	@NotNull

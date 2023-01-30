@@ -1,9 +1,9 @@
 package net.luis.xbackpack.network;
 
-import java.util.function.Supplier;
-
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent.Context;
+
+import java.util.function.Supplier;
 
 /**
  *

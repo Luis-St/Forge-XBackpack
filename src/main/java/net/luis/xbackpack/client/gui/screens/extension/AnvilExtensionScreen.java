@@ -1,10 +1,7 @@
 package net.luis.xbackpack.client.gui.screens.extension;
 
-import java.util.List;
-
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.luis.xbackpack.client.gui.screens.AbstractExtensionContainerScreen;
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtension;
@@ -14,8 +11,11 @@ import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.network.chat.Component;
 
+import java.util.List;
+import java.util.Objects;
+
 /**
- * 
+ *
  * @author Luis-st
  *
  */
@@ -31,7 +31,7 @@ public class AnvilExtensionScreen extends AbstractExtensionScreen {
 	
 	@Override
 	protected void init() {
-		this.handler = BackpackProvider.get(this.minecraft.player).getAnvilHandler();
+		this.handler = BackpackProvider.get(Objects.requireNonNull(this.minecraft.player)).getAnvilHandler();
 	}
 	
 	@Override
@@ -42,7 +42,7 @@ public class AnvilExtensionScreen extends AbstractExtensionScreen {
 				this.screen.blit(stack, this.leftPos + this.imageWidth + 59, this.topPos + 71, 111, 0, 22, 21);
 			}
 			this.renderLabels(stack);
-		}	
+		}
 	}
 	
 	private boolean shouldRenderCanceled() {
@@ -58,11 +58,9 @@ public class AnvilExtensionScreen extends AbstractExtensionScreen {
 			if (this.cost > 0) {
 				int color = 8453920;
 				Component component = null;
-				if (this.handler.getResultHandler().getStackInSlot(0).isEmpty()) {
-					component = null;
-				} else if (this.minecraft != null) {
+				if (!this.handler.getResultHandler().getStackInSlot(0).isEmpty() && this.minecraft != null) {
 					component = Component.translatable("xbackpack.backpack_extension.anvil.cost", this.cost);
-					if (!menu.mayPickup(this.minecraft.player)) {
+					if (!menu.mayPickup(Objects.requireNonNull(this.minecraft.player))) {
 						color = 16736352;
 					}
 				}
@@ -72,7 +70,7 @@ public class AnvilExtensionScreen extends AbstractExtensionScreen {
 					if (10 > this.cost) {
 						GuiComponent.fill(stack, x - 1, y - 2, x + this.font.width(component) + 3, y + 10, 1325400064);
 						this.font.drawShadow(stack, component, x + 1, y, color);
-					} else if (100 > this.cost && this.cost >= 10) {
+					} else if (100 > this.cost) {
 						GuiComponent.fill(stack, x - 7, y - 2, x + this.font.width(component) - 3, y + 10, 1325400064);
 						this.font.drawShadow(stack, component, x - 5, y, color);
 					} else {

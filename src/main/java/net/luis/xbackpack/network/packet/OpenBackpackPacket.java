@@ -1,7 +1,5 @@
 package net.luis.xbackpack.network.packet;
 
-import java.util.function.Supplier;
-
 import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.network.NetworkPacket;
 import net.luis.xbackpack.world.inventory.BackpackMenu;
@@ -12,8 +10,10 @@ import net.minecraft.world.SimpleMenuProvider;
 import net.minecraftforge.network.NetworkEvent.Context;
 import net.minecraftforge.network.NetworkHooks;
 
+import java.util.function.Supplier;
+
 /**
- * 
+ *
  * @author Luis-st
  *
  */
@@ -39,10 +39,9 @@ public class OpenBackpackPacket implements NetworkPacket {
 	public void handle(Supplier<Context> context) {
 		ServerPlayer player = context.get().getSender();
 		context.get().enqueueWork(() -> {
+			assert player != null;
 			if (player.containerMenu == player.inventoryMenu) {
-				NetworkHooks.openScreen(player, new SimpleMenuProvider((id, inventory, playerIn) -> {
-					return new BackpackMenu(id, inventory);
-				}, CONTAINER_NAME));
+				NetworkHooks.openScreen(player, new SimpleMenuProvider((id, inventory, playerIn) -> new BackpackMenu(id, inventory), CONTAINER_NAME));
 			}
 		});
 	}

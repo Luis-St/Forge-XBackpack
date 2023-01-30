@@ -1,17 +1,17 @@
 package net.luis.xbackpack.world.inventory.slot;
 
 import com.mojang.datafixers.util.Pair;
-
-import net.luis.xbackpack.BackpackConstans;
+import net.luis.xbackpack.BackpackConstants;
 import net.luis.xbackpack.XBackpack;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * 
+ *
  * @author Luis-st
  *
  */
@@ -30,18 +30,18 @@ public class BackpackToolSlot extends SlotItemHandler {
 	}
 	
 	@Override
-	public int getMaxStackSize(ItemStack stack) {
+	public int getMaxStackSize(@NotNull ItemStack stack) {
 		return 1;
 	}
 	
 	@Override
 	public boolean mayPlace(ItemStack stack) {
-		return BackpackConstans.VALID_TOOL_SLOT_ITEMS.contains(stack.getItem());
+		return BackpackConstants.VALID_TOOL_SLOT_ITEMS.contains(stack.getItem());
 	}
 	
 	@Override
 	public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
 		return Pair.of(InventoryMenu.BLOCK_ATLAS, EMPTY_TOOL_SLOT);
 	}
-
+	
 }

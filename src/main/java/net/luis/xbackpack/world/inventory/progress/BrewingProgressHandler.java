@@ -4,6 +4,7 @@ import net.luis.xbackpack.network.XBNetworkHandler;
 import net.luis.xbackpack.network.packet.extension.UpdateBrewingStandPacket;
 import net.luis.xbackpack.world.inventory.handler.CraftingFuelHandler;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.resources.ResourceLocation;
@@ -23,8 +24,10 @@ import net.minecraftforge.event.brewing.PotionBrewEvent;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.Objects;
+
 /**
- * 
+ *
  * @author Luis-st
  *
  */
@@ -125,7 +128,7 @@ public class BrewingProgressHandler implements ProgressHandler {
 	}
 	
 	private void playSound(ServerPlayer player, ServerLevel level) {
-		player.connection.send(new ClientboundSoundPacket(SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, player.getX(), player.getY(), player.getZ(), 1.0F, level.random.nextFloat() * 0.1F + 0.9F, level.random.nextLong()));
+		player.connection.send(new ClientboundSoundPacket(BuiltInRegistries.SOUND_EVENT.wrapAsHolder(SoundEvents.BREWING_STAND_BREW), SoundSource.BLOCKS, player.getX(), player.getY(), player.getZ(), 1.0F, level.random.nextFloat() * 0.1F + 0.9F, level.random.nextLong()));
 	}
 	
 	private NonNullList<ItemStack> asList() {
@@ -168,17 +171,17 @@ public class BrewingProgressHandler implements ProgressHandler {
 	@Override
 	public CompoundTag serialize() {
 		CompoundTag tag = new CompoundTag();
-		tag.putString("input", ForgeRegistries.ITEMS.getKey(this.input).toString());
+		tag.putString("input", Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(this.input)).toString());
 		tag.putInt("fuel", this.fuel);
 		tag.putInt("brew_time", this.brewTime);
 		return tag;
 	}
-
+	
 	@Override
 	public void deserialize(CompoundTag tag) {
 		this.input = ForgeRegistries.ITEMS.getValue(ResourceLocation.tryParse(tag.getString("input")));
 		this.fuel = tag.getInt("fuel");
 		this.brewTime = tag.getInt("brew_time");
 	}
-
+	
 }

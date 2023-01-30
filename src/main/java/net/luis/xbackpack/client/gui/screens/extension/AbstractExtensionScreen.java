@@ -1,11 +1,7 @@
 package net.luis.xbackpack.client.gui.screens.extension;
 
-import java.util.List;
-import java.util.function.Consumer;
-
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.client.gui.screens.AbstractExtensionContainerScreen;
 import net.luis.xbackpack.world.capability.BackpackProvider;
@@ -19,8 +15,12 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Consumer;
+
 /**
- * 
+ *
  * @author Luis-st
  *
  */
@@ -64,7 +64,7 @@ public abstract class AbstractExtensionScreen {
 	}
 	
 	protected boolean canUseExtension(BackpackExtension extension) {
-		return BackpackProvider.get(this.minecraft.player).getConfig().getExtensionConfig().getWithState(BackpackExtensionState.UNLOCKED).contains(extension);
+		return BackpackProvider.get(Objects.requireNonNull(this.minecraft.player)).getConfig().getExtensionConfig().getWithState(BackpackExtensionState.UNLOCKED).contains(extension);
 	}
 	
 	protected int getExtensionOffset(BackpackExtension extension) {
@@ -83,25 +83,22 @@ public abstract class AbstractExtensionScreen {
 			return true;
 		} else if (this.extensions.indexOf(this.extension) > this.extensions.indexOf(extension)) {
 			return true;
-		} else if (this.getExtensionOffset(extension) > this.getExtensionOffset(this.extension) + this.extension.getImageHeight()) {
-			return true;
+		} else {
+			return this.getExtensionOffset(extension) > this.getExtensionOffset(this.extension) + this.extension.getImageHeight();
 		}
-		return false;
 	}
 	
 	protected boolean isInExtension(BackpackExtension extension, double mouseX, double mouseY) {
 		if (this.extension == extension || this.isExtensionRenderable(extension)) {
 			double topX = this.leftPos + this.imageWidth;
 			double topY = this.topPos + this.getExtensionOffset(extension);
-			if (topX + extension.getIconWidth() >= mouseX && mouseX >= topX && topY + extension.getIconHeight() >= mouseY && mouseY >= topY) {
-				return true;
-			}
+			return topX + extension.getIconWidth() >= mouseX && mouseX >= topX && topY + extension.getIconHeight() >= mouseY && mouseY >= topY;
 		}
 		return false;
 	}
 	
 	protected ResourceLocation getTexture() {
-		ResourceLocation location = BackpackExtensions.REGISTRY.get().getKey(this.extension);
+		ResourceLocation location = Objects.requireNonNull(BackpackExtensions.REGISTRY.get().getKey(this.extension));
 		return new ResourceLocation(location.getNamespace(), "textures/gui/container/" + location.getPath() + "_extension.png");
 	}
 	

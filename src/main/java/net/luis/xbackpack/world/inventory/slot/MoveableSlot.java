@@ -1,7 +1,7 @@
 package net.luis.xbackpack.world.inventory.slot;
 
 /**
- * 
+ *
  * @author Luis-st
  *
  */

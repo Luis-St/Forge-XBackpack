@@ -1,12 +1,12 @@
 package net.luis.xbackpack.network.packet.modifier;
 
-import java.util.function.Supplier;
-
 import net.luis.xbackpack.network.NetworkPacket;
 import net.luis.xbackpack.world.inventory.BackpackMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent.Context;
+
+import java.util.function.Supplier;
 
 /**
  *

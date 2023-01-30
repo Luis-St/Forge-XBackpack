@@ -1,7 +1,6 @@
 package net.luis.xbackpack.world.inventory.slot;
 
 import com.mojang.datafixers.util.Pair;
-
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
@@ -12,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 
 /**
- * 
+ *
  * @author Luis-st
  *
  */
@@ -37,7 +36,7 @@ public class BackpackArmorSlot extends Slot {
 	public int getMaxStackSize(ItemStack stack) {
 		return 1;
 	}
-
+	
 	@Override
 	public boolean mayPlace(ItemStack stack) {
 		return stack.canEquip(this.equipmentSlot, this.player);
@@ -46,17 +45,22 @@ public class BackpackArmorSlot extends Slot {
 	@Override
 	public boolean mayPickup(Player player) {
 		ItemStack stack = this.getItem();
-		return !stack.isEmpty() && !player.isCreative() && EnchantmentHelper.hasBindingCurse(stack) ? false : super.mayPickup(player);
+		return (stack.isEmpty() || player.isCreative() || !EnchantmentHelper.hasBindingCurse(stack)) && super.mayPickup(player);
 	}
 	
 	@Override
 	public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
 		switch (this.equipmentSlot) {
-		case HEAD: return Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_HELMET);
-		case CHEST: return Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_CHESTPLATE);
-		case LEGS: return Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_LEGGINGS);
-		case FEET: return Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_BOOTS);
-		default: break;
+			case HEAD:
+				return Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_HELMET);
+			case CHEST:
+				return Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_CHESTPLATE);
+			case LEGS:
+				return Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_LEGGINGS);
+			case FEET:
+				return Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_BOOTS);
+			default:
+				break;
 		}
 		return super.getNoItemIcon();
 	}

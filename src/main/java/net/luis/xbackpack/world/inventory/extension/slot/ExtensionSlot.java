@@ -1,16 +1,17 @@
 package net.luis.xbackpack.world.inventory.extension.slot;
 
-import java.util.Optional;
-
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.inventory.extension.AbstractExtensionMenu;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Optional;
 
 /**
- * 
+ *
  * @author Luis-st
  *
  */
@@ -41,7 +42,7 @@ public class ExtensionSlot extends SlotItemHandler implements ExtensionMenuSlot 
 	}
 	
 	@Override
-	public void set(ItemStack stack) {
+	public void set(@NotNull ItemStack stack) {
 		super.set(stack);
 		if (this.sendChanges) {
 			this.extensionMenu.slotsChanged();
@@ -57,7 +58,7 @@ public class ExtensionSlot extends SlotItemHandler implements ExtensionMenuSlot 
 	}
 	
 	@Override
-	public Optional<ItemStack> tryRemove(int minAmount, int maxAmount, Player player) {
+	public @NotNull Optional<ItemStack> tryRemove(int minAmount, int maxAmount, @NotNull Player player) {
 		Optional<ItemStack> optional = super.tryRemove(minAmount, maxAmount, player);
 		if (this.sendChanges) {
 			this.extensionMenu.slotsChanged();
@@ -66,7 +67,7 @@ public class ExtensionSlot extends SlotItemHandler implements ExtensionMenuSlot 
 	}
 	
 	@Override
-	public ItemStack safeInsert(ItemStack stack, int count) {
+	public @NotNull ItemStack safeInsert(@NotNull ItemStack stack, int count) {
 		ItemStack remainingStack = super.safeInsert(stack, count);
 		if (this.sendChanges) {
 			this.extensionMenu.slotsChanged();

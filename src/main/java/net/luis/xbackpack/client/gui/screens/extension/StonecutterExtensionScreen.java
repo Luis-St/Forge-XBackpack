@@ -1,12 +1,8 @@
 package net.luis.xbackpack.client.gui.screens.extension;
 
-import java.util.List;
-import java.util.function.Consumer;
-
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.luis.xbackpack.client.gui.screens.AbstractExtensionContainerScreen;
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtension;
@@ -21,8 +17,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.StonecutterRecipe;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Consumer;
+
 /**
- * 
+ *
  * @author Luis-st
  *
  */
@@ -42,7 +42,7 @@ public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 	
 	@Override
 	protected void init() {
-		this.handler = BackpackProvider.get(this.minecraft.player).getStonecutterHandler();
+		this.handler = BackpackProvider.get(Objects.requireNonNull(this.minecraft.player)).getStonecutterHandler();
 	}
 	
 	@Override
@@ -106,7 +106,7 @@ public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 				double y = mouseY - (double) (this.topPos + 142 + i / 4 * 18);
 				if (x >= 0.0 && y >= 0.0 && x < 16.0 && y < 18.0) {
 					Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_STONECUTTER_SELECT_RECIPE, 1.0F));
-					this.minecraft.gameMode.handleInventoryButtonClick(this.screen.getMenu().containerId, index);
+					Objects.requireNonNull(this.minecraft.gameMode).handleInventoryButtonClick(this.screen.getMenu().containerId, index);
 					this.selectedRecipe = index;
 					return true;
 				}
@@ -169,7 +169,7 @@ public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 	
 	public void updateRecipes(boolean resetSelected) {
 		this.recipes.clear();
-		this.recipes.addAll(this.minecraft.getConnection().getRecipeManager().getRecipesFor(RecipeType.STONECUTTING, new SimpleContainer(this.getInputStack()), this.minecraft.level));
+		this.recipes.addAll(Objects.requireNonNull(this.minecraft.getConnection()).getRecipeManager().getRecipesFor(RecipeType.STONECUTTING, new SimpleContainer(this.getInputStack()), Objects.requireNonNull(this.minecraft.level)));
 		this.scrollOffset = 0.0F;
 		this.startIndex = 0;
 		if (resetSelected) {

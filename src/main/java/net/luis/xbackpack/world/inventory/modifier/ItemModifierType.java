@@ -16,22 +16,9 @@ public enum ItemModifierType {
 	private final String name;
 	private final int id;
 	
-	private ItemModifierType(String name, int id) {
+	ItemModifierType(String name, int id) {
 		this.name = name;
 		this.id = id;
-	}
-	
-	public String getName() {
-		return this.name;
-	}
-
-	public int getId() {
-		return this.id;
-	}
-	
-	@Override
-	public String toString() {
-		return this.name;
 	}
 	
 	@Nullable
@@ -40,6 +27,19 @@ public enum ItemModifierType {
 			return FILTER;
 		}
 		return id == SORTER.getId() ? SORTER : null;
+	}
+	
+	public String getName() {
+		return this.name;
+	}
+	
+	public int getId() {
+		return this.id;
+	}
+	
+	@Override
+	public String toString() {
+		return this.name;
 	}
 	
 }

@@ -1,0 +1,8 @@
+{
+  "sources": [
+    {
+      "type": "single",
+      "resource": "xbackpack:item/empty_tool_slot"
+    }
+  ]
+}

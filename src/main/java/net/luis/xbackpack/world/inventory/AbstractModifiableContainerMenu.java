@@ -1,13 +1,6 @@
 package net.luis.xbackpack.world.inventory;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.Nullable;
-
 import com.google.common.collect.Lists;
-
 import net.luis.xbackpack.network.XBNetworkHandler;
 import net.luis.xbackpack.network.packet.modifier.UpdateItemModifiersPacket;
 import net.luis.xbackpack.util.Util;
@@ -20,6 +13,12 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -87,10 +86,10 @@ public abstract class AbstractModifiableContainerMenu extends AbstractExtensionC
 				this.filter = ItemFilters.NONE;
 				changed = true;
 			}
-		} else if (type.sholdCycle()) {
+		} else if (type.shouldCycle()) {
 			List<ItemFilter> filters = Lists.newArrayList(ItemFilters.values()).stream().filter(ItemFilter::isSelectable).collect(Collectors.toList());
 			if (this.filter.isSelectable()) {
-				this.filter = direction.cycle(filters, this.filter);
+				this.filter = Objects.requireNonNull(direction).cycle(filters, this.filter);
 				changed = true;
 			}
 		}
@@ -117,10 +116,10 @@ public abstract class AbstractModifiableContainerMenu extends AbstractExtensionC
 				this.sorter = ItemSorters.NONE;
 				changed = true;
 			}
-		} else if (type.sholdCycle()) {
+		} else if (type.shouldCycle()) {
 			List<ItemSorter> sorters = Lists.newArrayList(ItemSorters.values()).stream().filter(ItemSorter::isSelectable).collect(Collectors.toList());
 			if (this.sorter.isSelectable()) {
-				this.sorter = direction.cycle(sorters, this.sorter);
+				this.sorter = Objects.requireNonNull(direction).cycle(sorters, this.sorter);
 				changed = true;
 			}
 		}

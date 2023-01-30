@@ -1,15 +1,12 @@
 package net.luis.xbackpack.client.gui.screens;
 
-import org.jetbrains.annotations.NotNull;
-
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
-
 import net.luis.xbackpack.world.inventory.slot.MoveableSlot;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
-import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -22,31 +19,34 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.event.ContainerScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 /**
- * 
+ *
  * @author Luis-st
- * 
+ *
  */
 
 public abstract class AbstractScrollableContainerScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> {
 	
-	private boolean scrolling = false;
 	protected int scrollOffset = 0;
+	private boolean scrolling = false;
 	
 	protected AbstractScrollableContainerScreen(T menu, Inventory inventory, Component titleComponent) {
 		super(menu, inventory, titleComponent);
 	}
 	
 	@Override
-	protected abstract void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY);
+	protected abstract void renderBg(@NotNull PoseStack stack, float partialTicks, int mouseX, int mouseY);
 	
 	@Override
-	public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+	public void render(@NotNull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		this.renderBg(stack, partialTicks, mouseX, mouseY);
 		MinecraftForge.EVENT_BUS.post(new ContainerScreenEvent.Render.Background(this, stack, mouseX, mouseY));
 		RenderSystem.disableDepthTest();
-		for (Widget widget : this.renderables) {
+		for (Renderable widget : this.renderables) {
 			widget.render(stack, mouseX, mouseY, partialTicks);
 		}
 		PoseStack viewStack = RenderSystem.getModelViewStack();
@@ -81,7 +81,7 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 				time = 1.0F;
 				this.snapbackItem = ItemStack.EMPTY;
 			}
-			this.renderFloatingItem(this.snapbackItem, this.snapbackStartX + (int) ((this.snapbackEnd.x - this.snapbackStartX) * time), this.snapbackStartY + (int) ((this.snapbackEnd.y - this.snapbackStartY) * time), (String) null);
+			this.renderFloatingItem(this.snapbackItem, this.snapbackStartX + (int) ((Objects.requireNonNull(this.snapbackEnd).x - this.snapbackStartX) * time), this.snapbackStartY + (int) ((this.snapbackEnd.y - this.snapbackStartY) * time), null);
 		}
 		viewStack.popPose();
 		RenderSystem.applyModelViewMatrix();
@@ -97,9 +97,7 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 	protected void renderSlots(PoseStack stack, int mouseX, int mouseY) {
 		for (int i = 0; i < this.menu.slots.size(); ++i) {
 			Slot slot = this.menu.slots.get(i);
-			if (this.getSlotRenderType(slot) == SlotRenderType.SKIP) {
-				continue;
-			} else {
+			if (this.getSlotRenderType(slot) != SlotRenderType.SKIP) {
 				int y = slot instanceof MoveableSlot moveableSlot ? moveableSlot.getY(this.scrollOffset) : slot.y;
 				this.renderAndDecorateSlot(stack, mouseX, mouseY, slot, slot.x, y, this.getSlotColor(i));
 			}
@@ -147,8 +145,8 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 		if (slotStack.isEmpty()) {
 			Pair<ResourceLocation, ResourceLocation> pair = slot.getNoItemIcon();
 			if (pair != null) {
-				TextureAtlasSprite atlasSprite = this.minecraft.getTextureAtlas(pair.getFirst()).apply(pair.getSecond());
-				RenderSystem.setShaderTexture(0, atlasSprite.atlas().location());
+				TextureAtlasSprite atlasSprite = Objects.requireNonNull(this.minecraft).getTextureAtlas(pair.getFirst()).apply(pair.getSecond());
+				RenderSystem.setShaderTexture(0, atlasSprite.atlasLocation());
 				blit(stack, slotX, slotY, this.getBlitOffset(), 16, 16, atlasSprite);
 				clickedSlot = true;
 			}
@@ -159,7 +157,7 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 			}
 			RenderSystem.enableDepthTest();
 			int modelOffset = slotX + slotY * this.imageWidth;
-			this.itemRenderer.renderAndDecorateItem(this.minecraft.player, slotStack, slotX, slotY, modelOffset);
+			this.itemRenderer.renderAndDecorateItem(Objects.requireNonNull(Objects.requireNonNull(this.minecraft).player), slotStack, slotX, slotY, modelOffset);
 			this.itemRenderer.renderGuiItemDecorations(this.font, slotStack, slotX, slotY, stackCount);
 		}
 		this.itemRenderer.blitOffset = 0.0F;
@@ -167,7 +165,7 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 	}
 	
 	@Override
-	protected void renderTooltip(PoseStack stack, int mouseX, int mouseY) {
+	protected void renderTooltip(@NotNull PoseStack stack, int mouseX, int mouseY) {
 		if (this.menu.getCarried().isEmpty() && this.hoveredSlot != null && this.hoveredSlot.hasItem() && this.getSlotRenderType(this.hoveredSlot) == SlotRenderType.DEFAULT) {
 			this.renderTooltip(stack, this.hoveredSlot.getItem(), mouseX, mouseY);
 		}

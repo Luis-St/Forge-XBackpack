@@ -1,7 +1,5 @@
 package net.luis.xbackpack.network.packet.extension;
 
-import java.util.function.Supplier;
-
 import net.luis.xbackpack.network.NetworkPacket;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
@@ -10,8 +8,11 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent.Context;
 
+import java.util.Objects;
+import java.util.function.Supplier;
+
 /**
- * 
+ *
  * @author Luis-st
  *
  */
@@ -30,7 +31,7 @@ public class UpdateExtensionPacket implements NetworkPacket {
 	
 	@Override
 	public void encode(FriendlyByteBuf buffer) {
-		buffer.writeResourceLocation(BackpackExtensions.REGISTRY.get().getKey(this.extension));
+		buffer.writeResourceLocation(Objects.requireNonNull(BackpackExtensions.REGISTRY.get().getKey(this.extension)));
 	}
 	
 	@Override

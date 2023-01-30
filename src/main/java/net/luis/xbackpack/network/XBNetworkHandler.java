@@ -1,18 +1,9 @@
 package net.luis.xbackpack.network;
 
-import java.util.function.BiConsumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
-
 import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.network.packet.OpenBackpackPacket;
 import net.luis.xbackpack.network.packet.UpdateBackpackPacket;
-import net.luis.xbackpack.network.packet.extension.UpdateAnvilPacket;
-import net.luis.xbackpack.network.packet.extension.UpdateBrewingStandPacket;
-import net.luis.xbackpack.network.packet.extension.UpdateEnchantmentTablePacket;
-import net.luis.xbackpack.network.packet.extension.UpdateExtensionPacket;
-import net.luis.xbackpack.network.packet.extension.UpdateFurnacePacket;
-import net.luis.xbackpack.network.packet.extension.UpdateStonecutterPacket;
+import net.luis.xbackpack.network.packet.extension.*;
 import net.luis.xbackpack.network.packet.modifier.ResetItemModifierPacket;
 import net.luis.xbackpack.network.packet.modifier.UpdateItemModifiersPacket;
 import net.luis.xbackpack.network.packet.modifier.UpdateSearchTermPacket;
@@ -32,8 +23,12 @@ import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 /**
- * 
+ *
  * @author Luis-st
  *
  */

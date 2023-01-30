@@ -17,8 +17,8 @@ public class Util {
 	public static int tryParseInteger(String value, int fallback) {
 		int number = fallback;
 		try {
-			number = Integer.valueOf(value);
-		} catch (Exception e) {
+			number = Integer.parseInt(value);
+		} catch (Exception ignored) {
 			
 		}
 		return number;

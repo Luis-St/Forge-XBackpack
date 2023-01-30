@@ -1,7 +1,5 @@
 package net.luis.xbackpack.world.extension;
 
-import java.util.function.Supplier;
-
 import net.luis.xbackpack.XBackpack;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
@@ -12,6 +10,8 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
 import net.minecraftforge.registries.RegistryObject;
+
+import java.util.function.Supplier;
 
 /**
  *

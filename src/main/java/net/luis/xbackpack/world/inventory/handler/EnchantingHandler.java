@@ -4,7 +4,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.items.ItemStackHandler;
 
 /**
- * 
+ *
  * @author Luis-st
  *
  */

@@ -5,9 +5,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.items.IItemHandler;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * 
+ *
  * @author Luis-st
  *
  */
@@ -28,12 +29,12 @@ public class FurnaceExtensionResultSlot extends ExtensionSlot {
 	}
 	
 	@Override
-	public boolean mayPlace(ItemStack stack) {
+	public boolean mayPlace(@NotNull ItemStack stack) {
 		return false;
 	}
 	
 	@Override
-	public ItemStack remove(int amount) {
+	public @NotNull ItemStack remove(int amount) {
 		if (this.hasItem()) {
 			this.removeCount += Math.min(amount, this.getItem().getCount());
 		}
@@ -41,13 +42,13 @@ public class FurnaceExtensionResultSlot extends ExtensionSlot {
 	}
 	
 	@Override
-	public void onTake(Player player, ItemStack stack) {
+	public void onTake(@NotNull Player player, @NotNull ItemStack stack) {
 		this.checkTakeAchievements(stack);
 		super.onTake(player, stack);
 	}
 	
 	@Override
-	protected void onQuickCraft(ItemStack stack, int amount) {
+	protected void onQuickCraft(@NotNull ItemStack stack, int amount) {
 		this.removeCount += amount;
 		this.checkTakeAchievements(stack);
 	}
@@ -58,5 +59,5 @@ public class FurnaceExtensionResultSlot extends ExtensionSlot {
 		this.removeCount = 0;
 		ForgeEventFactory.firePlayerSmeltedEvent(this.player, stack);
 	}
-
+	
 }

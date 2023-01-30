@@ -1,8 +1,5 @@
 package net.luis.xbackpack.world.inventory.progress;
 
-import java.util.List;
-import java.util.Optional;
-
 import net.luis.xbackpack.network.XBNetworkHandler;
 import net.luis.xbackpack.network.packet.extension.UpdateFurnacePacket;
 import net.luis.xbackpack.world.inventory.handler.SmeltingHandler;
@@ -18,8 +15,11 @@ import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
+import java.util.List;
+import java.util.Optional;
+
 /**
- * 
+ *
  * @author Luis-st
  *
  */
@@ -43,7 +43,7 @@ public class SmeltingProgressHandler implements ProgressHandler {
 	
 	@Override
 	public void tick() {
-		int oldcookingProgress = this.getCookingProgress();
+		int oldCookingProgress = this.getCookingProgress();
 		int oldFuelTime = this.getFuelProgress();
 		this.checkRecipe();
 		this.forceStorages();
@@ -81,7 +81,7 @@ public class SmeltingProgressHandler implements ProgressHandler {
 				this.broadcastChanges();
 			}
 		}
-		if (oldcookingProgress != this.getCookingProgress() || oldFuelTime != this.getFuelProgress()) {
+		if (oldCookingProgress != this.getCookingProgress() || oldFuelTime != this.getFuelProgress()) {
 			this.broadcastChanges();
 		}
 	}
@@ -155,7 +155,9 @@ public class SmeltingProgressHandler implements ProgressHandler {
 		} else if (!toStack.areCapsCompatible(stack)) {
 			return false;
 		} else {
-			return !toStack.hasTag() || toStack.getTag().equals(stack.getTag());
+			if (!toStack.hasTag()) return true;
+			assert toStack.getTag() != null;
+			return toStack.getTag().equals(stack.getTag());
 		}
 	}
 	
@@ -259,7 +261,7 @@ public class SmeltingProgressHandler implements ProgressHandler {
 		int cookingTime = this.cookingTime;
 		return cookingTime != 0 && cookingProgress != 0 ? cookingProgress * 24 / cookingTime : 0;
 	}
-
+	
 	public int getFuelProgress() {
 		int maxFuel = this.maxFuel == 0 ? 200 : this.maxFuel;
 		return this.fuelTime * 13 / maxFuel;

@@ -1,7 +1,6 @@
 package net.luis.xbackpack.client.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
-
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -49,7 +48,7 @@ public class TooltipCommand {
 				source.sendSuccess(Component.translatable("xbackpack.commands.tooltip.set.success.false"), false);
 			}
 		} else {
-			source.sendFailure(Component.translatable("xxbackpack.commands.tooltip.failure"));
+			source.sendFailure(Component.translatable("xbackpack.commands.tooltip.failure"));
 		}
 		return 1;
 	}

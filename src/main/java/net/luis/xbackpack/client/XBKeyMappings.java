@@ -1,12 +1,11 @@
 package net.luis.xbackpack.client;
 
-import org.lwjgl.glfw.GLFW;
-
 import net.luis.xbackpack.XBackpack;
 import net.minecraft.client.KeyMapping;
+import org.lwjgl.glfw.GLFW;
 
 /**
- * 
+ *
  * @author Luis-st
  *
  */

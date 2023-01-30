@@ -1,8 +1,5 @@
 package net.luis.xbackpack.world.inventory.extension;
 
-import java.util.Map;
-import java.util.function.Consumer;
-
 import net.luis.xbackpack.network.XBNetworkHandler;
 import net.luis.xbackpack.network.packet.extension.UpdateAnvilPacket;
 import net.luis.xbackpack.world.capability.BackpackProvider;
@@ -10,6 +7,7 @@ import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.luis.xbackpack.world.inventory.AbstractExtensionContainerMenu;
 import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
 import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -24,9 +22,13 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AnvilUpdateEvent;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Map;
+import java.util.function.Consumer;
 
 /**
- * 
+ *
  * @author Luis-st
  *
  */
@@ -40,6 +42,10 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 	public AnvilExtensionMenu(AbstractExtensionContainerMenu menu, Player player) {
 		super(menu, player, BackpackExtensions.ANVIL.get());
 		this.handler = BackpackProvider.get(this.player).getAnvilHandler();
+	}
+	
+	private static int calculateIncreasedRepairCost(int cost) {
+		return cost * 2 + 1;
 	}
 	
 	@Override
@@ -56,7 +62,7 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 		consumer.accept(new ExtensionSlot(this, this.handler.getInputHandler(), 1, 260, 73));
 		consumer.accept(new ExtensionSlot(this, this.handler.getResultHandler(), 0, 304, 73) {
 			@Override
-			public boolean mayPlace(ItemStack stack) {
+			public boolean mayPlace(@NotNull ItemStack stack) {
 				return false;
 			}
 			
@@ -66,7 +72,7 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 			}
 			
 			@Override
-			public void onTake(Player player, ItemStack stack) {
+			public void onTake(@NotNull Player player, @NotNull ItemStack stack) {
 				AnvilExtensionMenu.this.onTake(player, stack);
 				super.onTake(player, stack);
 			}
@@ -103,7 +109,7 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	private void playSound(ServerPlayer player, ServerLevel level) {
-		player.connection.send(new ClientboundSoundPacket(SoundEvents.ANVIL_USE, SoundSource.BLOCKS, player.getX(), player.getY(), player.getZ(), 1.0F, level.random.nextFloat() * 0.1F + 0.9F, level.random.nextLong()));
+		player.connection.send(new ClientboundSoundPacket(BuiltInRegistries.SOUND_EVENT.wrapAsHolder(SoundEvents.ANVIL_USE), SoundSource.BLOCKS, player.getX(), player.getY(), player.getZ(), 1.0F, level.random.nextFloat() * 0.1F + 0.9F, level.random.nextLong()));
 	}
 	
 	@Override
@@ -262,10 +268,6 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 		XBNetworkHandler.INSTANCE.sendToPlayer(this.player, new UpdateAnvilPacket(this.cost));
 	}
 	
-	private static int calculateIncreasedRepairCost(int cost) {	
-		return cost * 2 + 1;
-	}
-
 	public int getCost() {
 		return this.cost;
 	}
@@ -287,13 +289,11 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 	@Override
 	public boolean quickMoveStack(ItemStack slotStack, int index) {
 		if (908 >= index && index >= 0) { // from container
-			if (this.menu.moveItemStackTo(slotStack, 938, 940, false)) { // into input
-				return true;
-			}
+			// into input
+			return this.menu.moveItemStackTo(slotStack, 938, 940, false);
 		} else if (index == 940) { // from result
-			if (this.movePreferredMenu(slotStack)) { // into container
-				return true;
-			}
+			// into container
+			return this.movePreferredMenu(slotStack);
 		}
 		return false;
 	}
@@ -302,5 +302,5 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 	public void close() {
 		this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);
 	}
-
+	
 }

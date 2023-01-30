@@ -1,9 +1,5 @@
 package net.luis.xbackpack.server.commands.arguments;
 
-import java.util.Collection;
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
-
 import com.google.common.collect.Lists;
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.StringReader;
@@ -13,13 +9,17 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.Dynamic2CommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-
 import net.luis.xbackpack.world.extension.BackpackExtensionState;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Collection;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -51,7 +51,7 @@ public class BackpackExtensionStateArgument implements ArgumentType<BackpackExte
 		if (state != null) {
 			return state;
 		}
-		throw INVALID_EXTENSION_STATE.create(state, "");
+		throw INVALID_EXTENSION_STATE.create(null, "");
 	}
 	
 	@Override
@@ -67,22 +67,22 @@ public class BackpackExtensionStateArgument implements ArgumentType<BackpackExte
 	public static class Info implements ArgumentTypeInfo<BackpackExtensionStateArgument, Info.Template> {
 		
 		@Override
-		public void serializeToNetwork(Template template, FriendlyByteBuf buffer) {
+		public void serializeToNetwork(@NotNull Template template, @NotNull FriendlyByteBuf buffer) {
 			
 		}
 		
 		@Override
-		public Template deserializeFromNetwork(FriendlyByteBuf buffer) {
+		public @NotNull Template deserializeFromNetwork(@NotNull FriendlyByteBuf buffer) {
 			return new Template(new BackpackExtensionStateArgument());
 		}
 		
 		@Override
-		public void serializeToJson(Template template, JsonObject object) {
+		public void serializeToJson(@NotNull Template template, @NotNull JsonObject object) {
 			
 		}
 		
 		@Override
-		public Template unpack(BackpackExtensionStateArgument argument) {
+		public @NotNull Template unpack(@NotNull BackpackExtensionStateArgument argument) {
 			return new Template(argument);
 		}
 		
@@ -95,12 +95,12 @@ public class BackpackExtensionStateArgument implements ArgumentType<BackpackExte
 			}
 			
 			@Override
-			public BackpackExtensionStateArgument instantiate(CommandBuildContext context) {
+			public @NotNull BackpackExtensionStateArgument instantiate(@NotNull CommandBuildContext context) {
 				return this.argument;
 			}
 			
 			@Override
-			public ArgumentTypeInfo<BackpackExtensionStateArgument, ?> type() {
+			public @NotNull ArgumentTypeInfo<BackpackExtensionStateArgument, ?> type() {
 				return Info.this;
 			}
 			

@@ -5,9 +5,10 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * 
+ *
  * @author Luis-st
  *
  */
@@ -25,40 +26,40 @@ public class CraftingContainerWrapper extends CraftingContainer implements IItem
 	public int getSlots() {
 		return this.itemHandler.getSlots();
 	}
-
+	
 	@Override
-	public ItemStack getStackInSlot(int slot) {
+	public @NotNull ItemStack getStackInSlot(int slot) {
 		return this.itemHandler.getStackInSlot(slot);
 	}
-
+	
 	@Override
-	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+	public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
 		ItemStack itemStack = this.itemHandler.insertItem(slot, stack, simulate);
 		this.menu.slotsChanged(this);
 		return itemStack;
 	}
-
+	
 	@Override
-	public ItemStack extractItem(int slot, int amount, boolean simulate) {
+	public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
 		ItemStack stack = this.itemHandler.extractItem(slot, amount, simulate);
 		if (!stack.isEmpty()) {
 			this.menu.slotsChanged(this);
 		}
 		return stack;
 	}
-
+	
 	@Override
 	public int getSlotLimit(int slot) {
 		return this.itemHandler.getSlotLimit(slot);
 	}
-
+	
 	@Override
-	public boolean isItemValid(int slot, ItemStack stack) {
+	public boolean isItemValid(int slot, @NotNull ItemStack stack) {
 		return this.itemHandler.isItemValid(slot, stack);
 	}
-
+	
 	@Override
-	public void setStackInSlot(int slot, ItemStack stack) {
+	public void setStackInSlot(int slot, @NotNull ItemStack stack) {
 		this.itemHandler.setStackInSlot(slot, stack);
 		this.menu.slotsChanged(this);
 	}
@@ -79,17 +80,17 @@ public class CraftingContainerWrapper extends CraftingContainer implements IItem
 	}
 	
 	@Override
-	public ItemStack getItem(int slot) {
+	public @NotNull ItemStack getItem(int slot) {
 		return this.getStackInSlot(slot);
 	}
 	
 	@Override
-	public ItemStack removeItemNoUpdate(int slot) {
+	public @NotNull ItemStack removeItemNoUpdate(int slot) {
 		return this.extractItem(slot, slot, true);
 	}
 	
 	@Override
-	public ItemStack removeItem(int slot, int amount) {
+	public @NotNull ItemStack removeItem(int slot, int amount) {
 		ItemStack stack = this.extractItem(slot, amount, false);
 		if (!stack.isEmpty()) {
 			this.menu.slotsChanged(this);
@@ -98,7 +99,7 @@ public class CraftingContainerWrapper extends CraftingContainer implements IItem
 	}
 	
 	@Override
-	public void setItem(int slot, ItemStack stack) {
+	public void setItem(int slot, @NotNull ItemStack stack) {
 		this.insertItem(slot, stack, false);
 		this.menu.slotsChanged(this);
 	}
@@ -111,10 +112,10 @@ public class CraftingContainerWrapper extends CraftingContainer implements IItem
 	}
 	
 	@Override
-	public void fillStackedContents(StackedContents contents) {
+	public void fillStackedContents(@NotNull StackedContents contents) {
 		for (int i = 0; i < this.getSlots(); i++) {
 			contents.accountSimpleStack(this.getStackInSlot(i));
 		}
 	}
-
+	
 }

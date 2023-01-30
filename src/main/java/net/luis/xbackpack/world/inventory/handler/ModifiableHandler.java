@@ -1,10 +1,6 @@
 package net.luis.xbackpack.world.inventory.handler;
 
-import java.util.List;
-import java.util.function.Function;
-
 import com.google.common.collect.Lists;
-
 import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.world.inventory.slot.SlotWrapper;
 import net.minecraft.nbt.CompoundTag;
@@ -12,6 +8,10 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+import java.util.function.Function;
 
 /**
  *
@@ -55,7 +55,7 @@ public class ModifiableHandler implements IItemHandlerModifiable {
 	}
 	
 	@Override
-	public ItemStack getStackInSlot(int slot) {
+	public @NotNull ItemStack getStackInSlot(int slot) {
 		int wrappedSlot = this.getWrappedSlot(slot);
 		if (wrappedSlot != -1) {
 			return this.mainHandler.getStackInSlot(wrappedSlot);
@@ -71,7 +71,7 @@ public class ModifiableHandler implements IItemHandlerModifiable {
 	}
 	
 	@Override
-	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+	public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
 		int wrappedSlot = this.getWrappedSlot(slot);
 		if (wrappedSlot != -1) {
 			return this.mainHandler.insertItem(wrappedSlot, stack, simulate);
@@ -80,7 +80,7 @@ public class ModifiableHandler implements IItemHandlerModifiable {
 	}
 	
 	@Override
-	public ItemStack extractItem(int slot, int amount, boolean simulate) {
+	public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
 		int wrappedSlot = this.getWrappedSlot(slot);
 		if (wrappedSlot != -1) {
 			return this.mainHandler.extractItem(wrappedSlot, amount, simulate);
@@ -98,7 +98,7 @@ public class ModifiableHandler implements IItemHandlerModifiable {
 	}
 	
 	@Override
-	public boolean isItemValid(int slot, ItemStack stack) {
+	public boolean isItemValid(int slot, @NotNull ItemStack stack) {
 		int wrappedSlot = this.getWrappedSlot(slot);
 		if (wrappedSlot != -1) {
 			if (this.mainHandler.getStackInSlot(wrappedSlot).isEmpty() && (wrappedSlot != slot || this.isCurrentlyModified())) {
@@ -110,7 +110,7 @@ public class ModifiableHandler implements IItemHandlerModifiable {
 	}
 	
 	@Override
-	public void setStackInSlot(int slot, ItemStack stack) {
+	public void setStackInSlot(int slot, @NotNull ItemStack stack) {
 		int wrappedSlot = this.getWrappedSlot(slot);
 		if (wrappedSlot != -1) {
 			this.mainHandler.setStackInSlot(wrappedSlot, stack);
@@ -129,9 +129,7 @@ public class ModifiableHandler implements IItemHandlerModifiable {
 		if (wrapper.getMainSlot() == mainSlot) {
 			return wrapper;
 		}
-		return this.slotWrappers.stream().filter((slotWrapper) -> {
-			return slotWrapper.getMainSlot() == mainSlot;
-		}).findFirst().orElseThrow();
+		return this.slotWrappers.stream().filter((slotWrapper) -> slotWrapper.getMainSlot() == mainSlot).findFirst().orElseThrow();
 	}
 	
 	public int getWrappedSlot(int mainSlot) {
@@ -158,9 +156,7 @@ public class ModifiableHandler implements IItemHandlerModifiable {
 		List<ItemStack> stacks = Lists.newArrayList();
 		for (int i = 0; i < this.mainHandler.getSlots(); i++) {
 			ItemStack stack = this.mainHandler.getStackInSlot(i).copy();
-			if (stack.isEmpty()) {
-				continue;
-			} else {
+			if (!stack.isEmpty()) {
 				stack.getOrCreateTagElement(XBackpack.MOD_NAME + "ItemModifierInformation").putInt("SlotIndex", i);
 				stacks.add(stack);
 			}
@@ -172,9 +168,7 @@ public class ModifiableHandler implements IItemHandlerModifiable {
 		this.resetWrappedSlots(SlotWrapper::ofDisabled);
 		for (int i = 0; i < stacks.size(); i++) {
 			CompoundTag tag = stacks.get(i).getTagElement(XBackpack.MOD_NAME + "ItemModifierInformation");
-			if (tag == null || !tag.contains("SlotIndex", Tag.TAG_INT)) {
-				continue;
-			} else {
+			if (tag != null && tag.contains("SlotIndex", Tag.TAG_INT)) {
 				this.setWrappedSlot(i, tag.getInt("SlotIndex"));
 			}
 		}

@@ -12,9 +12,9 @@ import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 import net.minecraftforge.items.ItemStackHandler;
 
 /**
- * 
+ *
  * @author Luis-st
- * 
+ *
  */
 
 @AutoRegisterCapability

@@ -21,7 +21,7 @@ public class GatherDataEventHandler {
 	public static void gatherData(GatherDataEvent event) {
 		DataGenerator generator = event.getGenerator();
 		if (event.includeDev()) {
-			generator.addProvider(event.includeClient(), new XBLanguageProvider(generator));
+			generator.addProvider(event.includeClient(), new XBLanguageProvider(generator.getPackOutput()));
 		}
 	}
 	

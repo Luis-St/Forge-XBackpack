@@ -1,6 +1,6 @@
 package net.luis.xbackpack.world.backpack;
 
-import net.luis.xbackpack.BackpackConstans;
+import net.luis.xbackpack.BackpackConstants;
 import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.network.XBNetworkHandler;
 import net.luis.xbackpack.network.packet.UpdateBackpackPacket;
@@ -19,7 +19,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.items.ItemStackHandler;
 
 /**
- * 
+ *
  * @author Luis-st
  *
  */
@@ -46,7 +46,7 @@ public class BackpackHandler implements IBackpack {
 	public BackpackHandler(Player player) {
 		this.player = player;
 		this.config = new BackpackConfig(this.player);
-		this.smeltHandler = new SmeltingProgressHandler(this.player, this.furnaceHandler, BackpackConstans.FURNACE_RECIPE_TYPES);
+		this.smeltHandler = new SmeltingProgressHandler(this.player, this.furnaceHandler, BackpackConstants.FURNACE_RECIPE_TYPES);
 		this.brewHandler = new BrewingProgressHandler(this.player, this.brewingHandler);
 	}
 	

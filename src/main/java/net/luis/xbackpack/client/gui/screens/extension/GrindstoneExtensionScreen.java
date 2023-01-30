@@ -1,10 +1,7 @@
 package net.luis.xbackpack.client.gui.screens.extension;
 
-import java.util.List;
-
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.luis.xbackpack.client.gui.screens.AbstractExtensionContainerScreen;
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtension;
@@ -12,8 +9,11 @@ import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
+import java.util.List;
+import java.util.Objects;
+
 /**
- * 
+ *
  * @author Luis-st
  *
  */
@@ -28,7 +28,7 @@ public class GrindstoneExtensionScreen extends AbstractExtensionScreen {
 	
 	@Override
 	protected void init() {
-		this.handler = BackpackProvider.get(this.minecraft.player).getGrindstoneHandler();
+		this.handler = BackpackProvider.get(Objects.requireNonNull(this.minecraft.player)).getGrindstoneHandler();
 	}
 	
 	@Override
@@ -41,5 +41,5 @@ public class GrindstoneExtensionScreen extends AbstractExtensionScreen {
 			}
 		}
 	}
-
+	
 }

@@ -8,7 +8,7 @@ import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.ResultSlot;
 
 /**
- * 
+ *
  * @author Luis-st
  *
  */
@@ -31,5 +31,5 @@ public class ExtensionResultSlot extends ResultSlot implements ExtensionMenuSlot
 	public BackpackExtension getExtension() {
 		return this.extensionMenu.getExtension();
 	}
-
+	
 }

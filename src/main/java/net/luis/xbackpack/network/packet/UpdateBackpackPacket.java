@@ -1,15 +1,15 @@
 package net.luis.xbackpack.network.packet;
 
-import java.util.function.Supplier;
-
 import net.luis.xbackpack.client.XBClientPacketHandler;
 import net.luis.xbackpack.network.NetworkPacket;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent.Context;
 
+import java.util.function.Supplier;
+
 /**
- * 
+ *
  * @author Luis-st
  *
  */

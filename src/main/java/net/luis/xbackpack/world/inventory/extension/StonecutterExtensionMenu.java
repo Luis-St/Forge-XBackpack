@@ -1,11 +1,6 @@
 package net.luis.xbackpack.world.inventory.extension;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.function.Consumer;
-
 import com.google.common.collect.Lists;
-
 import net.luis.xbackpack.network.XBNetworkHandler;
 import net.luis.xbackpack.network.packet.extension.UpdateStonecutterPacket;
 import net.luis.xbackpack.world.capability.BackpackProvider;
@@ -13,6 +8,7 @@ import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.luis.xbackpack.world.inventory.AbstractExtensionContainerMenu;
 import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
 import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -24,9 +20,14 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.StonecutterRecipe;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Consumer;
 
 /**
- * 
+ *
  * @author Luis-st
  *
  */
@@ -54,12 +55,12 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 		consumer.accept(new ExtensionSlot(this, this.handler.getInputHandler(), 0, 249, 121));
 		consumer.accept(new ExtensionSlot(this, this.handler.getResultHandler(), 0, 249, 207) {
 			@Override
-			public boolean mayPlace(ItemStack stack) {
+			public boolean mayPlace(@NotNull ItemStack stack) {
 				return false;
 			}
 			
 			@Override
-			public void onTake(Player player, ItemStack stack) {
+			public void onTake(@NotNull Player player, @NotNull ItemStack stack) {
 				StonecutterExtensionMenu.this.onTake(player, stack);
 				super.onTake(player, stack);
 			}
@@ -82,7 +83,7 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	private void playSound(ServerPlayer player, ServerLevel level) {
-		player.connection.send(new ClientboundSoundPacket(SoundEvents.UI_STONECUTTER_TAKE_RESULT, SoundSource.BLOCKS, player.getX(), player.getY(), player.getZ(), 1.0F, level.random.nextFloat() * 0.1F + 0.9F, level.random.nextLong()));
+		player.connection.send(new ClientboundSoundPacket(BuiltInRegistries.SOUND_EVENT.wrapAsHolder(SoundEvents.UI_STONECUTTER_TAKE_RESULT), SoundSource.BLOCKS, player.getX(), player.getY(), player.getZ(), 1.0F, level.random.nextFloat() * 0.1F + 0.9F, level.random.nextLong()));
 	}
 	
 	public boolean requiresTickUpdate() {
@@ -141,15 +142,11 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 	@Override
 	public boolean quickMoveStack(ItemStack slotStack, int index) {
 		if (908 >= index && index >= 0) { // from container
-			if (this.menu.moveItemStackTo(slotStack, 944, 945, false)) { // into input
-				return true;
-			}
+			return this.menu.moveItemStackTo(slotStack, 944, 945, false); // into input
 		} else if (index == 945) { // from result
-			if (this.movePreferredMenu(slotStack)) { // into container
-				return true;
-			}
+			return this.movePreferredMenu(slotStack); // into container
 		}
 		return false;
 	}
-
+	
 }

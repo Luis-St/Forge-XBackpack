@@ -1,6 +1,6 @@
 package net.luis.xbackpack.event.client;
 
-import net.luis.xbackpack.BackpackConstans;
+import net.luis.xbackpack.BackpackConstants;
 import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.client.XBKeyMappings;
 import net.luis.xbackpack.client.commands.TooltipCommand;
@@ -19,12 +19,14 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RegisterClientCommandsEvent;
 import net.minecraftforge.client.event.InputEvent.MouseScrollingEvent;
+import net.minecraftforge.client.event.RegisterClientCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+
+import java.util.Objects;
 
 /**
  *
@@ -72,10 +74,10 @@ public class ClientEventHandler {
 	public static void mouseScroll(MouseScrollingEvent event) {
 		double delta = event.getScrollDelta();
 		Minecraft minecraft = Minecraft.getInstance();
-		LocalPlayer player = minecraft.player;
-		if (player.isShiftKeyDown() && minecraft.gameMode.getPlayerMode() != GameType.SPECTATOR) {
+		LocalPlayer player = Objects.requireNonNull(minecraft.player);
+		if (player.isShiftKeyDown() && Objects.requireNonNull(minecraft.gameMode).getPlayerMode() != GameType.SPECTATOR) {
 			ItemStack main = player.getMainHandItem();
-			if (BackpackConstans.VALID_TOOL_SLOT_ITEMS.contains(main.getItem())) {
+			if (BackpackConstants.VALID_TOOL_SLOT_ITEMS.contains(main.getItem())) {
 				IBackpack backpack = BackpackProvider.get(player);
 				ItemStack top = backpack.getToolHandler().getStackInSlot(0).copy();
 				ItemStack down = backpack.getToolHandler().getStackInSlot(2).copy();

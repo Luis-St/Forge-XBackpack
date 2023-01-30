@@ -1,10 +1,5 @@
 package net.luis.xbackpack.server.commands.arguments;
 
-import java.util.Collection;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
@@ -13,7 +8,6 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.Dynamic2CommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.minecraft.commands.CommandBuildContext;
@@ -23,6 +17,12 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.IForgeRegistry;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Collection;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -53,7 +53,7 @@ public class BackpackExtensionArgument implements ArgumentType<BackpackExtension
 	@Override
 	public BackpackExtension parse(StringReader reader) throws CommandSyntaxException {
 		ResourceLocation location = ResourceLocation.read(reader);
-		if (location != null && this.registrySupplier.get().containsKey(location)) {
+		if (this.registrySupplier.get().containsKey(location)) {
 			return this.registrySupplier.get().getValue(location);
 		}
 		throw INVALID_BACKPACK_EXTENSION.create(location, "");
@@ -72,22 +72,22 @@ public class BackpackExtensionArgument implements ArgumentType<BackpackExtension
 	public static class Info implements ArgumentTypeInfo<BackpackExtensionArgument, Info.Template> {
 		
 		@Override
-		public void serializeToNetwork(Template template, FriendlyByteBuf buffer) {
+		public void serializeToNetwork(@NotNull Template template, @NotNull FriendlyByteBuf buffer) {
 			
 		}
 		
 		@Override
-		public Template deserializeFromNetwork(FriendlyByteBuf buffer) {
+		public @NotNull Template deserializeFromNetwork(@NotNull FriendlyByteBuf buffer) {
 			return new Template(new BackpackExtensionArgument());
 		}
 		
 		@Override
-		public void serializeToJson(Template template, JsonObject object) {
+		public void serializeToJson(@NotNull Template template, @NotNull JsonObject object) {
 			
 		}
 		
 		@Override
-		public Template unpack(BackpackExtensionArgument argument) {
+		public @NotNull Template unpack(@NotNull BackpackExtensionArgument argument) {
 			return new Template(argument);
 		}
 		
@@ -100,12 +100,12 @@ public class BackpackExtensionArgument implements ArgumentType<BackpackExtension
 			}
 			
 			@Override
-			public BackpackExtensionArgument instantiate(CommandBuildContext context) {
+			public @NotNull BackpackExtensionArgument instantiate(@NotNull CommandBuildContext context) {
 				return this.argument;
 			}
 			
 			@Override
-			public ArgumentTypeInfo<BackpackExtensionArgument, ?> type() {
+			public @NotNull ArgumentTypeInfo<BackpackExtensionArgument, ?> type() {
 				return Info.this;
 			}
 			

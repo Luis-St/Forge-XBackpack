@@ -1,8 +1,6 @@
 package net.luis.xbackpack.world.inventory.extension;
 
-import java.util.function.Consumer;
-
-import net.luis.xbackpack.BackpackConstans;
+import net.luis.xbackpack.BackpackConstants;
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.capability.IBackpack;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
@@ -19,9 +17,12 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.common.ForgeHooks;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Consumer;
 
 /**
- * 
+ *
  * @author Luis-st
  *
  */
@@ -48,25 +49,25 @@ public class FurnaceExtensionMenu extends AbstractExtensionMenu {
 		for (int i = 0; i < 4; i++) {
 			consumer.accept(new ExtensionSlot(this, this.handler.getInputStorageHandler(), i, 225 + i * 18, 49) {
 				@Override
-				public boolean mayPlace(ItemStack stack) {
+				public boolean mayPlace(@NotNull ItemStack stack) {
 					return FurnaceExtensionMenu.this.canSmelt(stack);
 				}
 			});
 		}
 		consumer.accept(new ExtensionSlot(this, this.handler.getInputHandler(), 0, 225, 71) {
 			@Override
-			public boolean mayPlace(ItemStack stack) {
+			public boolean mayPlace(@NotNull ItemStack stack) {
 				return FurnaceExtensionMenu.this.canSmelt(stack);
 			}
 		});
 		consumer.accept(new ExtensionSlot(this, this.handler.getFuelHandler(), 0, 225, 107) {
 			@Override
-			public boolean mayPlace(ItemStack stack) {
+			public boolean mayPlace(@NotNull ItemStack stack) {
 				return FurnaceExtensionMenu.this.isFuel(stack) || stack.is(Items.BUCKET);
 			}
 			
 			@Override
-			public int getMaxStackSize(ItemStack stack) {
+			public int getMaxStackSize(@NotNull ItemStack stack) {
 				return stack.is(Items.BUCKET) ? 1 : super.getMaxStackSize(stack);
 			}
 		});
@@ -74,7 +75,7 @@ public class FurnaceExtensionMenu extends AbstractExtensionMenu {
 		for (int i = 0; i < 4; i++) {
 			consumer.accept(new ExtensionSlot(this, this.handler.getResultStorageHandler(), i, 225 + i * 18, 129) {
 				@Override
-				public boolean mayPlace(ItemStack stack) {
+				public boolean mayPlace(@NotNull ItemStack stack) {
 					return false;
 				}
 			});
@@ -83,7 +84,7 @@ public class FurnaceExtensionMenu extends AbstractExtensionMenu {
 	
 	@SuppressWarnings("unchecked")
 	private boolean canSmelt(ItemStack stack) {
-		for (RecipeType<? extends AbstractCookingRecipe> recipeType : BackpackConstans.FURNACE_RECIPE_TYPES) {
+		for (RecipeType<? extends AbstractCookingRecipe> recipeType : BackpackConstants.FURNACE_RECIPE_TYPES) {
 			if (this.player.level.getRecipeManager().getRecipeFor((RecipeType<AbstractCookingRecipe>) recipeType, new SimpleContainer(stack), this.player.level).isPresent()) {
 				return true;
 			}
@@ -92,7 +93,7 @@ public class FurnaceExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	private boolean isFuel(ItemStack stack) {
-		for (RecipeType<? extends AbstractCookingRecipe> recipeType : BackpackConstans.FURNACE_RECIPE_TYPES) {
+		for (RecipeType<? extends AbstractCookingRecipe> recipeType : BackpackConstants.FURNACE_RECIPE_TYPES) {
 			if (ForgeHooks.getBurnTime(stack, recipeType) > 0) {
 				return true;
 			}
@@ -106,20 +107,16 @@ public class FurnaceExtensionMenu extends AbstractExtensionMenu {
 			if (this.canSmelt(slotStack)) {
 				if (this.menu.moveItemStackTo(slotStack, 931, 932, false)) { // into input
 					return true;
-				} else if (this.menu.moveItemStackTo(slotStack, 927, 931, false)) { // into input storage
-					return true;
+				} else { // into input storage
+					return this.menu.moveItemStackTo(slotStack, 927, 931, false);
 				}
 			} else if (this.isFuel(slotStack) || slotStack.is(Items.BUCKET)) {
-				if (this.menu.moveItemStackTo(slotStack, 932, 933, false)) { // into fuel
-					return true;
-				}
+				return this.menu.moveItemStackTo(slotStack, 932, 933, false); // into fuel
 			}
-		} else if (index >= 937 && index >= 933) { // from result
-			if (this.movePreferredMenu(slotStack)) { // into container
-				return true;
-			}
+		} else if (index >= 937) { // from result
+			return this.movePreferredMenu(slotStack); // into container
 		}
 		return false;
 	}
-
+	
 }

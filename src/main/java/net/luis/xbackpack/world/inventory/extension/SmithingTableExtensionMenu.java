@@ -1,14 +1,11 @@
 package net.luis.xbackpack.world.inventory.extension;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.function.Consumer;
-
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.luis.xbackpack.world.inventory.AbstractExtensionContainerMenu;
 import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
 import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -21,6 +18,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.UpgradeRecipe;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Consumer;
 
 public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 	
@@ -38,14 +40,14 @@ public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 	public void open() {
 		this.createResult();
 	}
-
+	
 	@Override
 	public void addSlots(Consumer<Slot> consumer) {
 		consumer.accept(new ExtensionSlot(this, this.handler.getInputHandler(), 0, 225, 193));
 		consumer.accept(new ExtensionSlot(this, this.handler.getInputHandler(), 1, 260, 193));
 		consumer.accept(new ExtensionSlot(this, this.handler.getResultHandler(), 0, 304, 193, false) {
 			@Override
-			public boolean mayPlace(ItemStack stack) {
+			public boolean mayPlace(@NotNull ItemStack stack) {
 				return false;
 			}
 			
@@ -55,7 +57,7 @@ public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 			}
 			
 			@Override
-			public void onTake(Player player, ItemStack stack) {
+			public void onTake(@NotNull Player player, @NotNull ItemStack stack) {
 				SmithingTableExtensionMenu.this.onTake(player, stack);
 				super.onTake(player, stack);
 			}
@@ -65,7 +67,7 @@ public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 	private boolean mayPickup(Player player) {
 		return this.selectedRecipe != null && this.selectedRecipe.matches(this.asContainer(), this.level);
 	}
-
+	
 	private void onTake(Player player, ItemStack stack) {
 		stack.onCraftedBy(player.level, player, stack.getCount());
 		if (this.selectedRecipe != null) {
@@ -77,7 +79,7 @@ public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 			this.playSound(serverPlayer, serverPlayer.getLevel());
 		}
 	}
-
+	
 	private void shrinkStackInSlot(int slot) {
 		ItemStack stack = this.handler.getInputHandler().getStackInSlot(slot);
 		stack.shrink(1);
@@ -85,14 +87,14 @@ public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	private void playSound(ServerPlayer player, ServerLevel level) {
-		player.connection.send(new ClientboundSoundPacket(SoundEvents.SMITHING_TABLE_USE, SoundSource.BLOCKS, player.getX(), player.getY(), player.getZ(), 1.0F, level.random.nextFloat() * 0.1F + 0.9F, level.random.nextLong()));
+		player.connection.send(new ClientboundSoundPacket(BuiltInRegistries.SOUND_EVENT.wrapAsHolder(SoundEvents.SMITHING_TABLE_USE), SoundSource.BLOCKS, player.getX(), player.getY(), player.getZ(), 1.0F, level.random.nextFloat() * 0.1F + 0.9F, level.random.nextLong()));
 	}
 	
 	@Override
 	public void slotsChanged() {
 		this.createResult();
 	}
-
+	
 	private void createResult() {
 		List<UpgradeRecipe> recipes = this.level.getRecipeManager().getRecipesFor(RecipeType.SMITHING, this.asContainer(), this.level);
 		if (recipes.isEmpty()) {
@@ -102,7 +104,7 @@ public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 			ItemStack stack = this.selectedRecipe.assemble(this.asContainer());
 			this.handler.getResultHandler().setStackInSlot(0, stack);
 		}
-
+		
 	}
 	
 	private SimpleContainer asContainer() {
@@ -112,25 +114,19 @@ public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 	@Override
 	public boolean quickMoveStack(ItemStack slotStack, int index) {
 		if (908 >= index && index >= 0) { // from container
-			if (this.canQuickMoveIngredient(slotStack)) {
-				if (this.menu.moveItemStackTo(slotStack, 955, 956, false)) { // into addition
-					return true;
-				}
-			} else if (this.menu.moveItemStackTo(slotStack, 954, 955, false)) { // into input
-				return true;
+			if (this.canQuickMoveIngredient(slotStack)) { // into addition
+				return this.menu.moveItemStackTo(slotStack, 955, 956, false);
+			} else {  // into input
+				return this.menu.moveItemStackTo(slotStack, 954, 955, false);
 			}
 		} else if (index == 956) { // from result
-			if (this.movePreferredMenu(slotStack)) { // into container
-				return true;
-			}
+			return this.movePreferredMenu(slotStack); // into addition
 		}
 		return false;
 	}
 	
 	private boolean canQuickMoveIngredient(ItemStack stack) {
-		return this.player.level.getRecipeManager().getAllRecipesFor(RecipeType.SMITHING).stream().anyMatch((recipe) -> {
-			return recipe.isAdditionIngredient(stack);
-		});
+		return this.player.level.getRecipeManager().getAllRecipesFor(RecipeType.SMITHING).stream().anyMatch((recipe) -> recipe.isAdditionIngredient(stack));
 	}
-
+	
 }

@@ -1,12 +1,8 @@
 package net.luis.xbackpack.client.gui.screens;
 
-import java.util.List;
-import java.util.Objects;
-
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.luis.xbackpack.client.XBKeyMappings;
 import net.luis.xbackpack.client.gui.components.ActionButton;
 import net.luis.xbackpack.client.gui.components.ActionButton.ClickType;
@@ -22,6 +18,10 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.TooltipFlag;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -56,17 +56,17 @@ public abstract class AbstractModifiableContainerScreen<T extends AbstractModifi
 		}, this::addWidget);
 		this.filterButton = this.getFilterData().addIfExists((xPosition, yPosition, width, height) -> {
 			return new ActionButton(xPosition, yPosition, width, height, (type) -> {
-				this.minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId, Objects.requireNonNull(type) == ClickType.LEFT ? 0 : 1);
+				Objects.requireNonNull(Objects.requireNonNull(this.minecraft).gameMode).handleInventoryButtonClick(this.menu.containerId, Objects.requireNonNull(type) == ClickType.LEFT ? 0 : 1);
 			});
 		}, this::addRenderableWidget);
 		this.sorterButton = this.getSorterData().addIfExists((xPosition, yPosition, width, height) -> {
 			return new ActionButton(xPosition, yPosition, width, height, (type) -> {
-				this.minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId, Objects.requireNonNull(type) == ClickType.LEFT ? 2 : 3);
+				Objects.requireNonNull(Objects.requireNonNull(this.minecraft).gameMode).handleInventoryButtonClick(this.menu.containerId, Objects.requireNonNull(type) == ClickType.LEFT ? 2 : 3);
 			});
 		}, this::addRenderableWidget);
 		this.mergerButton = this.getMergerData().addIfExists((xPosition, yPosition, width, height) -> {
 			return new ActionButton(xPosition, yPosition, width, height, (type) -> {
-				this.minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId, 4);
+				Objects.requireNonNull(Objects.requireNonNull(this.minecraft).gameMode).handleInventoryButtonClick(this.menu.containerId, 4);
 			});
 		}, this::addRenderableWidget);
 	}
@@ -82,7 +82,7 @@ public abstract class AbstractModifiableContainerScreen<T extends AbstractModifi
 	protected abstract RenderData getMergerData();
 	
 	@Override
-	public void resize(Minecraft minecraft, int width, int height) {
+	public void resize(@NotNull Minecraft minecraft, int width, int height) {
 		if (this.searchBox != null) {
 			String searchBoxValue = this.searchBox.getValue();
 			this.init(minecraft, width, height);
@@ -94,12 +94,8 @@ public abstract class AbstractModifiableContainerScreen<T extends AbstractModifi
 	}
 	
 	@Override
-	public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-		if (this.menu.getFilter() == ItemFilters.NONE && this.menu.getSorter() == ItemSorters.NONE) {
-			this.mergerButton.visible = true;
-		} else {
-			this.mergerButton.visible = false;
-		}
+	public void render(@NotNull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+		this.mergerButton.visible = this.menu.getFilter() == ItemFilters.NONE && this.menu.getSorter() == ItemSorters.NONE;
 		super.render(stack, mouseX, mouseY, partialTicks);
 	}
 	
@@ -111,7 +107,7 @@ public abstract class AbstractModifiableContainerScreen<T extends AbstractModifi
 	}
 	
 	@Override
-	protected void renderTooltip(PoseStack stack, int mouseX, int mouseY) {
+	protected void renderTooltip(@NotNull PoseStack stack, int mouseX, int mouseY) {
 		super.renderTooltip(stack, mouseX, mouseY);
 		TooltipFlag tooltipFlag = this.getTooltipFlag();
 		if (this.filterButton != null && this.filterButton.isMouseOver(mouseX, mouseY)) {
@@ -169,7 +165,7 @@ public abstract class AbstractModifiableContainerScreen<T extends AbstractModifi
 				}
 				return true;
 			} else {
-				return this.searchBox.isFocused() && this.searchBox.isVisible() && keyCode != 256 ? true : super.keyPressed(keyCode, scanCode, modifiers);
+				return this.searchBox.isFocused() && this.searchBox.isVisible() && keyCode != 256 || super.keyPressed(keyCode, scanCode, modifiers);
 			}
 		} else {
 			if (XBKeyMappings.BACKPACK_OPEN.getKey().getValue() == keyCode) {

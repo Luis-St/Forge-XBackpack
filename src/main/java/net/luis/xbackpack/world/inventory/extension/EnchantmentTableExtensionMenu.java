@@ -1,8 +1,5 @@
 package net.luis.xbackpack.world.inventory.extension;
 
-import java.util.List;
-import java.util.function.Consumer;
-
 import net.luis.xbackpack.network.XBNetworkHandler;
 import net.luis.xbackpack.network.packet.extension.UpdateEnchantmentTablePacket;
 import net.luis.xbackpack.world.capability.BackpackProvider;
@@ -12,6 +9,7 @@ import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
 import net.luis.xbackpack.world.inventory.handler.EnchantingHandler;
 import net.minecraft.Util;
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.resources.ResourceLocation;
@@ -33,9 +31,13 @@ import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+import java.util.function.Consumer;
 
 /**
- * 
+ *
  * @author Luis-st
  *
  */
@@ -72,13 +74,13 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 	public void addSlots(Consumer<Slot> consumer) {
 		consumer.accept(new ExtensionSlot(this, this.handler.getPowerHandler(), 0, 235, 108) {
 			@Override
-			public boolean mayPlace(ItemStack stack) {
+			public boolean mayPlace(@NotNull ItemStack stack) {
 				return stack.is(Tags.Items.BOOKSHELVES) || stack.getItem() instanceof BookItem;
 			}
 		});
 		consumer.accept(new ExtensionSlot(this, this.handler.getInputHandler(), 0, 225, 130) {
 			@Override
-			public boolean mayPlace(ItemStack stack) {
+			public boolean mayPlace(@NotNull ItemStack stack) {
 				return stack.isEnchantable() || stack.getItem() instanceof BookItem;
 			}
 			
@@ -89,7 +91,7 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 		});
 		consumer.accept(new ExtensionSlot(this, this.handler.getFuelHandler(), 0, 245, 130) {
 			@Override
-			public boolean mayPlace(ItemStack stack) {
+			public boolean mayPlace(@NotNull ItemStack stack) {
 				return stack.is(Tags.Items.ENCHANTING_FUELS);
 			}
 		});
@@ -100,7 +102,7 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 		ItemStack inputStack = this.handler.getInputHandler().getStackInSlot(0);
 		if (!inputStack.isEmpty() && inputStack.isEnchantable()) {
 			int power = this.calculatePower();
-			this.rng.setSeed((long) this.enchantmentSeed);
+			this.rng.setSeed(this.enchantmentSeed);
 			for (int row = 0; row < 3; ++row) {
 				this.enchantingCosts[row] = EnchantmentHelper.getEnchantmentCost(this.rng, row, power, inputStack);
 				this.enchantments[row] = EMPTY_ENCHANTMENT;
@@ -113,7 +115,7 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 			for (int row = 0; row < 3; ++row) {
 				if (this.enchantingCosts[row] > 0) {
 					List<EnchantmentInstance> enchantments = this.getEnchantmentList(inputStack, row, this.enchantingCosts[row]);
-					if (enchantments != null && !enchantments.isEmpty()) {
+					if (!enchantments.isEmpty()) {
 						EnchantmentInstance instance = Util.getRandom(enchantments, this.rng);
 						this.enchantments[row] = ForgeRegistries.ENCHANTMENTS.getKey(instance.enchantment);
 						this.enchantmentLevels[row] = instance.level;
@@ -166,8 +168,7 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 						}
 						this.handler.getInputHandler().setStackInSlot(0, resultStack);
 					}
-					for (int j = 0; j < enchantments.size(); ++j) {
-						EnchantmentInstance enchantment = enchantments.get(j);
+					for (EnchantmentInstance enchantment : enchantments) {
 						if (isBook) {
 							EnchantedBookItem.addEnchantment(resultStack, enchantment);
 						} else {
@@ -197,7 +198,7 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	private List<EnchantmentInstance> getEnchantmentList(ItemStack inputStack, int row, int enchantingCost) {
-		this.rng.setSeed((long) (this.enchantmentSeed + row));
+		this.rng.setSeed(this.enchantmentSeed + row);
 		List<EnchantmentInstance> enchantments = EnchantmentHelper.selectEnchantment(this.rng, inputStack, enchantingCost, false);
 		if (inputStack.is(Items.BOOK) && enchantments.size() > 1) {
 			enchantments.remove(this.rng.nextInt(enchantments.size()));
@@ -206,29 +207,21 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	private void playSound(ServerPlayer player, ServerLevel level) {
-		player.connection.send(new ClientboundSoundPacket(SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS, player.getX(), player.getY(), player.getZ(), 1.0F, level.random.nextFloat() * 0.1F + 0.9F, level.random.nextLong()));
+		player.connection.send(new ClientboundSoundPacket(BuiltInRegistries.SOUND_EVENT.wrapAsHolder(SoundEvents.ENCHANTMENT_TABLE_USE), SoundSource.BLOCKS, player.getX(), player.getY(), player.getZ(), 1.0F, level.random.nextFloat() * 0.1F + 0.9F, level.random.nextLong()));
 	}
 	
 	@Override
 	public boolean quickMoveStack(ItemStack slotStack, int index) {
 		if (908 >= index && index >= 0) { // from container
 			if (slotStack.is(Tags.Items.BOOKSHELVES) || this.canQuickMoveBook()) {
-				if (this.menu.moveItemStackTo(slotStack, 941, 942, false)) { // into power
-					return true;
-				}
+				return this.menu.moveItemStackTo(slotStack, 941, 942, false); // into power
 			} else if (slotStack.isEnchantable() || slotStack.getItem() instanceof BookItem) {
-				if (this.menu.moveItemStackTo(slotStack, 942, 943, false)) { // into input
-					return true;
-				}
+				return this.menu.moveItemStackTo(slotStack, 942, 943, false); // into input
 			} else if (slotStack.is(Tags.Items.ENCHANTING_FUELS)) {
-				if (this.menu.moveItemStackTo(slotStack, 943, 944, false)) { // into fuel
-					return true;
-				}
+				return this.menu.moveItemStackTo(slotStack, 943, 944, false); // into fuel
 			}
-		} else if (index >= 943 && index >= 941) { // from extension
-			if (this.movePreferredMenu(slotStack)) { // into container
-				return true;
-			}
+		} else if (index >= 943) { // from extension
+			return this.movePreferredMenu(slotStack); // into container
 		}
 		return false;
 	}
@@ -240,5 +233,5 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 		}
 		return false;
 	}
-
+	
 }

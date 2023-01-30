@@ -1,11 +1,10 @@
 package net.luis.xbackpack.world.inventory.modifier;
 
-import java.util.List;
-
-import org.jetbrains.annotations.Nullable;
-
 import net.luis.xbackpack.world.inventory.modifier.filter.ItemFilter;
 import net.luis.xbackpack.world.inventory.modifier.sorter.ItemSorter;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 /**
  *
@@ -27,21 +26,21 @@ public interface ModifiableMenu {
 	
 	void updateSorter(@Nullable ItemSorter sorter, UpdateType type, @Nullable CycleDirection direction);
 	
-	public static enum UpdateType {
+	enum UpdateType {
 		
-		NONE("none", 0, false), 
-		SET("set", 1, true), 
-		SET_NO_UPDATE("set_no_update", 2, false), 
-		RESET("reset", 3, true), 
-		RESET_NO_UPDATE("reset_no_update", 4, false), 
-		CYCLE("cycle", 5, true), 
+		NONE("none", 0, false),
+		SET("set", 1, true),
+		SET_NO_UPDATE("set_no_update", 2, false),
+		RESET("reset", 3, true),
+		RESET_NO_UPDATE("reset_no_update", 4, false),
+		CYCLE("cycle", 5, true),
 		CYCLE_NO_UPDATE("cycle_no_update", 6, false);
 		
 		private final String name;
 		private final int id;
 		private final boolean shouldUpdate;
 		
-		private UpdateType(String name, int id, boolean shouldUpdate) {
+		UpdateType(String name, int id, boolean shouldUpdate) {
 			this.name = name;
 			this.id = id;
 			this.shouldUpdate = shouldUpdate;
@@ -63,7 +62,7 @@ public interface ModifiableMenu {
 			return this == RESET || this == RESET_NO_UPDATE;
 		}
 		
-		public boolean sholdCycle() {
+		public boolean shouldCycle() {
 			return this == CYCLE || this == CYCLE_NO_UPDATE;
 		}
 		
@@ -78,7 +77,7 @@ public interface ModifiableMenu {
 		
 	}
 	
-	public static enum CycleDirection {
+	enum CycleDirection {
 		
 		FORWARDS("forwards", 0) {
 			@Override
@@ -101,7 +100,7 @@ public interface ModifiableMenu {
 		private final String name;
 		private final int id;
 		
-		private CycleDirection(String name, int id) {
+		CycleDirection(String name, int id) {
 			this.name = name;
 			this.id = id;
 		}
