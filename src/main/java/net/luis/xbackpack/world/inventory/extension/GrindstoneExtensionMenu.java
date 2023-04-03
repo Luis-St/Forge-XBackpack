@@ -49,7 +49,7 @@ public class GrindstoneExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	@Override
-	public void addSlots(Consumer<Slot> consumer) {
+	public void addSlots(@NotNull Consumer<Slot> consumer) {
 		consumer.accept(new ExtensionSlot(this, this.handler.getInputHandler(), 0, 243, 172) {
 			@Override
 			public boolean mayPlace(@NotNull ItemStack stack) {
@@ -116,7 +116,7 @@ public class GrindstoneExtensionMenu extends AbstractExtensionMenu {
 		return experience;
 	}
 	
-	private void playSound(ServerPlayer player, ServerLevel level) {
+	private void playSound(@NotNull ServerPlayer player, @NotNull ServerLevel level) {
 		player.connection.send(new ClientboundSoundPacket(BuiltInRegistries.SOUND_EVENT.wrapAsHolder(SoundEvents.GRINDSTONE_USE), SoundSource.BLOCKS, player.getX(), player.getY(), player.getZ(), 1.0F, level.random.nextFloat() * 0.1F + 0.9F, level.random.nextLong()));
 	}
 	
@@ -182,7 +182,7 @@ public class GrindstoneExtensionMenu extends AbstractExtensionMenu {
 		this.menu.broadcastChanges();
 	}
 	
-	private ItemStack mergeEnchants(ItemStack firstStack, ItemStack secondStack) {
+	private @NotNull ItemStack mergeEnchants(@NotNull ItemStack firstStack, ItemStack secondStack) {
 		ItemStack resultStack = firstStack.copy();
 		Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(secondStack);
 		for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
@@ -194,7 +194,7 @@ public class GrindstoneExtensionMenu extends AbstractExtensionMenu {
 		return resultStack;
 	}
 	
-	private ItemStack removeNonCurses(ItemStack inputStack, int damageValue, int count) {
+	private @NotNull ItemStack removeNonCurses(@NotNull ItemStack inputStack, int damageValue, int count) {
 		ItemStack resultStack = inputStack.copy();
 		resultStack.removeTagKey("Enchantments");
 		resultStack.removeTagKey("StoredEnchantments");

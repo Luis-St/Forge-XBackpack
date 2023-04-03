@@ -73,7 +73,7 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 					count = ChatFormatting.YELLOW + "0";
 				}
 			}
-			this.renderFloatingItem(mouseStack, mouseX - this.leftPos - 8, mouseY - this.topPos - renderOffset, count);
+			this.renderFloatingItem(stack, mouseStack, mouseX - this.leftPos - 8, mouseY - this.topPos - renderOffset, count);
 		}
 		if (!this.snapbackItem.isEmpty()) {
 			float time = (float) (Util.getMillis() - this.snapbackTime) / 100.0F;
@@ -81,7 +81,8 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 				time = 1.0F;
 				this.snapbackItem = ItemStack.EMPTY;
 			}
-			this.renderFloatingItem(this.snapbackItem, this.snapbackStartX + (int) ((Objects.requireNonNull(this.snapbackEnd).x - this.snapbackStartX) * time), this.snapbackStartY + (int) ((this.snapbackEnd.y - this.snapbackStartY) * time), null);
+			this.renderFloatingItem(stack, this.snapbackItem, this.snapbackStartX + (int) ((Objects.requireNonNull(this.snapbackEnd).x - this.snapbackStartX) * time),
+					this.snapbackStartY + (int) ((this.snapbackEnd.y - this.snapbackStartY) * time), null);
 		}
 		viewStack.popPose();
 		RenderSystem.applyModelViewMatrix();
@@ -109,11 +110,11 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 		this.renderSlot(stack, slot, slotX, slotY);
 		if (this.isHovering(slot, mouseX, mouseY)) {
 			this.hoveredSlot = slot;
-			renderSlotHighlight(stack, slotX, slotY, this.getBlitOffset(), slotColor);
+			renderSlotHighlight(stack, slotX, slotY, 0, slotColor);
 		}
 	}
 	
-	protected void renderSlot(PoseStack stack, Slot slot, int slotX, int slotY) {
+	protected void renderSlot(PoseStack stack, @NotNull Slot slot, int slotX, int slotY) {
 		ItemStack slotStack = slot.getItem();
 		boolean quickReplace = false;
 		boolean clickedSlot = slot == this.clickedSlot && !this.draggingItem.isEmpty() && !this.isSplittingStack;
@@ -140,14 +141,14 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 				this.recalculateQuickCraftRemaining();
 			}
 		}
-		this.setBlitOffset(100);
-		this.itemRenderer.blitOffset = 100.0F;
+		stack.pushPose();
+		stack.translate(0.0F, 0.0F, 100.0F);
 		if (slotStack.isEmpty()) {
 			Pair<ResourceLocation, ResourceLocation> pair = slot.getNoItemIcon();
 			if (pair != null) {
 				TextureAtlasSprite atlasSprite = Objects.requireNonNull(this.minecraft).getTextureAtlas(pair.getFirst()).apply(pair.getSecond());
 				RenderSystem.setShaderTexture(0, atlasSprite.atlasLocation());
-				blit(stack, slotX, slotY, this.getBlitOffset(), 16, 16, atlasSprite);
+				blit(stack, slotX, slotY, 0, 16, 16, atlasSprite);
 				clickedSlot = true;
 			}
 		}
@@ -157,11 +158,10 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 			}
 			RenderSystem.enableDepthTest();
 			int modelOffset = slotX + slotY * this.imageWidth;
-			this.itemRenderer.renderAndDecorateItem(Objects.requireNonNull(Objects.requireNonNull(this.minecraft).player), slotStack, slotX, slotY, modelOffset);
-			this.itemRenderer.renderGuiItemDecorations(this.font, slotStack, slotX, slotY, stackCount);
+			this.itemRenderer.renderAndDecorateItem(stack, Objects.requireNonNull(Objects.requireNonNull(this.minecraft).player), slotStack, slotX, slotY, modelOffset);
+			this.itemRenderer.renderGuiItemDecorations(stack, this.font, slotStack, slotX, slotY, stackCount);
 		}
-		this.itemRenderer.blitOffset = 0.0F;
-		this.setBlitOffset(0);
+		stack.popPose();
 	}
 	
 	@Override

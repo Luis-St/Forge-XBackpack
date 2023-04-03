@@ -29,12 +29,12 @@ public class BackpackProvider implements ICapabilitySerializable<CompoundTag> {
 		this.optional = LazyOptional.of(() -> this.handler);
 	}
 	
-	public static IBackpack get(Player player) {
+	public static IBackpack get(@NotNull Player player) {
 		return player.getCapability(BACKPACK, null).orElseThrow(NullPointerException::new);
 	}
 	
 	@Override
-	public <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, Direction side) {
+	public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> capability, Direction side) {
 		return BACKPACK.orEmpty(capability, this.optional);
 	}
 	

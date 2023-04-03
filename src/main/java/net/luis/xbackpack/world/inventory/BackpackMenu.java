@@ -143,7 +143,7 @@ public class BackpackMenu extends AbstractModifiableContainerMenu {
 		return true;
 	}
 	
-	private boolean moveSpecial(ItemStack slotStack) {
+	private boolean moveSpecial(@NotNull ItemStack slotStack) {
 		if (BackpackConstants.VALID_TOOL_SLOT_ITEMS.contains(slotStack.getItem())) {
 			return this.moveItemStackTo(slotStack, 909, 912, false); // into tool slot
 		} else if (BackpackConstants.SHIFTABLE_OFFHAND_SLOT_ITEMS.contains(slotStack.getItem())) {

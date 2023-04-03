@@ -9,10 +9,12 @@ import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.StonecutterRecipe;
@@ -30,6 +32,7 @@ import java.util.function.Consumer;
 public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 	
 	private final List<StonecutterRecipe> recipes = Lists.newArrayList();
+	private Player player;
 	private CraftingHandler handler;
 	private double scrollOffset = 0.0F;
 	private boolean scrolling = false;
@@ -42,16 +45,17 @@ public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 	
 	@Override
 	protected void init() {
-		this.handler = BackpackProvider.get(Objects.requireNonNull(this.minecraft.player)).getStonecutterHandler();
+		this.player = Objects.requireNonNull(this.minecraft.player);
+		this.handler = BackpackProvider.get(this.player).getStonecutterHandler();
 	}
 	
 	@Override
 	protected void renderAdditional(PoseStack stack, float partialTicks, int mouseX, int mouseY, boolean open) {
 		if (open) {
 			RenderSystem.setShaderTexture(0, this.getTexture());
-			this.screen.blit(stack, this.leftPos + this.imageWidth + 72, this.topPos + 143 + (int) (39.0 * this.scrollOffset), 95 + (this.isScrollBarActive() ? 0 : 12), 0, 12, 15);
+			GuiComponent.blit(stack, this.leftPos + this.imageWidth + 72, this.topPos + 143 + (int) (39.0 * this.scrollOffset), 95 + (this.isScrollBarActive() ? 0 : 12), 0, 12, 15);
 			this.renderButtons(stack, mouseX, mouseY);
-			this.renderRecipes();
+			this.renderRecipes(stack);
 		}
 	}
 	
@@ -67,16 +71,16 @@ public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 			} else if (mouseX >= x && x + 16 > mouseX && mouseY + 1 >= y && y + 18 > mouseY + 1) {
 				offset += 36;
 			}
-			this.screen.blit(stack, x, y - 1, 95, offset, 16, 18);
+			GuiComponent.blit(stack, x, y - 1, 95, offset, 16, 18);
 		}
 	}
 	
-	private void renderRecipes() {
+	private void renderRecipes(PoseStack stack) {
 		for (int index = this.startIndex; index < this.startIndex + 12 && index < this.recipes.size(); ++index) {
 			int i = index - this.startIndex;
 			int x = this.leftPos + 225 + index % 4 * 16;
 			int y = this.topPos + 142 + (i / 4) * 18 + 2;
-			this.minecraft.getItemRenderer().renderAndDecorateItem(this.recipes.get(index).getResultItem(), x, y);
+			this.minecraft.getItemRenderer().renderAndDecorateItem(stack, this.recipes.get(index).getResultItem(this.player.level.registryAccess()), x, y);
 		}
 	}
 	
@@ -90,7 +94,7 @@ public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 					double x = mouseX - (double) (this.leftPos + 225 + i % 4 * 16);
 					double y = mouseY - (double) (this.topPos + 142 + i / 4 * 18);
 					if (x >= 0.0 && y >= 0.0 && x < 16.0 && y < 18.0) {
-						tooltipRenderer.accept(this.recipes.get(index).getResultItem());
+						tooltipRenderer.accept(this.recipes.get(index).getResultItem(this.player.level.registryAccess()));
 					}
 				}
 			}
@@ -134,7 +138,7 @@ public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 			int bottom = top + 54;
 			this.scrollOffset = (mouseY - top - 7.5) / ((bottom - top) - 15.0);
 			this.scrollOffset = Mth.clamp(this.scrollOffset, 0.0, 1.0);
-			this.startIndex = (int) (this.scrollOffset * (double) this.getOffscreenRows() + 0.5) * 4;
+			this.startIndex = (int) (this.scrollOffset * (double) this.getOffScreenRows() + 0.5) * 4;
 			return true;
 		} else {
 			return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
@@ -144,9 +148,9 @@ public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
 		if (this.isScrollBarActive()) {
-			double offset = delta / (double) this.getOffscreenRows();
+			double offset = delta / (double) this.getOffScreenRows();
 			this.scrollOffset = Mth.clamp(this.scrollOffset - offset, 0.0F, 1.0F);
-			this.startIndex = (int) (this.scrollOffset * (double) this.getOffscreenRows() + 0.5) * 4;
+			this.startIndex = (int) (this.scrollOffset * (double) this.getOffScreenRows() + 0.5) * 4;
 		}
 		return true;
 	}
@@ -163,7 +167,7 @@ public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 		return this.shouldDisplayRecipes() && this.recipes.size() > 12;
 	}
 	
-	private int getOffscreenRows() {
+	private int getOffScreenRows() {
 		return (this.recipes.size() + 4 - 1) / 4 - 3;
 	}
 	

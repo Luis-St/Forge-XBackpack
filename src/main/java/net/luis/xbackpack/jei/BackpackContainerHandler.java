@@ -22,8 +22,7 @@ import java.util.Objects;
 public class BackpackContainerHandler implements IGuiContainerHandler<BackpackScreen> {
 	
 	@Override
-	@SuppressWarnings("resource")
-	public @NotNull List<Rect2i> getGuiExtraAreas(BackpackScreen screen) {
+	public @NotNull List<Rect2i> getGuiExtraAreas(@NotNull BackpackScreen screen) {
 		if (BackpackProvider.get(Objects.requireNonNull(screen.getMinecraft().player)).getConfig().getExtensionConfig().getWithState(BackpackExtensionState.UNLOCKED).size() > 0) {
 			List<Rect2i> extraAreas = Lists.newArrayList(new Rect2i(screen.getGuiLeft() + screen.getXSize(), screen.getGuiTop(), 30, screen.getYSize()));
 			BackpackExtension extension = screen.getExtension();

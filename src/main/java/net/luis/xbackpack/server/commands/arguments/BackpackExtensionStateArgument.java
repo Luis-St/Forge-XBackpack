@@ -37,16 +37,16 @@ public class BackpackExtensionStateArgument implements ArgumentType<BackpackExte
 		
 	}
 	
-	public static BackpackExtensionStateArgument state() {
+	public static @NotNull BackpackExtensionStateArgument state() {
 		return new BackpackExtensionStateArgument();
 	}
 	
-	public static <S> BackpackExtensionState get(CommandContext<S> context, String name) {
+	public static <S> BackpackExtensionState get(@NotNull CommandContext<S> context, String name) {
 		return context.getArgument(name, BackpackExtensionState.class);
 	}
 	
 	@Override
-	public BackpackExtensionState parse(StringReader reader) throws CommandSyntaxException {
+	public BackpackExtensionState parse(@NotNull StringReader reader) throws CommandSyntaxException {
 		BackpackExtensionState state = BackpackExtensionState.fromString(reader.readUnquotedString());
 		if (state != null) {
 			return state;

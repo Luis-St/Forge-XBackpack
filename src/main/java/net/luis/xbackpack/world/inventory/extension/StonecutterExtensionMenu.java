@@ -51,7 +51,7 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	@Override
-	public void addSlots(Consumer<Slot> consumer) {
+	public void addSlots(@NotNull Consumer<Slot> consumer) {
 		consumer.accept(new ExtensionSlot(this, this.handler.getInputHandler(), 0, 249, 121));
 		consumer.accept(new ExtensionSlot(this, this.handler.getResultHandler(), 0, 249, 207) {
 			@Override
@@ -67,7 +67,7 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 		});
 	}
 	
-	private void onTake(Player player, ItemStack stack) {
+	private void onTake(Player player, @NotNull ItemStack stack) {
 		stack.onCraftedBy(player.level, player, stack.getCount());
 		if (this.recipe != null && !this.recipe.isSpecial()) {
 			player.awardRecipes(Collections.singleton(this.recipe));
@@ -82,7 +82,7 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 		}
 	}
 	
-	private void playSound(ServerPlayer player, ServerLevel level) {
+	private void playSound(@NotNull ServerPlayer player, @NotNull ServerLevel level) {
 		player.connection.send(new ClientboundSoundPacket(BuiltInRegistries.SOUND_EVENT.wrapAsHolder(SoundEvents.UI_STONECUTTER_TAKE_RESULT), SoundSource.BLOCKS, player.getX(), player.getY(), player.getZ(), 1.0F, level.random.nextFloat() * 0.1F + 0.9F, level.random.nextLong()));
 	}
 	
@@ -127,7 +127,7 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 	private void setupResult() {
 		if (!this.recipes.isEmpty() && this.isValidIndex(this.selectedRecipe)) {
 			StonecutterRecipe recipe = this.recipes.get(this.selectedRecipe);
-			this.handler.getResultHandler().setStackInSlot(0, recipe.assemble(new SimpleContainer(this.handler.getInputHandler().getStackInSlot(0))));
+			this.handler.getResultHandler().setStackInSlot(0, recipe.assemble(new SimpleContainer(this.handler.getInputHandler().getStackInSlot(0)), this.player.level.registryAccess()));
 			this.recipe = recipe;
 		} else {
 			this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);

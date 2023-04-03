@@ -63,10 +63,6 @@ public abstract class AbstractExtensionScreen {
 		
 	}
 	
-	protected boolean canUseExtension(BackpackExtension extension) {
-		return BackpackProvider.get(Objects.requireNonNull(this.minecraft.player)).getConfig().getExtensionConfig().getWithState(BackpackExtensionState.UNLOCKED).contains(extension);
-	}
-	
 	protected int getExtensionOffset(BackpackExtension extension) {
 		int offset = 3;
 		for (BackpackExtension backpackExtension : this.extensions) {
@@ -106,14 +102,14 @@ public abstract class AbstractExtensionScreen {
 		int offset = this.getExtensionOffset(this.extension);
 		RenderSystem.setShaderTexture(0, ICONS);
 		GuiComponent.blit(stack, this.leftPos + this.imageWidth, this.topPos + offset, this.extension.getIconWidth(), this.extension.getIconHeight(), 0, 0, 32, 32, 256, 256);
-		this.itemRenderer.renderAndDecorateItem(this.extension.getIcon(), this.leftPos + this.imageWidth + 1, this.topPos + 3 + offset);
+		this.itemRenderer.renderAndDecorateItem(stack, this.extension.getIcon(), this.leftPos + this.imageWidth + 1, this.topPos + 3 + offset);
 	}
 	
 	public void renderOpened(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 		int offset = this.getExtensionOffset(this.extension);
 		RenderSystem.setShaderTexture(0, this.getTexture());
-		this.screen.blit(stack, this.leftPos + this.imageWidth - 3, this.topPos + offset, 0, 0, this.extension.getImageWidth(), this.extension.getImageHeight());
-		this.itemRenderer.renderAndDecorateItem(this.extension.getIcon(), this.leftPos + this.imageWidth + 1, this.topPos + 4 + offset);
+		GuiComponent.blit(stack, this.leftPos + this.imageWidth - 3, this.topPos + offset, 0, 0, this.extension.getImageWidth(), this.extension.getImageHeight());
+		this.itemRenderer.renderAndDecorateItem(stack, this.extension.getIcon(), this.leftPos + this.imageWidth + 1, this.topPos + 4 + offset);
 		this.font.draw(stack, this.extension.getTitle(), this.leftPos + this.imageWidth + 19, this.topPos + 9 + offset, 4210752);
 		if (this.minecraft != null) {
 			this.renderAdditional(stack, partialTicks, mouseX, mouseY, true);

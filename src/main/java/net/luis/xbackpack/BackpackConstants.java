@@ -3,6 +3,8 @@ package net.luis.xbackpack;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -38,9 +40,8 @@ public class BackpackConstants {
 	 * Add items to this list in {@link FMLCommonSetupEvent},<br>
 	 * if you want to add valid items for the armor slot<br>
 	 * <br>
-	 * note: the item can only be place in the Slot if {@link IForgeItem#canEquip()} returns {@code true}
+	 * note: the item can only be place in the Slot if {@link ItemStack#canEquip(EquipmentSlot, Entity)} returns {@code true}
 	 */
-	// TODO
 	public static final List<Item> VALID_ARMOR_SLOT_ITEMS = ITEM.stream().filter(item -> {
 		return item instanceof ArmorItem || item instanceof ElytraItem || item == Items.CARVED_PUMPKIN;
 	}).collect(Collectors.toList());

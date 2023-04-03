@@ -9,6 +9,7 @@ import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.luis.xbackpack.world.inventory.handler.EnchantingHandler;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.screens.inventory.EnchantmentNames;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.CommonComponents;
@@ -49,10 +50,8 @@ public class EnchantmentTableExtensionScreen extends AbstractExtensionScreen {
 	
 	@Override
 	protected void renderAdditional(PoseStack stack, float partialTicks, int mouseX, int mouseY, boolean open) {
-		if (open) {
-			for (int row = 0; row < 3; row++) {
-				this.renderRow(stack, mouseX, mouseY, row, this.minecraft.player, this.enchantments[row], this.enchantingCosts[row]);
-			}
+		for (int row = 0; row < 3 && open; row++) {
+			this.renderRow(stack, mouseX, mouseY, row, this.minecraft.player, this.enchantments[row], this.enchantingCosts[row]);
 		}
 	}
 	
@@ -62,32 +61,24 @@ public class EnchantmentTableExtensionScreen extends AbstractExtensionScreen {
 			int enchantmentColor;
 			RenderSystem.setShaderTexture(0, this.getTexture());
 			if ((player.experienceLevel >= enchantingCost && this.hasFuel(row)) || player.getAbilities().instabuild) {
-				if (this.isHoveringRow(row, mouseX, mouseY)) {
-					this.screen.blit(stack, this.leftPos + this.imageWidth + 47, this.topPos + 97 + row * 19, 136, 38, 78, 19);
-				} else {
-					this.screen.blit(stack, this.leftPos + this.imageWidth + 47, this.topPos + 97 + row * 19, 136, 0, 78, 19);
-				}
+				GuiComponent.blit(stack, this.leftPos + this.imageWidth + 47, this.topPos + 97 + row * 19, 136, this.isHoveringRow(row, mouseX, mouseY) ? 38 : 0, 78, 19);
 				this.renderLevel(stack, row, true);
 				costColor = 8453920;
 				enchantmentColor = 6839882;
 			} else {
-				this.screen.blit(stack, this.leftPos + this.imageWidth + 47, this.topPos + 97 + row * 19, 136, 19, 78, 19);
+				GuiComponent.blit(stack, this.leftPos + this.imageWidth + 47, this.topPos + 97 + row * 19, 136, 19, 78, 19);
 				this.renderLevel(stack, row, false);
 				costColor = 4226832;
 				enchantmentColor = 3419941;
 			}
 			this.renderLabels(stack, row, costColor, enchantmentColor);
 		} else {
-			this.screen.blit(stack, this.leftPos + this.imageWidth + 47, this.topPos + 97 + row * 19, 136, 19, 78, 19);
+			GuiComponent.blit(stack, this.leftPos + this.imageWidth + 47, this.topPos + 97 + row * 19, 136, 19, 78, 19);
 		}
 	}
 	
 	private void renderLevel(PoseStack stack, int row, boolean active) {
-		if (active) {
-			this.screen.blit(stack, this.leftPos + this.imageWidth + 47, this.topPos + 97 + row * 19, 136 + row * 19, 57, 19, 19);
-		} else {
-			this.screen.blit(stack, this.leftPos + this.imageWidth + 47, this.topPos + 97 + row * 19, 136 + row * 19, 76, 19, 19);
-		}
+		GuiComponent.blit(stack, this.leftPos + this.imageWidth + 47, this.topPos + 97 + row * 19, 136 + row * 19, active ? 57 : 76, 19, 19);
 	}
 	
 	private void renderLabels(PoseStack stack, int row, int costColor, int enchantmentColor) {
@@ -96,16 +87,14 @@ public class EnchantmentTableExtensionScreen extends AbstractExtensionScreen {
 		int length = 50 - this.font.width(cost);
 		EnchantmentNames.getInstance().initSeed(this.enchantmentSeed + row);
 		FormattedText enchantmentName = EnchantmentNames.getInstance().getRandomName(this.font, length);
-		this.font.drawWordWrap(enchantmentName, this.leftPos + this.imageWidth + 67, this.topPos + 99 + 19 * row, length, enchantmentColor);
+		this.font.drawWordWrap(stack, enchantmentName, this.leftPos + this.imageWidth + 67, this.topPos + 99 + 19 * row, length, enchantmentColor);
 	}
 	
 	@Override
 	public void renderTooltip(PoseStack stack, int mouseX, int mouseY, boolean open, boolean renderable, Consumer<ItemStack> tooltipRenderer) {
 		super.renderTooltip(stack, mouseX, mouseY, open, renderable, tooltipRenderer);
-		if (open) {
-			for (int row = 0; row < 3; row++) {
-				this.renderTooltip(stack, mouseX, mouseY, row, this.minecraft.player, this.enchantments[row], this.enchantmentLevels[row], this.enchantingCosts[row]);
-			}
+		for (int row = 0; row < 3 && open; row++) {
+			this.renderTooltip(stack, mouseX, mouseY, row, this.minecraft.player, this.enchantments[row], this.enchantmentLevels[row], this.enchantingCosts[row]);
 		}
 	}
 	
@@ -123,20 +112,10 @@ public class EnchantmentTableExtensionScreen extends AbstractExtensionScreen {
 				if (enchantmentLevel >= player.experienceLevel) {
 					components.add(Component.translatable("container.enchant.level.requirement", enchantmentLevel).withStyle(ChatFormatting.RED));
 				} else {
-					MutableComponent mutablecomponent;
-					if (rowIndex == 1) {
-						mutablecomponent = Component.translatable("container.enchant.lapis.one");
-					} else {
-						mutablecomponent = Component.translatable("container.enchant.lapis.many", rowIndex);
-					}
-					components.add(mutablecomponent.withStyle(fuel >= rowIndex ? ChatFormatting.GRAY : ChatFormatting.RED));
-					MutableComponent component;
-					if (rowIndex == 1) {
-						component = Component.translatable("container.enchant.level.one");
-					} else {
-						component = Component.translatable("container.enchant.level.many", rowIndex);
-					}
-					components.add(component.withStyle(ChatFormatting.GRAY));
+					MutableComponent lapisComponent = rowIndex == 1 ? Component.translatable("container.enchant.lapis.one") : Component.translatable("container.enchant.lapis.many", rowIndex);
+					components.add(lapisComponent.withStyle(fuel >= rowIndex ? ChatFormatting.GRAY : ChatFormatting.RED));
+					MutableComponent levelComponent = rowIndex == 1 ? Component.translatable("container.enchant.level.one") : Component.translatable("container.enchant.level.many", rowIndex);
+					components.add(levelComponent.withStyle(ChatFormatting.GRAY));
 				}
 			}
 			this.screen.renderComponentTooltip(stack, components, mouseX, mouseY);

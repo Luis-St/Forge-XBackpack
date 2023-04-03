@@ -79,7 +79,7 @@ public class BackpackScreen extends AbstractModifiableContainerScreen<BackpackMe
 	protected void renderScreen(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		super.renderScreen(stack, mouseX, mouseY, partialTicks);
 		RenderSystem.setShaderTexture(0, ICONS);
-		this.blit(stack, this.leftPos + 75, this.topPos + 6, 32, 0, 8, 8);
+		blit(stack, this.leftPos + 75, this.topPos + 6, 32, 0, 8, 8);
 		GuiComponent.blit(stack, this.leftPos + 89, this.topPos + 6, 8, 8, 46, 0, 14, 14, 256, 256);
 		if (this.menu.getFilter() == ItemFilters.NONE && this.menu.getSorter() == ItemSorters.NONE) {
 			GuiComponent.blit(stack, this.leftPos + 200, this.topPos + 6, 8, 8, 40, 0, 6, 6, 256, 256);
@@ -90,9 +90,9 @@ public class BackpackScreen extends AbstractModifiableContainerScreen<BackpackMe
 	protected void renderBg(@NotNull PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 		super.renderBg(stack, partialTicks, mouseX, mouseY);
 		RenderSystem.setShaderTexture(0, BACKPACK);
-		this.blit(stack, this.leftPos, this.topPos, 0, 0, 220, 220);
+		blit(stack, this.leftPos, this.topPos, 0, 0, 220, 220);
 		int scrollPosition = this.topPos + 18 + this.scrollOffset;
-		this.blit(stack, this.leftPos + 198, scrollPosition, 244, 0, 12, 15);
+		blit(stack, this.leftPos + 198, scrollPosition, 244, 0, 12, 15);
 	}
 	
 	@Override

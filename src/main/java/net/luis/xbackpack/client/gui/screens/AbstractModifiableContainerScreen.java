@@ -50,7 +50,6 @@ public abstract class AbstractModifiableContainerScreen<T extends AbstractModifi
 			searchBox.setBordered(false);
 			searchBox.setVisible(true);
 			searchBox.setCanLoseFocus(true);
-			searchBox.setFocus(false);
 			searchBox.setTextColor(16777215);
 			return searchBox;
 		}, this::addWidget);
@@ -117,11 +116,11 @@ public abstract class AbstractModifiableContainerScreen<T extends AbstractModifi
 			this.renderComponentTooltip(stack, this.menu.getSorter().getTooltip(tooltipFlag), mouseX, mouseY);
 		}
 		if (this.mergerButton != null && this.mergerButton.visible && this.mergerButton.isMouseOver(mouseX, mouseY)) {
-			this.renderComponentTooltip(stack, this.getMergerTooptip(tooltipFlag), mouseX, mouseY);
+			this.renderComponentTooltip(stack, this.getMergerTooltip(tooltipFlag), mouseX, mouseY);
 		}
 	}
 	
-	protected List<Component> getMergerTooptip(TooltipFlag tooltipFlag) {
+	protected List<Component> getMergerTooltip(TooltipFlag tooltipFlag) {
 		if (tooltipFlag.isAdvanced()) {
 			List<Component> tooltip = Lists.newArrayList();
 			tooltip.add(Component.translatable("xbackpack.backpack_action.item_merger").withStyle(ChatFormatting.WHITE));

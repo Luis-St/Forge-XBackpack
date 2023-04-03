@@ -7,6 +7,7 @@ import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.List;
@@ -37,7 +38,7 @@ public class GrindstoneExtensionScreen extends AbstractExtensionScreen {
 			RenderSystem.setShaderTexture(0, this.getTexture());
 			ItemStackHandler handler = this.handler.getInputHandler();
 			if ((!handler.getStackInSlot(0).isEmpty() || !handler.getStackInSlot(1).isEmpty()) && this.handler.getResultHandler().getStackInSlot(0).isEmpty()) {
-				this.screen.blit(stack, this.leftPos + this.imageWidth + 60, this.topPos + 184, 112, 0, 22, 21);
+				GuiComponent.blit(stack, this.leftPos + this.imageWidth + 60, this.topPos + 184, 112, 0, 22, 21);
 			}
 		}
 	}

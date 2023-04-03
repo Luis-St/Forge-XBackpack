@@ -9,6 +9,7 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -33,7 +34,7 @@ public class BackpackArmorSlot extends Slot {
 	}
 	
 	@Override
-	public int getMaxStackSize(ItemStack stack) {
+	public int getMaxStackSize(@NotNull ItemStack stack) {
 		return 1;
 	}
 	
@@ -43,26 +44,20 @@ public class BackpackArmorSlot extends Slot {
 	}
 	
 	@Override
-	public boolean mayPickup(Player player) {
+	public boolean mayPickup(@NotNull Player player) {
 		ItemStack stack = this.getItem();
 		return (stack.isEmpty() || player.isCreative() || !EnchantmentHelper.hasBindingCurse(stack)) && super.mayPickup(player);
 	}
 	
 	@Override
 	public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
-		switch (this.equipmentSlot) {
-			case HEAD:
-				return Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_HELMET);
-			case CHEST:
-				return Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_CHESTPLATE);
-			case LEGS:
-				return Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_LEGGINGS);
-			case FEET:
-				return Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_BOOTS);
-			default:
-				break;
-		}
-		return super.getNoItemIcon();
+		return switch (this.equipmentSlot) {
+			case HEAD -> Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_HELMET);
+			case CHEST -> Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_CHESTPLATE);
+			case LEGS ->  Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_LEGGINGS);
+			case FEET -> Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_BOOTS);
+			default -> super.getNoItemIcon();
+		};
 	}
 	
 }

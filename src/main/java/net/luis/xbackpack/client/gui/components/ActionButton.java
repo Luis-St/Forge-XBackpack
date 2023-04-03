@@ -31,17 +31,13 @@ public class ActionButton extends AbstractButton {
 		this.action = action;
 	}
 	
-	public boolean isHovered() {
-		return this.isHovered;
-	}
-	
 	@Override
 	public void onPress() {
 		
 	}
 	
 	@Override
-	public void renderButton(@NotNull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+	public void renderWidget(@NotNull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		RenderSystem.setShaderTexture(0, BACKPACK);

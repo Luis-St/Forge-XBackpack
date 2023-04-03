@@ -164,7 +164,7 @@ public class ModifiableHandler implements IItemHandlerModifiable {
 		return stacks;
 	}
 	
-	public void applyModifications(List<ItemStack> stacks) {
+	public void applyModifications(@NotNull List<ItemStack> stacks) {
 		this.resetWrappedSlots(SlotWrapper::ofDisabled);
 		for (int i = 0; i < stacks.size(); i++) {
 			CompoundTag tag = stacks.get(i).getTagElement(XBackpack.MOD_NAME + "ItemModifierInformation");

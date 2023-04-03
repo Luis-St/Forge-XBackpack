@@ -6,6 +6,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -15,7 +16,7 @@ import net.minecraft.world.entity.player.Player;
 
 public class TooltipCommand {
 	
-	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+	public static void register(@NotNull CommandDispatcher<CommandSourceStack> dispatcher) {
 		dispatcher.register(Commands.literal("tooltip").executes((command) -> {
 			return getTooltipVisibility(command.getSource());
 		}).then(Commands.literal("enable").executes((command) -> {
@@ -25,7 +26,7 @@ public class TooltipCommand {
 		})));
 	}
 	
-	private static int getTooltipVisibility(CommandSourceStack source) {
+	private static int getTooltipVisibility(@NotNull CommandSourceStack source) {
 		if (source.getEntity() instanceof Player player) {
 			boolean showModifierInfo = BackpackProvider.get(player).getConfig().getClientConfig().shouldShowModifierInfo();
 			if (showModifierInfo) {
@@ -39,7 +40,7 @@ public class TooltipCommand {
 		return 1;
 	}
 	
-	private static int setTooltipVisibility(CommandSourceStack source, boolean value) {
+	private static int setTooltipVisibility(@NotNull CommandSourceStack source, boolean value) {
 		if (source.getEntity() instanceof Player player) {
 			BackpackProvider.get(player).getConfig().getClientConfig().setShowModifierInfo(value);
 			if (value) {

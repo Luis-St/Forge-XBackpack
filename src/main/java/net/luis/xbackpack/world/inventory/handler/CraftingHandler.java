@@ -2,6 +2,7 @@ package net.luis.xbackpack.world.inventory.handler;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.items.ItemStackHandler;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -42,7 +43,7 @@ public class CraftingHandler {
 		return tag;
 	}
 	
-	public void deserialize(CompoundTag tag) {
+	public void deserialize(@NotNull CompoundTag tag) {
 		this.inputHandler.deserializeNBT(tag.getCompound("input_handler"));
 		this.resultHandler.deserializeNBT(tag.getCompound("result_handler"));
 	}

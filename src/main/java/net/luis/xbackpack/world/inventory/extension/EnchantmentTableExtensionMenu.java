@@ -197,7 +197,7 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 		}
 	}
 	
-	private List<EnchantmentInstance> getEnchantmentList(ItemStack inputStack, int row, int enchantingCost) {
+	private @NotNull List<EnchantmentInstance> getEnchantmentList(ItemStack inputStack, int row, int enchantingCost) {
 		this.rng.setSeed(this.enchantmentSeed + row);
 		List<EnchantmentInstance> enchantments = EnchantmentHelper.selectEnchantment(this.rng, inputStack, enchantingCost, false);
 		if (inputStack.is(Items.BOOK) && enchantments.size() > 1) {
@@ -206,7 +206,7 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 		return enchantments;
 	}
 	
-	private void playSound(ServerPlayer player, ServerLevel level) {
+	private void playSound(@NotNull ServerPlayer player, @NotNull ServerLevel level) {
 		player.connection.send(new ClientboundSoundPacket(BuiltInRegistries.SOUND_EVENT.wrapAsHolder(SoundEvents.ENCHANTMENT_TABLE_USE), SoundSource.BLOCKS, player.getX(), player.getY(), player.getZ(), 1.0F, level.random.nextFloat() * 0.1F + 0.9F, level.random.nextLong()));
 	}
 	

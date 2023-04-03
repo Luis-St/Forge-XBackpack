@@ -10,6 +10,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent.Context;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
@@ -29,19 +30,19 @@ public class UpdateItemModifiersPacket implements NetworkPacket {
 		this.sorter = sorter;
 	}
 	
-	public UpdateItemModifiersPacket(FriendlyByteBuf buffer) {
+	public UpdateItemModifiersPacket(@NotNull FriendlyByteBuf buffer) {
 		this.filter = ItemFilters.byId(buffer.readInt(), ItemFilters.NONE);
 		this.sorter = ItemSorters.byId(buffer.readInt(), ItemSorters.NONE);
 	}
 	
 	@Override
-	public void encode(FriendlyByteBuf buffer) {
+	public void encode(@NotNull FriendlyByteBuf buffer) {
 		buffer.writeInt(this.filter.getId());
 		buffer.writeInt(this.sorter.getId());
 	}
 	
 	@Override
-	public void handle(Supplier<Context> context) {
+	public void handle(@NotNull Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 				XBClientPacketHandler.updateBackpackItemModifiers(this.filter, this.sorter);

@@ -7,6 +7,7 @@ import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -18,7 +19,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 public class GatherDataEventHandler {
 	
 	@SubscribeEvent
-	public static void gatherData(GatherDataEvent event) {
+	public static void gatherData(@NotNull GatherDataEvent event) {
 		DataGenerator generator = event.getGenerator();
 		if (event.includeDev()) {
 			generator.addProvider(event.includeClient(), new XBLanguageProvider(generator.getPackOutput()));

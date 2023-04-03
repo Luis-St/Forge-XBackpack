@@ -1,5 +1,6 @@
 package net.luis.xbackpack.util;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -28,7 +29,7 @@ public class Util {
 		return tryParseEnum(value, enumValues, null);
 	}
 	
-	public static <T extends Enum<T>> T tryParseEnum(String value, T[] enumValues, @Nullable T fallback) {
+	public static <T extends Enum<T>> T tryParseEnum(String value, T [] enumValues, @Nullable T fallback) {
 		for (T enumValue : enumValues) {
 			if (enumValue.name().toLowerCase().equals(value)) {
 				return enumValue;

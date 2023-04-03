@@ -48,9 +48,7 @@ public abstract class AbstractExtensionContainerScreen<T extends AbstractExtensi
 	@Override
 	protected void init() {
 		super.init();
-		this.extensionScreens.forEach((extensionScreen) -> {
-			extensionScreen.init(this.minecraft, this.itemRenderer, this.font, this.imageWidth, this.imageHeight, this.leftPos, this.topPos);
-		});
+		this.extensionScreens.forEach((extensionScreen) -> extensionScreen.init(this.minecraft, this.itemRenderer, this.font, this.imageWidth, this.imageHeight, this.leftPos, this.topPos));
 	}
 	
 	@Override
@@ -89,9 +87,7 @@ public abstract class AbstractExtensionContainerScreen<T extends AbstractExtensi
 		for (BackpackExtension extension : this.extensions) {
 			AbstractExtensionScreen extensionScreen = this.getExtensionScreen(extension);
 			if (extensionScreen != null && this.canUseExtension(extension)) {
-				extensionScreen.renderTooltip(stack, mouseX, mouseY, this.extension == extension && this.extension != NO.get(), this.isExtensionRenderable(extension), (itemStack) -> {
-					this.renderTooltip(stack, itemStack, mouseX, mouseY);
-				});
+				extensionScreen.renderTooltip(stack, mouseX, mouseY, this.extension == extension && this.extension != NO.get(), this.isExtensionRenderable(extension), (itemStack) -> this.renderTooltip(stack, itemStack, mouseX, mouseY));
 			}
 		}
 	}

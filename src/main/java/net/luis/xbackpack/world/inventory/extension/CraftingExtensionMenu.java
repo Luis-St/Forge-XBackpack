@@ -67,7 +67,7 @@ public class CraftingExtensionMenu extends AbstractExtensionMenu {
 			if (optional.isPresent()) {
 				CraftingRecipe recipe = optional.get();
 				if (this.resultWrapper.setRecipeUsed(level, player, recipe)) {
-					stack = recipe.assemble(this.craftingWrapper);
+					stack = recipe.assemble(this.craftingWrapper, player.level.registryAccess());
 				}
 			}
 			this.resultWrapper.setItem(0, stack);

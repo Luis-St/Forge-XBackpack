@@ -7,6 +7,7 @@ import net.luis.xbackpack.world.inventory.modifier.ModifiableMenu.UpdateType;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent.Context;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
@@ -24,17 +25,17 @@ public class ResetItemModifierPacket implements NetworkPacket {
 		this.modifierType = modifierType;
 	}
 	
-	public ResetItemModifierPacket(FriendlyByteBuf buffer) {
+	public ResetItemModifierPacket(@NotNull FriendlyByteBuf buffer) {
 		this.modifierType = ItemModifierType.byId(buffer.readInt());
 	}
 	
 	@Override
-	public void encode(FriendlyByteBuf buffer) {
+	public void encode(@NotNull FriendlyByteBuf buffer) {
 		buffer.writeInt(this.modifierType.getId());
 	}
 	
 	@Override
-	public void handle(Supplier<Context> context) {
+	public void handle(@NotNull Supplier<Context> context) {
 		ServerPlayer player = context.get().getSender();
 		context.get().enqueueWork(() -> {
 			if (player.containerMenu instanceof BackpackMenu menu) {

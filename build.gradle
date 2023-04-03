@@ -16,7 +16,7 @@ apply plugin: "net.minecraftforge.gradle"
 apply plugin: "eclipse"
 apply plugin: "maven-publish"
 
-version = "1.19.3-3.2"
+version = "1.19.4-3.2"
 group = "net.luis.xbackpack"
 archivesBaseName = "XBackpack"
 
@@ -24,7 +24,7 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 println("Java: " + System.getProperty("java.version") + " JVM: " + System.getProperty("java.vm.version") + "(" + System.getProperty("java.vendor") + ") Arch: " + System.getProperty("os.arch"))
 minecraft {
-	mappings channel: "official", version: "1.19.3"
+	mappings channel: "official", version: "1.19.4"
 
 	accessTransformer = file("src/main/resources/META-INF/accesstransformer.cfg")
 	
@@ -107,18 +107,18 @@ repositories {
 }
 
 dependencies {
-	minecraft "net.minecraftforge:forge:1.19.3-44.1.8"
+	minecraft "net.minecraftforge:forge:1.19.4-45.0.40"
 	
-	compileOnly fg.deobf("mezz.jei:jei-1.19.3-common-api:12.1.1.13")
-	compileOnly fg.deobf("mezz.jei:jei-1.19.3-forge-api:12.1.1.13")
-	runtimeOnly fg.deobf("mezz.jei:jei-1.19.3-forge:12.1.1.13")
+	compileOnly fg.deobf("mezz.jei:jei-1.19.4-common-api:13.0.0.1")
+	compileOnly fg.deobf("mezz.jei:jei-1.19.4-forge-api:13.0.0.1")
+	runtimeOnly fg.deobf("mezz.jei:jei-1.19.4-forge:13.0.0.1")
 }
 
 jar {
 	manifest {
 		attributes([
 				"Specification-Title"     : "XBackpack",
-				"Specification-Version"   : "1.19.2-3.2",
+				"Specification-Version"   : "1.19.4-3.2",
 				"Implementation-Title"    : project.name,
 				"Implementation-Timestamp": new Date().format("yyyy-MM-dd HH:mm:ssZ")
 		])

@@ -10,10 +10,12 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -46,7 +48,7 @@ public class BackpackExtensionConfig {
 		}).map(Entry::getKey).collect(Collectors.toList());
 	}
 	
-	public void setState(ServerPlayer player, BackpackExtension extension, BackpackExtensionState state) {
+	public void setState(@NotNull ServerPlayer player, BackpackExtension extension, BackpackExtensionState state) {
 		this.states.put(extension, new Data(state, player.getStats().getValue(Stats.ITEM_CRAFTED, extension.getUnlockItem().getItem())));
 	}
 	
@@ -70,7 +72,7 @@ public class BackpackExtensionConfig {
 		ListTag statesTag = new ListTag();
 		for (Entry<BackpackExtension, Data> entry : this.states.entrySet()) {
 			CompoundTag stateTag = new CompoundTag();
-			stateTag.putString("key", BackpackExtensions.REGISTRY.get().getKey(entry.getKey()).toString());
+			stateTag.putString("key", Objects.requireNonNull(BackpackExtensions.REGISTRY.get().getKey(entry.getKey())).toString());
 			stateTag.putString("value", entry.getValue().state().getName());
 			stateTag.putInt("unlock_count", entry.getValue().unlockCount());
 			statesTag.add(stateTag);
@@ -79,7 +81,7 @@ public class BackpackExtensionConfig {
 		return tag;
 	}
 	
-	public void deserialize(CompoundTag tag) {
+	public void deserialize(@NotNull CompoundTag tag) {
 		ListTag statesTag = tag.getList("states", Tag.TAG_COMPOUND);
 		for (int i = 0; i < statesTag.size(); i++) {
 			CompoundTag stateTag = statesTag.getCompound(i);

@@ -45,7 +45,7 @@ public class BrewingStandExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	@Override
-	public void addSlots(Consumer<Slot> consumer) {
+	public void addSlots(@NotNull Consumer<Slot> consumer) {
 		consumer.accept(new ExtensionSlot(this, this.handler.getInputHandler(), 0, 277, 146) {
 			@Override
 			public boolean mayPlace(@NotNull ItemStack stack) {
@@ -87,7 +87,7 @@ public class BrewingStandExtensionMenu extends AbstractExtensionMenu {
 		}
 	}
 	
-	@Override // TODO
+	@Override
 	public boolean quickMoveStack(ItemStack slotStack, int index) {
 		if (908 >= index && index >= 0) { // from container
 			if (slotStack.is(Items.BLAZE_POWDER) && this.canQuickMovePowder()) {
@@ -97,7 +97,7 @@ public class BrewingStandExtensionMenu extends AbstractExtensionMenu {
 			} else if (BrewingRecipeRegistry.isValidInput(slotStack)) {
 				return this.menu.moveItemStackTo(slotStack, 948, 451, false); // into result
 			}
-		} else if (450 >= index && index >= 946) { // from extension
+		} else if (950 >= index && index >= 946) { // from extension
 			return this.movePreferredMenu(slotStack); // into container
 		}
 		return false;

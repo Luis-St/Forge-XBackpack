@@ -6,6 +6,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent.Context;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
@@ -19,19 +20,19 @@ public class UpdateBrewingStandPacket implements NetworkPacket {
 		this.brewTime = brewTime;
 	}
 	
-	public UpdateBrewingStandPacket(FriendlyByteBuf buffer) {
+	public UpdateBrewingStandPacket(@NotNull FriendlyByteBuf buffer) {
 		this.fuel = buffer.readInt();
 		this.brewTime = buffer.readInt();
 	}
 	
 	@Override
-	public void encode(FriendlyByteBuf buffer) {
+	public void encode(@NotNull FriendlyByteBuf buffer) {
 		buffer.writeInt(this.fuel);
 		buffer.writeInt(this.brewTime);
 	}
 	
 	@Override
-	public void handle(Supplier<Context> context) {
+	public void handle(@NotNull Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 				XBClientPacketHandler.updateBrewingStandExtension(this.fuel, this.brewTime);

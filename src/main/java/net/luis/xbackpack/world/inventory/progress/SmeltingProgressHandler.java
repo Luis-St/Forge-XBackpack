@@ -14,6 +14,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -72,7 +73,7 @@ public class SmeltingProgressHandler implements ProgressHandler {
 				this.cookingProgress--;
 			}
 			if (this.cookingProgress >= this.cookingTime && !this.handler.getInputHandler().extractItem(0, 1, false).isEmpty()) {
-				ItemStack stack = this.handler.getResultHandler().insertItem(0, progressingRecipe.assemble(new SimpleContainer()), false);
+				ItemStack stack = this.handler.getResultHandler().insertItem(0, progressingRecipe.assemble(new SimpleContainer(), this.player.level.registryAccess()), false);
 				if (!stack.isEmpty()) {
 					this.player.drop(stack, true, true);
 				}
@@ -145,7 +146,7 @@ public class SmeltingProgressHandler implements ProgressHandler {
 		}
 	}
 	
-	private boolean areMergable(ItemStack toStack, ItemStack stack) {
+	private boolean areMergable(@NotNull ItemStack toStack, ItemStack stack) {
 		if (toStack.getCount() >= toStack.getMaxStackSize()) {
 			return false;
 		} else if (!toStack.is(stack.getItem())) {
@@ -223,7 +224,7 @@ public class SmeltingProgressHandler implements ProgressHandler {
 	private boolean canProgress(ItemStack stack) {
 		AbstractCookingRecipe recipe = this.getRecipe(stack);
 		if (recipe != null) {
-			return ItemEntity.areMergable(recipe.getResultItem(), this.getResultItem()) || this.getResultItem().isEmpty();
+			return ItemEntity.areMergable(recipe.getResultItem(this.player.level.registryAccess()), this.getResultItem()) || this.getResultItem().isEmpty();
 		}
 		return false;
 	}

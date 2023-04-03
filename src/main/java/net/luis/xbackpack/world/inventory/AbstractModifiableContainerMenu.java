@@ -14,6 +14,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -74,7 +75,7 @@ public abstract class AbstractModifiableContainerMenu extends AbstractExtensionC
 	}
 	
 	@Override
-	public void updateFilter(@Nullable ItemFilter filter, UpdateType type, @Nullable CycleDirection direction) {
+	public void updateFilter(@Nullable ItemFilter filter, @NotNull UpdateType type, @Nullable CycleDirection direction) {
 		boolean changed = false;
 		if (type.shouldSet()) {
 			if (this.filter != filter) {
@@ -104,7 +105,7 @@ public abstract class AbstractModifiableContainerMenu extends AbstractExtensionC
 	}
 	
 	@Override
-	public void updateSorter(@Nullable ItemSorter sorter, UpdateType type, @Nullable CycleDirection direction) {
+	public void updateSorter(@Nullable ItemSorter sorter, @NotNull UpdateType type, @Nullable CycleDirection direction) {
 		boolean changed = false;
 		if (type.shouldSet()) {
 			if (this.sorter != sorter) {

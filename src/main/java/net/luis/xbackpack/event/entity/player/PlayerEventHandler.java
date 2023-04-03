@@ -13,6 +13,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent.ItemCraftedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -24,21 +25,21 @@ import net.minecraftforge.fml.common.Mod;
 public class PlayerEventHandler {
 	
 	@SubscribeEvent
-	public static void itemCrafted(ItemCraftedEvent event) {
+	public static void itemCrafted(@NotNull ItemCraftedEvent event) {
 		if (event.getEntity() instanceof ServerPlayer player) {
 			BackpackProvider.get(player).broadcastChanges();
 		}
 	}
 	
 	@SubscribeEvent
-	public static void playerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
+	public static void playerChangedDimension(@NotNull PlayerEvent.PlayerChangedDimensionEvent event) {
 		if (event.getEntity() instanceof ServerPlayer player) {
 			BackpackProvider.get(player).broadcastChanges();
 		}
 	}
 	
 	@SubscribeEvent
-	public static void playerClone(PlayerEvent.Clone event) {
+	public static void playerClone(@NotNull PlayerEvent.Clone event) {
 		Player original = event.getOriginal();
 		Player player = event.getEntity();
 		original.reviveCaps();
@@ -51,14 +52,14 @@ public class PlayerEventHandler {
 	}
 	
 	@SubscribeEvent
-	public static void playerRespawn(PlayerEvent.PlayerRespawnEvent event) {
+	public static void playerRespawn(@NotNull PlayerEvent.PlayerRespawnEvent event) {
 		if (event.getEntity() instanceof ServerPlayer player) {
 			BackpackProvider.get(player).broadcastChanges();
 		}
 	}
 	
 	@SubscribeEvent
-	public static void playerTick(TickEvent.PlayerTickEvent event) {
+	public static void playerTick(@NotNull TickEvent.PlayerTickEvent event) {
 		if (event.phase == Phase.START && event.side == LogicalSide.SERVER) {
 			event.player.getCapability(BackpackProvider.BACKPACK, null).ifPresent(IBackpack::tick);
 			if (event.player.containerMenu instanceof BackpackMenu menu) {

@@ -16,7 +16,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.UpgradeRecipe;
+import net.minecraft.world.item.crafting.SmithingRecipe;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,7 +28,7 @@ public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 	
 	private final CraftingHandler handler;
 	private final Level level;
-	private UpgradeRecipe selectedRecipe;
+	private SmithingRecipe selectedRecipe;
 	
 	public SmithingTableExtensionMenu(AbstractExtensionContainerMenu menu, Player player) {
 		super(menu, player, BackpackExtensions.SMITHING_TABLE.get());
@@ -42,7 +42,7 @@ public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	@Override
-	public void addSlots(Consumer<Slot> consumer) {
+	public void addSlots(@NotNull Consumer<Slot> consumer) {
 		consumer.accept(new ExtensionSlot(this, this.handler.getInputHandler(), 0, 225, 193));
 		consumer.accept(new ExtensionSlot(this, this.handler.getInputHandler(), 1, 260, 193));
 		consumer.accept(new ExtensionSlot(this, this.handler.getResultHandler(), 0, 304, 193, false) {
@@ -68,7 +68,7 @@ public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 		return this.selectedRecipe != null && this.selectedRecipe.matches(this.asContainer(), this.level);
 	}
 	
-	private void onTake(Player player, ItemStack stack) {
+	private void onTake(Player player, @NotNull ItemStack stack) {
 		stack.onCraftedBy(player.level, player, stack.getCount());
 		if (this.selectedRecipe != null) {
 			player.awardRecipes(Collections.singleton(this.selectedRecipe));
@@ -86,7 +86,7 @@ public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 		this.handler.getInputHandler().setStackInSlot(slot, stack);
 	}
 	
-	private void playSound(ServerPlayer player, ServerLevel level) {
+	private void playSound(@NotNull ServerPlayer player, @NotNull ServerLevel level) {
 		player.connection.send(new ClientboundSoundPacket(BuiltInRegistries.SOUND_EVENT.wrapAsHolder(SoundEvents.SMITHING_TABLE_USE), SoundSource.BLOCKS, player.getX(), player.getY(), player.getZ(), 1.0F, level.random.nextFloat() * 0.1F + 0.9F, level.random.nextLong()));
 	}
 	
@@ -96,18 +96,18 @@ public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	private void createResult() {
-		List<UpgradeRecipe> recipes = this.level.getRecipeManager().getRecipesFor(RecipeType.SMITHING, this.asContainer(), this.level);
+		List<SmithingRecipe> recipes = this.level.getRecipeManager().getRecipesFor(RecipeType.SMITHING, this.asContainer(), this.level);
 		if (recipes.isEmpty()) {
 			this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);
 		} else {
 			this.selectedRecipe = recipes.get(0);
-			ItemStack stack = this.selectedRecipe.assemble(this.asContainer());
+			ItemStack stack = this.selectedRecipe.assemble(this.asContainer(), this.level.registryAccess());
 			this.handler.getResultHandler().setStackInSlot(0, stack);
 		}
 		
 	}
 	
-	private SimpleContainer asContainer() {
+	private @NotNull SimpleContainer asContainer() {
 		return new SimpleContainer(this.handler.getInputHandler().getStackInSlot(0), this.handler.getInputHandler().getStackInSlot(1));
 	}
 	

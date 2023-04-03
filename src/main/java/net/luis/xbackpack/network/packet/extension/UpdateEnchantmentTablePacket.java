@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent.Context;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
@@ -30,7 +31,7 @@ public class UpdateEnchantmentTablePacket implements NetworkPacket {
 		this.enchantmentSeed = enchantmentSeed;
 	}
 	
-	public UpdateEnchantmentTablePacket(FriendlyByteBuf buffer) {
+	public UpdateEnchantmentTablePacket(@NotNull FriendlyByteBuf buffer) {
 		this.enchantments = new ResourceLocation[buffer.readInt()];
 		for (int i = 0; i < this.enchantments.length; i++) {
 			this.enchantments[i] = buffer.readResourceLocation();
@@ -41,10 +42,10 @@ public class UpdateEnchantmentTablePacket implements NetworkPacket {
 	}
 	
 	@Override
-	public void encode(FriendlyByteBuf buffer) {
+	public void encode(@NotNull FriendlyByteBuf buffer) {
 		buffer.writeInt(this.enchantments.length);
-		for (int i = 0; i < this.enchantments.length; i++) {
-			buffer.writeResourceLocation(this.enchantments[i]);
+		for (ResourceLocation enchantment : this.enchantments) {
+			buffer.writeResourceLocation(enchantment);
 		}
 		buffer.writeVarIntArray(this.enchantmentLevels);
 		buffer.writeVarIntArray(this.enchantingCosts);
@@ -52,7 +53,7 @@ public class UpdateEnchantmentTablePacket implements NetworkPacket {
 	}
 	
 	@Override
-	public void handle(Supplier<Context> context) {
+	public void handle(@NotNull Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 				XBClientPacketHandler.updateEnchantmentTableExtension(this.enchantments, this.enchantmentLevels, this.enchantingCosts, this.enchantmentSeed);

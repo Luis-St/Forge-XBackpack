@@ -8,6 +8,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -19,7 +20,7 @@ import net.minecraftforge.fml.common.Mod;
 public class AttachCapabilitiesEventHandler {
 	
 	@SubscribeEvent
-	public static void attachPlayerCapabilities(AttachCapabilitiesEvent<Entity> event) {
+	public static void attachPlayerCapabilities(@NotNull AttachCapabilitiesEvent<Entity> event) {
 		if (event.getObject() instanceof Player player) {
 			event.addCapability(new ResourceLocation(XBackpack.MOD_ID, "backpack"), new BackpackProvider(player));
 		}

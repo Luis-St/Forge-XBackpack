@@ -184,7 +184,7 @@ public enum ItemFilters implements ItemFilter {
 	ARMOR("armor", 15) {
 		@Override
 		public boolean canKeepItem(ItemStack stack, String searchTerm) {
-			return stack.getItem() instanceof Wearable;
+			return stack.getItem() instanceof Equipable;
 		}
 	};
 	

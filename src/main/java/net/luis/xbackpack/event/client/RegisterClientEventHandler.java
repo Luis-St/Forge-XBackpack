@@ -7,6 +7,7 @@ import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -18,7 +19,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 public class RegisterClientEventHandler {
 	
 	@SubscribeEvent
-	public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
+	public static void registerKeyMappings(@NotNull RegisterKeyMappingsEvent event) {
 		event.register(XBKeyMappings.BACKPACK_OPEN);
 		event.register(XBKeyMappings.BACKPACK_NEXT);
 		event.register(XBKeyMappings.BACKPACK_SLOT_TOP);

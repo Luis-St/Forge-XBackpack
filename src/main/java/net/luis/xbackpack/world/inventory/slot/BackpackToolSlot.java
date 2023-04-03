@@ -35,7 +35,7 @@ public class BackpackToolSlot extends SlotItemHandler {
 	}
 	
 	@Override
-	public boolean mayPlace(ItemStack stack) {
+	public boolean mayPlace(@NotNull ItemStack stack) {
 		return BackpackConstants.VALID_TOOL_SLOT_ITEMS.contains(stack.getItem());
 	}
 	

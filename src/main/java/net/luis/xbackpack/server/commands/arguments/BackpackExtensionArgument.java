@@ -42,11 +42,11 @@ public class BackpackExtensionArgument implements ArgumentType<BackpackExtension
 		this.registrySupplier = BackpackExtensions.REGISTRY;
 	}
 	
-	public static BackpackExtensionArgument extension() {
+	public static @NotNull BackpackExtensionArgument extension() {
 		return new BackpackExtensionArgument();
 	}
 	
-	public static <S> BackpackExtension get(CommandContext<S> context, String name) {
+	public static <S> BackpackExtension get(@NotNull CommandContext<S> context, String name) {
 		return context.getArgument(name, BackpackExtension.class);
 	}
 	

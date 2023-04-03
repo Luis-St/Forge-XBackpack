@@ -5,6 +5,7 @@ import net.luis.xbackpack.world.inventory.BackpackMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent.Context;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
@@ -22,17 +23,17 @@ public class UpdateSearchTermPacket implements NetworkPacket {
 		this.searchBoxValue = searchBoxValue;
 	}
 	
-	public UpdateSearchTermPacket(FriendlyByteBuf buffer) {
+	public UpdateSearchTermPacket(@NotNull FriendlyByteBuf buffer) {
 		this.searchBoxValue = buffer.readUtf();
 	}
 	
 	@Override
-	public void encode(FriendlyByteBuf buffer) {
+	public void encode(@NotNull FriendlyByteBuf buffer) {
 		buffer.writeUtf(this.searchBoxValue);
 	}
 	
 	@Override
-	public void handle(Supplier<Context> context) {
+	public void handle(@NotNull Supplier<Context> context) {
 		ServerPlayer player = context.get().getSender();
 		context.get().enqueueWork(() -> {
 			if (player.containerMenu instanceof BackpackMenu menu) {

@@ -57,7 +57,7 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	@Override
-	public void addSlots(Consumer<Slot> consumer) {
+	public void addSlots(@NotNull Consumer<Slot> consumer) {
 		consumer.accept(new ExtensionSlot(this, this.handler.getInputHandler(), 0, 225, 73));
 		consumer.accept(new ExtensionSlot(this, this.handler.getInputHandler(), 1, 260, 73));
 		consumer.accept(new ExtensionSlot(this, this.handler.getResultHandler(), 0, 304, 73) {
@@ -73,27 +73,27 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 			
 			@Override
 			public void onTake(@NotNull Player player, @NotNull ItemStack stack) {
-				AnvilExtensionMenu.this.onTake(player, stack);
+				AnvilExtensionMenu.this.onTake(player);
 				super.onTake(player, stack);
 			}
 		});
 	}
 	
-	public boolean mayPickup(Player player) {
+	public boolean mayPickup(@NotNull Player player) {
 		return (player.getAbilities().instabuild || player.experienceLevel >= this.cost) && this.cost > 0;
 	}
 	
-	private void onTake(Player player, ItemStack stack) {
+	private void onTake(Player player) {
 		if (player instanceof ServerPlayer serverPlayer) {
 			if (!serverPlayer.getAbilities().instabuild) {
 				serverPlayer.giveExperienceLevels(-this.cost);
 			}
 			this.handler.getInputHandler().setStackInSlot(0, ItemStack.EMPTY);
 			if (this.repairItemCountCost > 0) {
-				ItemStack rigthStack = this.handler.getInputHandler().getStackInSlot(1);
-				if (!rigthStack.isEmpty() && rigthStack.getCount() > this.repairItemCountCost) {
-					rigthStack.shrink(this.repairItemCountCost);
-					this.handler.getInputHandler().setStackInSlot(1, rigthStack);
+				ItemStack rightStack = this.handler.getInputHandler().getStackInSlot(1);
+				if (!rightStack.isEmpty() && rightStack.getCount() > this.repairItemCountCost) {
+					rightStack.shrink(this.repairItemCountCost);
+					this.handler.getInputHandler().setStackInSlot(1, rightStack);
 				} else {
 					this.handler.getInputHandler().setStackInSlot(1, ItemStack.EMPTY);
 				}
@@ -122,7 +122,6 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 		this.cost = 1;
 		int enchantCost = 0;
 		int repairCost = 0;
-		int renameCost = 0;
 		if (leftStack.isEmpty()) {
 			this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);
 			this.cost = 0;
@@ -202,20 +201,12 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 									rightLevel = rightEnchantment.getMaxLevel();
 								}
 								map.put(rightEnchantment, rightLevel);
-								int rarityCost = 0;
-								switch (rightEnchantment.getRarity()) {
-									case COMMON:
-										rarityCost = 1;
-										break;
-									case UNCOMMON:
-										rarityCost = 2;
-										break;
-									case RARE:
-										rarityCost = 4;
-										break;
-									case VERY_RARE:
-										rarityCost = 8;
-								}
+								int rarityCost = switch (rightEnchantment.getRarity()) {
+									case COMMON -> 1;
+									case UNCOMMON -> 2;
+									case RARE -> 4;
+									case VERY_RARE -> 8;
+								};
 								if (enchantedBook) {
 									rarityCost = Math.max(1, rarityCost / 2);
 								}
@@ -236,13 +227,9 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 			}
 			if (enchantedBook && !resultStack.isBookEnchantable(rightStack))
 				resultStack = ItemStack.EMPTY;
-			this.cost = 0;
 			this.cost = repairCost + enchantCost;
 			if (enchantCost <= 0) {
 				resultStack = ItemStack.EMPTY;
-			}
-			if (renameCost == enchantCost && renameCost > 0 && this.cost >= 40) {
-				this.cost = 39;
 			}
 			if (this.cost >= 40 && !this.player.getAbilities().instabuild) {
 				resultStack = ItemStack.EMPTY;
@@ -252,9 +239,7 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 				if (!rightStack.isEmpty() && baseRepairCost < rightStack.getBaseRepairCost()) {
 					baseRepairCost = rightStack.getBaseRepairCost();
 				}
-				if (renameCost != enchantCost || renameCost == 0) {
-					baseRepairCost = calculateIncreasedRepairCost(baseRepairCost);
-				}
+				baseRepairCost = calculateIncreasedRepairCost(baseRepairCost);
 				resultStack.setRepairCost(baseRepairCost);
 				EnchantmentHelper.setEnchantments(map, resultStack);
 			}
@@ -289,11 +274,9 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 	@Override
 	public boolean quickMoveStack(ItemStack slotStack, int index) {
 		if (908 >= index && index >= 0) { // from container
-			// into input
-			return this.menu.moveItemStackTo(slotStack, 938, 940, false);
+			return this.menu.moveItemStackTo(slotStack, 938, 940, false); // into input
 		} else if (index == 940) { // from result
-			// into container
-			return this.movePreferredMenu(slotStack);
+			return this.movePreferredMenu(slotStack); // into container
 		}
 		return false;
 	}

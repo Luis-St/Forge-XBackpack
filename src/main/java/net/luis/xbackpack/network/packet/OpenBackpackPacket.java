@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraftforge.network.NetworkEvent.Context;
 import net.minecraftforge.network.NetworkHooks;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
@@ -36,7 +37,7 @@ public class OpenBackpackPacket implements NetworkPacket {
 	}
 	
 	@Override
-	public void handle(Supplier<Context> context) {
+	public void handle(@NotNull Supplier<Context> context) {
 		ServerPlayer player = context.get().getSender();
 		context.get().enqueueWork(() -> {
 			assert player != null;

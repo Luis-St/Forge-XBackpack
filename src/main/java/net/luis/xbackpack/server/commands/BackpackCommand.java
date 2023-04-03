@@ -15,6 +15,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Objects;
@@ -27,7 +28,7 @@ import java.util.Objects;
 
 public class BackpackCommand {
 	
-	public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext context) {
+	public static void register(@NotNull CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext context) {
 		dispatcher.register(Commands.literal("backpack").requires((source) -> {
 			return source.hasPermission(2);
 		}).then(Commands.literal("extension").then(Commands.argument("player", EntityArgument.player()).then(Commands.literal("*").then(Commands.argument("state", BackpackExtensionStateArgument.state()).executes((command) -> {
@@ -39,7 +40,7 @@ public class BackpackCommand {
 		})))))/* Add here other settings */);
 	}
 	
-	private static int getExtensionState(CommandSourceStack source, ServerPlayer player, List<BackpackExtension> extensions) {
+	private static int getExtensionState(CommandSourceStack source, ServerPlayer player, @NotNull List<BackpackExtension> extensions) {
 		if (extensions.size() > 1) {
 			source.sendFailure(Component.translatable("xbackpack.commands.backpack.get.failure"));
 		} else {
@@ -48,7 +49,7 @@ public class BackpackCommand {
 		return 1;
 	}
 	
-	private static int setExtensionState(CommandSourceStack source, ServerPlayer player, List<BackpackExtension> extensions, BackpackExtensionState state) {
+	private static int setExtensionState(CommandSourceStack source, ServerPlayer player, @NotNull List<BackpackExtension> extensions, BackpackExtensionState state) {
 		int i = 0;
 		IBackpack backpack = BackpackProvider.get(player);
 		for (BackpackExtension extension : extensions) {
@@ -64,7 +65,7 @@ public class BackpackCommand {
 		return 1;
 	}
 	
-	private static String getName(BackpackExtension extension) {
+	private static @NotNull String getName(BackpackExtension extension) {
 		String[] nameParts = Objects.requireNonNull(BackpackExtensions.REGISTRY.get().getKey(extension)).getPath().split("_");
 		StringBuilder name = new StringBuilder();
 		for (String namePart : nameParts) {

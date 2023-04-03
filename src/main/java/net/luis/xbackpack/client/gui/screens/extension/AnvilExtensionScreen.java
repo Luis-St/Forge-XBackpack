@@ -39,7 +39,7 @@ public class AnvilExtensionScreen extends AbstractExtensionScreen {
 		if (open) {
 			if (this.shouldRenderCanceled()) {
 				RenderSystem.setShaderTexture(0, this.getTexture());
-				this.screen.blit(stack, this.leftPos + this.imageWidth + 59, this.topPos + 71, 111, 0, 22, 21);
+				GuiComponent.blit(stack, this.leftPos + this.imageWidth + 59, this.topPos + 71, 111, 0, 22, 21);
 			}
 			this.renderLabels(stack);
 		}

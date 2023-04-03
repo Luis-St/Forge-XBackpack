@@ -23,6 +23,7 @@ import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.brewing.PotionBrewEvent;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -107,11 +108,11 @@ public class BrewingProgressHandler implements ProgressHandler {
 		}
 	}
 	
-	private ItemStack getInputItem() {
+	private @NotNull ItemStack getInputItem() {
 		return this.handler.getInputHandler().getStackInSlot(0);
 	}
 	
-	private NonNullList<ItemStack> getInputList() {
+	private @NotNull NonNullList<ItemStack> getInputList() {
 		NonNullList<ItemStack> stacks = NonNullList.withSize(this.handler.getInputHandler().getSlots(), ItemStack.EMPTY);
 		for (int i = 0; i < stacks.size(); i++) {
 			stacks.set(i, this.handler.getInputHandler().getStackInSlot(i));
@@ -119,7 +120,7 @@ public class BrewingProgressHandler implements ProgressHandler {
 		return stacks;
 	}
 	
-	private ItemStack getFuelItem() {
+	private @NotNull ItemStack getFuelItem() {
 		return this.handler.getFuelHandler().getStackInSlot(0);
 	}
 	
@@ -127,11 +128,11 @@ public class BrewingProgressHandler implements ProgressHandler {
 		return this.handler.getResultHandler();
 	}
 	
-	private void playSound(ServerPlayer player, ServerLevel level) {
+	private void playSound(@NotNull ServerPlayer player, @NotNull ServerLevel level) {
 		player.connection.send(new ClientboundSoundPacket(BuiltInRegistries.SOUND_EVENT.wrapAsHolder(SoundEvents.BREWING_STAND_BREW), SoundSource.BLOCKS, player.getX(), player.getY(), player.getZ(), 1.0F, level.random.nextFloat() * 0.1F + 0.9F, level.random.nextLong()));
 	}
 	
-	private NonNullList<ItemStack> asList() {
+	private @NotNull NonNullList<ItemStack> asList() {
 		NonNullList<ItemStack> stacks = NonNullList.withSize(5, ItemStack.EMPTY);
 		for (int i = 0; i < 3; i++) {
 			stacks.set(i, this.getResultHandler().getStackInSlot(i));
@@ -178,7 +179,7 @@ public class BrewingProgressHandler implements ProgressHandler {
 	}
 	
 	@Override
-	public void deserialize(CompoundTag tag) {
+	public void deserialize(@NotNull CompoundTag tag) {
 		this.input = ForgeRegistries.ITEMS.getValue(ResourceLocation.tryParse(tag.getString("input")));
 		this.fuel = tag.getInt("fuel");
 		this.brewTime = tag.getInt("brew_time");

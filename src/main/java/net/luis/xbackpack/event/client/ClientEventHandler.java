@@ -25,6 +25,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -40,12 +41,12 @@ public class ClientEventHandler {
 	public static int lastPacket;
 	
 	@SubscribeEvent
-	public static void registerClientCommands(RegisterClientCommandsEvent event) {
+	public static void registerClientCommands(@NotNull RegisterClientCommandsEvent event) {
 		TooltipCommand.register(event.getDispatcher());
 	}
 	
 	@SubscribeEvent
-	public static void clientTick(TickEvent.ClientTickEvent event) {
+	public static void clientTick(@NotNull TickEvent.ClientTickEvent event) {
 		if (event.phase == Phase.START) {
 			if (0 >= lastPacket) {
 				if (XBKeyMappings.BACKPACK_OPEN.isDown()) {
@@ -71,7 +72,7 @@ public class ClientEventHandler {
 	}
 	
 	@SubscribeEvent
-	public static void mouseScroll(MouseScrollingEvent event) {
+	public static void mouseScroll(@NotNull MouseScrollingEvent event) {
 		double delta = event.getScrollDelta();
 		Minecraft minecraft = Minecraft.getInstance();
 		LocalPlayer player = Objects.requireNonNull(minecraft.player);

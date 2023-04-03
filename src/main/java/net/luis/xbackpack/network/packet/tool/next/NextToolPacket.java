@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkEvent.Context;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 import java.util.function.Supplier;
@@ -35,7 +36,7 @@ public class NextToolPacket implements NetworkPacket {
 	}
 	
 	@Override
-	public void handle(Supplier<Context> context) {
+	public void handle(@NotNull Supplier<Context> context) {
 		ServerPlayer player = context.get().getSender();
 		context.get().enqueueWork(() -> {
 			IBackpack backpack = BackpackProvider.get(Objects.requireNonNull(player));

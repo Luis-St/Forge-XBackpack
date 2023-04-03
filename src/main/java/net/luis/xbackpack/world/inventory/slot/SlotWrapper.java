@@ -1,6 +1,7 @@
 package net.luis.xbackpack.world.inventory.slot;
 
 import net.minecraft.network.FriendlyByteBuf;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -18,21 +19,21 @@ public class SlotWrapper {
 		this.slot = slot;
 	}
 	
-	public static SlotWrapper of(int mainSlot, int slot) {
+	public static @NotNull SlotWrapper of(int mainSlot, int slot) {
 		return new SlotWrapper(mainSlot, slot);
 	}
 	
-	public static SlotWrapper of(FriendlyByteBuf buffer) {
+	public static @NotNull SlotWrapper of(@NotNull FriendlyByteBuf buffer) {
 		int mainSlot = buffer.readInt();
 		int slot = buffer.readInt();
 		return new SlotWrapper(mainSlot, slot);
 	}
 	
-	public static SlotWrapper ofUnwrapped(int mainSlot) {
+	public static @NotNull SlotWrapper ofUnwrapped(int mainSlot) {
 		return of(mainSlot, mainSlot);
 	}
 	
-	public static SlotWrapper ofDisabled(int mainSlot) {
+	public static @NotNull SlotWrapper ofDisabled(int mainSlot) {
 		return of(mainSlot, -1);
 	}
 	
@@ -48,7 +49,7 @@ public class SlotWrapper {
 		this.slot = slot;
 	}
 	
-	public void encode(FriendlyByteBuf buffer) {
+	public void encode(@NotNull FriendlyByteBuf buffer) {
 		buffer.writeInt(this.mainSlot);
 		buffer.writeInt(this.slot);
 	}

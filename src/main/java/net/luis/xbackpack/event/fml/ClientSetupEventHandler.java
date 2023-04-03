@@ -9,6 +9,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -20,7 +21,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 public class ClientSetupEventHandler {
 	
 	@SubscribeEvent
-	public static void clientSetup(FMLClientSetupEvent event) {
+	public static void clientSetup(@NotNull FMLClientSetupEvent event) {
 		event.enqueueWork(() -> MenuScreens.register(XBMenuTypes.BACKPACK_MENU.get(), BackpackScreen::new));
 	}
 	

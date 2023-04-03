@@ -18,10 +18,6 @@ public class SmeltingHandler extends CraftingFuelHandler {
 		this(input, 1, 1, inputStorage, resultStorage);
 	}
 	
-	public SmeltingHandler(ItemStackHandler inputHandler, ItemStackHandler inputStorageHandler, ItemStackHandler resultStorageHandler) {
-		this(inputHandler, new ItemStackHandler(1), new ItemStackHandler(1), inputStorageHandler, resultStorageHandler);
-	}
-	
 	public SmeltingHandler(int input, int fuel, int result, int inputStorage, int resultStorage) {
 		this(new ItemStackHandler(input), new ItemStackHandler(fuel), new ItemStackHandler(result), new ItemStackHandler(inputStorage), new ItemStackHandler(resultStorage));
 	}

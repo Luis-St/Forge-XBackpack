@@ -29,7 +29,7 @@ public class XBJeiPlugin implements IModPlugin {
 	}
 	
 	@Override
-	public void registerGuiHandlers(IGuiHandlerRegistration registration) {
+	public void registerGuiHandlers(@NotNull IGuiHandlerRegistration registration) {
 		registration.addGuiContainerHandler(BackpackScreen.class, new BackpackContainerHandler());
 	}
 	

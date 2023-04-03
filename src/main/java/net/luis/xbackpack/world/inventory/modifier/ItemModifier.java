@@ -5,6 +5,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.TooltipFlag;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -24,7 +25,7 @@ public interface ItemModifier {
 	
 	boolean isSelectable();
 	
-	default List<Component> getTooltip(TooltipFlag tooltipFlag) {
+	default List<Component> getTooltip(@NotNull TooltipFlag tooltipFlag) {
 		if (tooltipFlag.isAdvanced()) {
 			List<MutableComponent> info = this.getInfo();
 			if (!info.isEmpty()) {
