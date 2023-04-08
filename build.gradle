@@ -145,9 +145,6 @@ publishing {
 	
 	repositories {
 		maven {
-			url uri("C:/Users/luiss/.m2/repository")
-		}
-		maven {
 			url uri("${projectDir}/maven/repositories")
 		}
 	}
