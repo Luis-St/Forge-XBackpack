@@ -1,6 +1,7 @@
 package net.luis.xbackpack.world.inventory;
 
 import com.google.common.collect.Lists;
+import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.luis.xbackpack.world.inventory.extension.AbstractExtensionMenu;
@@ -11,6 +12,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -46,9 +48,51 @@ public abstract class AbstractExtensionContainerMenu extends AbstractContainerMe
 		this.getExtensionMenu().ifPresent(AbstractExtensionMenu::open);
 	}
 	
-	@Override
-	public boolean moveItemStackTo(@NotNull ItemStack stack, int startIndex, int endIndex, boolean addToIndex) {
-		return super.moveItemStackTo(stack, startIndex, endIndex, addToIndex);
+	public boolean moveItemStackTo(@NotNull ItemStack stack, int startIndex, int endIndex) {
+		if (!stack.isStackable()) {
+			for (int i = startIndex; i < endIndex; i++) {
+				Slot slot = this.getSlot(i);
+				if (!slot.mayPlace(stack)) {
+					continue;
+				}
+				if (!slot.hasItem()) {
+					slot.setByPlayer(stack.copy());
+					stack.setCount(0);
+					slot.setChanged();
+					return true;
+				}
+			}
+			return false;
+		}
+		for (int i = startIndex; i < endIndex; i++) {
+			Slot slot = this.getSlot(i);
+			if (!slot.mayPlace(stack)) {
+				continue;
+			}
+			if (!slot.hasItem()) {
+				slot.setByPlayer(stack.copy());
+				stack.setCount(0);
+				slot.setChanged();
+				return true;
+			}
+			ItemStack slotStack = slot.getItem();
+			if (slotStack.getCount() >= slotStack.getMaxStackSize() || !ItemStack.isSameItemSameTags(stack, slotStack)) {
+				continue;
+			}
+			int count = slotStack.getCount() + stack.getCount();
+			int maxSize = Math.min(stack.getMaxStackSize(), slot.getMaxStackSize());
+			if (maxSize >= count) {
+				slotStack.setCount(count);
+				stack.setCount(0);
+				slot.setChanged();
+				return true;
+			} else {
+				slotStack.setCount(maxSize);
+				stack.setCount(count - maxSize);
+				slot.setChanged();
+			}
+		}
+		return stack.isEmpty();
 	}
 	
 	protected boolean moveExtension(ItemStack slotStack, int index) {

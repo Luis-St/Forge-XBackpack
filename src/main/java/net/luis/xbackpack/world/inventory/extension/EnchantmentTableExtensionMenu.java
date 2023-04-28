@@ -214,11 +214,11 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 	public boolean quickMoveStack(ItemStack slotStack, int index) {
 		if (908 >= index && index >= 0) { // from container
 			if (slotStack.is(Tags.Items.BOOKSHELVES) || this.canQuickMoveBook()) {
-				return this.menu.moveItemStackTo(slotStack, 941, 942, false); // into power
+				return this.menu.moveItemStackTo(slotStack, 941, 942); // into power
 			} else if (slotStack.isEnchantable() || slotStack.getItem() instanceof BookItem) {
-				return this.menu.moveItemStackTo(slotStack, 942, 943, false); // into input
+				return this.menu.moveItemStackTo(slotStack, 942, 943); // into input
 			} else if (slotStack.is(Tags.Items.ENCHANTING_FUELS)) {
-				return this.menu.moveItemStackTo(slotStack, 943, 944, false); // into fuel
+				return this.menu.moveItemStackTo(slotStack, 943, 944); // into fuel
 			}
 		} else if (index >= 943) { // from extension
 			return this.movePreferredMenu(slotStack); // into container

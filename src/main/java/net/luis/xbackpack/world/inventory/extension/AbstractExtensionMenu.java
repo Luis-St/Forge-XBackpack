@@ -52,18 +52,18 @@ public abstract class AbstractExtensionMenu {
 	public abstract boolean quickMoveStack(ItemStack slotStack, int index);
 	
 	protected boolean movePreferredMenu(ItemStack slotStack) {
-		if (!this.menu.moveItemStackTo(slotStack, 0, 873, false)) { // into menu
-			if (!this.menu.moveItemStackTo(slotStack, 900, 909, false)) { // into hotbar
-				return this.menu.moveItemStackTo(slotStack, 873, 900, false); // into inventory
+		if (!this.menu.moveItemStackTo(slotStack, 0, 873)) { // into menu
+			if (!this.menu.moveItemStackTo(slotStack, 900, 909)) { // into hotbar
+				return this.menu.moveItemStackTo(slotStack, 873, 900); // into inventory
 			}
 		}
 		return true;
 	}
 	
 	protected boolean movePreferredInventory(ItemStack slotStack) {
-		if (!this.menu.moveItemStackTo(slotStack, 900, 909, false)) { // into hotbar
-			if (!this.menu.moveItemStackTo(slotStack, 873, 900, false)) { // into inventory
-				return this.menu.moveItemStackTo(slotStack, 0, 873, false); // into menu
+		if (!this.menu.moveItemStackTo(slotStack, 900, 909)) { // into hotbar
+			if (!this.menu.moveItemStackTo(slotStack, 873, 900)) { // into inventory
+				return this.menu.moveItemStackTo(slotStack, 0, 873); // into menu
 			}
 		}
 		return true;

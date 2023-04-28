@@ -238,7 +238,7 @@ public class GrindstoneExtensionMenu extends AbstractExtensionMenu {
 	public boolean quickMoveStack(ItemStack slotStack, int index) {
 		if (908 >= index && index >= 0) { // from container
 			if (slotStack.isDamageableItem() || slotStack.is(Items.ENCHANTED_BOOK) || slotStack.isEnchanted()) {
-				return this.menu.moveItemStackTo(slotStack, 951, 953, false); // into input
+				return this.menu.moveItemStackTo(slotStack, 951, 953); // into input
 			}
 		} else if (index == 953) { // from result
 			return this.movePreferredMenu(slotStack); // into container

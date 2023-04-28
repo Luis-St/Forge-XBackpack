@@ -78,7 +78,7 @@ public class CraftingExtensionMenu extends AbstractExtensionMenu {
 	@Override
 	public boolean quickMoveStack(ItemStack slotStack, int index) {
 		if (908 >= index && index >= 0) { // from container
-			return this.menu.moveItemStackTo(slotStack, 917, 926, false); // into input
+			return this.menu.moveItemStackTo(slotStack, 917, 926); // into input
 		} else if (index == 926) { // from result
 			return this.movePreferredMenu(slotStack); // into container
 		}

@@ -115,9 +115,9 @@ public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 	public boolean quickMoveStack(ItemStack slotStack, int index) {
 		if (908 >= index && index >= 0) { // from container
 			if (this.canQuickMoveIngredient(slotStack)) { // into addition
-				return this.menu.moveItemStackTo(slotStack, 955, 956, false);
+				return this.menu.moveItemStackTo(slotStack, 955, 956);
 			} else {  // into input
-				return this.menu.moveItemStackTo(slotStack, 954, 955, false);
+				return this.menu.moveItemStackTo(slotStack, 954, 955);
 			}
 		} else if (index == 956) { // from result
 			return this.movePreferredMenu(slotStack); // into addition

@@ -102,7 +102,7 @@ public class BackpackMenu extends AbstractModifiableContainerMenu {
 				stack = slotStack.copy();
 				if (!this.moveSpecial(slotStack)) {
 					if (!this.moveExtension(slotStack, index)) { // into extension
-						if (!this.moveItemStackTo(slotStack, 0, 873, false)) { // into menu
+						if (!this.moveItemStackTo(slotStack, 0, 873)) { // into menu
 							return ItemStack.EMPTY;
 						}
 					}
@@ -110,7 +110,7 @@ public class BackpackMenu extends AbstractModifiableContainerMenu {
 			} else if (916 >= index && index >= 909) { // from tool, armor or offhand slot
 				stack = slotStack.copy();
 				if (!this.moveExtension(slotStack, index)) { // into extension
-					if (!this.moveItemStackTo(slotStack, 0, 873, false)) { // into menu
+					if (!this.moveItemStackTo(slotStack, 0, 873)) { // into menu
 						if (!this.moveInventory(slotStack)) { // into inventory
 							return ItemStack.EMPTY;
 						}
@@ -119,7 +119,7 @@ public class BackpackMenu extends AbstractModifiableContainerMenu {
 			} else if (956 >= index && index >= 917) { // from extensions
 				stack = slotStack.copy();
 				if (!this.moveExtension(slotStack, index)) { // into extension
-					if (!this.moveItemStackTo(slotStack, 0, 873, false)) { // into menu
+					if (!this.moveItemStackTo(slotStack, 0, 873)) { // into menu
 						if (!this.moveInventory(slotStack)) { // into inventory
 							return ItemStack.EMPTY;
 						}
@@ -137,19 +137,19 @@ public class BackpackMenu extends AbstractModifiableContainerMenu {
 	}
 	
 	private boolean moveInventory(ItemStack slotStack) {
-		if (!this.moveItemStackTo(slotStack, 900, 909, false)) { // into hotbar
-			return this.moveItemStackTo(slotStack, 873, 900, false); // into inventory
+		if (!this.moveItemStackTo(slotStack, 900, 909)) { // into hotbar
+			return this.moveItemStackTo(slotStack, 873, 900); // into inventory
 		}
 		return true;
 	}
 	
 	private boolean moveSpecial(@NotNull ItemStack slotStack) {
 		if (BackpackConstants.VALID_TOOL_SLOT_ITEMS.contains(slotStack.getItem())) {
-			return this.moveItemStackTo(slotStack, 909, 912, false); // into tool slot
+			return this.moveItemStackTo(slotStack, 909, 912); // into tool slot
 		} else if (BackpackConstants.SHIFTABLE_OFFHAND_SLOT_ITEMS.contains(slotStack.getItem())) {
-			return this.moveItemStackTo(slotStack, 916, 917, false); // into offhand slot
+			return this.moveItemStackTo(slotStack, 916, 917); // into offhand slot
 		} else if (BackpackConstants.VALID_ARMOR_SLOT_ITEMS.contains(slotStack.getItem())) {
-			return this.moveItemStackTo(slotStack, 912, 916, false); // into armor slot
+			return this.moveItemStackTo(slotStack, 912, 916); // into armor slot
 		}
 		return false;
 	}

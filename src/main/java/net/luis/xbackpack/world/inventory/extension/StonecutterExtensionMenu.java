@@ -142,7 +142,7 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 	@Override
 	public boolean quickMoveStack(ItemStack slotStack, int index) {
 		if (908 >= index && index >= 0) { // from container
-			return this.menu.moveItemStackTo(slotStack, 944, 945, false); // into input
+			return this.menu.moveItemStackTo(slotStack, 944, 945); // into input
 		} else if (index == 945) { // from result
 			return this.movePreferredMenu(slotStack); // into container
 		}

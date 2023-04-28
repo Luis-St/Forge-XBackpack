@@ -91,11 +91,11 @@ public class BrewingStandExtensionMenu extends AbstractExtensionMenu {
 	public boolean quickMoveStack(ItemStack slotStack, int index) {
 		if (908 >= index && index >= 0) { // from container
 			if (slotStack.is(Items.BLAZE_POWDER) && this.canQuickMovePowder()) {
-				return this.menu.moveItemStackTo(slotStack, 947, 948, false); // into fuel
+				return this.menu.moveItemStackTo(slotStack, 947, 948); // into fuel
 			} else if (BrewingRecipeRegistry.isValidIngredient(slotStack)) {
-				return this.menu.moveItemStackTo(slotStack, 946, 947, false); // into input
+				return this.menu.moveItemStackTo(slotStack, 946, 947); // into input
 			} else if (BrewingRecipeRegistry.isValidInput(slotStack)) {
-				return this.menu.moveItemStackTo(slotStack, 948, 451, false); // into result
+				return this.menu.moveItemStackTo(slotStack, 948, 451); // into result
 			}
 		} else if (950 >= index && index >= 946) { // from extension
 			return this.movePreferredMenu(slotStack); // into container

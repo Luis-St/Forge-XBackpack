@@ -105,13 +105,13 @@ public class FurnaceExtensionMenu extends AbstractExtensionMenu {
 	public boolean quickMoveStack(ItemStack slotStack, int index) {
 		if (908 >= index && index >= 0) { // from container
 			if (this.canSmelt(slotStack)) {
-				if (this.menu.moveItemStackTo(slotStack, 931, 932, false)) { // into input
+				if (this.menu.moveItemStackTo(slotStack, 931, 932)) { // into input
 					return true;
 				} else { // into input storage
-					return this.menu.moveItemStackTo(slotStack, 927, 931, false);
+					return this.menu.moveItemStackTo(slotStack, 927, 931);
 				}
 			} else if (this.isFuel(slotStack) || slotStack.is(Items.BUCKET)) {
-				return this.menu.moveItemStackTo(slotStack, 932, 933, false); // into fuel
+				return this.menu.moveItemStackTo(slotStack, 932, 933); // into fuel
 			}
 		} else if (index >= 937) { // from result
 			return this.movePreferredMenu(slotStack); // into container
