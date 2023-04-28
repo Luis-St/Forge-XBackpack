@@ -16,7 +16,7 @@ apply plugin: "net.minecraftforge.gradle"
 apply plugin: "eclipse"
 apply plugin: "maven-publish"
 
-version = "1.19.4-3.2"
+version = "1.19.4-3.3"
 group = "net.luis.xbackpack"
 archivesBaseName = "XBackpack"
 
@@ -118,7 +118,7 @@ jar {
 	manifest {
 		attributes([
 				"Specification-Title"     : "XBackpack",
-				"Specification-Version"   : "1.19.4-3.2",
+				"Specification-Version"   : "1.19.4-3.3",
 				"Implementation-Title"    : project.name,
 				"Implementation-Timestamp": new Date().format("yyyy-MM-dd HH:mm:ssZ")
 		])
