@@ -41,5 +41,4 @@ public interface ItemModifier {
 	MutableComponent getDisplayName();
 	
 	List<MutableComponent> getInfo();
-	
 }

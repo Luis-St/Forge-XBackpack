@@ -17,5 +17,4 @@ public class CraftingExtensionScreen extends AbstractExtensionScreen {
 	public CraftingExtensionScreen(AbstractExtensionContainerScreen<?> screen, List<BackpackExtension> extensions) {
 		super(screen, BackpackExtensions.CRAFTING_TABLE.get(), extensions);
 	}
-	
 }

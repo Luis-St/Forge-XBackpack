@@ -17,5 +17,4 @@ public interface ProgressHandler {
 	CompoundTag serialize();
 	
 	void deserialize(CompoundTag tag);
-	
 }

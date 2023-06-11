@@ -19,5 +19,4 @@ public class BackpackSlot extends SlotItemHandler implements MoveableSlot {
 	public int getY(int scrollOffset) {
 		return this.y - scrollOffset * 18;
 	}
-	
 }

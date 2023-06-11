@@ -16,5 +16,4 @@ public interface NetworkPacket {
 	void encode(FriendlyByteBuf buffer);
 	
 	void handle(Supplier<Context> context);
-	
 }

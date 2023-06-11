@@ -19,7 +19,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class BackpackProvider implements ICapabilitySerializable<CompoundTag> {
 	
-	public static final Capability<IBackpack> BACKPACK = CapabilityManager.get(new CapabilityToken<>() {});
+	public static final Capability<IBackpack> BACKPACK = CapabilityManager.get(new CapabilityToken<>() {
+	});
 	
 	private final BackpackHandler handler;
 	private final LazyOptional<IBackpack> optional;
@@ -47,5 +48,4 @@ public class BackpackProvider implements ICapabilitySerializable<CompoundTag> {
 	public void deserializeNBT(CompoundTag tag) {
 		this.handler.deserialize(tag);
 	}
-	
 }

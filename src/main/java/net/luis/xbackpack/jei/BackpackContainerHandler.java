@@ -33,5 +33,4 @@ public class BackpackContainerHandler implements IGuiContainerHandler<BackpackSc
 		}
 		return Lists.newArrayList();
 	}
-	
 }

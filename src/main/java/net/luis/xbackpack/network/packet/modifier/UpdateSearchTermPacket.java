@@ -41,5 +41,4 @@ public class UpdateSearchTermPacket implements NetworkPacket {
 			}
 		});
 	}
-	
 }

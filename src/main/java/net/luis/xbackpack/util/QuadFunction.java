@@ -18,5 +18,4 @@ public interface QuadFunction<T, U, V, W, R> {
 		Objects.requireNonNull(after);
 		return (T t, U u, V v, W w) -> after.apply(this.apply(t, u, v, w));
 	}
-	
 }

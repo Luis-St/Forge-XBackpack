@@ -47,5 +47,4 @@ public class CraftingHandler {
 		this.inputHandler.deserializeNBT(tag.getCompound("input_handler"));
 		this.resultHandler.deserializeNBT(tag.getCompound("result_handler"));
 	}
-	
 }

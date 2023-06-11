@@ -31,5 +31,4 @@ public class ExtensionResultSlot extends ResultSlot implements ExtensionMenuSlot
 	public BackpackExtension getExtension() {
 		return this.extensionMenu.getExtension();
 	}
-	
 }

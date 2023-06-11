@@ -97,5 +97,4 @@ public class BackpackExtensionConfig {
 	private record Data(BackpackExtensionState state, int unlockCount) {
 		
 	}
-	
 }

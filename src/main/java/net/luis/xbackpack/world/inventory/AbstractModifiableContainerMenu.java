@@ -137,5 +137,4 @@ public abstract class AbstractModifiableContainerMenu extends AbstractExtensionC
 	}
 	
 	protected abstract void onItemModifiersChanged(ServerPlayer player);
-	
 }

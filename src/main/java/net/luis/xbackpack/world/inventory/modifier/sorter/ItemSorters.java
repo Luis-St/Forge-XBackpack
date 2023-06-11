@@ -255,5 +255,4 @@ public enum ItemSorters implements ItemSorter {
 	public String toString() {
 		return this.name;
 	}
-	
 }

@@ -41,5 +41,4 @@ public enum ItemModifierType {
 	public String toString() {
 		return this.name;
 	}
-	
 }

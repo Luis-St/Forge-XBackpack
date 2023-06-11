@@ -23,5 +23,4 @@ public record RenderData(boolean exists, int xPosition, int yPosition, int width
 		}
 		return null;
 	}
-	
 }

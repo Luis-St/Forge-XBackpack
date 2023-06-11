@@ -74,5 +74,4 @@ public class ExtensionSlot extends SlotItemHandler implements ExtensionMenuSlot 
 		}
 		return remainingStack;
 	}
-	
 }

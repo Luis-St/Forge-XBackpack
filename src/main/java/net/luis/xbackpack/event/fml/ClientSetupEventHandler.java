@@ -24,5 +24,4 @@ public class ClientSetupEventHandler {
 	public static void clientSetup(@NotNull FMLClientSetupEvent event) {
 		event.enqueueWork(() -> MenuScreens.register(XBMenuTypes.BACKPACK_MENU.get(), BackpackScreen::new));
 	}
-	
 }

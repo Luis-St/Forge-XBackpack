@@ -46,5 +46,4 @@ public enum BackpackExtensionState {
 	public String toString() {
 		return this.name;
 	}
-	
 }

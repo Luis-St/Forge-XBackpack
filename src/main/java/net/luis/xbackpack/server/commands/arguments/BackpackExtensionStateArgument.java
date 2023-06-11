@@ -105,7 +105,5 @@ public class BackpackExtensionStateArgument implements ArgumentType<BackpackExte
 			}
 			
 		}
-		
 	}
-	
 }

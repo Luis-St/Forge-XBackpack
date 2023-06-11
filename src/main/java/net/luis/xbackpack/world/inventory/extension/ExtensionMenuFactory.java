@@ -13,5 +13,4 @@ import net.minecraft.world.entity.player.Player;
 public interface ExtensionMenuFactory {
 	
 	AbstractExtensionMenu create(AbstractExtensionContainerMenu menu, Player player);
-	
 }

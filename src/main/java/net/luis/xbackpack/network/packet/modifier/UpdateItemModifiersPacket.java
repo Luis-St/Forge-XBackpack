@@ -49,5 +49,4 @@ public class UpdateItemModifiersPacket implements NetworkPacket {
 			});
 		});
 	}
-	
 }

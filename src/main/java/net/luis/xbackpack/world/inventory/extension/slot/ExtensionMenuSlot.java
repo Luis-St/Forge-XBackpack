@@ -14,5 +14,4 @@ public interface ExtensionMenuSlot {
 	AbstractExtensionMenu getMenu();
 	
 	BackpackExtension getExtension();
-	
 }

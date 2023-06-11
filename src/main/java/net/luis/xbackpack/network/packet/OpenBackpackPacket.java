@@ -46,5 +46,4 @@ public class OpenBackpackPacket implements NetworkPacket {
 			}
 		});
 	}
-	
 }

@@ -50,5 +50,4 @@ public class SimpleEntry<K, V> implements Map.Entry<K, V> {
 		}
 		return false;
 	}
-	
 }

@@ -80,5 +80,4 @@ public abstract class AbstractExtensionMenu {
 	public BackpackExtension getExtension() {
 		return this.extension;
 	}
-	
 }

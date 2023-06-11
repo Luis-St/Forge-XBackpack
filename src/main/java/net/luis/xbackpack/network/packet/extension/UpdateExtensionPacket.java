@@ -44,5 +44,4 @@ public class UpdateExtensionPacket implements NetworkPacket {
 			}
 		});
 	}
-	
 }

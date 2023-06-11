@@ -254,5 +254,4 @@ public enum ItemFilters implements ItemFilter {
 	public String toString() {
 		return this.name;
 	}
-	
 }

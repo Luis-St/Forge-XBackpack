@@ -74,7 +74,6 @@ public interface ModifiableMenu {
 		public String toString() {
 			return this.name;
 		}
-		
 	}
 	
 	enum CycleDirection {
@@ -119,7 +118,5 @@ public interface ModifiableMenu {
 		public String toString() {
 			return this.name;
 		}
-		
 	}
-	
 }

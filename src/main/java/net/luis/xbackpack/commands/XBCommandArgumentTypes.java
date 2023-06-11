@@ -25,5 +25,4 @@ public class XBCommandArgumentTypes {
 	public static final RegistryObject<BackpackExtensionStateArgument.Info> BACKPACK_EXTENSION_STATE_TYPE = COMMAND_ARGUMENT_TYPES.register("backpack_extension_state_type", () -> {
 		return ArgumentTypeInfos.registerByClass(BackpackExtensionStateArgument.class, new BackpackExtensionStateArgument.Info());
 	});
-	
 }

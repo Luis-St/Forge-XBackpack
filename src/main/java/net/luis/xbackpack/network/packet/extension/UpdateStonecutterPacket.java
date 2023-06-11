@@ -41,5 +41,4 @@ public class UpdateStonecutterPacket implements NetworkPacket {
 			});
 		});
 	}
-	
 }

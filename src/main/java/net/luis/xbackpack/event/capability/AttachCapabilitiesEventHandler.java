@@ -25,5 +25,4 @@ public class AttachCapabilitiesEventHandler {
 			event.addCapability(new ResourceLocation(XBackpack.MOD_ID, "backpack"), new BackpackProvider(player));
 		}
 	}
-	
 }

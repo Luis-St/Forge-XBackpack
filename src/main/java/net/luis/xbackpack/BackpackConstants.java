@@ -8,7 +8,6 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraftforge.common.extensions.IForgeItem;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -29,6 +28,7 @@ public class BackpackConstants {
 	 */
 	public static final List<RecipeType<? extends AbstractCookingRecipe>> FURNACE_RECIPE_TYPES = Lists.newArrayList(RecipeType.SMELTING, RecipeType.BLASTING, RecipeType.SMOKING);
 	private static final List<Item> ITEM = ImmutableList.copyOf(ForgeRegistries.ITEMS.getValues());
+	
 	/**
 	 * Add items to this list in {@link FMLCommonSetupEvent},<br>
 	 * if you want to add valid items for the tool slot
@@ -36,6 +36,7 @@ public class BackpackConstants {
 	public static final List<Item> VALID_TOOL_SLOT_ITEMS = ITEM.stream().filter(item -> {
 		return item instanceof TieredItem || item instanceof ShearsItem || item instanceof FlintAndSteelItem || item instanceof BowItem || item instanceof CrossbowItem;
 	}).collect(Collectors.toList());
+	
 	/**
 	 * Add items to this list in {@link FMLCommonSetupEvent},<br>
 	 * if you want to add valid items for the armor slot<br>
@@ -45,6 +46,7 @@ public class BackpackConstants {
 	public static final List<Item> VALID_ARMOR_SLOT_ITEMS = ITEM.stream().filter(item -> {
 		return item instanceof ArmorItem || item instanceof ElytraItem || item == Items.CARVED_PUMPKIN;
 	}).collect(Collectors.toList());
+	
 	/**
 	 * Add items to this list in {@link FMLCommonSetupEvent},<br>
 	 * if you want to quick move the item via shift into the offhand slot
@@ -52,5 +54,4 @@ public class BackpackConstants {
 	public static final List<Item> SHIFTABLE_OFFHAND_SLOT_ITEMS = ITEM.stream().filter(item -> {
 		return item instanceof ShieldItem || item == Items.TORCH || item == Items.SOUL_TORCH || item.isEdible();
 	}).collect(Collectors.toList());
-	
 }

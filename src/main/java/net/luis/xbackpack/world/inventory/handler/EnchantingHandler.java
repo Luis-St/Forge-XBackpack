@@ -59,5 +59,4 @@ public class EnchantingHandler {
 		this.inputHandler.deserializeNBT(tag.getCompound("input_handler"));
 		this.fuelHandler.deserializeNBT(tag.getCompound("fuel_handler"));
 	}
-	
 }

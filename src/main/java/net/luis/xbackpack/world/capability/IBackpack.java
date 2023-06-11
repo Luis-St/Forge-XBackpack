@@ -55,5 +55,4 @@ public interface IBackpack {
 	CompoundTag serialize();
 	
 	void deserialize(CompoundTag tag);
-	
 }

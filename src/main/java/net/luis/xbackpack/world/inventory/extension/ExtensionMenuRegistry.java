@@ -35,5 +35,4 @@ public class ExtensionMenuRegistry {
 			EXTENSION_FACTORIES.put(extension, factory);
 		}
 	}
-	
 }

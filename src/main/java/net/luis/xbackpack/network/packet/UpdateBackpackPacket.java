@@ -38,5 +38,4 @@ public class UpdateBackpackPacket implements NetworkPacket {
 			XBClientPacketHandler.updateBackpack(this.tag);
 		});
 	}
-	
 }

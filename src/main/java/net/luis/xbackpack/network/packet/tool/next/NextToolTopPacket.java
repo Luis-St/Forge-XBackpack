@@ -52,5 +52,4 @@ public class NextToolTopPacket implements NetworkPacket {
 			}
 		});
 	}
-	
 }

@@ -32,5 +32,4 @@ public class XBJeiPlugin implements IModPlugin {
 	public void registerGuiHandlers(@NotNull IGuiHandlerRegistration registration) {
 		registration.addGuiContainerHandler(BackpackScreen.class, new BackpackContainerHandler());
 	}
-	
 }

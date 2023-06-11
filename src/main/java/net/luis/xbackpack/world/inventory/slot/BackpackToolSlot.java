@@ -43,5 +43,4 @@ public class BackpackToolSlot extends SlotItemHandler {
 	public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
 		return Pair.of(InventoryMenu.BLOCK_ATLAS, EMPTY_TOOL_SLOT);
 	}
-	
 }

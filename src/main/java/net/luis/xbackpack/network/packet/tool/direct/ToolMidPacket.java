@@ -48,5 +48,4 @@ public class ToolMidPacket implements NetworkPacket {
 			}
 		});
 	}
-	
 }

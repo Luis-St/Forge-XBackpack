@@ -48,5 +48,4 @@ public class ToolDownPacket implements NetworkPacket {
 			}
 		});
 	}
-	
 }

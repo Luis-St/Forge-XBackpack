@@ -21,5 +21,4 @@ public class BackpackClientConfig {
 	public void setShowModifierInfo(boolean showModifierInfo) {
 		this.showModifierInfo = showModifierInfo;
 	}
-	
 }

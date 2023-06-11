@@ -41,5 +41,4 @@ public class UpdateAnvilPacket implements NetworkPacket {
 			});
 		});
 	}
-	
 }

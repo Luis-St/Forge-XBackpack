@@ -230,5 +230,4 @@ public class BackpackMenu extends AbstractModifiableContainerMenu {
 		}
 		this.broadcastChanges();
 	}
-	
 }

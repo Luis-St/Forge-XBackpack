@@ -20,5 +20,4 @@ public interface ItemSorter extends ItemModifier {
 	}
 	
 	List<ItemStack> sort(List<ItemStack> stacks, String searchTerm);
-	
 }

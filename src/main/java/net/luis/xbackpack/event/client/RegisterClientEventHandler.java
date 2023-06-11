@@ -26,5 +26,4 @@ public class RegisterClientEventHandler {
 		event.register(XBKeyMappings.BACKPACK_SLOT_MID);
 		event.register(XBKeyMappings.BACKPACK_SLOT_DOWN);
 	}
-	
 }

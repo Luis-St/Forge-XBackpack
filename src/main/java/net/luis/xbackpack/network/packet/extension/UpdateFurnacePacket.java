@@ -45,5 +45,4 @@ public class UpdateFurnacePacket implements NetworkPacket {
 			});
 		});
 	}
-	
 }

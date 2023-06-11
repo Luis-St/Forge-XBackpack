@@ -23,5 +23,4 @@ public class EntityEventHandler {
 			BackpackProvider.get(player).broadcastChanges();
 		}
 	}
-	
 }

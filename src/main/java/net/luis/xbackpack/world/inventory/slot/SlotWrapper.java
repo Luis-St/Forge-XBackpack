@@ -53,5 +53,4 @@ public class SlotWrapper {
 		buffer.writeInt(this.mainSlot);
 		buffer.writeInt(this.slot);
 	}
-	
 }

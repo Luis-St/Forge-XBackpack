@@ -86,5 +86,4 @@ public enum XBNetworkHandler {
 	public <T extends NetworkPacket> void sendToPlayer(ServerPlayer player, T packet) {
 		this.getChannel().send(PacketDistributor.PLAYER.with(() -> player), packet);
 	}
-	
 }

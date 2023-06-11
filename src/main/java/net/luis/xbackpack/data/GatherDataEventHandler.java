@@ -25,5 +25,4 @@ public class GatherDataEventHandler {
 			generator.addProvider(event.includeClient(), new XBLanguageProvider(generator.getPackOutput()));
 		}
 	}
-	
 }

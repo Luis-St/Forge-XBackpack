@@ -107,5 +107,4 @@ public class BrewingStandExtensionMenu extends AbstractExtensionMenu {
 		ItemStack stack = this.handler.getFuelHandler().getStackInSlot(0);
 		return stack.isEmpty() || (stack.is(Items.BLAZE_POWDER) && stack.getMaxStackSize() > stack.getCount());
 	}
-	
 }
