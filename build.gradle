@@ -1,20 +1,3 @@
-/*buildscript {
-	repositories {
-		maven {
-			url = "https://maven.minecraftforge.net"
-		}
-		mavenCentral()
-	}
-	
-	dependencies {
-		classpath group: "net.minecraftforge.gradle", name: "ForgeGradle", version: "5.1.+", changing: true
-		classpath "org.spongepowered:mixingradle:0.7.+"
-	}
-}
-
-apply plugin: "net.minecraftforge.gradle"
-apply plugin: "idea"
-apply plugin: "maven-publish"*/
 plugins {
 	id 'eclipse'
 	id 'idea'
@@ -116,19 +99,19 @@ dependencies {
 	minecraft "net.minecraftforge:forge:${MinecraftVersion}-${ForgeVersion}"
 	
 	compileOnly fg.deobf("mezz.jei:jei-${MinecraftVersion}-common-api:${JeiVersion}")
-	compileOnly fg.deobf("mezz.jei:jei-${MinecraftVersion}-forge-api:1${JeiVersion}")
+	compileOnly fg.deobf("mezz.jei:jei-${MinecraftVersion}-forge-api:${JeiVersion}")
 	runtimeOnly fg.deobf("mezz.jei:jei-${MinecraftVersion}-forge:${JeiVersion}")
 }
 
 def resourceTargets = ["META-INF/mods.toml", "pack.mcmeta"]
 def replaceProperties = [
 		MinecraftVersion: MinecraftVersion, MinecraftVersionRange: MinecraftVersionRange,
-		ForgeVersion: ForgeVersion, ForgeVersionRange: ForgeVersionRange,
-		ForgeLoaderRange: ForgeLoaderRange
+		ForgeVersion    : ForgeVersion, ForgeVersionRange: ForgeVersionRange,
+		ForgeLoaderRange: ForgeLoaderRange, ModVersion: ModVersion
 ]
 processResources {
 	inputs.properties replaceProperties
-	replaceProperties.put 'project', project
+	replaceProperties.put "project", project
 	
 	filesMatching(resourceTargets) {
 		expand replaceProperties
