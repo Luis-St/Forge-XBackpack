@@ -53,20 +53,26 @@ public class BackpackExtensionArgument implements ArgumentType<BackpackExtension
 	@Override
 	public BackpackExtension parse(StringReader reader) throws CommandSyntaxException {
 		ResourceLocation location = ResourceLocation.read(reader);
-		if (this.registrySupplier.get().containsKey(location)) {
-			return this.registrySupplier.get().getValue(location);
+		IForgeRegistry<BackpackExtension> registry = this.registrySupplier.get();
+		if (registry.containsKey(location) && !location.equals(registry.getKey(BackpackExtensions.NO.get()))) {
+			return registry.getValue(location);
 		}
 		throw INVALID_BACKPACK_EXTENSION.create(location, "");
 	}
 	
 	@Override
 	public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-		return SharedSuggestionProvider.suggest(this.registrySupplier.get().getKeys().stream().map(ResourceLocation::toString), builder);
+		return SharedSuggestionProvider.suggest(this.values().stream().map(ResourceLocation::toString), builder);
 	}
 	
 	@Override
 	public Collection<String> getExamples() {
-		return this.registrySupplier.get().getKeys().stream().map(ResourceLocation::toString).collect(Collectors.toList());
+		return this.values().stream().map(ResourceLocation::toString).collect(Collectors.toList());
+	}
+	
+	private Collection<ResourceLocation> values() {
+		IForgeRegistry<BackpackExtension> registry = this.registrySupplier.get();
+		return registry.getValues().stream().filter(extension -> extension != BackpackExtensions.NO.get()).map(registry::getKey).collect(Collectors.toList());
 	}
 	
 	public static class Info implements ArgumentTypeInfo<BackpackExtensionArgument, Info.Template> {
@@ -108,9 +114,6 @@ public class BackpackExtensionArgument implements ArgumentType<BackpackExtension
 			public @NotNull ArgumentTypeInfo<BackpackExtensionArgument, ?> type() {
 				return Info.this;
 			}
-			
 		}
-		
 	}
-	
 }

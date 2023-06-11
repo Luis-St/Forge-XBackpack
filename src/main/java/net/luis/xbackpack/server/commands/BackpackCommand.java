@@ -54,6 +54,9 @@ public class BackpackCommand {
 		MutableInt i =  new MutableInt(0);
 		IBackpack backpack = BackpackProvider.get(player);
 		for (BackpackExtension extension : extensions) {
+			if (extension == BackpackExtensions.NO.get()) {
+				continue;
+			}
 			if (extension.isDisabled()) {
 				source.sendFailure(Component.translatable("xbackpack.commands.backpack.set.failure.disabled", getName(extension)));
 				continue;

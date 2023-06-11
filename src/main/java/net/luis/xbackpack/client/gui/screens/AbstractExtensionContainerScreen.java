@@ -36,7 +36,7 @@ import static net.luis.xbackpack.world.extension.BackpackExtensions.REGISTRY;
 
 public abstract class AbstractExtensionContainerScreen<T extends AbstractExtensionContainerMenu> extends AbstractScrollableContainerScreen<T> {
 	
-	private final List<BackpackExtension> extensions = List.of(CRAFTING_TABLE.get(), FURNACE.get(), ANVIL.get(), ENCHANTMENT_TABLE.get(), STONECUTTER.get(), BREWING_STAND.get(), GRINDSTONE.get(), SMITHING_TABLE.get());
+	private final List<BackpackExtension> extensions = Lists.newArrayList(REGISTRY.get()).stream().filter(((Predicate<BackpackExtension>) BackpackExtension::isDisabled).negate()).toList();
 	private final List<AbstractExtensionScreen> extensionScreens = Lists.newArrayList();
 	private BackpackExtension extension = NO.get();
 	
@@ -204,7 +204,10 @@ public abstract class AbstractExtensionContainerScreen<T extends AbstractExtensi
 	}
 	
 	protected void addExtensionScreen(BiFunction<AbstractExtensionContainerScreen<T>, List<BackpackExtension>, AbstractExtensionScreen> screenFactory) {
-		this.extensionScreens.add(screenFactory.apply(this, this.extensions));
+		AbstractExtensionScreen extensionScreen = screenFactory.apply(this, this.extensions);
+		if (!extensionScreen.getExtension().isDisabled()) {
+			this.extensionScreens.add(extensionScreen);
+		}
 	}
 	
 	public AbstractExtensionScreen getExtensionScreen(BackpackExtension extension) {
@@ -213,7 +216,7 @@ public abstract class AbstractExtensionContainerScreen<T extends AbstractExtensi
 	
 	private void updateExtension(BackpackExtension extension) {
 		Objects.requireNonNull(this.minecraft).getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-		if (this.extension == extension || extension == null) {
+		if (this.extension == extension || extension == null || extension.isDisabled()) {
 			this.extension = NO.get();
 		} else {
 			this.extension = extension;

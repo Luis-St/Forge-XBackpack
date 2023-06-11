@@ -46,6 +46,7 @@ public class XBLanguageProvider extends LanguageProvider {
 		this.add("xbackpack.commands.arguments.state.invalid", "Unknown extension state {0}");
 		this.add("xbackpack.commands.backpack.get.failure", "Can not get the state of multiple backpack extensions");
 		this.add("xbackpack.commands.backpack.get.success", "Backpack extension {0} of player {1} has state {2}");
+		this.add("xbackpack.commands.backpack.set.failure.disabled", "Can not set the state of {0}, because the backpack extension is disabled by the mod");
 		this.add("xbackpack.commands.backpack.set.success.single", "Set successfully the state of backpack extension {0} of player {1} to state {2}");
 		this.add("xbackpack.commands.backpack.set.success.multiple", "Set successfully the state of {0} backpack extensions of player {1} to state {2}");
 		this.add("xbackpack.commands.tooltip.set.success.true", "The item modification information was enabled");
@@ -109,5 +110,4 @@ public class XBLanguageProvider extends LanguageProvider {
 		this.add("xbackpack.backpack_action.item_merger", "Item Merger");
 		this.add("xbackpack.backpack_action.item_merger.info", "Tried to merge all items that are not maximally stacked");
 	}
-	
 }

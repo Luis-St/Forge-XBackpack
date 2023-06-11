@@ -20,18 +20,28 @@ public final class BackpackExtension {
 	private final int iconHeight;
 	private final int imageWidth;
 	private final int imageHeight;
+	private final boolean disabled;
 	
 	public BackpackExtension(ItemStack stack, int iconWidth, int iconHeight, int imageWidth, int imageHeight) {
-		this(stack, stack, iconWidth, iconHeight, imageWidth, imageHeight);
+		this(stack, stack, iconWidth, iconHeight, imageWidth, imageHeight, false);
 	}
 	
 	public BackpackExtension(ItemStack unlockItem, ItemStack icon, int iconWidth, int iconHeight, int imageWidth, int imageHeight) {
+		this(unlockItem, icon, iconWidth, iconHeight, imageWidth, imageHeight, false);
+	}
+	
+	public BackpackExtension(ItemStack stack, int iconWidth, int iconHeight, int imageWidth, int imageHeight, boolean disabled) {
+		this(stack, stack, iconWidth, iconHeight, imageWidth, imageHeight, disabled);
+	}
+	
+	public BackpackExtension(ItemStack unlockItem, ItemStack icon, int iconWidth, int iconHeight, int imageWidth, int imageHeight, boolean disabled) {
 		this.unlockItem = unlockItem;
 		this.icon = icon;
 		this.iconWidth = iconWidth;
 		this.iconHeight = iconHeight;
 		this.imageWidth = imageWidth;
 		this.imageHeight = imageHeight;
+		this.disabled = disabled;
 	}
 	
 	public ItemStack getUnlockItem() {
@@ -70,9 +80,12 @@ public final class BackpackExtension {
 		return this.imageHeight;
 	}
 	
+	public boolean isDisabled() {
+		return this.disabled;
+	}
+	
 	@Override
 	public String toString() {
 		return Objects.requireNonNull(BackpackExtensions.REGISTRY.get().getKey(this)).toString();
 	}
-	
 }

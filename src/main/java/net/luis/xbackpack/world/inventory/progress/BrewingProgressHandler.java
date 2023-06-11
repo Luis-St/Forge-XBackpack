@@ -91,7 +91,7 @@ public class BrewingProgressHandler implements ProgressHandler {
 			}
 			this.onPotionBrewed(this.asList());
 			if (this.player instanceof ServerPlayer player) {
-				this.playSound(player, player.getLevel());
+				this.playSound(player, player.serverLevel());
 			}
 			if (inputStack.hasCraftingRemainingItem()) {
 				ItemStack remainingStack = inputStack.getCraftingRemainingItem();
@@ -99,7 +99,7 @@ public class BrewingProgressHandler implements ProgressHandler {
 				if (inputStack.isEmpty()) {
 					inputStack = remainingStack;
 				} else {
-					Containers.dropItemStack(this.player.level, this.player.getX(), this.player.getY(), this.player.getZ(), remainingStack);
+					Containers.dropItemStack(this.player.level(), this.player.getX(), this.player.getY(), this.player.getZ(), remainingStack);
 				}
 			} else {
 				inputStack.shrink(1);
@@ -184,5 +184,4 @@ public class BrewingProgressHandler implements ProgressHandler {
 		this.fuel = tag.getInt("fuel");
 		this.brewTime = tag.getInt("brew_time");
 	}
-	
 }

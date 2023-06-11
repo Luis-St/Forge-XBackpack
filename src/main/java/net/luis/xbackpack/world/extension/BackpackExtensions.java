@@ -26,7 +26,7 @@ public class BackpackExtensions {
 	public static final Supplier<IForgeRegistry<BackpackExtension>> REGISTRY = BACKPACK_EXTENSIONS.makeRegistry(RegistryBuilder::new);
 	
 	public static final RegistryObject<BackpackExtension> NO = BACKPACK_EXTENSIONS.register("no", () -> {
-		return new BackpackExtension(ItemStack.EMPTY, 0, 0, 0, 0);
+		return new BackpackExtension(ItemStack.EMPTY, 0, 0, 0, 0, true);
 	});
 	public static final RegistryObject<BackpackExtension> CRAFTING_TABLE = BACKPACK_EXTENSIONS.register("crafting_table", () -> {
 		return new BackpackExtension(new ItemStack(Items.CRAFTING_TABLE), 20, 22, 68, 135);
@@ -50,7 +50,6 @@ public class BackpackExtensions {
 		return new BackpackExtension(new ItemStack(Items.GRINDSTONE), 20, 22, 112, 84);
 	});
 	public static final RegistryObject<BackpackExtension> SMITHING_TABLE = BACKPACK_EXTENSIONS.register("smithing_table", () -> {
-		return new BackpackExtension(new ItemStack(Items.SMITHING_TABLE), 20, 22, 111, 46);
+		return new BackpackExtension(new ItemStack(Items.SMITHING_TABLE), 20, 22, 111, 46, true);
 	});
-	
 }

@@ -1,7 +1,6 @@
 package net.luis.xbackpack.world.inventory;
 
 import com.google.common.collect.Lists;
-import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.luis.xbackpack.world.inventory.extension.AbstractExtensionMenu;
@@ -127,9 +126,11 @@ public abstract class AbstractExtensionContainerMenu extends AbstractContainerMe
 	}
 	
 	protected void addExtensionMenu(BackpackExtension extension, Player player, ExtensionMenuFactory menuFactory) {
-		AbstractExtensionMenu extensionMenu = ExtensionMenuRegistry.getExtensionMenu(extension, this, player, menuFactory);
-		extensionMenu.addSlots(this::addSlot);
-		this.extensionMenus.add(extensionMenu);
+		if (!extension.isDisabled()) {
+			AbstractExtensionMenu extensionMenu = ExtensionMenuRegistry.getExtensionMenu(extension, this, player, menuFactory);
+			extensionMenu.addSlots(this::addSlot);
+			this.extensionMenus.add(extensionMenu);
+		}
 	}
 	
 	@Nullable
@@ -141,5 +142,4 @@ public abstract class AbstractExtensionContainerMenu extends AbstractContainerMe
 	public Optional<AbstractExtensionMenu> getExtensionMenu() {
 		return Optional.ofNullable(this.getExtensionMenu(this.getExtension()));
 	}
-	
 }
