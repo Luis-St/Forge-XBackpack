@@ -1,13 +1,13 @@
-modLoader = "javafml" #mandatory
-loaderVersion = "[45,)" #mandatory
+modLoader = "javafml"
+loaderVersion = "${ForgeLoaderRange}"
 license = "All rights reserved"
 
-[[mods]] #mandatory
-modId = "xbackpack" #mandatory
-version = "1.19.4-3.3" #mandatory
-displayName = "XBackpack" #mandatory
-credits = "Thanks for downloading my Mod" #optional
-authors = "Luis" #optional
+[[mods]]
+modId = "xbackpack"
+version = "${ModVersion}"
+displayName = "XBackpack"
+credits = "Thanks for downloading my Mod"
+authors = "Luis"
 displayURL = "https://github.com/Luis-st/Forge-XBackpack/issues"
 description = '''
 Adds a cool Backpack to the Game
@@ -15,16 +15,16 @@ Have a lot of fun when playing
 XBackpack Development Team
 '''
 
-[[dependencies.xbackpack]] #optional
-modId = "forge" #mandatory
-mandatory = true #mandator
-versionRange = "[45,)" #mandatory
+[[dependencies.xbackpack]]
+modId = "forge"
+mandatory = true
+versionRange = "${ForgeVersionRange}"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.xbackpack]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.19.4,1.20)"
+versionRange = "${MinecraftVersionRange}"
 ordering = "NONE"
 side = "BOTH"
