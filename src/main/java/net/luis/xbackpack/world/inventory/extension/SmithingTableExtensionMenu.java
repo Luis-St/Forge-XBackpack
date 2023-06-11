@@ -33,7 +33,7 @@ public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 	public SmithingTableExtensionMenu(AbstractExtensionContainerMenu menu, Player player) {
 		super(menu, player, BackpackExtensions.SMITHING_TABLE.get());
 		this.handler = BackpackProvider.get(this.player).getSmithingHandler();
-		this.level = this.player.level;
+		this.level = this.player.level();
 	}
 	
 	@Override
@@ -69,14 +69,14 @@ public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	private void onTake(Player player, @NotNull ItemStack stack) {
-		stack.onCraftedBy(player.level, player, stack.getCount());
+		stack.onCraftedBy(player.level(), player, stack.getCount());
 		if (this.selectedRecipe != null) {
 			player.awardRecipes(Collections.singleton(this.selectedRecipe));
 		}
 		this.shrinkStackInSlot(0);
 		this.shrinkStackInSlot(1);
 		if (player instanceof ServerPlayer serverPlayer) {
-			this.playSound(serverPlayer, serverPlayer.getLevel());
+			this.playSound(serverPlayer, serverPlayer.serverLevel());
 		}
 	}
 	
@@ -126,7 +126,6 @@ public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	private boolean canQuickMoveIngredient(ItemStack stack) {
-		return this.player.level.getRecipeManager().getAllRecipesFor(RecipeType.SMITHING).stream().anyMatch((recipe) -> recipe.isAdditionIngredient(stack));
+		return this.player.level().getRecipeManager().getAllRecipesFor(RecipeType.SMITHING).stream().anyMatch((recipe) -> recipe.isAdditionIngredient(stack));
 	}
-	
 }

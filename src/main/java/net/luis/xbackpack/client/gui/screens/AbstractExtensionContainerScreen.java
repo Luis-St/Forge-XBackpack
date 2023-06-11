@@ -2,7 +2,7 @@ package net.luis.xbackpack.client.gui.screens;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.client.gui.screens.extension.AbstractExtensionScreen;
 import net.luis.xbackpack.network.XBNetworkHandler;
 import net.luis.xbackpack.network.packet.extension.UpdateExtensionPacket;
@@ -10,6 +10,8 @@ import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.extension.BackpackExtensionState;
 import net.luis.xbackpack.world.inventory.AbstractExtensionContainerMenu;
+import net.minecraft.Util;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
@@ -21,8 +23,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiFunction;
+import java.util.function.Predicate;
 
-import static net.luis.xbackpack.world.extension.BackpackExtensions.*;
+import static net.luis.xbackpack.world.extension.BackpackExtensions.NO;
+import static net.luis.xbackpack.world.extension.BackpackExtensions.REGISTRY;
 
 /**
  *
@@ -48,46 +52,46 @@ public abstract class AbstractExtensionContainerScreen<T extends AbstractExtensi
 	@Override
 	protected void init() {
 		super.init();
-		this.extensionScreens.forEach((extensionScreen) -> extensionScreen.init(this.minecraft, this.itemRenderer, this.font, this.imageWidth, this.imageHeight, this.leftPos, this.topPos));
+		this.extensionScreens.forEach((extensionScreen) -> extensionScreen.init(this.minecraft, this.font, this.imageWidth, this.imageHeight, this.leftPos, this.topPos));
 	}
 	
 	@Override
-	public void render(@NotNull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-		super.render(stack, mouseX, mouseY, partialTicks);
-		this.renderScreen(stack, mouseX, mouseY, partialTicks);
-		this.renderTooltip(stack, mouseX, mouseY);
+	public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+		super.render(graphics, mouseX, mouseY, partialTicks);
+		this.renderScreen(graphics, mouseX, mouseY, partialTicks);
+		this.renderTooltip(graphics, mouseX, mouseY);
 	}
 	
-	protected abstract void renderScreen(PoseStack stack, int mouseX, int mouseY, float partialTicks);
+	protected abstract void renderScreen(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks);
 	
 	@Override
-	protected void renderBg(@NotNull PoseStack stack, float partialTicks, int mouseX, int mouseY) {
-		this.renderBackground(stack);
+	protected void renderBg(@NotNull GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
+		this.renderBackground(graphics);
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		this.renderExtensions(stack, partialTicks, mouseX, mouseY);
+		this.renderExtensions(graphics, partialTicks, mouseX, mouseY);
 	}
 	
-	private void renderExtensions(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
+	private void renderExtensions(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
 		for (BackpackExtension extension : this.extensions) {
 			AbstractExtensionScreen extensionScreen = this.getExtensionScreen(extension);
 			if (extensionScreen != null) {
 				if (this.extension == extension && this.extension != NO.get()) {
-					extensionScreen.renderOpened(stack, partialTicks, mouseX, mouseY);
+					extensionScreen.renderOpened(graphics, partialTicks, mouseX, mouseY);
 				} else if (this.isExtensionRenderable(extension)) {
-					extensionScreen.render(stack, partialTicks, mouseX, mouseY);
+					extensionScreen.render(graphics, partialTicks, mouseX, mouseY);
 				}
 			}
 		}
 	}
 	
 	@Override
-	protected void renderTooltip(@NotNull PoseStack stack, int mouseX, int mouseY) {
-		super.renderTooltip(stack, mouseX, mouseY);
+	protected void renderTooltip(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {
+		super.renderTooltip(graphics, mouseX, mouseY);
 		for (BackpackExtension extension : this.extensions) {
 			AbstractExtensionScreen extensionScreen = this.getExtensionScreen(extension);
 			if (extensionScreen != null && this.canUseExtension(extension)) {
-				extensionScreen.renderTooltip(stack, mouseX, mouseY, this.extension == extension && this.extension != NO.get(), this.isExtensionRenderable(extension), (itemStack) -> this.renderTooltip(stack, itemStack, mouseX, mouseY));
+				extensionScreen.renderTooltip(graphics, mouseX, mouseY, this.extension == extension && this.extension != NO.get(), this.isExtensionRenderable(extension), (itemStack) -> graphics.renderTooltip(this.font, itemStack, mouseX, mouseY));
 			}
 		}
 	}
@@ -203,7 +207,6 @@ public abstract class AbstractExtensionContainerScreen<T extends AbstractExtensi
 		this.extensionScreens.add(screenFactory.apply(this, this.extensions));
 	}
 	
-	@Nullable
 	public AbstractExtensionScreen getExtensionScreen(BackpackExtension extension) {
 		return this.extensionScreens.stream().filter((extensionScreen) -> extensionScreen.getExtension() == extension).findAny().orElse(null);
 	}
@@ -217,5 +220,4 @@ public abstract class AbstractExtensionContainerScreen<T extends AbstractExtensi
 		}
 		XBNetworkHandler.INSTANCE.sendToServer(new UpdateExtensionPacket(this.extension));
 	}
-	
 }

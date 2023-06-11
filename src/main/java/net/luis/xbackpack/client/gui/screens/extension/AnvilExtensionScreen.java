@@ -1,14 +1,13 @@
 package net.luis.xbackpack.client.gui.screens.extension;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.luis.xbackpack.client.gui.screens.AbstractExtensionContainerScreen;
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.luis.xbackpack.world.inventory.extension.AnvilExtensionMenu;
 import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
 import java.util.List;
@@ -35,13 +34,12 @@ public class AnvilExtensionScreen extends AbstractExtensionScreen {
 	}
 	
 	@Override
-	protected void renderAdditional(PoseStack stack, float partialTicks, int mouseX, int mouseY, boolean open) {
+	protected void renderAdditional(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY, boolean open) {
 		if (open) {
 			if (this.shouldRenderCanceled()) {
-				RenderSystem.setShaderTexture(0, this.getTexture());
-				GuiComponent.blit(stack, this.leftPos + this.imageWidth + 59, this.topPos + 71, 111, 0, 22, 21);
+				graphics.blit(this.getTexture(), this.leftPos + this.imageWidth + 59, this.topPos + 71, 111, 0, 22, 21);
 			}
-			this.renderLabels(stack);
+			this.renderLabels(graphics);
 		}
 	}
 	
@@ -52,7 +50,7 @@ public class AnvilExtensionScreen extends AbstractExtensionScreen {
 		return false;
 	}
 	
-	private void renderLabels(PoseStack stack) {
+	private void renderLabels(GuiGraphics graphics) {
 		RenderSystem.disableBlend();
 		if (this.screen.getMenu().getExtensionMenu(this.extension) instanceof AnvilExtensionMenu menu) {
 			if (this.cost > 0) {
@@ -68,14 +66,14 @@ public class AnvilExtensionScreen extends AbstractExtensionScreen {
 					int x = this.leftPos + this.imageWidth + 64;
 					int y = this.topPos + 9 + this.getExtensionOffset(this.extension);
 					if (10 > this.cost) {
-						GuiComponent.fill(stack, x - 1, y - 2, x + this.font.width(component) + 3, y + 10, 1325400064);
-						this.font.drawShadow(stack, component, x + 1, y, color);
+						graphics.fill(x - 1, y - 2, x + this.font.width(component) + 3, y + 10, 1325400064);
+						graphics.drawString(this.font, component, x + 1, y, color);
 					} else if (100 > this.cost) {
-						GuiComponent.fill(stack, x - 7, y - 2, x + this.font.width(component) - 3, y + 10, 1325400064);
-						this.font.drawShadow(stack, component, x - 5, y, color);
+						graphics.fill(x - 7, y - 2, x + this.font.width(component) - 3, y + 10, 1325400064);
+						graphics.drawString(this.font, component, x - 5, y, color);
 					} else {
-						GuiComponent.fill(stack, x - 13, y - 2, x + this.font.width(component) - 9, y + 10, 1325400064);
-						this.font.drawShadow(stack, component, x - 11, y, color);
+						graphics.fill(x - 13, y - 2, x + this.font.width(component) - 9, y + 10, 1325400064);
+						graphics.drawString(this.font, component, x - 11, y, color);
 					}
 				}
 			}
@@ -85,5 +83,4 @@ public class AnvilExtensionScreen extends AbstractExtensionScreen {
 	public void update(int cost) {
 		this.cost = cost;
 	}
-	
 }

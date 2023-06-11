@@ -101,7 +101,7 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 				this.handler.getInputHandler().setStackInSlot(1, ItemStack.EMPTY);
 			}
 			this.cost = 0;
-			this.playSound(serverPlayer, serverPlayer.getLevel());
+			this.playSound(serverPlayer, serverPlayer.serverLevel());
 		}
 		this.menu.broadcastChanges();
 		this.broadcastChanges();
@@ -285,5 +285,4 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 	public void close() {
 		this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);
 	}
-	
 }

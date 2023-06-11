@@ -21,7 +21,7 @@ public class BackpackConfig {
 	
 	public BackpackConfig(Player player) {
 		this.player = player;
-		this.isClientSide = this.player.level.isClientSide;
+		this.isClientSide = this.player.level().isClientSide;
 		this.clientConfig = new BackpackClientConfig();
 		this.extensionConfig = new BackpackExtensionConfig();
 	}
@@ -55,5 +55,4 @@ public class BackpackConfig {
 	public void deserialize(CompoundTag tag) {
 		this.extensionConfig.deserialize(tag.getCompound("extension_config"));
 	}
-	
 }

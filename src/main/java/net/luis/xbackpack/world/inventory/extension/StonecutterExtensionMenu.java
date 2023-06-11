@@ -68,7 +68,7 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	private void onTake(Player player, @NotNull ItemStack stack) {
-		stack.onCraftedBy(player.level, player, stack.getCount());
+		stack.onCraftedBy(player.level(), player, stack.getCount());
 		if (this.recipe != null && !this.recipe.isSpecial()) {
 			player.awardRecipes(Collections.singleton(this.recipe));
 		}
@@ -78,7 +78,7 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 		}
 		this.menu.broadcastChanges();
 		if (player instanceof ServerPlayer serverPlayer) {
-			this.playSound(serverPlayer, serverPlayer.getLevel());
+			this.playSound(serverPlayer, serverPlayer.serverLevel());
 		}
 	}
 	
@@ -110,7 +110,7 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 		this.recipes.clear();
 		this.selectedRecipe = -1;
 		this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);
-		this.recipes.addAll(this.player.level.getRecipeManager().getRecipesFor(RecipeType.STONECUTTING, new SimpleContainer(stack), this.player.level));
+		this.recipes.addAll(this.player.level().getRecipeManager().getRecipesFor(RecipeType.STONECUTTING, new SimpleContainer(stack), this.player.level()));
 		XBNetworkHandler.INSTANCE.sendToPlayer(this.player, new UpdateStonecutterPacket(true));
 	}
 	
@@ -127,7 +127,7 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 	private void setupResult() {
 		if (!this.recipes.isEmpty() && this.isValidIndex(this.selectedRecipe)) {
 			StonecutterRecipe recipe = this.recipes.get(this.selectedRecipe);
-			this.handler.getResultHandler().setStackInSlot(0, recipe.assemble(new SimpleContainer(this.handler.getInputHandler().getStackInSlot(0)), this.player.level.registryAccess()));
+			this.handler.getResultHandler().setStackInSlot(0, recipe.assemble(new SimpleContainer(this.handler.getInputHandler().getStackInSlot(0)), this.player.level().registryAccess()));
 			this.recipe = recipe;
 		} else {
 			this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);
@@ -148,5 +148,4 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 		}
 		return false;
 	}
-	
 }

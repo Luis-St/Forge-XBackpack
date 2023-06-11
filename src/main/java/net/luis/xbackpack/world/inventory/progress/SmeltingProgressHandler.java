@@ -73,7 +73,7 @@ public class SmeltingProgressHandler implements ProgressHandler {
 				this.cookingProgress--;
 			}
 			if (this.cookingProgress >= this.cookingTime && !this.handler.getInputHandler().extractItem(0, 1, false).isEmpty()) {
-				ItemStack stack = this.handler.getResultHandler().insertItem(0, progressingRecipe.assemble(new SimpleContainer(), this.player.level.registryAccess()), false);
+				ItemStack stack = this.handler.getResultHandler().insertItem(0, progressingRecipe.assemble(new SimpleContainer(), this.player.level().registryAccess()), false);
 				if (!stack.isEmpty()) {
 					this.player.drop(stack, true, true);
 				}
@@ -204,7 +204,7 @@ public class SmeltingProgressHandler implements ProgressHandler {
 	private AbstractCookingRecipe getRecipe(ItemStack stack) {
 		AbstractCookingRecipe cookingRecipe = null;
 		for (RecipeType<? extends AbstractCookingRecipe> recipeType : this.recipeTypes) {
-			Optional<AbstractCookingRecipe> optional = this.player.level.getRecipeManager().getRecipeFor((RecipeType<AbstractCookingRecipe>) recipeType, new SimpleContainer(stack), this.player.level);
+			Optional<AbstractCookingRecipe> optional = this.player.level().getRecipeManager().getRecipeFor((RecipeType<AbstractCookingRecipe>) recipeType, new SimpleContainer(stack), this.player.level());
 			if (optional.isPresent()) {
 				AbstractCookingRecipe recipe = optional.get();
 				if (cookingRecipe == null) {
@@ -224,7 +224,7 @@ public class SmeltingProgressHandler implements ProgressHandler {
 	private boolean canProgress(ItemStack stack) {
 		AbstractCookingRecipe recipe = this.getRecipe(stack);
 		if (recipe != null) {
-			return ItemEntity.areMergable(recipe.getResultItem(this.player.level.registryAccess()), this.getResultItem()) || this.getResultItem().isEmpty();
+			return ItemEntity.areMergable(recipe.getResultItem(this.player.level().registryAccess()), this.getResultItem()) || this.getResultItem().isEmpty();
 		}
 		return false;
 	}
@@ -290,5 +290,4 @@ public class SmeltingProgressHandler implements ProgressHandler {
 		this.fuelTime = tag.getInt("fuel_time");
 		this.maxFuel = tag.getInt("max_fuel");
 	}
-	
 }

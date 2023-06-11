@@ -1,11 +1,9 @@
 package net.luis.xbackpack.client.gui.screens.extension;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.luis.xbackpack.client.gui.screens.AbstractExtensionContainerScreen;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 
 import java.util.List;
 
@@ -25,11 +23,10 @@ public class FurnaceExtensionScreen extends AbstractExtensionScreen {
 	}
 	
 	@Override
-	protected void renderAdditional(PoseStack stack, float partialTicks, int mouseX, int mouseY, boolean open) {
+	protected void renderAdditional(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY, boolean open) {
 		if (open) {
-			RenderSystem.setShaderTexture(0, this.getTexture());
-			GuiComponent.blit(stack, this.leftPos + this.imageWidth + 24, this.topPos + 89, 86, 14, this.cookingProgress, 17);
-			GuiComponent.blit(stack, this.leftPos + this.imageWidth + 5, this.topPos + 90 + 13 - this.fuelProgress, 86, 13 - this.fuelProgress, 14, this.fuelProgress);
+			graphics.blit(this.getTexture(), this.leftPos + this.imageWidth + 24, this.topPos + 89, 86, 14, this.cookingProgress, 17);
+			graphics.blit(this.getTexture(), this.leftPos + this.imageWidth + 5, this.topPos + 90 + 13 - this.fuelProgress, 86, 13 - this.fuelProgress, 14, this.fuelProgress);
 		}
 	}
 	
@@ -37,5 +34,4 @@ public class FurnaceExtensionScreen extends AbstractExtensionScreen {
 		this.cookingProgress = cookingProgress;
 		this.fuelProgress = fuelProgress;
 	}
-	
 }

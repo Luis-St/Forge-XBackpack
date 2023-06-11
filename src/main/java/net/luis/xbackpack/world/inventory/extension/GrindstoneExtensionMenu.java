@@ -77,12 +77,12 @@ public class GrindstoneExtensionMenu extends AbstractExtensionMenu {
 	
 	private void onTake(Player player, ItemStack stack) {
 		if (player instanceof ServerPlayer serverPlayer) {
-			GrindstoneEvent.OnTakeItem event = new GrindstoneEvent.OnTakeItem(this.handler.getInputHandler().getStackInSlot(0), this.handler.getInputHandler().getStackInSlot(1), this.getExperienceAmount(player.level));
+			GrindstoneEvent.OnTakeItem event = new GrindstoneEvent.OnTakeItem(this.handler.getInputHandler().getStackInSlot(0), this.handler.getInputHandler().getStackInSlot(1), this.getExperienceAmount(player.level()));
 			if (MinecraftForge.EVENT_BUS.post(event)) {
 				return;
 			}
 			player.giveExperiencePoints(event.getXp());
-			this.playSound(serverPlayer, serverPlayer.getLevel());
+			this.playSound(serverPlayer, serverPlayer.serverLevel());
 			this.handler.getInputHandler().setStackInSlot(0, event.getNewTopItem());
 			this.handler.getInputHandler().setStackInSlot(1, event.getNewBottomItem());
 		}
@@ -223,7 +223,7 @@ public class GrindstoneExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	private int onGrindstoneChange(ItemStack topStack, ItemStack bottomStack, int xp) {
-		GrindstoneEvent.OnplaceItem event = new GrindstoneEvent.OnplaceItem(topStack, bottomStack, xp);
+		GrindstoneEvent.OnPlaceItem event = new GrindstoneEvent.OnPlaceItem(topStack, bottomStack, xp);
 		if (MinecraftForge.EVENT_BUS.post(event)) {
 			return event.getXp();
 		}
@@ -245,5 +245,4 @@ public class GrindstoneExtensionMenu extends AbstractExtensionMenu {
 		}
 		return false;
 	}
-	
 }

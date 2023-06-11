@@ -2,7 +2,6 @@ package net.luis.xbackpack.client.gui.screens;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.luis.xbackpack.client.XBKeyMappings;
 import net.luis.xbackpack.client.gui.components.ActionButton;
 import net.luis.xbackpack.client.gui.components.ActionButton.ClickType;
@@ -14,6 +13,7 @@ import net.luis.xbackpack.world.inventory.modifier.filter.ItemFilters;
 import net.luis.xbackpack.world.inventory.modifier.sorter.ItemSorters;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  *
@@ -93,30 +94,30 @@ public abstract class AbstractModifiableContainerScreen<T extends AbstractModifi
 	}
 	
 	@Override
-	public void render(@NotNull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+	public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		this.mergerButton.visible = this.menu.getFilter() == ItemFilters.NONE && this.menu.getSorter() == ItemSorters.NONE;
-		super.render(stack, mouseX, mouseY, partialTicks);
+		super.render(graphics, mouseX, mouseY, partialTicks);
 	}
 	
 	@Override
-	protected void renderScreen(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+	protected void renderScreen(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		if (this.searchBox != null) {
-			this.searchBox.render(stack, mouseX, mouseY, partialTicks);
+			this.searchBox.render(graphics, mouseX, mouseY, partialTicks);
 		}
 	}
 	
 	@Override
-	protected void renderTooltip(@NotNull PoseStack stack, int mouseX, int mouseY) {
-		super.renderTooltip(stack, mouseX, mouseY);
+	protected void renderTooltip(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {
+		super.renderTooltip(graphics, mouseX, mouseY);
 		TooltipFlag tooltipFlag = this.getTooltipFlag();
 		if (this.filterButton != null && this.filterButton.isMouseOver(mouseX, mouseY)) {
-			this.renderComponentTooltip(stack, this.menu.getFilter().getTooltip(tooltipFlag), mouseX, mouseY);
+			graphics.renderTooltip(this.font, this.menu.getFilter().getTooltip(tooltipFlag), Optional.empty(), mouseX, mouseY);
 		}
 		if (this.sorterButton != null && this.sorterButton.isMouseOver(mouseX, mouseY)) {
-			this.renderComponentTooltip(stack, this.menu.getSorter().getTooltip(tooltipFlag), mouseX, mouseY);
+			graphics.renderTooltip(this.font, this.menu.getSorter().getTooltip(tooltipFlag), Optional.empty(), mouseX, mouseY);
 		}
 		if (this.mergerButton != null && this.mergerButton.visible && this.mergerButton.isMouseOver(mouseX, mouseY)) {
-			this.renderComponentTooltip(stack, this.getMergerTooltip(tooltipFlag), mouseX, mouseY);
+			graphics.renderTooltip(this.font, this.getMergerTooltip(tooltipFlag), Optional.empty(), mouseX, mouseY);
 		}
 	}
 	
@@ -193,5 +194,4 @@ public abstract class AbstractModifiableContainerScreen<T extends AbstractModifi
 	protected abstract void updateSearchTerm(String searchBoxValue);
 	
 	protected abstract void updateItemModifier(ItemModifierType modifierType);
-	
 }

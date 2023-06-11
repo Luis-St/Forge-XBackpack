@@ -12,7 +12,7 @@ import java.util.Objects;
  *
  */
 
-public class BackpackExtension {
+public final class BackpackExtension {
 	
 	private final ItemStack unlockItem;
 	private final ItemStack icon;

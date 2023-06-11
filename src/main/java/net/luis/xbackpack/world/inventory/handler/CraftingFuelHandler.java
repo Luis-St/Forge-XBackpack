@@ -2,6 +2,7 @@ package net.luis.xbackpack.world.inventory.handler;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.items.ItemStackHandler;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -42,9 +43,8 @@ public class CraftingFuelHandler extends CraftingHandler {
 	}
 	
 	@Override
-	public void deserialize(CompoundTag tag) {
+	public void deserialize(@NotNull CompoundTag tag) {
 		super.deserialize(tag);
 		this.fuelHandler.deserializeNBT(tag.getCompound("fuel_handler"));
 	}
-	
 }

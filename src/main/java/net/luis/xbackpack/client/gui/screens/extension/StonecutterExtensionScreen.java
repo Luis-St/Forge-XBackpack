@@ -1,15 +1,13 @@
 package net.luis.xbackpack.client.gui.screens.extension;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.luis.xbackpack.client.gui.screens.AbstractExtensionContainerScreen;
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -50,18 +48,16 @@ public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 	}
 	
 	@Override
-	protected void renderAdditional(PoseStack stack, float partialTicks, int mouseX, int mouseY, boolean open) {
+	protected void renderAdditional(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY, boolean open) {
 		if (open) {
-			RenderSystem.setShaderTexture(0, this.getTexture());
-			GuiComponent.blit(stack, this.leftPos + this.imageWidth + 72, this.topPos + 143 + (int) (39.0 * this.scrollOffset), 95 + (this.isScrollBarActive() ? 0 : 12), 0, 12, 15);
-			this.renderButtons(stack, mouseX, mouseY);
-			this.renderRecipes(stack);
+			graphics.blit(this.getTexture(), this.leftPos + this.imageWidth + 72, this.topPos + 143 + (int) (39.0 * this.scrollOffset), 95 + (this.isScrollBarActive() ? 0 : 12), 0, 12, 15);
+			this.renderButtons(graphics, mouseX, mouseY);
+			this.renderRecipes(graphics);
 		}
 	}
 	
-	private void renderButtons(PoseStack stack, int mouseX, int mouseY) {
+	private void renderButtons(GuiGraphics graphics, int mouseX, int mouseY) {
 		for (int index = this.startIndex; index < this.startIndex + 12 && index < this.recipes.size(); ++index) {
-			RenderSystem.setShaderTexture(0, this.getTexture());
 			int i = index - this.startIndex;
 			int x = this.leftPos + 225 + index % 4 * 16;
 			int y = this.topPos + 142 + (i / 4) * 18 + 2;
@@ -71,22 +67,22 @@ public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 			} else if (mouseX >= x && x + 16 > mouseX && mouseY + 1 >= y && y + 18 > mouseY + 1) {
 				offset += 36;
 			}
-			GuiComponent.blit(stack, x, y - 1, 95, offset, 16, 18);
+			graphics.blit(this.getTexture(), x, y - 1, 95, offset, 16, 18);
 		}
 	}
 	
-	private void renderRecipes(PoseStack stack) {
+	private void renderRecipes(GuiGraphics graphics) {
 		for (int index = this.startIndex; index < this.startIndex + 12 && index < this.recipes.size(); ++index) {
 			int i = index - this.startIndex;
 			int x = this.leftPos + 225 + index % 4 * 16;
 			int y = this.topPos + 142 + (i / 4) * 18 + 2;
-			this.minecraft.getItemRenderer().renderAndDecorateItem(stack, this.recipes.get(index).getResultItem(this.player.level.registryAccess()), x, y);
+			graphics.renderItem(this.recipes.get(index).getResultItem(this.player.level().registryAccess()), x, y);
 		}
 	}
 	
 	@Override
-	public void renderTooltip(PoseStack stack, int mouseX, int mouseY, boolean open, boolean renderable, Consumer<ItemStack> tooltipRenderer) {
-		super.renderTooltip(stack, mouseX, mouseY, open, renderable, tooltipRenderer);
+	public void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY, boolean open, boolean renderable, Consumer<ItemStack> tooltipRenderer) {
+		super.renderTooltip(graphics, mouseX, mouseY, open, renderable, tooltipRenderer);
 		if (open) {
 			if (this.shouldDisplayRecipes()) {
 				for (int index = this.startIndex; index < this.startIndex + 12 && index < this.recipes.size(); ++index) {
@@ -94,7 +90,7 @@ public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 					double x = mouseX - (double) (this.leftPos + 225 + i % 4 * 16);
 					double y = mouseY - (double) (this.topPos + 142 + i / 4 * 18);
 					if (x >= 0.0 && y >= 0.0 && x < 16.0 && y < 18.0) {
-						tooltipRenderer.accept(this.recipes.get(index).getResultItem(this.player.level.registryAccess()));
+						tooltipRenderer.accept(this.recipes.get(index).getResultItem(this.player.level().registryAccess()));
 					}
 				}
 			}
@@ -180,5 +176,4 @@ public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 			this.selectedRecipe = -1;
 		}
 	}
-	
 }

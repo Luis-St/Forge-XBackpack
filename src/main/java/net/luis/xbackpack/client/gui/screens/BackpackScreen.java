@@ -1,7 +1,5 @@
 package net.luis.xbackpack.client.gui.screens;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.client.gui.components.RenderData;
 import net.luis.xbackpack.client.gui.screens.extension.*;
@@ -16,7 +14,7 @@ import net.luis.xbackpack.world.inventory.modifier.filter.ItemFilters;
 import net.luis.xbackpack.world.inventory.modifier.sorter.ItemSorters;
 import net.luis.xbackpack.world.inventory.slot.BackpackSlot;
 import net.luis.xbackpack.world.inventory.slot.MoveableSlot;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -45,7 +43,6 @@ public class BackpackScreen extends AbstractModifiableContainerScreen<BackpackMe
 	
 	public BackpackScreen(BackpackMenu menu, Inventory inventory, Component titleComponent) {
 		super(menu, inventory, titleComponent);
-		this.passEvents = false;
 		this.imageWidth = 220;
 		this.imageHeight = 220;
 		this.inventoryLabelX += 22;
@@ -76,23 +73,21 @@ public class BackpackScreen extends AbstractModifiableContainerScreen<BackpackMe
 	}
 	
 	@Override
-	protected void renderScreen(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-		super.renderScreen(stack, mouseX, mouseY, partialTicks);
-		RenderSystem.setShaderTexture(0, ICONS);
-		blit(stack, this.leftPos + 75, this.topPos + 6, 32, 0, 8, 8);
-		GuiComponent.blit(stack, this.leftPos + 89, this.topPos + 6, 8, 8, 46, 0, 14, 14, 256, 256);
+	protected void renderScreen(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+		super.renderScreen(graphics, mouseX, mouseY, partialTicks);
+		graphics.blit(ICONS, this.leftPos + 75, this.topPos + 6, 32, 0, 8, 8);
+		graphics.blit(ICONS, this.leftPos + 89, this.topPos + 6, 8, 8, 46, 0, 14, 14, 256, 256);
 		if (this.menu.getFilter() == ItemFilters.NONE && this.menu.getSorter() == ItemSorters.NONE) {
-			GuiComponent.blit(stack, this.leftPos + 200, this.topPos + 6, 8, 8, 40, 0, 6, 6, 256, 256);
+			graphics.blit(ICONS, this.leftPos + 200, this.topPos + 6, 8, 8, 40, 0, 6, 6, 256, 256);
 		}
 	}
 	
 	@Override
-	protected void renderBg(@NotNull PoseStack stack, float partialTicks, int mouseX, int mouseY) {
-		super.renderBg(stack, partialTicks, mouseX, mouseY);
-		RenderSystem.setShaderTexture(0, BACKPACK);
-		blit(stack, this.leftPos, this.topPos, 0, 0, 220, 220);
+	protected void renderBg(@NotNull GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
+		super.renderBg(graphics, partialTicks, mouseX, mouseY);
+		graphics.blit(BACKPACK, this.leftPos, this.topPos, 0, 0, 220, 220);
 		int scrollPosition = this.topPos + 18 + this.scrollOffset;
-		blit(stack, this.leftPos + 198, scrollPosition, 244, 0, 12, 15);
+		graphics.blit(BACKPACK, this.leftPos + 198, scrollPosition, 244, 0, 12, 15);
 	}
 	
 	@Override
@@ -178,5 +173,4 @@ public class BackpackScreen extends AbstractModifiableContainerScreen<BackpackMe
 	protected void updateItemModifier(ItemModifierType modifierType) {
 		XBNetworkHandler.INSTANCE.sendToServer(new ResetItemModifierPacket(modifierType));
 	}
-	
 }

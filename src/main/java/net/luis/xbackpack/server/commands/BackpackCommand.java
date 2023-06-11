@@ -15,6 +15,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import org.apache.commons.lang3.mutable.MutableInt;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -44,23 +45,27 @@ public class BackpackCommand {
 		if (extensions.size() > 1) {
 			source.sendFailure(Component.translatable("xbackpack.commands.backpack.get.failure"));
 		} else {
-			source.sendSuccess(Component.translatable("xbackpack.commands.backpack.get.success", getName(extensions.get(0)), player.getName().getString(), BackpackProvider.get(player).getConfig().getExtensionConfig().getState(extensions.get(0)).getName()), false);
+			source.sendSuccess(() -> Component.translatable("xbackpack.commands.backpack.get.success", getName(extensions.get(0)), player.getName().getString(), BackpackProvider.get(player).getConfig().getExtensionConfig().getState(extensions.get(0)).getName()), false);
 		}
 		return 1;
 	}
 	
 	private static int setExtensionState(CommandSourceStack source, ServerPlayer player, @NotNull List<BackpackExtension> extensions, BackpackExtensionState state) {
-		int i = 0;
+		MutableInt i =  new MutableInt(0);
 		IBackpack backpack = BackpackProvider.get(player);
 		for (BackpackExtension extension : extensions) {
+			if (extension.isDisabled()) {
+				source.sendFailure(Component.translatable("xbackpack.commands.backpack.set.failure.disabled", getName(extension)));
+				continue;
+			}
 			backpack.getConfig().getExtensionConfig().setState(player, extension, state);
-			++i;
+			i.increment();
 		}
 		backpack.broadcastChanges();
-		if (i == 1) {
-			source.sendSuccess(Component.translatable("xbackpack.commands.backpack.set.success.single", getName(extensions.get(0)), player.getName().getString(), state.getName()), false);
-		} else if (i > 1) {
-			source.sendSuccess(Component.translatable("xbackpack.commands.backpack.set.success.multiple", i, player.getName().getString(), state.getName()), false);
+		if (i.getValue() == 1) {
+			source.sendSuccess(() -> Component.translatable("xbackpack.commands.backpack.set.success.single", getName(extensions.get(0)), player.getName().getString(), state.getName()), false);
+		} else if (i.getValue() > 1) {
+			source.sendSuccess(() -> Component.translatable("xbackpack.commands.backpack.set.success.multiple", i.getValue(), player.getName().getString(), state.getName()), false);
 		}
 		return 1;
 	}
@@ -74,5 +79,4 @@ public class BackpackCommand {
 		}
 		return name.toString().trim();
 	}
-	
 }

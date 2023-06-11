@@ -13,6 +13,7 @@ import net.luis.xbackpack.world.inventory.handler.SmeltingHandler;
 import net.luis.xbackpack.world.inventory.progress.BrewingProgressHandler;
 import net.luis.xbackpack.world.inventory.progress.ProgressHandler;
 import net.luis.xbackpack.world.inventory.progress.SmeltingProgressHandler;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -180,8 +181,7 @@ public class BackpackHandler implements IBackpack {
 		} else {
 			XBackpack.LOGGER.error("The data version has changed, to prevent the loss of the backpack inventory, the game will be terminated");
 			XBackpack.LOGGER.info("If you want to know how to update the data version, check out the linked wiki on CurseForge");
-			System.exit(0);
+			Minecraft.getInstance().close();
 		}
 	}
-	
 }

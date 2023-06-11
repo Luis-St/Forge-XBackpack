@@ -1,13 +1,11 @@
 package net.luis.xbackpack.client.gui.components;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.luis.xbackpack.XBackpack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
@@ -37,14 +35,12 @@ public class ActionButton extends AbstractButton {
 	}
 	
 	@Override
-	public void renderWidget(@NotNull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+	public void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		RenderSystem.setShaderTexture(0, BACKPACK);
 		if (this.isHoveredOrFocused()) {
-			GuiComponent.blit(stack, this.getX(), this.getY(), this.width, this.height, 244, 27, 12, 12, 256, 256);
+			graphics.blit(BACKPACK, this.getX(), this.getY(), this.width, this.height, 244, 27, 12, 12, 256, 256);
 		} else {
-			GuiComponent.blit(stack, this.getX(), this.getY(), this.width, this.height, 244, 15, 12, 12, 256, 256);
+			graphics.blit(BACKPACK, this.getX(), this.getY(), this.width, this.height, 244, 15, 12, 12, 256, 256);
 		}
 	}
 	
@@ -77,7 +73,5 @@ public class ActionButton extends AbstractButton {
 		
 		RIGHT(),
 		LEFT()
-		
 	}
-	
 }

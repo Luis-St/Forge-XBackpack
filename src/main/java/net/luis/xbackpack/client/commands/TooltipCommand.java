@@ -30,9 +30,9 @@ public class TooltipCommand {
 		if (source.getEntity() instanceof Player player) {
 			boolean showModifierInfo = BackpackProvider.get(player).getConfig().getClientConfig().shouldShowModifierInfo();
 			if (showModifierInfo) {
-				source.sendSuccess(Component.translatable("xbackpack.commands.tooltip.get.success.true"), false);
+				source.sendSuccess(() -> Component.translatable("xbackpack.commands.tooltip.get.success.true"), false);
 			} else {
-				source.sendSuccess(Component.translatable("xbackpack.commands.tooltip.get.success.false"), false);
+				source.sendSuccess(() -> Component.translatable("xbackpack.commands.tooltip.get.success.false"), false);
 			}
 		} else {
 			source.sendFailure(Component.translatable("xbackpack.commands.tooltip.failure"));
@@ -44,14 +44,13 @@ public class TooltipCommand {
 		if (source.getEntity() instanceof Player player) {
 			BackpackProvider.get(player).getConfig().getClientConfig().setShowModifierInfo(value);
 			if (value) {
-				source.sendSuccess(Component.translatable("xbackpack.commands.tooltip.set.success.true"), false);
+				source.sendSuccess(() -> Component.translatable("xbackpack.commands.tooltip.set.success.true"), false);
 			} else {
-				source.sendSuccess(Component.translatable("xbackpack.commands.tooltip.set.success.false"), false);
+				source.sendSuccess(() -> Component.translatable("xbackpack.commands.tooltip.set.success.false"), false);
 			}
 		} else {
 			source.sendFailure(Component.translatable("xbackpack.commands.tooltip.failure"));
 		}
 		return 1;
 	}
-	
 }

@@ -1,17 +1,13 @@
 package net.luis.xbackpack.client.gui.screens.extension;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.client.gui.screens.AbstractExtensionContainerScreen;
-import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtension;
-import net.luis.xbackpack.world.extension.BackpackExtensionState;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
@@ -33,7 +29,6 @@ public abstract class AbstractExtensionScreen {
 	protected final BackpackExtension extension;
 	protected final List<BackpackExtension> extensions;
 	protected Minecraft minecraft;
-	protected ItemRenderer itemRenderer;
 	protected Font font;
 	protected int imageWidth;
 	protected int imageHeight;
@@ -46,9 +41,8 @@ public abstract class AbstractExtensionScreen {
 		this.extensions = extensions;
 	}
 	
-	public final void init(Minecraft minecraft, ItemRenderer itemRenderer, Font font, int imageWidth, int imageHeight, int leftPos, int topPos) {
+	public final void init(Minecraft minecraft, Font font, int imageWidth, int imageHeight, int leftPos, int topPos) {
 		this.minecraft = minecraft;
-		this.itemRenderer = itemRenderer;
 		this.font = font;
 		this.imageWidth = imageWidth;
 		this.imageHeight = imageHeight;
@@ -98,31 +92,31 @@ public abstract class AbstractExtensionScreen {
 		return new ResourceLocation(location.getNamespace(), "textures/gui/container/" + location.getPath() + "_extension.png");
 	}
 	
-	public void render(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
+	public void render(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
 		int offset = this.getExtensionOffset(this.extension);
-		RenderSystem.setShaderTexture(0, ICONS);
-		GuiComponent.blit(stack, this.leftPos + this.imageWidth, this.topPos + offset, this.extension.getIconWidth(), this.extension.getIconHeight(), 0, 0, 32, 32, 256, 256);
-		this.itemRenderer.renderAndDecorateItem(stack, this.extension.getIcon(), this.leftPos + this.imageWidth + 1, this.topPos + 3 + offset);
+		graphics.blit(ICONS, this.leftPos + this.imageWidth, this.topPos + offset, this.extension.getIconWidth(), this.extension.getIconHeight(), 0, 0, 32, 32, 256, 256);
+		graphics.renderItem(this.extension.getIcon(), this.leftPos + this.imageWidth + 1, this.topPos + 3 + offset);
 	}
 	
-	public void renderOpened(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
+	public void renderOpened(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
 		int offset = this.getExtensionOffset(this.extension);
 		RenderSystem.setShaderTexture(0, this.getTexture());
-		GuiComponent.blit(stack, this.leftPos + this.imageWidth - 3, this.topPos + offset, 0, 0, this.extension.getImageWidth(), this.extension.getImageHeight());
-		this.itemRenderer.renderAndDecorateItem(stack, this.extension.getIcon(), this.leftPos + this.imageWidth + 1, this.topPos + 4 + offset);
-		this.font.draw(stack, this.extension.getTitle(), this.leftPos + this.imageWidth + 19, this.topPos + 9 + offset, 4210752);
+		graphics.blit(this.getTexture(), this.leftPos + this.imageWidth - 3, this.topPos + offset, 0, 0, this.extension.getImageWidth(), this.extension.getImageHeight());
+		graphics.renderItem(this.extension.getIcon(), this.leftPos + this.imageWidth + 1, this.topPos + 4 + offset);
+		graphics.renderItemDecorations(this.font, this.extension.getIcon(), this.leftPos + this.imageWidth + 1, this.topPos + 4 + offset);
+		graphics.drawString(this.font, this.extension.getTitle(), this.leftPos + this.imageWidth + 19, this.topPos + 9 + offset, 4210752, false);
 		if (this.minecraft != null) {
-			this.renderAdditional(stack, partialTicks, mouseX, mouseY, true);
+			this.renderAdditional(graphics, partialTicks, mouseX, mouseY, true);
 		}
 	}
 	
-	protected void renderAdditional(PoseStack stack, float partialTicks, int mouseX, int mouseY, boolean open) {
+	protected void renderAdditional(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY, boolean open) {
 		
 	}
 	
-	public void renderTooltip(PoseStack stack, int mouseX, int mouseY, boolean open, boolean renderable, Consumer<ItemStack> tooltipRenderer) {
+	public void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY, boolean open, boolean renderable, Consumer<ItemStack> tooltipRenderer) {
 		if (this.isInExtension(this.extension, mouseX, mouseY) && !open && renderable) {
-			this.screen.renderTooltip(stack, this.extension.getTooltip(), mouseX, mouseY);
+			graphics.renderTooltip(this.font, this.extension.getTooltip(), mouseX, mouseY);
 		}
 	}
 	
@@ -145,5 +139,4 @@ public abstract class AbstractExtensionScreen {
 	public BackpackExtension getExtension() {
 		return this.extension;
 	}
-	
 }

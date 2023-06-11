@@ -85,7 +85,7 @@ public class FurnaceExtensionMenu extends AbstractExtensionMenu {
 	@SuppressWarnings("unchecked")
 	private boolean canSmelt(ItemStack stack) {
 		for (RecipeType<? extends AbstractCookingRecipe> recipeType : BackpackConstants.FURNACE_RECIPE_TYPES) {
-			if (this.player.level.getRecipeManager().getRecipeFor((RecipeType<AbstractCookingRecipe>) recipeType, new SimpleContainer(stack), this.player.level).isPresent()) {
+			if (this.player.level().getRecipeManager().getRecipeFor((RecipeType<AbstractCookingRecipe>) recipeType, new SimpleContainer(stack), this.player.level()).isPresent()) {
 				return true;
 			}
 		}
@@ -118,5 +118,4 @@ public class FurnaceExtensionMenu extends AbstractExtensionMenu {
 		}
 		return false;
 	}
-	
 }

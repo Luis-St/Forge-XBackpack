@@ -1,11 +1,15 @@
 package net.luis.xbackpack.world.inventory.wrapper;
 
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 /**
  *
@@ -13,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
  *
  */
 
-public class CraftingContainerWrapper extends CraftingContainer implements IItemHandlerModifiable {
+public class CraftingContainerWrapper extends TransientCraftingContainer implements IItemHandlerModifiable {
 	
 	private final IItemHandlerModifiable itemHandler;
 	
@@ -117,5 +121,4 @@ public class CraftingContainerWrapper extends CraftingContainer implements IItem
 			contents.accountSimpleStack(this.getStackInSlot(i));
 		}
 	}
-	
 }

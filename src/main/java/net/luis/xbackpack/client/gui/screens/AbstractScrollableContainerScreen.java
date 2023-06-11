@@ -6,6 +6,7 @@ import com.mojang.datafixers.util.Pair;
 import net.luis.xbackpack.world.inventory.slot.MoveableSlot;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
@@ -39,15 +40,15 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 	}
 	
 	@Override
-	protected abstract void renderBg(@NotNull PoseStack stack, float partialTicks, int mouseX, int mouseY);
+	protected abstract void renderBg(@NotNull GuiGraphics graphics, float partialTicks, int mouseX, int mouseY);
 	
 	@Override
-	public void render(@NotNull PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-		this.renderBg(stack, partialTicks, mouseX, mouseY);
-		MinecraftForge.EVENT_BUS.post(new ContainerScreenEvent.Render.Background(this, stack, mouseX, mouseY));
+	public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+		this.renderBg(graphics, partialTicks, mouseX, mouseY);
+		MinecraftForge.EVENT_BUS.post(new ContainerScreenEvent.Render.Background(this, graphics, mouseX, mouseY));
 		RenderSystem.disableDepthTest();
 		for (Renderable widget : this.renderables) {
-			widget.render(stack, mouseX, mouseY, partialTicks);
+			widget.render(graphics, mouseX, mouseY, partialTicks);
 		}
 		PoseStack viewStack = RenderSystem.getModelViewStack();
 		viewStack.pushPose();
@@ -56,9 +57,9 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		this.hoveredSlot = null;
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		this.renderSlots(stack, mouseX, mouseY);
-		this.renderLabels(stack, mouseX, mouseY);
-		MinecraftForge.EVENT_BUS.post(new ContainerScreenEvent.Render.Foreground(this, stack, mouseX, mouseY));
+		this.renderSlots(graphics, mouseX, mouseY);
+		this.renderLabels(graphics, mouseX, mouseY);
+		MinecraftForge.EVENT_BUS.post(new ContainerScreenEvent.Render.Foreground(this, graphics, mouseX, mouseY));
 		ItemStack mouseStack = this.draggingItem.isEmpty() ? this.menu.getCarried() : this.draggingItem;
 		if (!mouseStack.isEmpty()) {
 			int renderOffset = this.draggingItem.isEmpty() ? 8 : 16;
@@ -73,7 +74,7 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 					count = ChatFormatting.YELLOW + "0";
 				}
 			}
-			this.renderFloatingItem(stack, mouseStack, mouseX - this.leftPos - 8, mouseY - this.topPos - renderOffset, count);
+			this.renderFloatingItem(graphics, mouseStack, mouseX - this.leftPos - 8, mouseY - this.topPos - renderOffset, count);
 		}
 		if (!this.snapbackItem.isEmpty()) {
 			float time = (float) (Util.getMillis() - this.snapbackTime) / 100.0F;
@@ -81,13 +82,13 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 				time = 1.0F;
 				this.snapbackItem = ItemStack.EMPTY;
 			}
-			this.renderFloatingItem(stack, this.snapbackItem, this.snapbackStartX + (int) ((Objects.requireNonNull(this.snapbackEnd).x - this.snapbackStartX) * time),
+			this.renderFloatingItem(graphics, this.snapbackItem, this.snapbackStartX + (int) ((Objects.requireNonNull(this.snapbackEnd).x - this.snapbackStartX) * time),
 					this.snapbackStartY + (int) ((this.snapbackEnd.y - this.snapbackStartY) * time), null);
 		}
 		viewStack.popPose();
 		RenderSystem.applyModelViewMatrix();
 		RenderSystem.enableDepthTest();
-		this.renderTooltip(stack, mouseX, mouseY);
+		this.renderTooltip(graphics, mouseX, mouseY);
 	}
 	
 	@NotNull
@@ -95,26 +96,26 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 		return SlotRenderType.DEFAULT;
 	}
 	
-	protected void renderSlots(PoseStack stack, int mouseX, int mouseY) {
+	protected void renderSlots(GuiGraphics graphics, int mouseX, int mouseY) {
 		for (int i = 0; i < this.menu.slots.size(); ++i) {
 			Slot slot = this.menu.slots.get(i);
 			if (this.getSlotRenderType(slot) != SlotRenderType.SKIP) {
 				int y = slot instanceof MoveableSlot moveableSlot ? moveableSlot.getY(this.scrollOffset) : slot.y;
-				this.renderAndDecorateSlot(stack, mouseX, mouseY, slot, slot.x, y, this.getSlotColor(i));
+				this.renderAndDecorateSlot(graphics, mouseX, mouseY, slot, slot.x, y, this.getSlotColor(i));
 			}
 		}
 	}
 	
-	protected void renderAndDecorateSlot(PoseStack stack, int mouseX, int mouseY, Slot slot, int slotX, int slotY, int slotColor) {
+	protected void renderAndDecorateSlot(GuiGraphics graphics, int mouseX, int mouseY, Slot slot, int slotX, int slotY, int slotColor) {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-		this.renderSlot(stack, slot, slotX, slotY);
+		this.renderSlot(graphics, slot, slotX, slotY);
 		if (this.isHovering(slot, mouseX, mouseY)) {
 			this.hoveredSlot = slot;
-			renderSlotHighlight(stack, slotX, slotY, 0, slotColor);
+			renderSlotHighlight(graphics, slotX, slotY, 0, slotColor);
 		}
 	}
 	
-	protected void renderSlot(PoseStack stack, @NotNull Slot slot, int slotX, int slotY) {
+	protected void renderSlot(GuiGraphics graphics, @NotNull Slot slot, int slotX, int slotY) {
 		ItemStack slotStack = slot.getItem();
 		boolean quickReplace = false;
 		boolean clickedSlot = slot == this.clickedSlot && !this.draggingItem.isEmpty() && !this.isSplittingStack;
@@ -128,46 +129,46 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 				return;
 			}
 			if (AbstractContainerMenu.canItemQuickReplace(slot, carriedStack, true) && this.menu.canDragTo(slot)) {
-				slotStack = carriedStack.copy();
 				quickReplace = true;
-				AbstractContainerMenu.getQuickCraftSlotCount(this.quickCraftSlots, this.quickCraftingType, slotStack, slot.getItem().isEmpty() ? 0 : slot.getItem().getCount());
-				int count = Math.min(slotStack.getMaxStackSize(), slot.getMaxStackSize(slotStack));
-				if (slotStack.getCount() > count) {
+				int count = Math.min(carriedStack.getMaxStackSize(), slot.getMaxStackSize(carriedStack));
+				int craftPlaceCount = AbstractContainerMenu.getQuickCraftPlaceCount(this.quickCraftSlots, this.quickCraftingType, carriedStack) + (slot.getItem().isEmpty() ? 0 : slot.getItem().getCount());
+				if (craftPlaceCount > count) {
+					craftPlaceCount = count;
 					stackCount = ChatFormatting.YELLOW.toString() + count;
-					slotStack.setCount(count);
 				}
+				slotStack = carriedStack.copyWithCount(craftPlaceCount);
 			} else {
 				this.quickCraftSlots.remove(slot);
 				this.recalculateQuickCraftRemaining();
 			}
 		}
-		stack.pushPose();
-		stack.translate(0.0F, 0.0F, 100.0F);
+		graphics.pose().pushPose();
+		graphics.pose().translate(0.0F, 0.0F, 100.0F);
 		if (slotStack.isEmpty()) {
 			Pair<ResourceLocation, ResourceLocation> pair = slot.getNoItemIcon();
 			if (pair != null) {
 				TextureAtlasSprite atlasSprite = Objects.requireNonNull(this.minecraft).getTextureAtlas(pair.getFirst()).apply(pair.getSecond());
 				RenderSystem.setShaderTexture(0, atlasSprite.atlasLocation());
-				blit(stack, slotX, slotY, 0, 16, 16, atlasSprite);
+				graphics.blit(slotX, slotY, 0, 16, 16, atlasSprite);
 				clickedSlot = true;
 			}
 		}
 		if (!clickedSlot) {
 			if (quickReplace) {
-				fill(stack, slotX, slotY, slotX + 16, slotY + 16, -2130706433);
+				graphics.fill(slotX, slotY, slotX + 16, slotY + 16, -2130706433);
 			}
 			RenderSystem.enableDepthTest();
 			int modelOffset = slotX + slotY * this.imageWidth;
-			this.itemRenderer.renderAndDecorateItem(stack, Objects.requireNonNull(Objects.requireNonNull(this.minecraft).player), slotStack, slotX, slotY, modelOffset);
-			this.itemRenderer.renderGuiItemDecorations(stack, this.font, slotStack, slotX, slotY, stackCount);
+			graphics.renderItem(Objects.requireNonNull(Objects.requireNonNull(this.minecraft).player), slotStack, slotX, slotY, modelOffset);
+			graphics.renderItemDecorations(this.font, slotStack, slotX, slotY, stackCount);
 		}
-		stack.popPose();
+		graphics.pose().popPose();
 	}
 	
 	@Override
-	protected void renderTooltip(@NotNull PoseStack stack, int mouseX, int mouseY) {
+	protected void renderTooltip(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {
 		if (this.menu.getCarried().isEmpty() && this.hoveredSlot != null && this.hoveredSlot.hasItem() && this.getSlotRenderType(this.hoveredSlot) == SlotRenderType.DEFAULT) {
-			this.renderTooltip(stack, this.hoveredSlot.getItem(), mouseX, mouseY);
+			graphics.renderTooltip(this.font, this.hoveredSlot.getItem(), mouseX, mouseY);
 		}
 	}
 	
@@ -227,5 +228,4 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 	public boolean isHovering(Slot slot, double mouseX, double mouseY) {
 		return this.isHovering(slot.x, slot instanceof MoveableSlot moveableSlot ? moveableSlot.getY(this.scrollOffset) : slot.y, 16, 16, mouseX, mouseY);
 	}
-	
 }

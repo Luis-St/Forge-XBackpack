@@ -48,13 +48,13 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 	
 	private final EnchantingHandler handler;
 	private final RandomSource rng = RandomSource.create();
-	private final ResourceLocation[] enchantments = new ResourceLocation[] {
+	private final ResourceLocation[] enchantments = new ResourceLocation[]{
 			EMPTY_ENCHANTMENT, EMPTY_ENCHANTMENT, EMPTY_ENCHANTMENT
 	};
-	private final int[] enchantmentLevels = new int[] {
+	private final int[] enchantmentLevels = new int[]{
 			-1, -1, -1
 	};
-	private final int[] enchantingCosts = new int[] {
+	private final int[] enchantingCosts = new int[]{
 			0, 0, 0
 	};
 	private int enchantmentSeed;
@@ -110,7 +110,7 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 				if (this.enchantingCosts[row] < row + 1) {
 					this.enchantingCosts[row] = 0;
 				}
-				this.enchantingCosts[row] = ForgeEventFactory.onEnchantmentLevelSet(this.player.level, this.player.blockPosition(), row, power, inputStack, this.enchantingCosts[row]);
+				this.enchantingCosts[row] = ForgeEventFactory.onEnchantmentLevelSet(this.player.level(), this.player.blockPosition(), row, power, inputStack, this.enchantingCosts[row]);
 			}
 			for (int row = 0; row < 3; ++row) {
 				if (this.enchantingCosts[row] > 0) {
@@ -184,7 +184,7 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 					player.awardStat(Stats.ENCHANT_ITEM);
 					if (player instanceof ServerPlayer serverPlayer) {
 						CriteriaTriggers.ENCHANTED_ITEM.trigger(serverPlayer, resultStack, requiredFuel);
-						this.playSound(serverPlayer, serverPlayer.getLevel());
+						this.playSound(serverPlayer, serverPlayer.serverLevel());
 					}
 					this.enchantmentSeed = player.getEnchantmentSeed();
 					this.slotsChanged();
@@ -233,5 +233,4 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 		}
 		return false;
 	}
-	
 }

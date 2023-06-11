@@ -1,11 +1,9 @@
 package net.luis.xbackpack.client.gui.screens.extension;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.luis.xbackpack.client.gui.screens.AbstractExtensionContainerScreen;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.Mth;
 
 import java.util.List;
@@ -18,7 +16,7 @@ import java.util.List;
 
 public class BrewingStandExtensionScreen extends AbstractExtensionScreen {
 	
-	private static final int[] BUBBLES = new int[] {
+	private static final int[] BUBBLES = new int[]{
 			29, 24, 20, 16, 11, 6, 0
 	};
 	private int fuel;
@@ -29,30 +27,29 @@ public class BrewingStandExtensionScreen extends AbstractExtensionScreen {
 	}
 	
 	@Override
-	protected void renderAdditional(PoseStack stack, float partialTicks, int mouseX, int mouseY, boolean open) {
+	protected void renderAdditional(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY, boolean open) {
 		if (open) {
-			RenderSystem.setShaderTexture(0, this.getTexture());
-			this.renderFuel(stack);
-			this.renderBrewing(stack);
+			this.renderFuel(graphics);
+			this.renderBrewing(graphics);
 		}
 	}
 	
-	private void renderFuel(PoseStack stack) {
+	private void renderFuel(GuiGraphics graphics) {
 		int fuel = Mth.clamp((18 * this.fuel + 20 - 1) / 20, 0, 18);
 		if (fuel > 0) {
-			GuiComponent.blit(stack, this.leftPos + this.imageWidth + 38, this.topPos + 173, 106, 29, fuel, 4);
+			graphics.blit(this.getTexture(), this.leftPos + this.imageWidth + 38, this.topPos + 173, 106, 29, fuel, 4);
 		}
 	}
 	
-	private void renderBrewing(PoseStack stack) {
+	private void renderBrewing(GuiGraphics graphics) {
 		if (this.brewTime > 0) {
 			int progress = (int) (28.0 * (1.0 - (double) this.brewTime / 400.0));
 			if (progress > 0) {
-				GuiComponent.blit(stack, this.leftPos + this.imageWidth + 75, this.topPos + 145, 106, 0, 9, progress);
+				graphics.blit(this.getTexture(), this.leftPos + this.imageWidth + 75, this.topPos + 145, 106, 0, 9, progress);
 			}
 			int bubbles = BUBBLES[this.brewTime / 2 % 7];
 			if (bubbles > 0) {
-				GuiComponent.blit(stack, this.leftPos + this.imageWidth + 42, this.topPos + 143 + 29 - bubbles, 115, 29 - bubbles, 12, bubbles);
+				graphics.blit(this.getTexture(), this.leftPos + this.imageWidth + 42, this.topPos + 143 + 29 - bubbles, 115, 29 - bubbles, 12, bubbles);
 			}
 		}
 	}
@@ -61,5 +58,4 @@ public class BrewingStandExtensionScreen extends AbstractExtensionScreen {
 		this.fuel = fuel;
 		this.brewTime = brewTime;
 	}
-	
 }
