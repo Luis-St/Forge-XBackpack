@@ -1,5 +1,6 @@
 package net.luis.xbackpack.world.inventory.handler;
 
+import net.luis.xbackpack.world.item.DynamicItemStackHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
@@ -15,18 +16,18 @@ public class CraftingFuelHandler extends CraftingHandler {
 	private final ItemStackHandler fuelHandler;
 	
 	public CraftingFuelHandler(int input, int result) {
-		this(new ItemStackHandler(input), new ItemStackHandler(result));
+		this(new DynamicItemStackHandler(input), new DynamicItemStackHandler(result));
 	}
 	
-	public CraftingFuelHandler(ItemStackHandler inputHandler, ItemStackHandler resultHandler) {
-		this(inputHandler, new ItemStackHandler(1), resultHandler);
+	public CraftingFuelHandler(DynamicItemStackHandler inputHandler, DynamicItemStackHandler resultHandler) {
+		this(inputHandler, new DynamicItemStackHandler(1), resultHandler);
 	}
 	
 	public CraftingFuelHandler(int input, int fuel, int result) {
-		this(new ItemStackHandler(input), new ItemStackHandler(fuel), new ItemStackHandler(result));
+		this(new DynamicItemStackHandler(input), new DynamicItemStackHandler(fuel), new DynamicItemStackHandler(result));
 	}
 	
-	public CraftingFuelHandler(ItemStackHandler inputHandler, ItemStackHandler fuelHandler, ItemStackHandler resultHandler) {
+	public CraftingFuelHandler(DynamicItemStackHandler inputHandler, DynamicItemStackHandler fuelHandler, DynamicItemStackHandler resultHandler) {
 		super(inputHandler, resultHandler);
 		this.fuelHandler = fuelHandler;
 	}

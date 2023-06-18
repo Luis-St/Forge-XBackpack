@@ -20,20 +20,21 @@ import net.minecraft.world.item.crafting.SmithingRecipe;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 	
 	private final CraftingHandler handler;
 	private final Level level;
+	private final List<SmithingRecipe> recipes;
 	private SmithingRecipe selectedRecipe;
 	
 	public SmithingTableExtensionMenu(AbstractExtensionContainerMenu menu, Player player) {
 		super(menu, player, BackpackExtensions.SMITHING_TABLE.get());
 		this.handler = BackpackProvider.get(this.player).getSmithingHandler();
 		this.level = this.player.level();
+		this.recipes = this.level.getRecipeManager().getAllRecipesFor(RecipeType.SMITHING);
 	}
 	
 	@Override
@@ -43,8 +44,30 @@ public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 	
 	@Override
 	public void addSlots(@NotNull Consumer<Slot> consumer) {
-		consumer.accept(new ExtensionSlot(this, this.handler.getInputHandler(), 0, 225, 193));
-		consumer.accept(new ExtensionSlot(this, this.handler.getInputHandler(), 1, 260, 193));
+		consumer.accept(new ExtensionSlot(this, this.handler.getInputHandler(), 0, 225, 193) {
+			@Override
+			public boolean mayPlace(@NotNull ItemStack stack) {
+				return SmithingTableExtensionMenu.this.recipes.stream().anyMatch((recipe) -> {
+					return recipe.isTemplateIngredient(stack);
+				});
+			}
+		});
+		consumer.accept(new ExtensionSlot(this, this.handler.getInputHandler(), 1, 243, 193) {
+			@Override
+			public boolean mayPlace(@NotNull ItemStack stack) {
+				return SmithingTableExtensionMenu.this.recipes.stream().anyMatch((recipe) -> {
+					return recipe.isBaseIngredient(stack);
+				});
+			}
+		});
+		consumer.accept(new ExtensionSlot(this, this.handler.getInputHandler(), 2, 260, 193) {
+			@Override
+			public boolean mayPlace(@NotNull ItemStack stack) {
+				return SmithingTableExtensionMenu.this.recipes.stream().anyMatch((recipe) -> {
+					return recipe.isAdditionIngredient(stack);
+				});
+			}
+		});
 		consumer.accept(new ExtensionSlot(this, this.handler.getResultHandler(), 0, 304, 193, false) {
 			@Override
 			public boolean mayPlace(@NotNull ItemStack stack) {
@@ -75,6 +98,7 @@ public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 		}
 		this.shrinkStackInSlot(0);
 		this.shrinkStackInSlot(1);
+		this.shrinkStackInSlot(2);
 		if (player instanceof ServerPlayer serverPlayer) {
 			this.playSound(serverPlayer, serverPlayer.serverLevel());
 		}
@@ -108,24 +132,32 @@ public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	private @NotNull SimpleContainer asContainer() {
-		return new SimpleContainer(this.handler.getInputHandler().getStackInSlot(0), this.handler.getInputHandler().getStackInSlot(1));
+		return new SimpleContainer(this.handler.getInputHandler().getStackInSlot(0), this.handler.getInputHandler().getStackInSlot(1), this.handler.getInputHandler().getStackInSlot(2));
 	}
 	
 	@Override
 	public boolean quickMoveStack(ItemStack slotStack, int index) {
 		if (908 >= index && index >= 0) { // from container
-			if (this.canQuickMoveIngredient(slotStack)) { // into addition
-				return this.menu.moveItemStackTo(slotStack, 955, 956);
-			} else {  // into input
-				return this.menu.moveItemStackTo(slotStack, 954, 955);
+			int slot = 954 + this.getSlotOffset(slotStack);
+			if (954 > slot || slot > 956) {
+				return false;
 			}
-		} else if (index == 956) { // from result
+			return this.menu.moveItemStackTo(slotStack, slot, slot + 1);
+		} else if (index == 957) { // from result
 			return this.movePreferredMenu(slotStack); // into addition
 		}
 		return false;
 	}
 	
-	private boolean canQuickMoveIngredient(ItemStack stack) {
-		return this.player.level().getRecipeManager().getAllRecipesFor(RecipeType.SMITHING).stream().anyMatch((recipe) -> recipe.isAdditionIngredient(stack));
+	private int getSlotOffset(ItemStack stack) {
+		return this.recipes.stream().map((recipe) -> {
+			if (recipe.isTemplateIngredient(stack)) {
+				return 0;
+			} else if (recipe.isBaseIngredient(stack)) {
+				return 1;
+			} else {
+				return recipe.isAdditionIngredient(stack) ? 2 : -1;
+			}
+		}).findFirst().orElse(-1);
 	}
 }

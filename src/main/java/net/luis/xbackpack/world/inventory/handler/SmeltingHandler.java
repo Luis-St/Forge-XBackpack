@@ -1,5 +1,6 @@
 package net.luis.xbackpack.world.inventory.handler;
 
+import net.luis.xbackpack.world.item.DynamicItemStackHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
@@ -20,10 +21,10 @@ public class SmeltingHandler extends CraftingFuelHandler {
 	}
 	
 	public SmeltingHandler(int input, int fuel, int result, int inputStorage, int resultStorage) {
-		this(new ItemStackHandler(input), new ItemStackHandler(fuel), new ItemStackHandler(result), new ItemStackHandler(inputStorage), new ItemStackHandler(resultStorage));
+		this(new DynamicItemStackHandler(input), new DynamicItemStackHandler(fuel), new DynamicItemStackHandler(result), new DynamicItemStackHandler(inputStorage), new DynamicItemStackHandler(resultStorage));
 	}
 	
-	public SmeltingHandler(ItemStackHandler inputHandler, ItemStackHandler fuelHandler, ItemStackHandler resultHandler, ItemStackHandler inputStorageHandler, ItemStackHandler resultStorageHandler) {
+	public SmeltingHandler(DynamicItemStackHandler inputHandler, DynamicItemStackHandler fuelHandler, DynamicItemStackHandler resultHandler, DynamicItemStackHandler inputStorageHandler, DynamicItemStackHandler resultStorageHandler) {
 		super(inputHandler, fuelHandler, resultHandler);
 		this.inputStorageHandler = inputStorageHandler;
 		this.resultStorageHandler = resultStorageHandler;

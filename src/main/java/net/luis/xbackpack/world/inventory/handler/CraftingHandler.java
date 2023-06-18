@@ -1,5 +1,6 @@
 package net.luis.xbackpack.world.inventory.handler;
 
+import net.luis.xbackpack.world.item.DynamicItemStackHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
@@ -15,15 +16,15 @@ public class CraftingHandler {
 	private final ItemStackHandler inputHandler;
 	private final ItemStackHandler resultHandler;
 	
-	public CraftingHandler(ItemStackHandler inputHandler) {
-		this(inputHandler, new ItemStackHandler(1));
+	public CraftingHandler(DynamicItemStackHandler inputHandler) {
+		this(inputHandler, new DynamicItemStackHandler(1));
 	}
 	
 	public CraftingHandler(int input, int result) {
-		this(new ItemStackHandler(input), new ItemStackHandler(result));
+		this(new DynamicItemStackHandler(input), new DynamicItemStackHandler(result));
 	}
 	
-	public CraftingHandler(ItemStackHandler inputHandler, ItemStackHandler resultHandler) {
+	public CraftingHandler(DynamicItemStackHandler inputHandler, DynamicItemStackHandler resultHandler) {
 		this.inputHandler = inputHandler;
 		this.resultHandler = resultHandler;
 	}

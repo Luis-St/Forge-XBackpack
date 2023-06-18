@@ -13,6 +13,7 @@ import net.luis.xbackpack.world.inventory.handler.SmeltingHandler;
 import net.luis.xbackpack.world.inventory.progress.BrewingProgressHandler;
 import net.luis.xbackpack.world.inventory.progress.ProgressHandler;
 import net.luis.xbackpack.world.inventory.progress.SmeltingProgressHandler;
+import net.luis.xbackpack.world.item.DynamicItemStackHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
@@ -31,9 +32,9 @@ public class BackpackHandler implements IBackpack {
 	
 	private final Player player;
 	private final BackpackConfig config;
-	private final ItemStackHandler backpackHandler = new ItemStackHandler(873);
-	private final ItemStackHandler toolHandler = new ItemStackHandler(3);
-	private final ItemStackHandler craftingHandler = new ItemStackHandler(9);
+	private final ItemStackHandler backpackHandler = new DynamicItemStackHandler(873);
+	private final ItemStackHandler toolHandler = new DynamicItemStackHandler(3);
+	private final ItemStackHandler craftingHandler = new DynamicItemStackHandler(9);
 	private final SmeltingHandler furnaceHandler = new SmeltingHandler(1, 4, 4);
 	private final SmeltingProgressHandler smeltHandler;
 	private final CraftingHandler anvilHandler = new CraftingHandler(2, 1);
@@ -42,7 +43,7 @@ public class BackpackHandler implements IBackpack {
 	private final CraftingFuelHandler brewingHandler = new CraftingFuelHandler(1, 3);
 	private final BrewingProgressHandler brewHandler;
 	private final CraftingHandler grindstoneHandler = new CraftingHandler(2, 1);
-	private final CraftingHandler smithingHandler = new CraftingHandler(2, 1);
+	private final CraftingHandler smithingHandler = new CraftingHandler(3, 1);
 	
 	public BackpackHandler(Player player) {
 		this.player = player;

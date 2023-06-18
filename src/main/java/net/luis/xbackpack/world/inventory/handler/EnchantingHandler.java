@@ -1,5 +1,6 @@
 package net.luis.xbackpack.world.inventory.handler;
 
+import net.luis.xbackpack.world.item.DynamicItemStackHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
@@ -20,15 +21,15 @@ public class EnchantingHandler {
 		this(power, input, 1);
 	}
 	
-	public EnchantingHandler(ItemStackHandler powerHandler, ItemStackHandler inputHandler) {
-		this(powerHandler, inputHandler, new ItemStackHandler(1));
+	public EnchantingHandler(DynamicItemStackHandler powerHandler, DynamicItemStackHandler inputHandler) {
+		this(powerHandler, inputHandler, new DynamicItemStackHandler(1));
 	}
 	
 	public EnchantingHandler(int power, int input, int fuel) {
-		this(new ItemStackHandler(power), new ItemStackHandler(input), new ItemStackHandler(fuel));
+		this(new DynamicItemStackHandler(power), new DynamicItemStackHandler(input), new DynamicItemStackHandler(fuel));
 	}
 	
-	public EnchantingHandler(ItemStackHandler powerHandler, ItemStackHandler inputHandler, ItemStackHandler fuelHandler) {
+	public EnchantingHandler(DynamicItemStackHandler powerHandler, DynamicItemStackHandler inputHandler, DynamicItemStackHandler fuelHandler) {
 		this.powerHandler = powerHandler;
 		this.inputHandler = inputHandler;
 		this.fuelHandler = fuelHandler;
