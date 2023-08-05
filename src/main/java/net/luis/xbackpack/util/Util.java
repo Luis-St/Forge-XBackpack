@@ -1,5 +1,6 @@
 package net.luis.xbackpack.util;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -10,13 +11,16 @@ import org.jetbrains.annotations.Nullable;
 
 public class Util {
 	
-	public static int tryParseInteger(String value) {
-		return tryParseInteger(value, 0);
-	}
-	
 	public static int tryParseInteger(String value, int fallback) {
 		int number = fallback;
 		try {
+			char firstChar = value.charAt(0);
+			char lastChar = value.charAt(value.length() - 1);
+			if (firstChar == '=' || firstChar == '<' || firstChar == '>') {
+				value = value.substring(1);
+			} else if (lastChar == '<' || lastChar == '>') {
+				value = value.substring(0, value.length() - 1);
+			}
 			number = Integer.parseInt(value);
 		} catch (Exception ignored) {
 			
@@ -28,7 +32,7 @@ public class Util {
 		return tryParseEnum(value, enumValues, null);
 	}
 	
-	public static <T extends Enum<T>> T tryParseEnum(String value, T[] enumValues, @Nullable T fallback) {
+	public static <T extends Enum<T>> T tryParseEnum(String value, T @NotNull [] enumValues, @Nullable T fallback) {
 		for (T enumValue : enumValues) {
 			if (enumValue.name().toLowerCase().equals(value)) {
 				return enumValue;

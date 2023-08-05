@@ -107,16 +107,28 @@ public enum ItemFilters implements ItemFilter {
 	COUNT_SEARCH("count_search", 4, false) {
 		@Override
 		public boolean canKeepItem(ItemStack stack, String searchTerm) {
-			int count = Util.tryParseInteger(searchTerm, -1);
 			if (searchTerm.isEmpty()) {
 				return true;
-			} else if (0 >= count) {
-				return false;
-			} else if (count > 64) {
-				return false;
-			} else {
-				return stack.getCount() == count;
 			}
+			int count = Util.tryParseInteger(searchTerm, -1);
+			if (count == -1) {
+				return false;
+			}
+			char firstChar = searchTerm.charAt(0);
+			if (firstChar == '=') {
+				return stack.getCount() == count;
+			} else if (firstChar == '<') {
+				return stack.getCount() <= count;
+			} else if (firstChar == '>') {
+				return stack.getCount() >= count;
+			}
+			char lastChar = searchTerm.charAt(searchTerm.length() - 1);
+			if (lastChar == '<') {
+				return stack.getCount() >= count;
+			} else if (lastChar == '>') {
+				return stack.getCount() <= count;
+			}
+			return stack.getCount() == count;
 		}
 	},
 	STACKABLE("stackable", 5) {
