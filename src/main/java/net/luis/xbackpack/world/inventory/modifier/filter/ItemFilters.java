@@ -2,6 +2,7 @@ package net.luis.xbackpack.world.inventory.modifier.filter;
 
 import com.google.common.collect.Lists;
 import net.luis.xbackpack.util.Util;
+import net.luis.xbackpack.world.item.CustomBackpackFilterItem;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.tags.TagKey;
@@ -131,69 +132,70 @@ public enum ItemFilters implements ItemFilter {
 	},
 	STACKABLE("stackable", 5) {
 		@Override
-			return stack.isStackable();
 		protected boolean canKeepItem(ItemStack stack, String searchTerm) {
+			return this.checkCustom(stack, CustomBackpackFilterItem::isStackable) || stack.isStackable();
 		}
 	},
 	NONE_STACKABLE("none_stackable", 6) {
 		@Override
-			return !stack.isStackable();
 		protected boolean canKeepItem(ItemStack stack, String searchTerm) {
+			return this.checkCustom(stack, (custom, itemStack) -> !custom.isStackable(itemStack)) || !stack.isStackable();
 		}
 	},
 	MAX_COUNT("max_count", 7) {
 		@Override
-			return stack.getItem().getMaxStackSize(stack) == stack.getCount();
 		protected boolean canKeepItem(ItemStack stack, String searchTerm) {
+			return this.checkCustom(stack, CustomBackpackFilterItem::isMaxCount) || stack.getItem().getMaxStackSize(stack) == stack.getCount();
 		}
 	},
 	ENCHANTABLE("enchantable", 8) {
 		@Override
-			return stack.isEnchantable();
 		protected boolean canKeepItem(ItemStack stack, String searchTerm) {
+			return stack.getItem() == Items.BOOK || this.checkCustom(stack, CustomBackpackFilterItem::isEnchantable) || stack.isEnchantable();
 		}
 	},
 	ENCHANTED("enchanted", 9) {
 		@Override
-			return stack.isEnchanted();
 		protected boolean canKeepItem(ItemStack stack, String searchTerm) {
+			return stack.getItem() instanceof EnchantedBookItem || this.checkCustom(stack, CustomBackpackFilterItem::isEnchanted) || stack.isEnchanted();
 		}
 	},
 	DAMAGEABLE("damageable", 10) {
 		@Override
-			return stack.isDamageableItem();
+		protected boolean canKeepItem(ItemStack stack, String searchTerm) {
+			return this.checkCustom(stack, CustomBackpackFilterItem::isDamageable) || stack.isDamageableItem();
 		}
 	},
 	DAMAGED("damaged", 11) {
 		@Override
-			return stack.isDamaged();
 		protected boolean canKeepItem(ItemStack stack, String searchTerm) {
+			return this.checkCustom(stack, CustomBackpackFilterItem::isDamaged) || stack.isDamaged();
 		}
 	},
 	EDIBLE("edible", 12) {
 		@Override
-			return stack.isEdible();
 		protected boolean canKeepItem(ItemStack stack, String searchTerm) {
+			return this.checkCustom(stack, CustomBackpackFilterItem::isEdible) || stack.isEdible();
 		}
 	},
-	WEAPON("weapon", 13) {
+	WEAPON("weapon", 15) {
 		@Override
 		protected boolean canKeepItem(ItemStack stack, String searchTerm) {
 			Item item = stack.getItem();
-			return item instanceof SwordItem || item instanceof BowItem || item instanceof CrossbowItem;
+			return this.checkCustom(stack, CustomBackpackFilterItem::isWeapon) || item instanceof SwordItem || item instanceof BowItem || item instanceof CrossbowItem;
 		}
 	},
 	TOOL("tool", 16) {
 		@Override
 		protected boolean canKeepItem(ItemStack stack, String searchTerm) {
 			Item item = stack.getItem();
-			return item instanceof DiggerItem || item instanceof FishingRodItem || item instanceof FlintAndSteelItem || item instanceof CompassItem || item == Items.CLOCK;
+			return this.checkCustom(stack, CustomBackpackFilterItem::isTool) || item instanceof DiggerItem || item instanceof FishingRodItem || item instanceof FlintAndSteelItem || item instanceof CompassItem || item == Items.CLOCK;
 		}
 	},
 	ARMOR("armor", 17) {
 		@Override
-		public boolean canKeepItem(ItemStack stack, String searchTerm) {
-			return stack.getItem() instanceof Equipable;
+		protected boolean canKeepItem(ItemStack stack, String searchTerm) {
+			return this.checkCustom(stack, CustomBackpackFilterItem::isArmor) || stack.getItem() instanceof Equipable;
 		}
 	};
 	
