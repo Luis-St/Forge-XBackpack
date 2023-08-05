@@ -37,7 +37,7 @@ public class ActionButton extends AbstractButton {
 	@Override
 	public void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		if (this.isHoveredOrFocused()) {
+		if (this.isHovered()) {
 			graphics.blit(BACKPACK, this.getX(), this.getY(), this.width, this.height, 244, 27, 12, 12, 256, 256);
 		} else {
 			graphics.blit(BACKPACK, this.getX(), this.getY(), this.width, this.height, 244, 15, 12, 12, 256, 256);
