@@ -3,9 +3,7 @@ package net.luis.xbackpack.world.inventory;
 import net.luis.xbackpack.XBackpack;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.common.extensions.IForgeMenuType;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.registries.*;
 
 /**
  *

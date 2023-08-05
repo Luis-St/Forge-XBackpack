@@ -6,12 +6,8 @@ import net.luis.xbackpack.server.commands.arguments.BackpackExtensionArgument;
 import net.luis.xbackpack.server.commands.arguments.BackpackExtensionStateArgument;
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.capability.IBackpack;
-import net.luis.xbackpack.world.extension.BackpackExtension;
-import net.luis.xbackpack.world.extension.BackpackExtensionState;
-import net.luis.xbackpack.world.extension.BackpackExtensions;
-import net.minecraft.commands.CommandBuildContext;
-import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.Commands;
+import net.luis.xbackpack.world.extension.*;
+import net.minecraft.commands.*;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -51,7 +47,7 @@ public class BackpackCommand {
 	}
 	
 	private static int setExtensionState(CommandSourceStack source, ServerPlayer player, @NotNull List<BackpackExtension> extensions, BackpackExtensionState state) {
-		MutableInt i =  new MutableInt(0);
+		MutableInt i = new MutableInt(0);
 		IBackpack backpack = BackpackProvider.get(player);
 		for (BackpackExtension extension : extensions) {
 			if (extension == BackpackExtensions.NO.get()) {

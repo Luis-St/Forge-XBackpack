@@ -17,9 +17,9 @@ import java.util.function.Consumer;
 
 public abstract class AbstractExtensionMenu {
 	
+	private final BackpackExtension extension;
 	protected final AbstractExtensionContainerMenu menu;
 	protected final Player player;
-	private final BackpackExtension extension;
 	
 	protected AbstractExtensionMenu(AbstractExtensionContainerMenu menu, Player player, BackpackExtension extension) {
 		this.menu = menu;

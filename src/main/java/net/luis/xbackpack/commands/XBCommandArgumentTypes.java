@@ -5,9 +5,7 @@ import net.luis.xbackpack.server.commands.arguments.BackpackExtensionArgument;
 import net.luis.xbackpack.server.commands.arguments.BackpackExtensionStateArgument;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.registries.*;
 
 /**
  *

@@ -16,8 +16,8 @@ import java.util.List;
 
 public class BrewingStandExtensionScreen extends AbstractExtensionScreen {
 	
-	private static final int[] BUBBLES = new int[]{
-			29, 24, 20, 16, 11, 6, 0
+	private static final int[] BUBBLES = new int[] {
+		29, 24, 20, 16, 11, 6, 0
 	};
 	private int fuel;
 	private int brewTime;

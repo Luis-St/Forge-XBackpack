@@ -1,10 +1,7 @@
 package net.luis.xbackpack.world.capability;
 
 import net.luis.xbackpack.world.backpack.config.BackpackConfig;
-import net.luis.xbackpack.world.inventory.handler.CraftingFuelHandler;
-import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
-import net.luis.xbackpack.world.inventory.handler.EnchantingHandler;
-import net.luis.xbackpack.world.inventory.handler.SmeltingHandler;
+import net.luis.xbackpack.world.inventory.handler.*;
 import net.luis.xbackpack.world.inventory.progress.ProgressHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;

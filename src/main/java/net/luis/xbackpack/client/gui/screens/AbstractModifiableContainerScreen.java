@@ -20,9 +20,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.TooltipFlag;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 /**
  *
@@ -121,7 +119,7 @@ public abstract class AbstractModifiableContainerScreen<T extends AbstractModifi
 		}
 	}
 	
-	protected List<Component> getMergerTooltip(TooltipFlag tooltipFlag) {
+	protected @NotNull List<Component> getMergerTooltip(@NotNull TooltipFlag tooltipFlag) {
 		if (tooltipFlag.isAdvanced()) {
 			List<Component> tooltip = Lists.newArrayList();
 			tooltip.add(Component.translatable("xbackpack.backpack_action.item_merger").withStyle(ChatFormatting.WHITE));

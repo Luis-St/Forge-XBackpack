@@ -1,21 +1,15 @@
 package net.luis.xbackpack.world.backpack.config;
 
 import com.google.common.collect.Maps;
-import net.luis.xbackpack.world.extension.BackpackExtension;
-import net.luis.xbackpack.world.extension.BackpackExtensionState;
-import net.luis.xbackpack.world.extension.BackpackExtensions;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
+import net.luis.xbackpack.world.extension.*;
+import net.minecraft.nbt.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**

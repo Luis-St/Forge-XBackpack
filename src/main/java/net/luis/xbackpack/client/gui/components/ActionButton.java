@@ -71,7 +71,6 @@ public class ActionButton extends AbstractButton {
 	
 	public enum ClickType {
 		
-		RIGHT(),
-		LEFT()
+		RIGHT(), LEFT()
 	}
 }

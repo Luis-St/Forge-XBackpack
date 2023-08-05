@@ -4,9 +4,7 @@ import com.google.common.collect.Lists;
 import mezz.jei.api.gui.handlers.IGuiContainerHandler;
 import net.luis.xbackpack.client.gui.screens.BackpackScreen;
 import net.luis.xbackpack.world.capability.BackpackProvider;
-import net.luis.xbackpack.world.extension.BackpackExtension;
-import net.luis.xbackpack.world.extension.BackpackExtensionState;
-import net.luis.xbackpack.world.extension.BackpackExtensions;
+import net.luis.xbackpack.world.extension.*;
 import net.minecraft.client.renderer.Rect2i;
 import org.jetbrains.annotations.NotNull;
 

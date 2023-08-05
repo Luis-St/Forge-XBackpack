@@ -32,8 +32,8 @@ import java.util.Objects;
 
 public abstract class AbstractScrollableContainerScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> {
 	
-	protected int scrollOffset = 0;
 	private boolean scrolling = false;
+	protected int scrollOffset = 0;
 	
 	protected AbstractScrollableContainerScreen(T menu, Inventory inventory, Component titleComponent) {
 		super(menu, inventory, titleComponent);
@@ -83,7 +83,7 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 				this.snapbackItem = ItemStack.EMPTY;
 			}
 			this.renderFloatingItem(graphics, this.snapbackItem, this.snapbackStartX + (int) ((Objects.requireNonNull(this.snapbackEnd).x - this.snapbackStartX) * time),
-					this.snapbackStartY + (int) ((this.snapbackEnd.y - this.snapbackStartY) * time), null);
+				this.snapbackStartY + (int) ((this.snapbackEnd.y - this.snapbackStartY) * time), null);
 		}
 		viewStack.popPose();
 		RenderSystem.applyModelViewMatrix();

@@ -22,10 +22,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.BookItem;
-import net.minecraft.world.item.EnchantedBookItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraftforge.common.Tags;
@@ -48,14 +45,14 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 	
 	private final EnchantingHandler handler;
 	private final RandomSource rng = RandomSource.create();
-	private final ResourceLocation[] enchantments = new ResourceLocation[]{
-			EMPTY_ENCHANTMENT, EMPTY_ENCHANTMENT, EMPTY_ENCHANTMENT
+	private final ResourceLocation[] enchantments = new ResourceLocation[] {
+		EMPTY_ENCHANTMENT, EMPTY_ENCHANTMENT, EMPTY_ENCHANTMENT
 	};
-	private final int[] enchantmentLevels = new int[]{
-			-1, -1, -1
+	private final int[] enchantmentLevels = new int[] {
+		-1, -1, -1
 	};
-	private final int[] enchantingCosts = new int[]{
-			0, 0, 0
+	private final int[] enchantingCosts = new int[] {
+		0, 0, 0
 	};
 	private int enchantmentSeed;
 	
