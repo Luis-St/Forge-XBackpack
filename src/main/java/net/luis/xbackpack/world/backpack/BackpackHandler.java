@@ -17,7 +17,7 @@ import net.minecraftforge.items.ItemStackHandler;
 
 /**
  *
- * @author Luis-st
+ * @author Luis-St
  *
  */
 

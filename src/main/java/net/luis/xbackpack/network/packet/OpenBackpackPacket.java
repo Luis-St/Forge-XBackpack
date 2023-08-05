@@ -15,7 +15,7 @@ import java.util.function.Supplier;
 
 /**
  *
- * @author Luis-st
+ * @author Luis-St
  *
  */
 

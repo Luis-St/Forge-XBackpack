@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 
 /**
  *
- * @author Luis-st
+ * @author Luis-St
  *
  */
 

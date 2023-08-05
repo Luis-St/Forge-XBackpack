@@ -7,7 +7,7 @@ import net.minecraftforge.registries.*;
 
 /**
  *
- * @author Luis-st
+ * @author Luis-St
  *
  */
 

@@ -6,7 +6,7 @@ import org.lwjgl.glfw.GLFW;
 
 /**
  *
- * @author Luis-st
+ * @author Luis-St
  *
  */
 

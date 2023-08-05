@@ -9,7 +9,7 @@ import net.minecraft.world.inventory.ResultSlot;
 
 /**
  *
- * @author Luis-st
+ * @author Luis-St
  *
  */
 

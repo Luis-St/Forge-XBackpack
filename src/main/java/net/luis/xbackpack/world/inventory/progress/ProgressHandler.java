@@ -4,7 +4,7 @@ import net.minecraft.nbt.CompoundTag;
 
 /**
  *
- * @author Luis-st
+ * @author Luis-St
  *
  */
 

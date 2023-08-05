@@ -6,7 +6,7 @@ import net.minecraftforge.common.data.LanguageProvider;
 
 /**
  *
- * @author Luis-st
+ * @author Luis-St
  *
  */
 

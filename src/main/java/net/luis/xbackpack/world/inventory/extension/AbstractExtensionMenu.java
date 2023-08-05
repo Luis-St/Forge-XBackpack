@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 
 /**
  *
- * @author Luis-st
+ * @author Luis-St
  *
  */
 

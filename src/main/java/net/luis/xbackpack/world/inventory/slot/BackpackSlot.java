@@ -5,7 +5,7 @@ import net.minecraftforge.items.SlotItemHandler;
 
 /**
  *
- * @author Luis-st
+ * @author Luis-St
  *
  */
 

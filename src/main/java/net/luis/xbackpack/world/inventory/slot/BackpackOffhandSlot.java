@@ -8,7 +8,7 @@ import net.minecraft.world.inventory.Slot;
 
 /**
  *
- * @author Luis-st
+ * @author Luis-St
  *
  */
 

@@ -18,7 +18,7 @@ import java.util.function.BiPredicate;
 
 /**
  *
- * @author Luis-st
+ * @author Luis-St
  *
  */
 

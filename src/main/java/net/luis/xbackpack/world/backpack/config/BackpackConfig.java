@@ -8,7 +8,7 @@ import net.minecraft.world.entity.player.Player;
 
 /**
  *
- * @author Luis-st
+ * @author Luis-St
  *
  */
 

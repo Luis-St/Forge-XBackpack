@@ -5,7 +5,7 @@ import net.luis.xbackpack.world.inventory.extension.AbstractExtensionMenu;
 
 /**
  *
- * @author Luis-st
+ * @author Luis-St
  *
  */
 

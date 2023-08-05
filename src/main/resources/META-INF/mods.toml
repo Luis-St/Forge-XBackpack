@@ -8,7 +8,7 @@ version = "${ModVersion}"
 displayName = "XBackpack"
 credits = "Thanks for downloading my Mod"
 authors = "Luis"
-displayURL = "https://github.com/Luis-st/Forge-XBackpack/issues"
+displayURL = "https://github.com/Luis-St/Forge-XBackpack/issues"
 description = '''
 Adds a cool Backpack to the Game
 Have a lot of fun when playing

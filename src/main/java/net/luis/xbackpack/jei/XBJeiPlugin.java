@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  *
- * @author Luis-st
+ * @author Luis-St
  *
  */
 

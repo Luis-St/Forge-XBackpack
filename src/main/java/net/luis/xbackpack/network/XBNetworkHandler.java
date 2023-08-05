@@ -18,7 +18,7 @@ import java.util.function.*;
 
 /**
  *
- * @author Luis-st
+ * @author Luis-St
  *
  */
 

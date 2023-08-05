@@ -26,7 +26,7 @@ import static net.luis.xbackpack.world.extension.BackpackExtensions.*;
 
 /**
  *
- * @author Luis-st
+ * @author Luis-St
  *
  */
 

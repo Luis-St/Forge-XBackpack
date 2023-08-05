@@ -2,7 +2,7 @@ package net.luis.xbackpack.world.backpack.config.client;
 
 /**
  *
- * @author Luis-st
+ * @author Luis-St
  *
  */
 
