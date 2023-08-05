@@ -81,12 +81,18 @@ public class XBLanguageProvider extends LanguageProvider {
 		this.add("xbackpack.backpack_action.filter.damaged.info.0", "Only items that are damaged are displayed");
 		this.add("xbackpack.backpack_action.filter.edible", "Edible Filter");
 		this.add("xbackpack.backpack_action.filter.edible.info.0", "Only items that are edible are displayed");
+		this.add("xbackpack.backpack_action.filter.repairable", "Repairable Filter");
+		this.add("xbackpack.backpack_action.filter.repairable.info.0", "Only items that can be repaired are displayed");
+		this.add("xbackpack.backpack_action.filter.fire_resistant", "Fire Resistant Filter");
+		this.add("xbackpack.backpack_action.filter.fire_resistant.info.0", "Only items that are resistant to fire are displayed");
 		this.add("xbackpack.backpack_action.filter.weapon", "Weapon Filter");
 		this.add("xbackpack.backpack_action.filter.weapon.info.0", "Only weapons are displayed");
 		this.add("xbackpack.backpack_action.filter.tool", "Tool Filter");
 		this.add("xbackpack.backpack_action.filter.tool.info.0", "Only tools are displayed");
 		this.add("xbackpack.backpack_action.filter.armor", "Armor Filter");
 		this.add("xbackpack.backpack_action.filter.armor.info.0", "Only armor is displayed");
+		this.add("xbackpack.backpack_action.filter.food", "Food Filter");
+		this.add("xbackpack.backpack_action.filter.food.info.0", "Only food is displayed");
 		this.add("xbackpack.backpack_action.sorter.none", "No Sorter");
 		this.add("xbackpack.backpack_action.sorter.none.info.0", "No item sorter active");
 		this.add("xbackpack.backpack_action.sorter.none.info.1", "All items are displayed in the normal order");

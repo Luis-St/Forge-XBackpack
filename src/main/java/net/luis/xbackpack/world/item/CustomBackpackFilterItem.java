@@ -24,9 +24,15 @@ public interface CustomBackpackFilterItem {
 	
 	boolean isEdible(ItemStack stack);
 	
+	boolean isRepairable(ItemStack stack);
+	
+	boolean isFireResistant(ItemStack stack);
+	
 	boolean isWeapon(ItemStack stack);
 	
 	boolean isTool(ItemStack stack);
 	
 	boolean isArmor(ItemStack stack);
+	
+	boolean isFood(ItemStack stack);
 }

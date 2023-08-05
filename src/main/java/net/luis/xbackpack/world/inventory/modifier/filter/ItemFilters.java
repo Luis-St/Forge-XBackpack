@@ -178,6 +178,18 @@ public enum ItemFilters implements ItemFilter {
 			return this.checkCustom(stack, CustomBackpackFilterItem::isEdible) || stack.isEdible();
 		}
 	},
+	REPAIRABLE("repairable", 13) {
+		@Override
+		protected boolean canKeepItem(ItemStack stack, String searchTerm) {
+			return this.checkCustom(stack, CustomBackpackFilterItem::isRepairable) || stack.isRepairable();
+		}
+	},
+	FIRE_RESISTANT("fire_resistant", 14) {
+		@Override
+		protected boolean canKeepItem(ItemStack stack, String searchTerm) {
+			return this.checkCustom(stack, CustomBackpackFilterItem::isFireResistant) || stack.getItem().isFireResistant();
+		}
+	},
 	WEAPON("weapon", 15) {
 		@Override
 		protected boolean canKeepItem(ItemStack stack, String searchTerm) {
@@ -196,6 +208,12 @@ public enum ItemFilters implements ItemFilter {
 		@Override
 		protected boolean canKeepItem(ItemStack stack, String searchTerm) {
 			return this.checkCustom(stack, CustomBackpackFilterItem::isArmor) || stack.getItem() instanceof Equipable;
+		}
+	},
+	FOOD("food", 18) {
+		@Override
+		protected boolean canKeepItem(ItemStack stack, String searchTerm) {
+			return this.checkCustom(stack, CustomBackpackFilterItem::isFood) || stack.getFoodProperties(null) != null || stack.getItem().getFoodProperties() != null;
 		}
 	};
 	
