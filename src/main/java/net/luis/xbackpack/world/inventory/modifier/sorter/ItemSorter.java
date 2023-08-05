@@ -19,5 +19,5 @@ public interface ItemSorter extends ItemModifier {
 		return ItemModifierType.SORTER;
 	}
 	
-	List<ItemStack> sort(List<ItemStack> stacks, String searchTerm);
+	List<ItemStack> sort(List<ItemStack> stacks, String searchTerm, boolean negate);
 }

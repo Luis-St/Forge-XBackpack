@@ -13,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.function.BiPredicate;
 
 /**
  *
@@ -24,7 +25,7 @@ public enum ItemFilters implements ItemFilter {
 	
 	NONE("none", 0) {
 		@Override
-		public boolean canKeepItem(ItemStack stack, String searchTerm) {
+		protected boolean canKeepItem(ItemStack stack, String searchTerm) {
 			return true;
 		}
 		
@@ -38,7 +39,7 @@ public enum ItemFilters implements ItemFilter {
 	},
 	NAME_SEARCH("name_search", 1, false) {
 		@Override
-		public boolean canKeepItem(ItemStack stack, String searchTerm) {
+		protected boolean canKeepItem(ItemStack stack, String searchTerm) {
 			String itemName = stack.getDisplayName().getString().replace("[", "").replace("]", "").trim().toLowerCase();
 			if (searchTerm.isEmpty()) {
 				return true;
@@ -46,55 +47,52 @@ public enum ItemFilters implements ItemFilter {
 				return true;
 			} else if (itemName.contains(searchTerm)) {
 				return true;
-			} else return itemName.startsWith(searchTerm);
+			}
+			return itemName.startsWith(searchTerm);
 		}
 	},
 	NAMESPACE_SEARCH("namespace_search", 2, false) {
 		@Override
-		public boolean canKeepItem(ItemStack stack, String searchTerm) {
+		protected boolean canKeepItem(ItemStack stack, String searchTerm) {
 			String namespace = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(stack.getItem())).getNamespace().trim().toLowerCase();
 			if (searchTerm.isEmpty()) {
 				return true;
 			} else if (!searchTerm.startsWith("@")) {
 				return false;
-			} else {
-				String string = searchTerm.substring(1);
-				if (string.isEmpty()) {
-					return true;
-				} else if (namespace.equals(string)) {
-					return true;
-				} else if (namespace.contains(string)) {
-					return true;
-				} else {
-					return namespace.startsWith(string);
-				}
 			}
+			String string = searchTerm.substring(1);
+			if (string.isEmpty()) {
+				return true;
+			} else if (namespace.equals(string)) {
+				return true;
+			} else if (namespace.contains(string)) {
+				return true;
+			}
+			return namespace.startsWith(string);
 		}
 	},
 	TAG_SEARCH("tag_search", 3, false) {
 		@Override
-		public boolean canKeepItem(ItemStack stack, String searchTerm) {
+		protected boolean canKeepItem(ItemStack stack, String searchTerm) {
 			if (searchTerm.isEmpty()) {
 				return true;
 			} else if (!searchTerm.startsWith("#")) {
 				return false;
+			}
+			String string = searchTerm.substring(1);
+			if (string.isEmpty()) {
+				return true;
 			} else {
-				String string = searchTerm.substring(1);
-				if (string.isEmpty()) {
-					return true;
+				TagKey<Item> tag = this.getTag(string);
+				if (tag == null) {
+					return false;
 				} else {
-					TagKey<Item> tag = this.getTag(string);
-					if (tag == null) {
-						return false;
-					} else {
-						return Objects.requireNonNull(ForgeRegistries.ITEMS.tags()).getTag(tag).contains(stack.getItem());
-					}
+					return Objects.requireNonNull(ForgeRegistries.ITEMS.tags()).getTag(tag).contains(stack.getItem());
 				}
 			}
 		}
 		
-		@Nullable
-		private TagKey<Item> getTag(String searchTerm) {
+		private @Nullable TagKey<Item> getTag(String searchTerm) {
 			List<TagKey<Item>> tags = Objects.requireNonNull(ForgeRegistries.ITEMS.tags()).stream().filter(ITag::isBound).filter((tag) -> !tag.isEmpty()).map(ITag::getKey).toList();
 			for (TagKey<Item> tag : tags) {
 				if (searchTerm.replace(" ", "_").equals(tag.location().getPath())) {
@@ -106,7 +104,7 @@ public enum ItemFilters implements ItemFilter {
 	},
 	COUNT_SEARCH("count_search", 4, false) {
 		@Override
-		public boolean canKeepItem(ItemStack stack, String searchTerm) {
+		protected boolean canKeepItem(ItemStack stack, String searchTerm) {
 			if (searchTerm.isEmpty()) {
 				return true;
 			}
@@ -133,67 +131,66 @@ public enum ItemFilters implements ItemFilter {
 	},
 	STACKABLE("stackable", 5) {
 		@Override
-		public boolean canKeepItem(ItemStack stack, String searchTerm) {
 			return stack.isStackable();
+		protected boolean canKeepItem(ItemStack stack, String searchTerm) {
 		}
 	},
 	NONE_STACKABLE("none_stackable", 6) {
 		@Override
-		public boolean canKeepItem(ItemStack stack, String searchTerm) {
 			return !stack.isStackable();
+		protected boolean canKeepItem(ItemStack stack, String searchTerm) {
 		}
 	},
 	MAX_COUNT("max_count", 7) {
 		@Override
-		public boolean canKeepItem(ItemStack stack, String searchTerm) {
 			return stack.getItem().getMaxStackSize(stack) == stack.getCount();
+		protected boolean canKeepItem(ItemStack stack, String searchTerm) {
 		}
 	},
 	ENCHANTABLE("enchantable", 8) {
 		@Override
-		public boolean canKeepItem(ItemStack stack, String searchTerm) {
 			return stack.isEnchantable();
+		protected boolean canKeepItem(ItemStack stack, String searchTerm) {
 		}
 	},
 	ENCHANTED("enchanted", 9) {
 		@Override
-		public boolean canKeepItem(ItemStack stack, String searchTerm) {
 			return stack.isEnchanted();
+		protected boolean canKeepItem(ItemStack stack, String searchTerm) {
 		}
 	},
 	DAMAGEABLE("damageable", 10) {
 		@Override
-		public boolean canKeepItem(ItemStack stack, String searchTerm) {
 			return stack.isDamageableItem();
 		}
 	},
 	DAMAGED("damaged", 11) {
 		@Override
-		public boolean canKeepItem(ItemStack stack, String searchTerm) {
 			return stack.isDamaged();
+		protected boolean canKeepItem(ItemStack stack, String searchTerm) {
 		}
 	},
 	EDIBLE("edible", 12) {
 		@Override
-		public boolean canKeepItem(ItemStack stack, String searchTerm) {
 			return stack.isEdible();
+		protected boolean canKeepItem(ItemStack stack, String searchTerm) {
 		}
 	},
 	WEAPON("weapon", 13) {
 		@Override
-		public boolean canKeepItem(ItemStack stack, String searchTerm) {
+		protected boolean canKeepItem(ItemStack stack, String searchTerm) {
 			Item item = stack.getItem();
 			return item instanceof SwordItem || item instanceof BowItem || item instanceof CrossbowItem;
 		}
 	},
-	TOOL("tool", 14) {
+	TOOL("tool", 16) {
 		@Override
-		public boolean canKeepItem(ItemStack stack, String searchTerm) {
+		protected boolean canKeepItem(ItemStack stack, String searchTerm) {
 			Item item = stack.getItem();
 			return item instanceof DiggerItem || item instanceof FishingRodItem || item instanceof FlintAndSteelItem || item instanceof CompassItem || item == Items.CLOCK;
 		}
 	},
-	ARMOR("armor", 15) {
+	ARMOR("armor", 17) {
 		@Override
 		public boolean canKeepItem(ItemStack stack, String searchTerm) {
 			return stack.getItem() instanceof Equipable;
@@ -214,12 +211,7 @@ public enum ItemFilters implements ItemFilter {
 		this.selectable = selectable;
 	}
 	
-	public static @NotNull ItemFilter byId(int id) {
-		return byId(id, null);
-	}
-	
-	@NotNull
-	public static ItemFilter byId(int id, ItemFilter fallback) {
+	public static @NotNull ItemFilter byId(int id, ItemFilter fallback) {
 		for (ItemFilter filter : ItemFilters.values()) {
 			if (filter.getId() == id) {
 				return filter;
@@ -243,8 +235,22 @@ public enum ItemFilters implements ItemFilter {
 		return this.selectable;
 	}
 	
+	protected abstract boolean canKeepItem(ItemStack stack, String searchTerm);
+	
 	@Override
-	public abstract boolean canKeepItem(ItemStack stack, String searchTerm);
+	public boolean canKeepItem(ItemStack stack, String searchTerm, boolean negate) {
+		if (this == NONE) {
+			return NONE.canKeepItem(stack, searchTerm);
+		}
+		return negate != this.canKeepItem(stack, searchTerm);
+	}
+	
+	protected boolean checkCustom(@NotNull ItemStack stack, BiPredicate<CustomBackpackFilterItem, ItemStack> predicate) {
+		if (stack.getItem() instanceof CustomBackpackFilterItem custom) {
+			return predicate.test(custom, stack);
+		}
+		return false;
+	}
 	
 	@Override
 	public MutableComponent getDisplayName() {

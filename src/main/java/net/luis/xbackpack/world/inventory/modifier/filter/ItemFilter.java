@@ -17,5 +17,5 @@ public interface ItemFilter extends ItemModifier {
 		return ItemModifierType.FILTER;
 	}
 	
-	boolean canKeepItem(ItemStack stack, String searchTerm);
+	boolean canKeepItem(ItemStack stack, String searchTerm, boolean negate);
 }

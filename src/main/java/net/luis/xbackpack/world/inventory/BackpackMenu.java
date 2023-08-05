@@ -9,10 +9,7 @@ import net.luis.xbackpack.world.inventory.extension.*;
 import net.luis.xbackpack.world.inventory.handler.ModifiableHandler;
 import net.luis.xbackpack.world.inventory.modifier.filter.ItemFilters;
 import net.luis.xbackpack.world.inventory.modifier.sorter.ItemSorters;
-import net.luis.xbackpack.world.inventory.slot.BackpackArmorSlot;
-import net.luis.xbackpack.world.inventory.slot.BackpackOffhandSlot;
-import net.luis.xbackpack.world.inventory.slot.BackpackSlot;
-import net.luis.xbackpack.world.inventory.slot.BackpackToolSlot;
+import net.luis.xbackpack.world.inventory.slot.*;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -200,9 +197,7 @@ public class BackpackMenu extends AbstractModifiableContainerMenu {
 		}
 		failedStacks.removeIf(ItemStack::isEmpty);
 		if (!failedStacks.isEmpty()) {
-			failedStacks.forEach((stack) -> {
-				player.drop(stack, false);
-			});
+			failedStacks.forEach(stack -> player.drop(stack, false));
 			failedStacks.clear();
 		}
 		this.broadcastChanges();
@@ -214,19 +209,21 @@ public class BackpackMenu extends AbstractModifiableContainerMenu {
 			this.handler.resetWrappedSlots();
 		} else {
 			List<ItemStack> stacks = this.handler.createModifiableList();
-			if (!this.getSearchTerm().isEmpty()) {
+			String searchTerm = this.getSearchTerm();
+			boolean negate = this.isNegate();
+			if (!searchTerm.isEmpty()) {
 				if (this.getSorter() == ItemSorters.NAME_SEARCH) {
-					stacks.removeIf((stack) -> !ItemFilters.NAME_SEARCH.canKeepItem(stack, this.getSearchTerm()));
+					stacks.removeIf((stack) -> !ItemFilters.NAME_SEARCH.canKeepItem(stack, searchTerm, negate));
 				} else if (this.getSorter() == ItemSorters.NAMESPACE_SEARCH) {
-					stacks.removeIf((stack) -> !ItemFilters.NAMESPACE_SEARCH.canKeepItem(stack, this.getSearchTerm()));
+					stacks.removeIf((stack) -> !ItemFilters.NAMESPACE_SEARCH.canKeepItem(stack, searchTerm, negate));
 				} else if (this.getSorter() == ItemSorters.TAG_SEARCH) {
-					stacks.removeIf((stack) -> !ItemFilters.TAG_SEARCH.canKeepItem(stack, this.getSearchTerm()));
+					stacks.removeIf((stack) -> !ItemFilters.TAG_SEARCH.canKeepItem(stack, searchTerm, negate));
 				} else if (this.getSorter() == ItemSorters.COUNT_SEARCH) {
-					stacks.removeIf((stack) -> !ItemFilters.COUNT_SEARCH.canKeepItem(stack, this.getSearchTerm()));
+					stacks.removeIf((stack) -> !ItemFilters.COUNT_SEARCH.canKeepItem(stack, searchTerm, negate));
 				}
 			}
-			stacks.removeIf((stack) -> !this.getFilter().canKeepItem(stack, this.getSearchTerm()));
-			this.handler.applyModifications(this.getSorter().sort(stacks, this.getSearchTerm()));
+			stacks.removeIf((stack) -> !this.getFilter().canKeepItem(stack, searchTerm, negate));
+			this.handler.applyModifications(this.getSorter().sort(stacks, searchTerm, negate));
 		}
 		this.broadcastChanges();
 	}

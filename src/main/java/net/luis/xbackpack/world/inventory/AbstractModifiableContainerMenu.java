@@ -33,6 +33,7 @@ public abstract class AbstractModifiableContainerMenu extends AbstractExtensionC
 	private ItemFilter filter = ItemFilters.NONE;
 	private ItemSorter sorter = ItemSorters.NONE;
 	private String searchTerm = "";
+	private boolean negate = false;
 	
 	protected AbstractModifiableContainerMenu(MenuType<?> menuType, int id, Inventory inventory) {
 		super(menuType, id, inventory);
@@ -47,6 +48,12 @@ public abstract class AbstractModifiableContainerMenu extends AbstractExtensionC
 	@Override
 	public void setSearchTerm(String searchTerm) {
 		this.searchTerm = StringUtils.trimToEmpty(searchTerm).toLowerCase();
+		if (this.searchTerm.startsWith("!")) {
+			this.negate = true;
+			this.searchTerm = this.searchTerm.substring(1);
+		} else {
+			this.negate = false;
+		}
 		if (this.searchTerm.isEmpty() && !this.sorter.isSelectable()) {
 			this.sorter = ItemSorters.NONE;
 		} else if (!this.searchTerm.isEmpty()) {
@@ -67,6 +74,10 @@ public abstract class AbstractModifiableContainerMenu extends AbstractExtensionC
 	
 	private boolean isNumber(String searchTerm) {
 		return Util.tryParseInteger(searchTerm, -1) >= 0;
+	}
+	
+	public boolean isNegate() {
+		return this.negate;
 	}
 	
 	@Override
