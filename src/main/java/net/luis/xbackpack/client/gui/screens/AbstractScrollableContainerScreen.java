@@ -8,6 +8,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.components.events.ContainerEventHandler;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -44,7 +45,7 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 	
 	@Override
 	public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-		this.renderBg(graphics, partialTicks, mouseX, mouseY);
+		this.renderBackground(graphics, mouseX, mouseY, partialTicks);
 		MinecraftForge.EVENT_BUS.post(new ContainerScreenEvent.Render.Background(this, graphics, mouseX, mouseY));
 		RenderSystem.disableDepthTest();
 		for (Renderable widget : this.renderables) {
@@ -219,8 +220,8 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 	}
 	
 	@Override
-	public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-		this.scrollOffset = this.clampMouseScroll(delta);
+	public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
+		this.scrollOffset = this.clampMouseScroll(deltaY);
 		return true;
 	}
 	

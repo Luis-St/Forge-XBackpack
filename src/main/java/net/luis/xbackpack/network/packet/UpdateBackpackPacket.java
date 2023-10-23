@@ -4,10 +4,8 @@ import net.luis.xbackpack.client.XBClientPacketHandler;
 import net.luis.xbackpack.network.NetworkPacket;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent.Context;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.function.Supplier;
 
 /**
  *
@@ -24,7 +22,7 @@ public class UpdateBackpackPacket implements NetworkPacket {
 	}
 	
 	public UpdateBackpackPacket(@NotNull FriendlyByteBuf buffer) {
-		this.tag = buffer.readAnySizeNbt();
+		this.tag = buffer.readNbt();
 	}
 	
 	@Override
@@ -33,8 +31,8 @@ public class UpdateBackpackPacket implements NetworkPacket {
 	}
 	
 	@Override
-	public void handle(@NotNull Supplier<Context> context) {
-		context.get().enqueueWork(() -> {
+	public void handle(@NotNull CustomPayloadEvent.Context context) {
+		context.enqueueWork(() -> {
 			XBClientPacketHandler.updateBackpack(this.tag);
 		});
 	}

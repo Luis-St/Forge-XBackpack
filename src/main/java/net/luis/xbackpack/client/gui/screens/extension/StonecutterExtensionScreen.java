@@ -14,8 +14,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.StonecutterRecipe;
+import net.minecraft.world.item.crafting.*;
 
 import java.util.List;
 import java.util.Objects;
@@ -29,7 +28,7 @@ import java.util.function.Consumer;
 
 public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 	
-	private final List<StonecutterRecipe> recipes = Lists.newArrayList();
+	private final List<RecipeHolder<StonecutterRecipe>> recipes = Lists.newArrayList();
 	private Player player;
 	private CraftingHandler handler;
 	private double scrollOffset = 0.0F;
@@ -76,7 +75,7 @@ public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 			int i = index - this.startIndex;
 			int x = this.leftPos + 225 + index % 4 * 16;
 			int y = this.topPos + 142 + (i / 4) * 18 + 2;
-			graphics.renderItem(this.recipes.get(index).getResultItem(this.player.level().registryAccess()), x, y);
+			graphics.renderItem(this.recipes.get(index).value().getResultItem(this.player.level().registryAccess()), x, y);
 		}
 	}
 	
@@ -90,7 +89,7 @@ public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 					double x = mouseX - (double) (this.leftPos + 225 + i % 4 * 16);
 					double y = mouseY - (double) (this.topPos + 142 + i / 4 * 18);
 					if (x >= 0.0 && y >= 0.0 && x < 16.0 && y < 18.0) {
-						tooltipRenderer.accept(this.recipes.get(index).getResultItem(this.player.level().registryAccess()));
+						tooltipRenderer.accept(this.recipes.get(index).value().getResultItem(this.player.level().registryAccess()));
 					}
 				}
 			}

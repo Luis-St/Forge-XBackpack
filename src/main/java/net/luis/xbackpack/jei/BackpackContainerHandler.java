@@ -5,6 +5,7 @@ import mezz.jei.api.gui.handlers.IGuiContainerHandler;
 import net.luis.xbackpack.client.gui.screens.BackpackScreen;
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.*;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.Rect2i;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,7 +22,11 @@ public class BackpackContainerHandler implements IGuiContainerHandler<BackpackSc
 	
 	@Override
 	public @NotNull List<Rect2i> getGuiExtraAreas(@NotNull BackpackScreen screen) {
-		if (BackpackProvider.get(Objects.requireNonNull(screen.getMinecraft().player)).getConfig().getExtensionConfig().getWithState(BackpackExtensionState.UNLOCKED).size() > 0) {
+		LocalPlayer player = screen.getMinecraft().player;
+		if (player == null) {
+			return Lists.newArrayList();
+		}
+		if (!BackpackProvider.get(player).getConfig().getExtensionConfig().getWithState(BackpackExtensionState.UNLOCKED).isEmpty()) {
 			List<Rect2i> extraAreas = Lists.newArrayList(new Rect2i(screen.getGuiLeft() + screen.getXSize(), screen.getGuiTop(), 30, screen.getYSize()));
 			BackpackExtension extension = screen.getExtension();
 			if (extension != BackpackExtensions.NO.get()) {

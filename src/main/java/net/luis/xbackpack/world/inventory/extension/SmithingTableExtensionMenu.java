@@ -15,8 +15,7 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.SmithingRecipe;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,8 +27,8 @@ public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 	
 	private final CraftingHandler handler;
 	private final Level level;
-	private final List<SmithingRecipe> recipes;
-	private SmithingRecipe selectedRecipe;
+	private final List<RecipeHolder<SmithingRecipe>> recipes;
+	private RecipeHolder<SmithingRecipe> selectedRecipe;
 	
 	public SmithingTableExtensionMenu(AbstractExtensionContainerMenu menu, Player player) {
 		super(menu, player, BackpackExtensions.SMITHING_TABLE.get());
@@ -49,7 +48,7 @@ public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 			@Override
 			public boolean mayPlace(@NotNull ItemStack stack) {
 				return SmithingTableExtensionMenu.this.recipes.stream().anyMatch((recipe) -> {
-					return recipe.isTemplateIngredient(stack);
+					return recipe.value().isTemplateIngredient(stack);
 				});
 			}
 		});
@@ -57,7 +56,7 @@ public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 			@Override
 			public boolean mayPlace(@NotNull ItemStack stack) {
 				return SmithingTableExtensionMenu.this.recipes.stream().anyMatch((recipe) -> {
-					return recipe.isBaseIngredient(stack);
+					return recipe.value().isBaseIngredient(stack);
 				});
 			}
 		});
@@ -65,7 +64,7 @@ public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 			@Override
 			public boolean mayPlace(@NotNull ItemStack stack) {
 				return SmithingTableExtensionMenu.this.recipes.stream().anyMatch((recipe) -> {
-					return recipe.isAdditionIngredient(stack);
+					return recipe.value().isAdditionIngredient(stack);
 				});
 			}
 		});
@@ -89,7 +88,7 @@ public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	private boolean mayPickup(Player player) {
-		return this.selectedRecipe != null && this.selectedRecipe.matches(this.asContainer(), this.level);
+		return this.selectedRecipe != null && this.selectedRecipe.value().matches(this.asContainer(), this.level);
 	}
 	
 	private void onTake(Player player, @NotNull ItemStack stack) {
@@ -121,12 +120,12 @@ public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	private void createResult() {
-		List<SmithingRecipe> recipes = this.level.getRecipeManager().getRecipesFor(RecipeType.SMITHING, this.asContainer(), this.level);
+		List<RecipeHolder<SmithingRecipe>> recipes = this.level.getRecipeManager().getRecipesFor(RecipeType.SMITHING, this.asContainer(), this.level);
 		if (recipes.isEmpty()) {
 			this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);
 		} else {
 			this.selectedRecipe = recipes.get(0);
-			ItemStack stack = this.selectedRecipe.assemble(this.asContainer(), this.level.registryAccess());
+			ItemStack stack = this.selectedRecipe.value().assemble(this.asContainer(), this.level.registryAccess());
 			this.handler.getResultHandler().setStackInSlot(0, stack);
 		}
 		
@@ -152,12 +151,12 @@ public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 	
 	private int getSlotOffset(ItemStack stack) {
 		return this.recipes.stream().map((recipe) -> {
-			if (recipe.isTemplateIngredient(stack)) {
+			if (recipe.value().isTemplateIngredient(stack)) {
 				return 0;
-			} else if (recipe.isBaseIngredient(stack)) {
+			} else if (recipe.value().isBaseIngredient(stack)) {
 				return 1;
 			} else {
-				return recipe.isAdditionIngredient(stack) ? 2 : -1;
+				return recipe.value().isAdditionIngredient(stack) ? 2 : -1;
 			}
 		}).findFirst().orElse(-1);
 	}

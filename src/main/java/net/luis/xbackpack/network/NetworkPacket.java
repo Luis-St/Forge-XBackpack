@@ -1,9 +1,8 @@
 package net.luis.xbackpack.network;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent.Context;
-
-import java.util.function.Supplier;
+import net.minecraftforge.event.network.CustomPayloadEvent;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -13,7 +12,7 @@ import java.util.function.Supplier;
 
 public interface NetworkPacket {
 	
-	void encode(FriendlyByteBuf buffer);
+	void encode(@NotNull FriendlyByteBuf buffer);
 	
-	void handle(Supplier<Context> context);
+	void handle(@NotNull CustomPayloadEvent.Context context);
 }

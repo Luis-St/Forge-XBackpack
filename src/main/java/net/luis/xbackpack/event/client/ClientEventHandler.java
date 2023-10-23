@@ -69,7 +69,7 @@ public class ClientEventHandler {
 	
 	@SubscribeEvent
 	public static void mouseScroll(@NotNull MouseScrollingEvent event) {
-		double delta = event.getScrollDelta();
+		double delta = event.getDeltaY();
 		Minecraft minecraft = Minecraft.getInstance();
 		LocalPlayer player = Objects.requireNonNull(minecraft.player);
 		if (player.isShiftKeyDown() && Objects.requireNonNull(minecraft.gameMode).getPlayerMode() != GameType.SPECTATOR) {

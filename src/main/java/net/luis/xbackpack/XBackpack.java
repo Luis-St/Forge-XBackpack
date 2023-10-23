@@ -31,5 +31,4 @@ public class XBackpack {
 		XBNetworkHandler.INSTANCE.initChannel();
 		XBNetworkHandler.INSTANCE.registerPackets();
 	}
-	
 }

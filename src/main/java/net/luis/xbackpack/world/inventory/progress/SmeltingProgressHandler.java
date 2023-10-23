@@ -9,8 +9,7 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.AbstractCookingRecipe;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.*;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
@@ -204,9 +203,9 @@ public class SmeltingProgressHandler implements ProgressHandler {
 	private AbstractCookingRecipe getRecipe(ItemStack stack) {
 		AbstractCookingRecipe cookingRecipe = null;
 		for (RecipeType<? extends AbstractCookingRecipe> recipeType : this.recipeTypes) {
-			Optional<AbstractCookingRecipe> optional = this.player.level().getRecipeManager().getRecipeFor((RecipeType<AbstractCookingRecipe>) recipeType, new SimpleContainer(stack), this.player.level());
+			Optional<RecipeHolder<AbstractCookingRecipe>> optional = this.player.level().getRecipeManager().getRecipeFor((RecipeType<AbstractCookingRecipe>) recipeType, new SimpleContainer(stack), this.player.level());
 			if (optional.isPresent()) {
-				AbstractCookingRecipe recipe = optional.get();
+				AbstractCookingRecipe recipe = optional.get().value();
 				if (cookingRecipe == null) {
 					cookingRecipe = recipe;
 				} else if (cookingRecipe.getCookingTime() > recipe.getCookingTime()) {

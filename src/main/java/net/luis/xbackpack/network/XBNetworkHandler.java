@@ -11,10 +11,11 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.network.*;
-import net.minecraftforge.network.simple.SimpleChannel;
 
-import java.util.function.*;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 /**
  *
@@ -26,12 +27,12 @@ public enum XBNetworkHandler {
 	
 	INSTANCE();
 	
-	private static final String VERSION = "5";
+	private static final int VERSION = 6;
 	private int id = 0;
 	private SimpleChannel simpleChannel;
 	
 	public void initChannel() {
-		this.simpleChannel = NetworkRegistry.newSimpleChannel(new ResourceLocation(XBackpack.MOD_ID, "simple_chnanel"), () -> VERSION, VERSION::equals, VERSION::equals);
+		this.simpleChannel = ChannelBuilder.named(new ResourceLocation(XBackpack.MOD_ID, "simple_channel")).acceptedVersions((status, version) -> true).simpleChannel();
 	}
 	
 	public void registerPackets() {
@@ -54,8 +55,8 @@ public enum XBNetworkHandler {
 		this.registerPacket(ResetItemModifierPacket.class, NetworkDirection.PLAY_TO_SERVER, ResetItemModifierPacket::encode, ResetItemModifierPacket::new, ResetItemModifierPacket::handle);
 	}
 	
-	private <T extends NetworkPacket> void registerPacket(Class<T> clazz, NetworkDirection direction, BiConsumer<T, FriendlyByteBuf> encoder, Function<FriendlyByteBuf, T> decoder, BiConsumer<T, Supplier<NetworkEvent.Context>> consumer) {
-		this.simpleChannel.messageBuilder(clazz, id++, direction).encoder(encoder).decoder(decoder).consumerMainThread(consumer).add();
+	private <T extends NetworkPacket> void registerPacket(Class<T> clazz, NetworkDirection direction, BiConsumer<T, FriendlyByteBuf> encoder, Function<FriendlyByteBuf, T> decoder, BiConsumer<T, CustomPayloadEvent.Context> consumer) {
+		this.simpleChannel.messageBuilder(clazz, this.id++, direction).encoder(encoder).decoder(decoder).consumerMainThread(consumer).add();
 	}
 	
 	private SimpleChannel getChannel() {
@@ -63,7 +64,7 @@ public enum XBNetworkHandler {
 	}
 	
 	public <T extends NetworkPacket> void sendToServer(T packet) {
-		this.getChannel().sendToServer(packet);
+		this.getChannel().send(packet, PacketDistributor.SERVER.noArg());
 	}
 	
 	public <T extends NetworkPacket> void sendToPlayer(Player player, T packet) {
@@ -73,6 +74,6 @@ public enum XBNetworkHandler {
 	}
 	
 	public <T extends NetworkPacket> void sendToPlayer(ServerPlayer player, T packet) {
-		this.getChannel().send(PacketDistributor.PLAYER.with(() -> player), packet);
+		this.getChannel().send(packet, PacketDistributor.PLAYER.with(player));
 	}
 }

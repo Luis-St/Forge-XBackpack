@@ -8,11 +8,10 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.network.NetworkEvent.Context;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
-import java.util.function.Supplier;
 
 /**
  *
@@ -31,14 +30,14 @@ public class NextToolTopPacket implements NetworkPacket {
 	}
 	
 	@Override
-	public void encode(FriendlyByteBuf buffer) {
+	public void encode(@NotNull FriendlyByteBuf buffer) {
 		
 	}
 	
 	@Override
-	public void handle(@NotNull Supplier<Context> context) {
-		ServerPlayer player = context.get().getSender();
-		context.get().enqueueWork(() -> {
+	public void handle(@NotNull CustomPayloadEvent.Context context) {
+		ServerPlayer player = context.getSender();
+		context.enqueueWork(() -> {
 			IBackpack backpack = BackpackProvider.get(Objects.requireNonNull(player));
 			ItemStack main = player.getMainHandItem().copy();
 			ItemStack top = backpack.getToolHandler().getStackInSlot(0).copy();

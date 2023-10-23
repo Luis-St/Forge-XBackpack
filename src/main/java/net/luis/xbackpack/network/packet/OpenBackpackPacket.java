@@ -7,11 +7,8 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.SimpleMenuProvider;
-import net.minecraftforge.network.NetworkEvent.Context;
-import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.function.Supplier;
 
 /**
  *
@@ -32,17 +29,17 @@ public class OpenBackpackPacket implements NetworkPacket {
 	}
 	
 	@Override
-	public void encode(FriendlyByteBuf buffer) {
+	public void encode(@NotNull FriendlyByteBuf buffer) {
 		
 	}
 	
 	@Override
-	public void handle(@NotNull Supplier<Context> context) {
-		ServerPlayer player = context.get().getSender();
-		context.get().enqueueWork(() -> {
+	public void handle(@NotNull CustomPayloadEvent.Context context) {
+		ServerPlayer player = context.getSender();
+		context.enqueueWork(() -> {
 			assert player != null;
 			if (player.containerMenu == player.inventoryMenu) {
-				NetworkHooks.openScreen(player, new SimpleMenuProvider((id, inventory, playerIn) -> new BackpackMenu(id, inventory), CONTAINER_NAME));
+				player.openMenu(new SimpleMenuProvider((id, inventory, playerIn) -> new BackpackMenu(id, inventory), CONTAINER_NAME));
 			}
 		});
 	}

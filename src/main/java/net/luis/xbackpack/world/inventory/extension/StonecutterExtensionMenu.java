@@ -18,8 +18,7 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.StonecutterRecipe;
+import net.minecraft.world.item.crafting.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -35,10 +34,10 @@ import java.util.function.Consumer;
 public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 	
 	private final CraftingHandler handler;
-	private final List<StonecutterRecipe> recipes = Lists.newArrayList();
+	private final List<RecipeHolder<StonecutterRecipe>> recipes = Lists.newArrayList();
 	private ItemStack input = ItemStack.EMPTY;
 	private int selectedRecipe = -1;
-	private StonecutterRecipe recipe;
+	private RecipeHolder<StonecutterRecipe> recipe;
 	
 	public StonecutterExtensionMenu(AbstractExtensionContainerMenu menu, Player player) {
 		super(menu, player, BackpackExtensions.STONECUTTER.get());
@@ -69,7 +68,7 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 	
 	private void onTake(Player player, @NotNull ItemStack stack) {
 		stack.onCraftedBy(player.level(), player, stack.getCount());
-		if (this.recipe != null && !this.recipe.isSpecial()) {
+		if (this.recipe != null && !this.recipe.value().isSpecial()) {
 			player.awardRecipes(Collections.singleton(this.recipe));
 		}
 		ItemStack inputStack = this.handler.getInputHandler().extractItem(0, 1, false);
@@ -126,8 +125,8 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 	
 	private void setupResult() {
 		if (!this.recipes.isEmpty() && this.isValidIndex(this.selectedRecipe)) {
-			StonecutterRecipe recipe = this.recipes.get(this.selectedRecipe);
-			this.handler.getResultHandler().setStackInSlot(0, recipe.assemble(new SimpleContainer(this.handler.getInputHandler().getStackInSlot(0)), this.player.level().registryAccess()));
+			RecipeHolder<StonecutterRecipe> recipe = this.recipes.get(this.selectedRecipe);
+			this.handler.getResultHandler().setStackInSlot(0, recipe.value().assemble(new SimpleContainer(this.handler.getInputHandler().getStackInSlot(0)), this.player.level().registryAccess()));
 			this.recipe = recipe;
 		} else {
 			this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);

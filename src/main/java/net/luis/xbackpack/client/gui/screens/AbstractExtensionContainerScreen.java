@@ -62,7 +62,6 @@ public abstract class AbstractExtensionContainerScreen<T extends AbstractExtensi
 	
 	@Override
 	protected void renderBg(@NotNull GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
-		this.renderBackground(graphics);
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		this.renderExtensions(graphics, partialTicks, mouseX, mouseY);
@@ -162,12 +161,12 @@ public abstract class AbstractExtensionContainerScreen<T extends AbstractExtensi
 	}
 	
 	@Override
-	public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+	public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
 		AbstractExtensionScreen extensionScreen = this.getExtensionScreen(this.extension);
-		if (extensionScreen != null && extensionScreen.mouseScrolled(mouseX, mouseY, delta)) {
+		if (extensionScreen != null && extensionScreen.mouseScrolled(mouseX, mouseY, deltaY)) {
 			return true;
 		}
-		return super.mouseScrolled(mouseX, mouseY, delta);
+		return super.mouseScrolled(mouseX, mouseY, deltaX, deltaY);
 	}
 	
 	@Override
@@ -199,7 +198,7 @@ public abstract class AbstractExtensionContainerScreen<T extends AbstractExtensi
 		return false;
 	}
 	
-	protected void addExtensionScreen(BiFunction<AbstractExtensionContainerScreen<T>, List<BackpackExtension>, AbstractExtensionScreen> screenFactory) {
+	protected void addExtensionScreen(@NotNull BiFunction<AbstractExtensionContainerScreen<T>, List<BackpackExtension>, AbstractExtensionScreen> screenFactory) {
 		AbstractExtensionScreen extensionScreen = screenFactory.apply(this, this.extensions);
 		if (!extensionScreen.getExtension().isDisabled()) {
 			this.extensionScreens.add(extensionScreen);

@@ -5,11 +5,9 @@ import net.luis.xbackpack.network.NetworkPacket;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkEvent.Context;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.function.Supplier;
 
 /**
  *
@@ -53,8 +51,8 @@ public class UpdateEnchantmentTablePacket implements NetworkPacket {
 	}
 	
 	@Override
-	public void handle(@NotNull Supplier<Context> context) {
-		context.get().enqueueWork(() -> {
+	public void handle(@NotNull CustomPayloadEvent.Context context) {
+		context.enqueueWork(() -> {
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 				XBClientPacketHandler.updateEnchantmentTableExtension(this.enchantments, this.enchantmentLevels, this.enchantingCosts, this.enchantmentSeed);
 			});

@@ -12,8 +12,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
 import java.util.Objects;
@@ -63,11 +62,11 @@ public class CraftingExtensionMenu extends AbstractExtensionMenu {
 		Level level = this.player.level();
 		if (!level.isClientSide && this.player instanceof ServerPlayer player) {
 			ItemStack stack = ItemStack.EMPTY;
-			Optional<CraftingRecipe> optional = Objects.requireNonNull(level.getServer()).getRecipeManager().getRecipeFor(RecipeType.CRAFTING, this.craftingWrapper, level);
+			Optional<RecipeHolder<CraftingRecipe>> optional = Objects.requireNonNull(level.getServer()).getRecipeManager().getRecipeFor(RecipeType.CRAFTING, this.craftingWrapper, level);
 			if (optional.isPresent()) {
-				CraftingRecipe recipe = optional.get();
+				RecipeHolder<CraftingRecipe> recipe = optional.get();
 				if (this.resultWrapper.setRecipeUsed(level, player, recipe)) {
-					stack = recipe.assemble(this.craftingWrapper, player.level().registryAccess());
+					stack = recipe.value().assemble(this.craftingWrapper, player.level().registryAccess());
 				}
 			}
 			this.resultWrapper.setItem(0, stack);

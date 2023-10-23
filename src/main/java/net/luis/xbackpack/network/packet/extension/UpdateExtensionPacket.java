@@ -6,11 +6,10 @@ import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.luis.xbackpack.world.inventory.BackpackMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkEvent.Context;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
-import java.util.function.Supplier;
 
 /**
  *
@@ -36,9 +35,9 @@ public class UpdateExtensionPacket implements NetworkPacket {
 	}
 	
 	@Override
-	public void handle(@NotNull Supplier<Context> context) {
-		ServerPlayer player = context.get().getSender();
-		context.get().enqueueWork(() -> {
+	public void handle(@NotNull CustomPayloadEvent.Context context) {
+		ServerPlayer player = context.getSender();
+		context.enqueueWork(() -> {
 			if (player.containerMenu instanceof BackpackMenu menu) {
 				menu.setExtension(this.extension);
 			}
