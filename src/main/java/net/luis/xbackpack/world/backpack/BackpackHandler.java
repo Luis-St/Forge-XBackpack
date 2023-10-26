@@ -177,7 +177,7 @@ public class BackpackHandler implements IBackpack {
 		} else {
 			XBackpack.LOGGER.error("The data version has changed, to prevent the loss of the backpack inventory, the game will be terminated");
 			XBackpack.LOGGER.info("If you want to know how to update the data version, check out the linked wiki on CurseForge");
-			Minecraft.getInstance().close();
+			System.exit(-1);
 		}
 	}
 }
