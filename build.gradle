@@ -106,7 +106,7 @@ def resourceTargets = ["META-INF/mods.toml", "pack.mcmeta"]
 def replaceProperties = [
 	MinecraftVersion: MinecraftVersion, MinecraftVersionRange: MinecraftVersionRange,
 	ForgeVersion    : ForgeVersion, ForgeVersionRange: ForgeVersionRange,
-	ForgeLoaderRange: ForgeLoaderRange, ModVersion: ModVersion
+	ForgeLoaderRange: ForgeLoaderRange, ModVersion: ModVersion, MinecraftPackFormat: MinecraftPackFormat
 ]
 processResources {
 	inputs.properties replaceProperties
