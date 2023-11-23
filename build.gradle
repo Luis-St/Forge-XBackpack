@@ -1,8 +1,8 @@
 plugins {
-	id 'eclipse'
-	id 'idea'
-	id 'maven-publish'
-	id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+	id "eclipse"
+	id "idea"
+	id "maven-publish"
+	id "net.minecraftforge.gradle" version "[6.0,6.2)"
 }
 
 version = "${MinecraftVersion}-${ModVersion}"
@@ -90,7 +90,7 @@ repositories {
 	}
 	maven {
 		name = "ModMaven"
-		url = "https://modmaven.dev"
+		url = "https://modmaven.dev/"
 	}
 }
 
@@ -138,6 +138,16 @@ artifacts {
 
 jar.finalizedBy("reobfJar")
 
+def username = ""
+def password = ""
+def file = file("./../credentials.properties")
+if (file.exists()) {
+	def properties = new Properties()
+	file.withInputStream {properties.load(it)}
+	username = properties.getProperty("username")
+	password = properties.getProperty("password")
+}
+
 publishing {
 	publications {
 		mavenJava(MavenPublication) {
@@ -145,10 +155,15 @@ publishing {
 			artifact sourcesJar
 		}
 	}
-	
 	repositories {
-		maven {
-			url uri("${projectDir}/maven/repositories")
+		if (!username.isBlank() && !password.isBlank()) {
+			maven {
+				url "https://maven.luis-st.net/libraries/"
+				credentials.username = username
+				credentials.password = password
+			}
+		} else {
+			System.err.println("No credentials provided. Publishing to maven.luis-st.net not possible.")
 		}
 	}
 }
