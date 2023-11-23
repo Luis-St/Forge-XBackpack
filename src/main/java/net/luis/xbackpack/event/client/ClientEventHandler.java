@@ -34,7 +34,7 @@ import java.util.Objects;
 @Mod.EventBusSubscriber(modid = XBackpack.MOD_ID, value = Dist.CLIENT)
 public class ClientEventHandler {
 	
-	public static int lastPacket;
+	public static int lastPacket = 0;
 	
 	@SubscribeEvent
 	public static void registerClientCommands(@NotNull RegisterClientCommandsEvent event) {
