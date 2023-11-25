@@ -158,7 +158,7 @@ publishing {
 	repositories {
 		if (!username.isBlank() && !password.isBlank()) {
 			maven {
-				url "https://maven.luis-st.net/libraries/"
+				url "https://maven.luis-st.net/forge/"
 				credentials.username = username
 				credentials.password = password
 			}
