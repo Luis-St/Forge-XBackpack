@@ -140,7 +140,7 @@ jar.finalizedBy("reobfJar")
 
 def username = ""
 def password = ""
-def file = file("./../credentials.properties")
+def file = file("./../../credentials.properties")
 if (file.exists()) {
 	def properties = new Properties()
 	file.withInputStream {properties.load(it)}
