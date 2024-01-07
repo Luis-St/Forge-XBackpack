@@ -1,7 +1,7 @@
 {
   "pack": {
     "description": {
-      "text": "XBackpack  resources"
+      "text": "XBackpack resources"
     },
     "pack_format": ${MinecraftPackFormat}
   }

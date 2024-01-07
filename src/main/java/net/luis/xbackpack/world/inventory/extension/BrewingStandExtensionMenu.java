@@ -83,7 +83,7 @@ public class BrewingStandExtensionMenu extends AbstractExtensionMenu {
 		Potion potion = PotionUtils.getPotion(stack);
 		if (player instanceof ServerPlayer serverPlayer) {
 			ForgeEventFactory.onPlayerBrewedPotion(player, stack);
-			CriteriaTriggers.BREWED_POTION.trigger(serverPlayer, potion);
+			CriteriaTriggers.BREWED_POTION.trigger(serverPlayer, potion.builtInRegistryHolder());
 		}
 	}
 	
