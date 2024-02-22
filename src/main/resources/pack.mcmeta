@@ -3,6 +3,6 @@
     "description": {
       "text": "XBackpack resources"
     },
-    "pack_format": ${MinecraftPackFormat}
+    "pack_format": 18
   }
 }

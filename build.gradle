@@ -84,29 +84,25 @@ minecraft {
 sourceSets.main.resources {srcDir "src/generated/resources"}
 
 repositories {
-//	maven {
-//		name = "Progwml6 maven"
-//		url = "https://dvs1.progwml6.com/files/maven/"
-//	}
-//	maven {
-//		name = "ModMaven"
-//		url = "https://modmaven.dev/"
-//	}
+	maven {
+		name = "ModMaven"
+		url = "https://modmaven.dev/"
+	}
 }
 
 dependencies {
 	minecraft "net.minecraftforge:forge:${MinecraftVersion}-${ForgeVersion}"
 	
-//	compileOnly fg.deobf("mezz.jei:jei-${MinecraftVersion}-common-api:${JeiVersion}")
-//	compileOnly fg.deobf("mezz.jei:jei-${MinecraftVersion}-forge-api:${JeiVersion}")
-//	runtimeOnly fg.deobf("mezz.jei:jei-${MinecraftVersion}-forge:${JeiVersion}")
+	compileOnly fg.deobf("mezz.jei:jei-${MinecraftVersion}-common-api:${JeiVersion}")
+	compileOnly fg.deobf("mezz.jei:jei-${MinecraftVersion}-forge-api:${JeiVersion}")
+	runtimeOnly fg.deobf("mezz.jei:jei-${MinecraftVersion}-forge:${JeiVersion}")
 }
 
 def resourceTargets = ["META-INF/mods.toml", "pack.mcmeta"]
 def replaceProperties = [
 	MinecraftVersion: MinecraftVersion, MinecraftVersionRange: MinecraftVersionRange,
 	ForgeVersion    : ForgeVersion, ForgeVersionRange: ForgeVersionRange,
-	ForgeLoaderRange: ForgeLoaderRange, ModVersion: ModVersion, MinecraftPackFormat: MinecraftPackFormat
+	ForgeLoaderRange: ForgeLoaderRange, ModVersion: ModVersion
 ]
 processResources {
 	inputs.properties replaceProperties
