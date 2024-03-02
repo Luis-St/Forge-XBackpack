@@ -1,15 +1,10 @@
+import java.nio.file.Files
+
 plugins {
 	id "eclipse"
 	id "idea"
 	id "maven-publish"
 	id "net.minecraftforge.gradle" version "[6.0,6.2)"
-}
-
-version = "${MinecraftVersion}-${ModVersion}"
-group = "net.luis.xbackpack"
-
-base {
-	archivesName = "XBackpack"
 }
 
 minecraft {
@@ -98,32 +93,6 @@ dependencies {
 	runtimeOnly fg.deobf("mezz.jei:jei-${MinecraftVersion}-forge:${JeiVersion}")
 }
 
-def resourceTargets = ["META-INF/mods.toml", "pack.mcmeta"]
-def replaceProperties = [
-	MinecraftVersion: MinecraftVersion, MinecraftVersionRange: MinecraftVersionRange,
-	ForgeVersion    : ForgeVersion, ForgeVersionRange: ForgeVersionRange,
-	ForgeLoaderRange: ForgeLoaderRange, ModVersion: ModVersion
-]
-processResources {
-	inputs.properties replaceProperties
-	replaceProperties.put "project", project
-	
-	filesMatching(resourceTargets) {
-		expand replaceProperties
-	}
-}
-
-jar {
-	manifest {
-		attributes([
-			"Specification-Title"     : "XBackpack",
-			"Specification-Version"   : "${ModVersion}",
-			"Implementation-Title"    : project.name,
-			"Implementation-Timestamp": new Date().format("yyyy-MM-dd HH:mm:ssZ")
-		])
-	}
-}
-
 java {
 	withSourcesJar()
 }
@@ -132,21 +101,46 @@ artifacts {
 	archives sourcesJar
 }
 
-jar.finalizedBy("reobfJar")
-
 def username = ""
 def password = ""
-def file = file("./../../credentials.properties")
-if (file.exists()) {
+def creds = file("./../../credentials.properties")
+if (creds.exists()) {
 	def properties = new Properties()
-	file.withInputStream {properties.load(it)}
+	creds.withInputStream {properties.load(it)}
 	username = properties.getProperty("username")
 	password = properties.getProperty("password")
+}
+
+def ver = "${MinecraftVersion}-${ModVersion}"
+tasks.register("renameArtifacts") {
+	doLast {
+		def jar = file("build/libs/${project.name}.jar")
+		def sourcesJar = file("build/libs/${project.name}-sources.jar")
+		if (Files.exists(jar.toPath())) {
+			def folder = file("D:/Games/Forge/Uploaded/XBackpack/${MinecraftVersion}")
+			if (!Files.exists(folder.toPath())) {
+				Files.createDirectory(folder.toPath())
+			}
+			if (!Files.exists(folder.toPath().resolve("XBackpack-${ver}.jar"))) {
+				Files.move(jar.toPath(), folder.toPath().resolve("XBackpack-${ver}.jar"))
+				println "Moved '${jar}' to '${folder.toPath().resolve("XBackpack-${ver}.jar")}'"
+			} else {
+				Files.delete(jar.toPath())
+				println "Deleted '${jar}'"
+			}
+		}
+		if (Files.deleteIfExists(sourcesJar.toPath())) {
+			println "Deleted '${sourcesJar}'"
+		}
+	}
 }
 
 publishing {
 	publications {
 		mavenJava(MavenPublication) {
+			groupId = "net.luis"
+			artifactId = "XBackpack"
+			version = ver
 			artifact jar
 			artifact sourcesJar
 		}
@@ -163,6 +157,40 @@ publishing {
 		}
 	}
 }
+
+def resourceTargets = ["META-INF/mods.toml", "pack.mcmeta"]
+def replaceProperties = [
+	MinecraftVersion: MinecraftVersion, MinecraftVersionRange: MinecraftVersionRange,
+	ForgeVersion: ForgeVersion, ForgeVersionRange: ForgeVersionRange,
+	ForgeLoaderRange: ForgeLoaderRange, ModVersion: ModVersion
+]
+processResources {
+	inputs.properties replaceProperties
+	replaceProperties.put "project", project
+	
+	filesMatching(resourceTargets) {
+		expand replaceProperties
+	}
+}
+
+jar {
+	manifest {
+		attributes([
+			"Specification-Title": "XBackpack",
+			"Specification-Version": "${ModVersion}",
+			"Implementation-Title": project.name,
+			"Implementation-Timestamp": new Date().format("yyyy-MM-dd HH:mm:ssZ")
+		])
+	}
+	finalizedBy("reobfJar")
+}
+
+sourcesJar {
+	outputs.upToDateWhen {false}
+}
+
+build.finalizedBy("renameArtifacts")
+publish.finalizedBy("renameArtifacts")
 
 tasks.withType(JavaCompile).configureEach {
 	options.encoding = "UTF-8"
