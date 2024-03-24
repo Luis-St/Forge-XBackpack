@@ -1,0 +1,66 @@
+name: Publish to maven and curseforge on merge of pull request
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - 'main'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout repository'
+        uses: actions/checkout@v4.1.1
+      - name: 'Set up Oracle JDK 21'
+        uses: oracle-actions/setup-java@v1
+        with:
+          website: oracle.com
+          release: 21
+      - name: 'Grant Permission to Gradle'
+        run: chmod +x gradlew
+      - name: 'Build with Gradle'
+        uses: gradle/actions/setup-gradle@v3.1.0
+        with:
+          arguments: build
+  publish-maven:
+    if: github.event.pull_request.merged == true
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout repository'
+        uses: actions/checkout@v4.1.1
+      - name: 'Set up Oracle JDK 21'
+        uses: oracle-actions/setup-java@v1
+        with:
+          website: oracle.com
+          release: 21
+      - name: 'Grant Permission to Gradle'
+        run: chmod +x gradlew
+      - name: 'Publish with Gradle'
+        uses: gradle/actions/setup-gradle@v3.1.0
+        with:
+          arguments: publish
+  publish-curseforge:
+    if: github.event.pull_request.merged == true
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout repository'
+        uses: actions/checkout@v4.1.1
+      - name: 'Set up Oracle JDK 21'
+        uses: oracle-actions/setup-java@v1
+        with:
+          website: oracle.com
+          release: 21
+      - name: 'Grant Permission to Gradle'
+        run: chmod +x gradlew
+      - name: 'Publish with Gradle'
+        uses: gradle/actions/setup-gradle@v3.1.0
+        with:
+          arguments: publishCurseForgePublicationToCurseForge
