@@ -1,18 +1,15 @@
 name: Publish to maven and curseforge on merge of pull request
 
 on:
-  pull_request:
-    types:
-      - closed
-    branches:
-      - 'main'
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
 
 permissions:
   contents: read
 
 jobs:
   build:
-    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout repository'
@@ -29,7 +26,6 @@ jobs:
         with:
           arguments: build
   publish-maven:
-    if: github.event.pull_request.merged == true
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -47,7 +43,6 @@ jobs:
         with:
           arguments: publish
   publish-curseforge:
-    if: github.event.pull_request.merged == true
     needs: build
     runs-on: ubuntu-latest
     steps:
