@@ -1,9 +1,6 @@
 name: Publish to maven and curseforge on merge of pull request
 
-on:
-  push:
-    tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
+on: release
 
 permissions:
   contents: read
