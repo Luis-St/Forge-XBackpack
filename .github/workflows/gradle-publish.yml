@@ -8,7 +8,24 @@ permissions:
   contents: read
 
 jobs:
+  license-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout repository'
+        uses: actions/checkout@v4.1.1
+      - name: 'Set up Oracle JDK 21'
+        uses: oracle-actions/setup-java@v1
+        with:
+          website: oracle.com
+          release: 21
+      - name: 'Grant Permission to Gradle'
+        run: chmod +x gradlew
+      - name: 'License check with Gradle'
+        uses: gradle/actions/setup-gradle@v3.1.0
+        with:
+          arguments: licenseCheck
   build:
+    needs: license-check
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout repository'
