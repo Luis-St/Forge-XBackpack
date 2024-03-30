@@ -1,8 +1,9 @@
 plugins {
 	id "idea"
 	id "maven-publish"
-	id "net.minecraftforge.gradle" version "[6.0,6.2)"
-	id "io.github.themrmilchmann.curseforge-publish" version "0.6.1"
+	id "net.minecraftforge.gradle" version "${ForgeGradle}"
+	id "com.github.joschi.licenser" version "${Licenser}"
+	id "io.github.themrmilchmann.curseforge-publish" version "${CurseForge}"
 }
 
 project.ext.username = System.getenv("MAVEN_USERNAME")
@@ -93,6 +94,13 @@ dependencies {
 	compileOnly fg.deobf("mezz.jei:jei-${MinecraftVersion}-common-api:${JeiVersion}")
 	compileOnly fg.deobf("mezz.jei:jei-${MinecraftVersion}-forge-api:${JeiVersion}")
 	runtimeOnly fg.deobf("mezz.jei:jei-${MinecraftVersion}-forge:${JeiVersion}")
+}
+
+compileJava.dependsOn(updateLicenses)
+
+license {
+	header = file("header.txt")
+	include("**/*.java")
 }
 
 java {
