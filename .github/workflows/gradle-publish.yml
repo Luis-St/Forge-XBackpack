@@ -1,6 +1,8 @@
-name: Publish to maven and curseforge on merge of pull request
+name: Publish to maven and curseforge
 
-on: release
+on:
+  release:
+    types: [ published ]
 
 permissions:
   contents: read
@@ -25,6 +27,11 @@ jobs:
   publish-maven:
     needs: build
     runs-on: ubuntu-latest
+    environment: Default
+    env:
+      MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+      MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
+      CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
     steps:
       - name: 'Checkout repository'
         uses: actions/checkout@v4.1.1
@@ -42,6 +49,11 @@ jobs:
   publish-curseforge:
     needs: build
     runs-on: ubuntu-latest
+    environment: Default
+    env:
+      MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+      MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
+      CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
     steps:
       - name: 'Checkout repository'
         uses: actions/checkout@v4.1.1

@@ -1,4 +1,4 @@
-name: Builds the project on commit
+name: Builds the project
 
 on: [ push ]
 
