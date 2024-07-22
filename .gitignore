@@ -29,7 +29,6 @@ LICENSE.txt
 
 # Project Files
 setup.bat
-build.bat
 
 # Cache Files
 src/generated/resources/.cache
