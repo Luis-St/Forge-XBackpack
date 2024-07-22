@@ -50,7 +50,7 @@ public class UpdateStonecutterPacket implements NetworkPacket {
 	}
 	
 	@Override
-	public void handle(@NotNull CustomPayloadEvent.Context context) {
+	public void handle(CustomPayloadEvent.@NotNull Context context) {
 		context.enqueueWork(() -> {
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 				XBClientPacketHandler.updateStonecutterExtension(this.resetSelected);

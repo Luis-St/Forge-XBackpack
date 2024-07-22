@@ -35,7 +35,7 @@ public class CraftingContainerWrapper extends TransientCraftingContainer impleme
 	
 	private final IItemHandlerModifiable itemHandler;
 	
-	public CraftingContainerWrapper(AbstractContainerMenu menu, IItemHandlerModifiable itemHandler, int width, int height) {
+	public CraftingContainerWrapper(@NotNull AbstractContainerMenu menu, @NotNull IItemHandlerModifiable itemHandler, int width, int height) {
 		super(menu, width, height);
 		this.itemHandler = itemHandler;
 	}

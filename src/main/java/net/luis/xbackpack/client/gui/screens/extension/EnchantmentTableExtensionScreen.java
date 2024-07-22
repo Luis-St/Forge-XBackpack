@@ -34,6 +34,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -53,7 +55,7 @@ public class EnchantmentTableExtensionScreen extends AbstractExtensionScreen {
 	private EnchantingHandler handler;
 	private int enchantmentSeed = 0;
 	
-	public EnchantmentTableExtensionScreen(AbstractExtensionContainerScreen<?> screen, List<BackpackExtension> extensions) {
+	public EnchantmentTableExtensionScreen(@NotNull AbstractExtensionContainerScreen<?> screen, @NotNull List<BackpackExtension> extensions) {
 		super(screen, BackpackExtensions.ENCHANTMENT_TABLE.get(), extensions);
 	}
 	
@@ -63,13 +65,13 @@ public class EnchantmentTableExtensionScreen extends AbstractExtensionScreen {
 	}
 	
 	@Override
-	protected void renderAdditional(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY, boolean open) {
+	protected void renderAdditional(@NotNull GuiGraphics graphics, float partialTicks, int mouseX, int mouseY, boolean open) {
 		for (int row = 0; row < 3 && open; row++) {
-			this.renderRow(graphics, mouseX, mouseY, row, this.minecraft.player, this.enchantments[row], this.enchantingCosts[row]);
+			this.renderRow(graphics, mouseX, mouseY, row, Objects.requireNonNull(this.minecraft.player), this.enchantments[row], this.enchantingCosts[row]);
 		}
 	}
 	
-	private void renderRow(GuiGraphics graphics, int mouseX, int mouseY, int row, LocalPlayer player, Enchantment enchantment, int enchantingCost) {
+	private void renderRow(@NotNull GuiGraphics graphics, int mouseX, int mouseY, int row, @NotNull LocalPlayer player, @Nullable Enchantment enchantment, int enchantingCost) {
 		if (enchantment != null) {
 			int costColor;
 			int enchantmentColor;
@@ -91,11 +93,11 @@ public class EnchantmentTableExtensionScreen extends AbstractExtensionScreen {
 		}
 	}
 	
-	private void renderLevel(GuiGraphics graphics, int row, boolean active) {
+	private void renderLevel(@NotNull GuiGraphics graphics, int row, boolean active) {
 		graphics.blit(this.getTexture(), this.leftPos + this.imageWidth + 47, this.topPos + 97 + row * 19, 136 + row * 19, active ? 57 : 76, 19, 19);
 	}
 	
-	private void renderLabels(GuiGraphics graphics, int row, int costColor, int enchantmentColor) {
+	private void renderLabels(@NotNull GuiGraphics graphics, int row, int costColor, int enchantmentColor) {
 		String cost = Integer.toString(this.enchantingCosts[row]);
 		graphics.drawString(this.font, cost, this.leftPos + this.imageWidth + 123 - this.font.width(cost), this.topPos + 106 + 19 * row, costColor);
 		int length = 50 - this.font.width(cost);
@@ -105,14 +107,14 @@ public class EnchantmentTableExtensionScreen extends AbstractExtensionScreen {
 	}
 	
 	@Override
-	public void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY, boolean open, boolean renderable, Consumer<ItemStack> tooltipRenderer) {
+	public void renderTooltip(@NotNull GuiGraphics graphics, int mouseX, int mouseY, boolean open, boolean renderable, @NotNull Consumer<ItemStack> tooltipRenderer) {
 		super.renderTooltip(graphics, mouseX, mouseY, open, renderable, tooltipRenderer);
 		for (int row = 0; row < 3 && open; row++) {
-			this.renderTooltip(graphics, mouseX, mouseY, row, this.minecraft.player, this.enchantments[row], this.enchantmentLevels[row], this.enchantingCosts[row]);
+			this.renderTooltip(graphics, mouseX, mouseY, row, Objects.requireNonNull(this.minecraft.player), this.enchantments[row], this.enchantmentLevels[row], this.enchantingCosts[row]);
 		}
 	}
 	
-	private void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY, int row, LocalPlayer player, Enchantment enchantment, int enchantmentLevel, int enchantingCost) {
+	private void renderTooltip(@NotNull GuiGraphics graphics, int mouseX, int mouseY, int row, @NotNull LocalPlayer player, @Nullable Enchantment enchantment, int enchantmentLevel, int enchantingCost) {
 		int fuel = this.getFuel();
 		int rowIndex = row + 1;
 		if (this.isHoveringRow(row, mouseX, mouseY) && enchantingCost > 0) {
@@ -162,7 +164,7 @@ public class EnchantmentTableExtensionScreen extends AbstractExtensionScreen {
 		return this.getFuel() >= row + 1;
 	}
 	
-	public void update(ResourceLocation[] enchantments, int[] enchantmentLevels, int[] enchantingCosts, int enchantmentSeed) {
+	public void update(ResourceLocation @NotNull [] enchantments, int @NotNull [] enchantmentLevels, int @NotNull [] enchantingCosts, int enchantmentSeed) {
 		for (int row = 0; row < this.enchantments.length; row++) {
 			this.enchantments[row] = ForgeRegistries.ENCHANTMENTS.getValue(enchantments[row]);
 		}

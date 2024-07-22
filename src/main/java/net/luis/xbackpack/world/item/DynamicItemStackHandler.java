@@ -19,10 +19,12 @@
 package net.luis.xbackpack.world.item;
 
 import net.luis.xbackpack.XBackpack;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -40,13 +42,13 @@ public class DynamicItemStackHandler extends ItemStackHandler {
 	}
 	
 	@Override
-	public CompoundTag serializeNBT() {
+	public CompoundTag serializeNBT(HolderLookup. @NotNull Provider lookup) {
 		ListTag itemsTag = new ListTag();
 		for (int i = 0; i < this.stacks.size(); i++) {
 			if (!this.stacks.get(i).isEmpty()) {
 				CompoundTag itemTag = new CompoundTag();
 				itemTag.putInt("Slot", i);
-				this.stacks.get(i).save(itemTag);
+				this.stacks.get(i).save(lookup, itemTag);
 				itemsTag.add(itemTag);
 			}
 		}
@@ -57,7 +59,7 @@ public class DynamicItemStackHandler extends ItemStackHandler {
 	}
 	
 	@Override
-	public void deserializeNBT(CompoundTag tag) {
+	public void deserializeNBT(HolderLookup. @NotNull Provider lookup, @NotNull CompoundTag tag) {
 		int size = tag.contains("Size", Tag.TAG_INT) ? tag.getInt("Size") : this.stacks.size();
 		boolean reduced = false;
 		if (this.initialSize >= size) {
@@ -75,7 +77,7 @@ public class DynamicItemStackHandler extends ItemStackHandler {
 				CompoundTag itemTag = itemsTag.getCompound(i);
 				int slot = itemTag.getInt("Slot");
 				if (slot >= 0 && slot < this.stacks.size()) {
-					this.stacks.set(slot, ItemStack.of(itemTag));
+					this.stacks.set(slot, ItemStack.parseOptional(lookup, itemTag));
 				}
 			}
 		}

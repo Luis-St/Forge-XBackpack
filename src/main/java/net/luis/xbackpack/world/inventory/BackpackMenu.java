@@ -26,7 +26,6 @@ import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.luis.xbackpack.world.inventory.extension.*;
 import net.luis.xbackpack.world.inventory.handler.ModifiableHandler;
 import net.luis.xbackpack.world.inventory.modifier.filter.ItemFilters;
-import net.luis.xbackpack.world.inventory.modifier.sorter.ItemSorters;
 import net.luis.xbackpack.world.inventory.slot.*;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -39,6 +38,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import static net.luis.xbackpack.world.inventory.modifier.sorter.ItemSorters.*;
+
 /**
  *
  * @author Luis-St
@@ -49,11 +50,11 @@ public class BackpackMenu extends AbstractModifiableContainerMenu {
 	
 	private final ModifiableHandler handler;
 	
-	public BackpackMenu(int id, Inventory inventory, FriendlyByteBuf byteBuf) {
+	public BackpackMenu(int id, @NotNull Inventory inventory, @NotNull FriendlyByteBuf byteBuf) {
 		this(id, inventory);
 	}
 	
-	public BackpackMenu(int id, Inventory inventory) {
+	public BackpackMenu(int id, @NotNull Inventory inventory) {
 		super(XBMenuTypes.BACKPACK_MENU.get(), id, inventory);
 		Player player = inventory.player;
 		IBackpack backpack = BackpackProvider.get(player);
@@ -89,7 +90,7 @@ public class BackpackMenu extends AbstractModifiableContainerMenu {
 		this.addExtensionMenu(BackpackExtensions.SMITHING_TABLE.get(), player, SmithingTableExtensionMenu::new);
 	}
 	
-	public ModifiableHandler getHandler() {
+	public @NotNull ModifiableHandler getHandler() {
 		return this.handler;
 	}
 	
@@ -151,7 +152,7 @@ public class BackpackMenu extends AbstractModifiableContainerMenu {
 		return stack;
 	}
 	
-	private boolean moveInventory(ItemStack slotStack) {
+	private boolean moveInventory(@NotNull ItemStack slotStack) {
 		if (!this.moveItemStackTo(slotStack, 900, 909)) { // into hotbar
 			return this.moveItemStackTo(slotStack, 873, 900); // into inventory
 		}
@@ -194,7 +195,7 @@ public class BackpackMenu extends AbstractModifiableContainerMenu {
 		return super.clickMenuButton(player, button);
 	}
 	
-	private void mergeInventory(ServerPlayer player) {
+	private void mergeInventory(@NotNull ServerPlayer player) {
 		List<ItemStack> failedStacks = Lists.newArrayList();
 		ModifiableHandler handler = new ModifiableHandler(this.handler.getSlots());
 		this.handler.resetWrappedSlots();
@@ -222,22 +223,20 @@ public class BackpackMenu extends AbstractModifiableContainerMenu {
 	}
 	
 	@Override
-	protected void onItemModifiersChanged(ServerPlayer player) {
-		if (this.getFilter() == ItemFilters.NONE && this.getSorter() == ItemSorters.NONE) {
+	protected void onItemModifiersChanged(@NotNull ServerPlayer player) {
+		if (this.getFilter() == ItemFilters.NONE && this.getSorter() == NONE) {
 			this.handler.resetWrappedSlots();
 		} else {
 			List<ItemStack> stacks = this.handler.createModifiableList();
 			String searchTerm = this.getSearchTerm();
 			boolean negate = this.isNegate();
 			if (!searchTerm.isEmpty()) {
-				if (this.getSorter() == ItemSorters.NAME_SEARCH) {
-					stacks.removeIf((stack) -> !ItemFilters.NAME_SEARCH.canKeepItem(stack, searchTerm, negate));
-				} else if (this.getSorter() == ItemSorters.NAMESPACE_SEARCH) {
-					stacks.removeIf((stack) -> !ItemFilters.NAMESPACE_SEARCH.canKeepItem(stack, searchTerm, negate));
-				} else if (this.getSorter() == ItemSorters.TAG_SEARCH) {
-					stacks.removeIf((stack) -> !ItemFilters.TAG_SEARCH.canKeepItem(stack, searchTerm, negate));
-				} else if (this.getSorter() == ItemSorters.COUNT_SEARCH) {
-					stacks.removeIf((stack) -> !ItemFilters.COUNT_SEARCH.canKeepItem(stack, searchTerm, negate));
+				switch (this.getSorter()) {
+					case NAME_SEARCH -> stacks.removeIf((stack) -> !ItemFilters.NAME_SEARCH.canKeepItem(stack, searchTerm, negate));
+					case NAMESPACE_SEARCH -> stacks.removeIf((stack) -> !ItemFilters.NAMESPACE_SEARCH.canKeepItem(stack, searchTerm, negate));
+					case TAG_SEARCH -> stacks.removeIf((stack) -> !ItemFilters.TAG_SEARCH.canKeepItem(stack, searchTerm, negate));
+					case COUNT_SEARCH -> stacks.removeIf((stack) -> !ItemFilters.COUNT_SEARCH.canKeepItem(stack, searchTerm, negate));
+					default -> {break;}
 				}
 			}
 			stacks.removeIf((stack) -> !this.getFilter().canKeepItem(stack, searchTerm, negate));

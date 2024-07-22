@@ -19,8 +19,7 @@
 package net.luis.xbackpack.world.extension;
 
 import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  *
@@ -36,12 +35,11 @@ public enum BackpackExtensionState {
 	
 	private final String name;
 	
-	BackpackExtensionState(String name) {
+	BackpackExtensionState(@NotNull String name) {
 		this.name = name;
 	}
 	
-	@Nullable
-	public static BackpackExtensionState fromString(String string) {
+	public static @Nullable BackpackExtensionState fromString(@NotNull String string) {
 		for (BackpackExtensionState state : values()) {
 			if (state.getName().equals(string)) {
 				return state;
@@ -50,13 +48,12 @@ public enum BackpackExtensionState {
 		return null;
 	}
 	
-	@NotNull
-	public static BackpackExtensionState fromString(String string, BackpackExtensionState fallbackState) {
+	public static @Nullable BackpackExtensionState fromString(@NotNull String string, @NotNull BackpackExtensionState fallbackState) {
 		BackpackExtensionState state = fromString(string);
 		return state != null ? state : fallbackState;
 	}
 	
-	public String getName() {
+	public @NotNull String getName() {
 		return this.name;
 	}
 	

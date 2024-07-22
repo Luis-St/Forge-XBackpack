@@ -39,21 +39,15 @@ import java.util.Objects;
 
 public class NextToolDownPacket implements NetworkPacket {
 	
-	public NextToolDownPacket() {
-		
-	}
+	public NextToolDownPacket() {}
 	
-	public NextToolDownPacket(FriendlyByteBuf buffer) {
-		
-	}
+	public NextToolDownPacket(FriendlyByteBuf buffer) {}
 	
 	@Override
-	public void encode(@NotNull FriendlyByteBuf buffer) {
-		
-	}
+	public void encode(@NotNull FriendlyByteBuf buffer) {}
 	
 	@Override
-	public void handle(@NotNull CustomPayloadEvent.Context context) {
+	public void handle(CustomPayloadEvent.@NotNull Context context) {
 		ServerPlayer player = context.getSender();
 		context.enqueueWork(() -> {
 			IBackpack backpack = BackpackProvider.get(Objects.requireNonNull(player));

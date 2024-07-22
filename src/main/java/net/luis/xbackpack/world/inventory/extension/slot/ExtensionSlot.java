@@ -39,23 +39,23 @@ public class ExtensionSlot extends SlotItemHandler implements ExtensionMenuSlot 
 	private final AbstractExtensionMenu extensionMenu;
 	private final boolean sendChanges;
 	
-	public ExtensionSlot(AbstractExtensionMenu extensionMenu, IItemHandler itemHandler, int index, int xPosition, int yPosition) {
+	public ExtensionSlot(@NotNull AbstractExtensionMenu extensionMenu, @NotNull IItemHandler itemHandler, int index, int xPosition, int yPosition) {
 		this(extensionMenu, itemHandler, index, xPosition, yPosition, true);
 	}
 	
-	public ExtensionSlot(AbstractExtensionMenu extensionMenu, IItemHandler itemHandler, int index, int xPosition, int yPosition, boolean sendChanges) {
+	public ExtensionSlot(@NotNull AbstractExtensionMenu extensionMenu, @NotNull IItemHandler itemHandler, int index, int xPosition, int yPosition, boolean sendChanges) {
 		super(itemHandler, index, xPosition, yPosition);
 		this.extensionMenu = extensionMenu;
 		this.sendChanges = sendChanges;
 	}
 	
 	@Override
-	public AbstractExtensionMenu getMenu() {
+	public @NotNull AbstractExtensionMenu getMenu() {
 		return this.extensionMenu;
 	}
 	
 	@Override
-	public BackpackExtension getExtension() {
+	public @NotNull BackpackExtension getExtension() {
 		return this.extensionMenu.getExtension();
 	}
 	
@@ -68,7 +68,7 @@ public class ExtensionSlot extends SlotItemHandler implements ExtensionMenuSlot 
 	}
 	
 	@Override
-	public void initialize(ItemStack stack) {
+	public void initialize(@NotNull ItemStack stack) {
 		super.initialize(stack);
 		if (this.sendChanges) {
 			this.extensionMenu.slotsChanged();

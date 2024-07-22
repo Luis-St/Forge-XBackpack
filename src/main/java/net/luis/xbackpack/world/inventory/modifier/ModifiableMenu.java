@@ -20,6 +20,7 @@ package net.luis.xbackpack.world.inventory.modifier;
 
 import net.luis.xbackpack.world.inventory.modifier.filter.ItemFilter;
 import net.luis.xbackpack.world.inventory.modifier.sorter.ItemSorter;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -32,17 +33,17 @@ import java.util.List;
 
 public interface ModifiableMenu {
 	
-	String getSearchTerm();
+	@NotNull String getSearchTerm();
 	
 	void setSearchTerm(String searchTerm);
 	
-	ItemFilter getFilter();
+	@NotNull ItemFilter getFilter();
 	
-	void updateFilter(@Nullable ItemFilter filter, UpdateType type, @Nullable CycleDirection direction);
+	void updateFilter(@Nullable ItemFilter filter, @NotNull UpdateType type, @Nullable CycleDirection direction);
 	
-	ItemSorter getSorter();
+	@NotNull ItemSorter getSorter();
 	
-	void updateSorter(@Nullable ItemSorter sorter, UpdateType type, @Nullable CycleDirection direction);
+	void updateSorter(@Nullable ItemSorter sorter, @NotNull UpdateType type, @Nullable CycleDirection direction);
 	
 	enum UpdateType {
 		
@@ -58,13 +59,13 @@ public interface ModifiableMenu {
 		private final int id;
 		private final boolean shouldUpdate;
 		
-		UpdateType(String name, int id, boolean shouldUpdate) {
+		UpdateType(@NotNull String name, int id, boolean shouldUpdate) {
 			this.name = name;
 			this.id = id;
 			this.shouldUpdate = shouldUpdate;
 		}
 		
-		public String getName() {
+		public @NotNull String getName() {
 			return this.name;
 		}
 		
@@ -98,16 +99,16 @@ public interface ModifiableMenu {
 		
 		FORWARDS("forwards", 0) {
 			@Override
-			public <T extends ItemModifier> T cycle(List<T> itemModifiers, T itemModifier) {
+			public <T extends ItemModifier> T cycle(@NotNull List<T> itemModifiers, T itemModifier) {
 				return itemModifiers.get((itemModifiers.indexOf(itemModifier) + 1) % itemModifiers.size());
 			}
 		},
 		BACKWARDS("backwards", 1) {
 			@Override
-			public <T extends ItemModifier> T cycle(List<T> itemModifiers, T itemModifier) {
+			public <T extends ItemModifier> T cycle(@NotNull List<T> itemModifiers, T itemModifier) {
 				int index = itemModifiers.indexOf(itemModifier);
 				if (index == 0) {
-					return itemModifiers.get(itemModifiers.size() - 1);
+					return itemModifiers.getLast();
 				} else {
 					return itemModifiers.get(index - 1);
 				}
@@ -117,12 +118,12 @@ public interface ModifiableMenu {
 		private final String name;
 		private final int id;
 		
-		CycleDirection(String name, int id) {
+		CycleDirection(@NotNull String name, int id) {
 			this.name = name;
 			this.id = id;
 		}
 		
-		public String getName() {
+		public @NotNull String getName() {
 			return this.name;
 		}
 		
@@ -130,7 +131,7 @@ public interface ModifiableMenu {
 			return this.id;
 		}
 		
-		public abstract <T extends ItemModifier> T cycle(List<T> itemModifiers, T itemModifier);
+		public abstract <T extends ItemModifier> T cycle(@NotNull List<T> itemModifiers, T itemModifier);
 		
 		@Override
 		public String toString() {

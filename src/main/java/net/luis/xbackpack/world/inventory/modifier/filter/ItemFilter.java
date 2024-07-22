@@ -21,6 +21,7 @@ package net.luis.xbackpack.world.inventory.modifier.filter;
 import net.luis.xbackpack.world.inventory.modifier.ItemModifier;
 import net.luis.xbackpack.world.inventory.modifier.ItemModifierType;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -31,9 +32,9 @@ import net.minecraft.world.item.ItemStack;
 public interface ItemFilter extends ItemModifier {
 	
 	@Override
-	default ItemModifierType getType() {
+	default @NotNull ItemModifierType getType() {
 		return ItemModifierType.FILTER;
 	}
 	
-	boolean canKeepItem(ItemStack stack, String searchTerm, boolean negate);
+	boolean canKeepItem(@NotNull ItemStack stack, @NotNull String searchTerm, boolean negate);
 }

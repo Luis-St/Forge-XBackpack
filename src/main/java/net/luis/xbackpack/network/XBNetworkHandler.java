@@ -50,7 +50,7 @@ public enum XBNetworkHandler {
 	private SimpleChannel simpleChannel;
 	
 	public void initChannel() {
-		this.simpleChannel = ChannelBuilder.named(new ResourceLocation(XBackpack.MOD_ID, "simple_channel")).acceptedVersions((status, version) -> true).simpleChannel();
+		this.simpleChannel = ChannelBuilder.named(ResourceLocation.fromNamespaceAndPath(XBackpack.MOD_ID, "simple_channel")).acceptedVersions((status, version) -> true).simpleChannel();
 	}
 	
 	public void registerPackets() {
@@ -73,6 +73,7 @@ public enum XBNetworkHandler {
 		this.registerPacket(ResetItemModifierPacket.class, NetworkDirection.PLAY_TO_SERVER, ResetItemModifierPacket::encode, ResetItemModifierPacket::new, ResetItemModifierPacket::handle);
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private <T extends NetworkPacket> void registerPacket(Class<T> clazz, NetworkDirection direction, BiConsumer<T, FriendlyByteBuf> encoder, Function<FriendlyByteBuf, T> decoder, BiConsumer<T, CustomPayloadEvent.Context> consumer) {
 		this.simpleChannel.messageBuilder(clazz, this.id++, direction).encoder(encoder).decoder(decoder).consumerMainThread(consumer).add();
 	}

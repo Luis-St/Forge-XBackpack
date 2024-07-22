@@ -51,8 +51,8 @@ import java.util.Objects;
 
 public class BackpackScreen extends AbstractModifiableContainerScreen<BackpackMenu> {
 	
-	private static final ResourceLocation BACKPACK = new ResourceLocation(XBackpack.MOD_ID, "textures/gui/container/backpack.png");
-	private static final ResourceLocation ICONS = new ResourceLocation(XBackpack.MOD_ID, "textures/gui/container/backpack_icons.png");
+	private static final ResourceLocation BACKPACK = ResourceLocation.fromNamespaceAndPath(XBackpack.MOD_ID, "textures/gui/container/backpack.png");
+	private static final ResourceLocation ICONS = ResourceLocation.fromNamespaceAndPath(XBackpack.MOD_ID, "textures/gui/container/backpack_icons.png");
 	
 	private RenderData searchData;
 	private RenderData filterData;
@@ -76,7 +76,7 @@ public class BackpackScreen extends AbstractModifiableContainerScreen<BackpackMe
 	}
 	
 	@Override
-	protected @NotNull SlotRenderType getSlotRenderType(Slot slot) {
+	protected @NotNull SlotRenderType getSlotRenderType(@NotNull Slot slot) {
 		if (slot instanceof ExtensionMenuSlot extensionSlot) {
 			return this.getExtension() == extensionSlot.getExtension() ? SlotRenderType.DEFAULT : SlotRenderType.SKIP;
 		} else if (slot instanceof BackpackSlot) {
@@ -91,7 +91,7 @@ public class BackpackScreen extends AbstractModifiableContainerScreen<BackpackMe
 	}
 	
 	@Override
-	protected void renderScreen(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+	protected void renderScreen(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		super.renderScreen(graphics, mouseX, mouseY, partialTicks);
 		graphics.blit(ICONS, this.leftPos + 75, this.topPos + 6, 32, 0, 8, 8);
 		graphics.blit(ICONS, this.leftPos + 89, this.topPos + 6, 8, 8, 46, 0, 14, 14, 256, 256);
@@ -136,12 +136,12 @@ public class BackpackScreen extends AbstractModifiableContainerScreen<BackpackMe
 	}
 	
 	@Override
-	public Slot findSlot(double mouseX, double mouseY) {
+	public @NotNull Slot findSlot(double mouseX, double mouseY) {
 		return super.findSlot(mouseX, mouseY);
 	}
 	
 	@Override
-	protected RenderData getSearchData() {
+	protected @NotNull RenderData getSearchData() {
 		if (this.searchData == null) {
 			this.searchData = new RenderData(true, this.leftPos + 103, this.topPos + 6, 86, 9);
 		}
@@ -154,7 +154,7 @@ public class BackpackScreen extends AbstractModifiableContainerScreen<BackpackMe
 	}
 	
 	@Override
-	protected RenderData getFilterData() {
+	protected @NotNull RenderData getFilterData() {
 		if (this.filterData == null) {
 			this.filterData = new RenderData(true, this.leftPos + 73, this.topPos + 4, 12, 12);
 		}
@@ -162,7 +162,7 @@ public class BackpackScreen extends AbstractModifiableContainerScreen<BackpackMe
 	}
 	
 	@Override
-	protected RenderData getSorterData() {
+	protected @NotNull RenderData getSorterData() {
 		if (this.sorterData == null) {
 			this.sorterData = new RenderData(true, this.leftPos + 87, this.topPos + 4, 12, 12);
 		}
@@ -170,7 +170,7 @@ public class BackpackScreen extends AbstractModifiableContainerScreen<BackpackMe
 	}
 	
 	@Override
-	protected RenderData getMergerData() {
+	protected @NotNull RenderData getMergerData() {
 		if (this.mergerData == null) {
 			this.mergerData = new RenderData(true, this.leftPos + 198, this.topPos + 4, 12, 12);
 		}
@@ -178,17 +178,17 @@ public class BackpackScreen extends AbstractModifiableContainerScreen<BackpackMe
 	}
 	
 	@Override
-	protected TooltipFlag getTooltipFlag() {
-		return BackpackProvider.get(Objects.requireNonNull(Objects.requireNonNull(this.minecraft).player)).getConfig().getClientConfig().shouldShowModifierInfo() ? TooltipFlag.Default.ADVANCED : TooltipFlag.Default.NORMAL;
+	protected @NotNull TooltipFlag getTooltipFlag() {
+		return Objects.requireNonNull(BackpackProvider.get(Objects.requireNonNull(Objects.requireNonNull(this.minecraft).player)).getConfig().getClientConfig()).shouldShowModifierInfo() ? TooltipFlag.Default.ADVANCED : TooltipFlag.Default.NORMAL;
 	}
 	
 	@Override
-	protected void updateSearchTerm(String searchBoxValue) {
+	protected void updateSearchTerm(@NotNull String searchBoxValue) {
 		XBNetworkHandler.INSTANCE.sendToServer(new UpdateSearchTermPacket(searchBoxValue));
 	}
 	
 	@Override
-	protected void updateItemModifier(ItemModifierType modifierType) {
+	protected void updateItemModifier(@NotNull ItemModifierType modifierType) {
 		XBNetworkHandler.INSTANCE.sendToServer(new ResetItemModifierPacket(modifierType));
 	}
 }

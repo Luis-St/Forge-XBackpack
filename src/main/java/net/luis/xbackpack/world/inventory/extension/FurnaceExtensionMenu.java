@@ -50,7 +50,7 @@ public class FurnaceExtensionMenu extends AbstractExtensionMenu {
 	private final SmeltingHandler handler;
 	private final ProgressHandler progressHandler;
 	
-	public FurnaceExtensionMenu(AbstractExtensionContainerMenu menu, Player player) {
+	public FurnaceExtensionMenu(@NotNull AbstractExtensionContainerMenu menu, @NotNull Player player) {
 		super(menu, player, BackpackExtensions.FURNACE.get());
 		IBackpack backpack = BackpackProvider.get(this.player);
 		this.handler = backpack.getSmeltingHandler();
@@ -63,7 +63,7 @@ public class FurnaceExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	@Override
-	public void addSlots(Consumer<Slot> consumer) {
+	public void addSlots(@NotNull Consumer<Slot> consumer) {
 		for (int i = 0; i < 4; i++) {
 			consumer.accept(new ExtensionSlot(this, this.handler.getInputStorageHandler(), i, 225 + i * 18, 49) {
 				@Override
@@ -101,7 +101,7 @@ public class FurnaceExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private boolean canSmelt(ItemStack stack) {
+	private boolean canSmelt(@NotNull ItemStack stack) {
 		for (RecipeType<? extends AbstractCookingRecipe> recipeType : BackpackConstants.FURNACE_RECIPE_TYPES) {
 			if (this.player.level().getRecipeManager().getRecipeFor((RecipeType<AbstractCookingRecipe>) recipeType, new SimpleContainer(stack), this.player.level()).isPresent()) {
 				return true;
@@ -110,7 +110,7 @@ public class FurnaceExtensionMenu extends AbstractExtensionMenu {
 		return false;
 	}
 	
-	private boolean isFuel(ItemStack stack) {
+	private boolean isFuel(@NotNull ItemStack stack) {
 		for (RecipeType<? extends AbstractCookingRecipe> recipeType : BackpackConstants.FURNACE_RECIPE_TYPES) {
 			if (ForgeHooks.getBurnTime(stack, recipeType) > 0) {
 				return true;
@@ -120,7 +120,7 @@ public class FurnaceExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	@Override
-	public boolean quickMoveStack(ItemStack slotStack, int index) {
+	public boolean quickMoveStack(@NotNull ItemStack slotStack, int index) {
 		if (908 >= index && index >= 0) { // from container
 			if (this.canSmelt(slotStack)) {
 				if (this.menu.moveItemStackTo(slotStack, 931, 932)) { // into input

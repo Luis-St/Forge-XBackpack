@@ -21,6 +21,7 @@ package net.luis.xbackpack.world.extension;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -40,19 +41,19 @@ public final class BackpackExtension {
 	private final int imageHeight;
 	private final boolean disabled;
 	
-	public BackpackExtension(ItemStack stack, int iconWidth, int iconHeight, int imageWidth, int imageHeight) {
+	public BackpackExtension(@NotNull ItemStack stack, int iconWidth, int iconHeight, int imageWidth, int imageHeight) {
 		this(stack, stack, iconWidth, iconHeight, imageWidth, imageHeight, false);
 	}
 	
-	public BackpackExtension(ItemStack unlockItem, ItemStack icon, int iconWidth, int iconHeight, int imageWidth, int imageHeight) {
+	public BackpackExtension(@NotNull ItemStack unlockItem, @NotNull ItemStack icon, int iconWidth, int iconHeight, int imageWidth, int imageHeight) {
 		this(unlockItem, icon, iconWidth, iconHeight, imageWidth, imageHeight, false);
 	}
 	
-	public BackpackExtension(ItemStack stack, int iconWidth, int iconHeight, int imageWidth, int imageHeight, boolean disabled) {
+	public BackpackExtension(@NotNull ItemStack stack, int iconWidth, int iconHeight, int imageWidth, int imageHeight, boolean disabled) {
 		this(stack, stack, iconWidth, iconHeight, imageWidth, imageHeight, disabled);
 	}
 	
-	public BackpackExtension(ItemStack unlockItem, ItemStack icon, int iconWidth, int iconHeight, int imageWidth, int imageHeight, boolean disabled) {
+	public BackpackExtension(@NotNull ItemStack unlockItem, @NotNull ItemStack icon, int iconWidth, int iconHeight, int imageWidth, int imageHeight, boolean disabled) {
 		this.unlockItem = unlockItem;
 		this.icon = icon;
 		this.iconWidth = iconWidth;
@@ -62,23 +63,21 @@ public final class BackpackExtension {
 		this.disabled = disabled;
 	}
 	
-	public ItemStack getUnlockItem() {
+	public @NotNull ItemStack getUnlockItem() {
 		return this.unlockItem;
 	}
 	
-	public ItemStack getIcon() {
+	public @NotNull ItemStack getIcon() {
 		return this.icon;
 	}
 	
-	public Component getTitle() {
-		ResourceLocation location = BackpackExtensions.REGISTRY.get().getKey(this);
-		assert location != null;
+	public @NotNull Component getTitle() {
+		ResourceLocation location = Objects.requireNonNull(BackpackExtensions.REGISTRY.get().getKey(this));
 		return Component.translatable(location.getNamespace() + ".backpack_extension." + location.getPath() + ".title");
 	}
 	
-	public Component getTooltip() {
-		ResourceLocation location = BackpackExtensions.REGISTRY.get().getKey(this);
-		assert location != null;
+	public @NotNull Component getTooltip() {
+		ResourceLocation location = Objects.requireNonNull(BackpackExtensions.REGISTRY.get().getKey(this));
 		return Component.translatable(location.getNamespace() + ".backpack_extension." + location.getPath() + ".tooltip");
 	}
 	

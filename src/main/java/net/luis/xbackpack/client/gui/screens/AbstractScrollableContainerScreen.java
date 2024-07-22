@@ -54,7 +54,7 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 	private boolean scrolling = false;
 	protected int scrollOffset = 0;
 	
-	protected AbstractScrollableContainerScreen(T menu, Inventory inventory, Component titleComponent) {
+	protected AbstractScrollableContainerScreen(@NotNull T menu, @NotNull Inventory inventory, @NotNull Component titleComponent) {
 		super(menu, inventory, titleComponent);
 	}
 	
@@ -110,12 +110,11 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 		this.renderTooltip(graphics, mouseX, mouseY);
 	}
 	
-	@NotNull
-	protected SlotRenderType getSlotRenderType(Slot slot) {
+	protected @NotNull SlotRenderType getSlotRenderType(@NotNull Slot slot) {
 		return SlotRenderType.DEFAULT;
 	}
 	
-	protected void renderSlots(GuiGraphics graphics, int mouseX, int mouseY) {
+	protected void renderSlots(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {
 		for (int i = 0; i < this.menu.slots.size(); ++i) {
 			Slot slot = this.menu.slots.get(i);
 			if (this.getSlotRenderType(slot) != SlotRenderType.SKIP) {
@@ -125,7 +124,7 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 		}
 	}
 	
-	protected void renderAndDecorateSlot(GuiGraphics graphics, int mouseX, int mouseY, Slot slot, int slotX, int slotY, int slotColor) {
+	protected void renderAndDecorateSlot(@NotNull GuiGraphics graphics, int mouseX, int mouseY, Slot slot, int slotX, int slotY, int slotColor) {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		this.renderSlot(graphics, slot, slotX, slotY);
 		if (this.isHovering(slot, mouseX, mouseY)) {
@@ -134,7 +133,7 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 		}
 	}
 	
-	protected void renderSlot(GuiGraphics graphics, @NotNull Slot slot, int slotX, int slotY) {
+	protected void renderSlot(@NotNull GuiGraphics graphics, @NotNull Slot slot, int slotX, int slotY) {
 		ItemStack slotStack = slot.getItem();
 		boolean quickReplace = false;
 		boolean clickedSlot = slot == this.clickedSlot && !this.draggingItem.isEmpty() && !this.isSplittingStack;
@@ -192,7 +191,7 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 	}
 	
 	@Override
-	public Slot findSlot(double mouseX, double mouseY) {
+	public @NotNull Slot findSlot(double mouseX, double mouseY) {
 		for (int i = 0; i < this.menu.slots.size(); ++i) {
 			Slot slot = this.menu.slots.get(i);
 			if (this.isHovering(slot, mouseX, mouseY) && this.getSlotRenderType(slot) == SlotRenderType.DEFAULT) {
@@ -244,7 +243,7 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 	}
 	
 	@Override
-	public boolean isHovering(Slot slot, double mouseX, double mouseY) {
+	public boolean isHovering(@NotNull Slot slot, double mouseX, double mouseY) {
 		return this.isHovering(slot.x, slot instanceof MoveableSlot moveableSlot ? moveableSlot.getY(this.scrollOffset) : slot.y, 16, 16, mouseX, mouseY);
 	}
 }

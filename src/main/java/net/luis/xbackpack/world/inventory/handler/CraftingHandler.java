@@ -19,6 +19,7 @@
 package net.luis.xbackpack.world.inventory.handler;
 
 import net.luis.xbackpack.world.item.DynamicItemStackHandler;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
@@ -34,7 +35,7 @@ public class CraftingHandler {
 	private final ItemStackHandler inputHandler;
 	private final ItemStackHandler resultHandler;
 	
-	public CraftingHandler(DynamicItemStackHandler inputHandler) {
+	public CraftingHandler(@NotNull DynamicItemStackHandler inputHandler) {
 		this(inputHandler, new DynamicItemStackHandler(1));
 	}
 	
@@ -42,28 +43,28 @@ public class CraftingHandler {
 		this(new DynamicItemStackHandler(input), new DynamicItemStackHandler(result));
 	}
 	
-	public CraftingHandler(DynamicItemStackHandler inputHandler, DynamicItemStackHandler resultHandler) {
+	public CraftingHandler(@NotNull DynamicItemStackHandler inputHandler, @NotNull DynamicItemStackHandler resultHandler) {
 		this.inputHandler = inputHandler;
 		this.resultHandler = resultHandler;
 	}
 	
-	public ItemStackHandler getInputHandler() {
+	public @NotNull ItemStackHandler getInputHandler() {
 		return this.inputHandler;
 	}
 	
-	public ItemStackHandler getResultHandler() {
+	public @NotNull ItemStackHandler getResultHandler() {
 		return this.resultHandler;
 	}
 	
-	public CompoundTag serialize() {
+	public @NotNull CompoundTag serialize(HolderLookup.@NotNull Provider provider) {
 		CompoundTag tag = new CompoundTag();
-		tag.put("input_handler", this.inputHandler.serializeNBT());
-		tag.put("result_handler", this.resultHandler.serializeNBT());
+		tag.put("input_handler", this.inputHandler.serializeNBT(provider));
+		tag.put("result_handler", this.resultHandler.serializeNBT(provider));
 		return tag;
 	}
 	
-	public void deserialize(@NotNull CompoundTag tag) {
-		this.inputHandler.deserializeNBT(tag.getCompound("input_handler"));
-		this.resultHandler.deserializeNBT(tag.getCompound("result_handler"));
+	public void deserialize(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag tag) {
+		this.inputHandler.deserializeNBT(provider, tag.getCompound("input_handler"));
+		this.resultHandler.deserializeNBT(provider, tag.getCompound("result_handler"));
 	}
 }

@@ -19,6 +19,7 @@
 package net.luis.xbackpack.world.item;
 
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -28,29 +29,29 @@ import net.minecraft.world.item.ItemStack;
 
 public interface CustomBackpackFilterItem {
 	
-	boolean isStackable(ItemStack stack);
+	boolean isStackable(@NotNull ItemStack stack);
 	
-	boolean isMaxCount(ItemStack stack);
+	boolean isMaxCount(@NotNull ItemStack stack);
 	
-	boolean isEnchantable(ItemStack stack);
+	boolean isEnchantable(@NotNull ItemStack stack);
 	
-	boolean isEnchanted(ItemStack stack);
+	boolean isEnchanted(@NotNull ItemStack stack);
 	
-	boolean isDamageable(ItemStack stack);
+	boolean isDamageable(@NotNull ItemStack stack);
 	
-	boolean isDamaged(ItemStack stack);
+	boolean isDamaged(@NotNull ItemStack stack);
 	
-	boolean isEdible(ItemStack stack);
+	boolean isEdible(@NotNull ItemStack stack);
 	
-	boolean isRepairable(ItemStack stack);
+	boolean isRepairable(@NotNull ItemStack stack);
 	
-	boolean isFireResistant(ItemStack stack);
+	boolean isFireResistant(@NotNull ItemStack stack);
 	
-	boolean isWeapon(ItemStack stack);
+	boolean isWeapon(@NotNull ItemStack stack);
 	
-	boolean isTool(ItemStack stack);
+	boolean isTool(@NotNull ItemStack stack);
 	
-	boolean isArmor(ItemStack stack);
+	boolean isArmor(@NotNull ItemStack stack);
 	
-	boolean isFood(ItemStack stack);
+	boolean isFood(@NotNull ItemStack stack);
 }

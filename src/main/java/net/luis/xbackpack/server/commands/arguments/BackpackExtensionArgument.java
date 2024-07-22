@@ -93,12 +93,11 @@ public class BackpackExtensionArgument implements ArgumentType<BackpackExtension
 		return registry.getValues().stream().filter(extension -> extension != BackpackExtensions.NO.get()).map(registry::getKey).collect(Collectors.toList());
 	}
 	
+	//region Argument info
 	public static class Info implements ArgumentTypeInfo<BackpackExtensionArgument, Info.Template> {
 		
 		@Override
-		public void serializeToNetwork(@NotNull Template template, @NotNull FriendlyByteBuf buffer) {
-			
-		}
+		public void serializeToNetwork(@NotNull Template template, @NotNull FriendlyByteBuf buffer) {}
 		
 		@Override
 		public @NotNull Template deserializeFromNetwork(@NotNull FriendlyByteBuf buffer) {
@@ -106,9 +105,7 @@ public class BackpackExtensionArgument implements ArgumentType<BackpackExtension
 		}
 		
 		@Override
-		public void serializeToJson(@NotNull Template template, @NotNull JsonObject object) {
-			
-		}
+		public void serializeToJson(@NotNull Template template, @NotNull JsonObject object) {}
 		
 		@Override
 		public @NotNull Template unpack(@NotNull BackpackExtensionArgument argument) {
@@ -134,4 +131,5 @@ public class BackpackExtensionArgument implements ArgumentType<BackpackExtension
 			}
 		}
 	}
+	//endregion
 }

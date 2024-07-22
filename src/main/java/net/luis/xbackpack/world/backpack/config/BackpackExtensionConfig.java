@@ -46,25 +46,25 @@ public class BackpackExtensionConfig {
 		}
 	}
 	
-	private Data getData(BackpackExtension extension) {
+	private @NotNull Data getData(@NotNull BackpackExtension extension) {
 		return this.states.getOrDefault(extension, new Data(BackpackExtensionState.LOCKED, 0));
 	}
 	
-	public BackpackExtensionState getState(BackpackExtension extension) {
+	public @NotNull BackpackExtensionState getState(@NotNull BackpackExtension extension) {
 		return this.getData(extension).state();
 	}
 	
-	public List<BackpackExtension> getWithState(BackpackExtensionState state) {
+	public @NotNull List<BackpackExtension> getWithState(@NotNull BackpackExtensionState state) {
 		return this.states.entrySet().stream().filter((entry) -> {
 			return entry.getValue().state() == state;
 		}).map(Entry::getKey).collect(Collectors.toList());
 	}
 	
-	public void setState(@NotNull ServerPlayer player, BackpackExtension extension, BackpackExtensionState state) {
+	public void setState(@NotNull ServerPlayer player, @NotNull BackpackExtension extension, @NotNull BackpackExtensionState state) {
 		this.states.put(extension, new Data(state, player.getStats().getValue(Stats.ITEM_CRAFTED, extension.getUnlockItem().getItem())));
 	}
 	
-	public void update(ServerPlayer player) {
+	public void update(@NotNull ServerPlayer player) {
 		for (BackpackExtension extension : BackpackExtensions.REGISTRY.get().getValues()) {
 			Data data = this.getData(extension);
 			BackpackExtensionState state = data.state();
@@ -79,7 +79,8 @@ public class BackpackExtensionConfig {
 		}
 	}
 	
-	public CompoundTag serialize() {
+	//region Serialization
+	public @NotNull CompoundTag serialize() {
 		CompoundTag tag = new CompoundTag();
 		ListTag statesTag = new ListTag();
 		for (Entry<BackpackExtension, Data> entry : this.states.entrySet()) {
@@ -105,8 +106,7 @@ public class BackpackExtensionConfig {
 			}
 		}
 	}
+	//endregion
 	
-	private record Data(BackpackExtensionState state, int unlockCount) {
-		
-	}
+	private record Data(@NotNull BackpackExtensionState state, int unlockCount) {}
 }

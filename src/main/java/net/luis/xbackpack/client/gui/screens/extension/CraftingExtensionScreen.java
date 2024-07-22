@@ -21,6 +21,7 @@ package net.luis.xbackpack.client.gui.screens.extension;
 import net.luis.xbackpack.client.gui.screens.AbstractExtensionContainerScreen;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -32,7 +33,7 @@ import java.util.List;
 
 public class CraftingExtensionScreen extends AbstractExtensionScreen {
 	
-	public CraftingExtensionScreen(AbstractExtensionContainerScreen<?> screen, List<BackpackExtension> extensions) {
+	public CraftingExtensionScreen(@NotNull AbstractExtensionContainerScreen<?> screen, @NotNull List<BackpackExtension> extensions) {
 		super(screen, BackpackExtensions.CRAFTING_TABLE.get(), extensions);
 	}
 }

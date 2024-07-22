@@ -19,6 +19,7 @@
 package net.luis.xbackpack.world.inventory.progress;
 
 import net.minecraft.nbt.CompoundTag;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -32,7 +33,7 @@ public interface ProgressHandler {
 	
 	void broadcastChanges();
 	
-	CompoundTag serialize();
+	@NotNull CompoundTag serialize();
 	
-	void deserialize(CompoundTag tag);
+	void deserialize(@NotNull CompoundTag tag);
 }

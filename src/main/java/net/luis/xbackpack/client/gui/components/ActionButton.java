@@ -38,19 +38,17 @@ import java.util.function.Consumer;
 
 public class ActionButton extends AbstractButton {
 	
-	private static final ResourceLocation BACKPACK = new ResourceLocation(XBackpack.MOD_ID, "textures/gui/container/backpack.png");
+	private static final ResourceLocation BACKPACK = ResourceLocation.fromNamespaceAndPath(XBackpack.MOD_ID, "textures/gui/container/backpack.png");
 	
 	private final Consumer<ClickType> action;
 	
-	public ActionButton(int x, int y, int width, int height, Consumer<ClickType> action) {
+	public ActionButton(int x, int y, int width, int height, @NotNull Consumer<ClickType> action) {
 		super(x, y, width, height, Component.empty());
 		this.action = action;
 	}
 	
 	@Override
-	public void onPress() {
-		
-	}
+	public void onPress() {}
 	
 	@Override
 	public void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
@@ -78,14 +76,10 @@ public class ActionButton extends AbstractButton {
 	}
 	
 	@Override
-	protected void updateWidgetNarration(@NotNull NarrationElementOutput narrationOutput) {
-	
-	}
+	protected void updateWidgetNarration(@NotNull NarrationElementOutput narrationOutput) {}
 	
 	@Override
-	protected void defaultButtonNarrationText(@NotNull NarrationElementOutput narrationOutput) {
-		
-	}
+	protected void defaultButtonNarrationText(@NotNull NarrationElementOutput narrationOutput) {}
 	
 	public enum ClickType {
 		

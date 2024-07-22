@@ -23,6 +23,7 @@ import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.Mth;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -40,26 +41,26 @@ public class BrewingStandExtensionScreen extends AbstractExtensionScreen {
 	private int fuel;
 	private int brewTime;
 	
-	public BrewingStandExtensionScreen(AbstractExtensionContainerScreen<?> screen, List<BackpackExtension> extensions) {
+	public BrewingStandExtensionScreen(@NotNull AbstractExtensionContainerScreen<?> screen, @NotNull List<BackpackExtension> extensions) {
 		super(screen, BackpackExtensions.BREWING_STAND.get(), extensions);
 	}
 	
 	@Override
-	protected void renderAdditional(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY, boolean open) {
+	protected void renderAdditional(@NotNull GuiGraphics graphics, float partialTicks, int mouseX, int mouseY, boolean open) {
 		if (open) {
 			this.renderFuel(graphics);
 			this.renderBrewing(graphics);
 		}
 	}
 	
-	private void renderFuel(GuiGraphics graphics) {
+	private void renderFuel(@NotNull GuiGraphics graphics) {
 		int fuel = Mth.clamp((18 * this.fuel + 20 - 1) / 20, 0, 18);
 		if (fuel > 0) {
 			graphics.blit(this.getTexture(), this.leftPos + this.imageWidth + 38, this.topPos + 173, 106, 29, fuel, 4);
 		}
 	}
 	
-	private void renderBrewing(GuiGraphics graphics) {
+	private void renderBrewing(@NotNull GuiGraphics graphics) {
 		if (this.brewTime > 0) {
 			int progress = (int) (28.0 * (1.0 - (double) this.brewTime / 400.0));
 			if (progress > 0) {

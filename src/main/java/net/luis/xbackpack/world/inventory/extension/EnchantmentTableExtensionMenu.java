@@ -59,7 +59,7 @@ import java.util.function.Consumer;
 
 public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 	
-	public static final ResourceLocation EMPTY_ENCHANTMENT = new ResourceLocation("enchantment_empty");
+	public static final ResourceLocation EMPTY_ENCHANTMENT = ResourceLocation.withDefaultNamespace("enchantment_empty");
 	
 	private final EnchantingHandler handler;
 	private final RandomSource rng = RandomSource.create();
@@ -74,7 +74,7 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 	};
 	private int enchantmentSeed;
 	
-	public EnchantmentTableExtensionMenu(AbstractExtensionContainerMenu menu, Player player) {
+	public EnchantmentTableExtensionMenu(@NotNull AbstractExtensionContainerMenu menu, @NotNull Player player) {
 		super(menu, player, BackpackExtensions.ENCHANTMENT_TABLE.get());
 		this.handler = BackpackProvider.get(this.player).getEnchantingHandler();
 		this.enchantmentSeed = player.getEnchantmentSeed();
@@ -86,7 +86,7 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	@Override
-	public void addSlots(Consumer<Slot> consumer) {
+	public void addSlots(@NotNull Consumer<Slot> consumer) {
 		consumer.accept(new ExtensionSlot(this, this.handler.getPowerHandler(), 0, 235, 108) {
 			@Override
 			public boolean mayPlace(@NotNull ItemStack stack) {
@@ -160,7 +160,7 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	@Override
-	public boolean clickMenuButton(Player player, int button) {
+	public boolean clickMenuButton(@NotNull Player player, int button) {
 		if (2 >= button && button >= 0) {
 			ItemStack inputStack = this.handler.getInputHandler().getStackInSlot(0);
 			ItemStack fuelStack = this.handler.getFuelHandler().getStackInSlot(0);
@@ -212,7 +212,7 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 		}
 	}
 	
-	private @NotNull List<EnchantmentInstance> getEnchantmentList(ItemStack inputStack, int row, int enchantingCost) {
+	private @NotNull List<EnchantmentInstance> getEnchantmentList(@NotNull ItemStack inputStack, int row, int enchantingCost) {
 		this.rng.setSeed(this.enchantmentSeed + row);
 		List<EnchantmentInstance> enchantments = EnchantmentHelper.selectEnchantment(this.rng, inputStack, enchantingCost, false);
 		if (inputStack.is(Items.BOOK) && enchantments.size() > 1) {
@@ -226,7 +226,7 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	@Override
-	public boolean quickMoveStack(ItemStack slotStack, int index) {
+	public boolean quickMoveStack(@NotNull ItemStack slotStack, int index) {
 		if (908 >= index && index >= 0) { // from container
 			if (slotStack.is(Tags.Items.BOOKSHELVES) || this.canQuickMoveBook()) {
 				return this.menu.moveItemStackTo(slotStack, 941, 942); // into power

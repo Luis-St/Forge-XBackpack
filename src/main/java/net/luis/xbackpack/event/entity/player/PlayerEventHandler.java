@@ -50,14 +50,14 @@ public class PlayerEventHandler {
 	}
 	
 	@SubscribeEvent
-	public static void playerChangedDimension(@NotNull PlayerEvent.PlayerChangedDimensionEvent event) {
+	public static void playerChangedDimension(PlayerEvent. @NotNull PlayerChangedDimensionEvent event) {
 		if (event.getEntity() instanceof ServerPlayer player) {
 			BackpackProvider.get(player).broadcastChanges();
 		}
 	}
 	
 	@SubscribeEvent
-	public static void playerClone(@NotNull PlayerEvent.Clone event) {
+	public static void playerClone(PlayerEvent. @NotNull Clone event) {
 		Player original = event.getOriginal();
 		Player player = event.getEntity();
 		original.reviveCaps();
@@ -70,14 +70,14 @@ public class PlayerEventHandler {
 	}
 	
 	@SubscribeEvent
-	public static void playerRespawn(@NotNull PlayerEvent.PlayerRespawnEvent event) {
+	public static void playerRespawn(PlayerEvent. @NotNull PlayerRespawnEvent event) {
 		if (event.getEntity() instanceof ServerPlayer player) {
 			BackpackProvider.get(player).broadcastChanges();
 		}
 	}
 	
 	@SubscribeEvent
-	public static void playerTick(@NotNull TickEvent.PlayerTickEvent event) {
+	public static void playerTick(TickEvent. @NotNull PlayerTickEvent event) {
 		if (event.phase == Phase.START && event.side == LogicalSide.SERVER) {
 			event.player.getCapability(BackpackProvider.BACKPACK, null).ifPresent(IBackpack::tick);
 			if (event.player.containerMenu instanceof BackpackMenu menu) {

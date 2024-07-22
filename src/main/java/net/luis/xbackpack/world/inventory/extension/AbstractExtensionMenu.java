@@ -24,6 +24,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
@@ -39,37 +40,31 @@ public abstract class AbstractExtensionMenu {
 	protected final AbstractExtensionContainerMenu menu;
 	protected final Player player;
 	
-	protected AbstractExtensionMenu(AbstractExtensionContainerMenu menu, Player player, BackpackExtension extension) {
+	protected AbstractExtensionMenu(@NotNull AbstractExtensionContainerMenu menu, @NotNull Player player, @NotNull BackpackExtension extension) {
 		this.menu = menu;
 		this.player = player;
 		this.extension = extension;
 	}
 	
-	public void open() {
-		
-	}
+	public void open() {}
 	
-	public abstract void addSlots(Consumer<Slot> consumer);
+	public abstract void addSlots(@NotNull Consumer<Slot> consumer);
 	
 	public boolean requiresTickUpdate() {
 		return false;
 	}
 	
-	public void slotsChanged(Container container) {
-		
-	}
+	public void slotsChanged(@NotNull Container container) {}
 	
-	public void slotsChanged() {
-		
-	}
+	public void slotsChanged() {}
 	
-	public boolean clickMenuButton(Player player, int button) {
+	public boolean clickMenuButton(@NotNull Player player, int button) {
 		return true;
 	}
 	
-	public abstract boolean quickMoveStack(ItemStack slotStack, int index);
+	public abstract boolean quickMoveStack(@NotNull ItemStack slotStack, int index);
 	
-	protected boolean movePreferredMenu(ItemStack slotStack) {
+	protected boolean movePreferredMenu(@NotNull ItemStack slotStack) {
 		if (!this.menu.moveItemStackTo(slotStack, 0, 873)) { // into menu
 			if (!this.menu.moveItemStackTo(slotStack, 900, 909)) { // into hotbar
 				return this.menu.moveItemStackTo(slotStack, 873, 900); // into inventory
@@ -78,7 +73,7 @@ public abstract class AbstractExtensionMenu {
 		return true;
 	}
 	
-	protected boolean movePreferredInventory(ItemStack slotStack) {
+	protected boolean movePreferredInventory(@NotNull ItemStack slotStack) {
 		if (!this.menu.moveItemStackTo(slotStack, 900, 909)) { // into hotbar
 			if (!this.menu.moveItemStackTo(slotStack, 873, 900)) { // into inventory
 				return this.menu.moveItemStackTo(slotStack, 0, 873); // into menu
@@ -87,15 +82,13 @@ public abstract class AbstractExtensionMenu {
 		return true;
 	}
 	
-	public void close() {
-		
-	}
+	public void close() {}
 	
-	public AbstractExtensionContainerMenu getMenu() {
+	public @NotNull AbstractExtensionContainerMenu getMenu() {
 		return this.menu;
 	}
 	
-	public BackpackExtension getExtension() {
+	public @NotNull BackpackExtension getExtension() {
 		return this.extension;
 	}
 }

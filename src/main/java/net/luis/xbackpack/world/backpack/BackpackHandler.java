@@ -27,11 +27,12 @@ import net.luis.xbackpack.world.capability.IBackpack;
 import net.luis.xbackpack.world.inventory.handler.*;
 import net.luis.xbackpack.world.inventory.progress.*;
 import net.luis.xbackpack.world.item.DynamicItemStackHandler;
-import net.minecraft.client.Minecraft;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.items.ItemStackHandler;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -58,7 +59,7 @@ public class BackpackHandler implements IBackpack {
 	private final CraftingHandler grindstoneHandler = new CraftingHandler(2, 1);
 	private final CraftingHandler smithingHandler = new CraftingHandler(3, 1);
 	
-	public BackpackHandler(Player player) {
+	public BackpackHandler(@NotNull Player player) {
 		this.player = player;
 		this.config = new BackpackConfig(this.player);
 		this.smeltHandler = new SmeltingProgressHandler(this.player, this.furnaceHandler, BackpackConstants.FURNACE_RECIPE_TYPES);
@@ -66,72 +67,72 @@ public class BackpackHandler implements IBackpack {
 	}
 	
 	@Override
-	public Player getPlayer() {
+	public @NotNull Player getPlayer() {
 		return this.player;
 	}
 	
 	@Override
-	public BackpackConfig getConfig() {
+	public @NotNull BackpackConfig getConfig() {
 		return this.config;
 	}
 	
 	@Override
-	public ItemStackHandler getBackpackHandler() {
+	public @NotNull ItemStackHandler getBackpackHandler() {
 		return this.backpackHandler;
 	}
 	
 	@Override
-	public ItemStackHandler getToolHandler() {
+	public @NotNull ItemStackHandler getToolHandler() {
 		return this.toolHandler;
 	}
 	
 	@Override
-	public ItemStackHandler getCraftingHandler() {
+	public @NotNull ItemStackHandler getCraftingHandler() {
 		return this.craftingHandler;
 	}
 	
 	@Override
-	public SmeltingHandler getSmeltingHandler() {
+	public @NotNull SmeltingHandler getSmeltingHandler() {
 		return this.furnaceHandler;
 	}
 	
 	@Override
-	public ProgressHandler getSmeltHandler() {
+	public @NotNull ProgressHandler getSmeltHandler() {
 		return this.smeltHandler;
 	}
 	
 	@Override
-	public CraftingHandler getAnvilHandler() {
+	public @NotNull CraftingHandler getAnvilHandler() {
 		return this.anvilHandler;
 	}
 	
 	@Override
-	public EnchantingHandler getEnchantingHandler() {
+	public @NotNull EnchantingHandler getEnchantingHandler() {
 		return this.enchantingHandler;
 	}
 	
 	@Override
-	public CraftingHandler getStonecutterHandler() {
+	public @NotNull CraftingHandler getStonecutterHandler() {
 		return this.stonecutterHandler;
 	}
 	
 	@Override
-	public CraftingFuelHandler getBrewingHandler() {
+	public @NotNull CraftingFuelHandler getBrewingHandler() {
 		return this.brewingHandler;
 	}
 	
 	@Override
-	public ProgressHandler getBrewHandler() {
+	public @NotNull ProgressHandler getBrewHandler() {
 		return this.brewHandler;
 	}
 	
 	@Override
-	public CraftingHandler getGrindstoneHandler() {
+	public @NotNull CraftingHandler getGrindstoneHandler() {
 		return this.grindstoneHandler;
 	}
 	
 	@Override
-	public CraftingHandler getSmithingHandler() {
+	public @NotNull CraftingHandler getSmithingHandler() {
 		return this.smithingHandler;
 	}
 	
@@ -153,45 +154,45 @@ public class BackpackHandler implements IBackpack {
 	}
 	
 	@Override
-	public CompoundTag serialize() {
+	public @NotNull CompoundTag serialize(HolderLookup.@NotNull Provider provider) {
 		CompoundTag tag = new CompoundTag();
 		tag.putInt("data_version", DATA_VERSION);
 		tag.put("backpack_config", this.config.serialize());
-		tag.put("backpack_handler", this.backpackHandler.serializeNBT());
-		tag.put("tool_handler", this.toolHandler.serializeNBT());
-		tag.put("crafting_handler", this.craftingHandler.serializeNBT());
-		tag.put("furnace_handler", this.furnaceHandler.serialize());
+		tag.put("backpack_handler", this.backpackHandler.serializeNBT(provider));
+		tag.put("tool_handler", this.toolHandler.serializeNBT(provider));
+		tag.put("crafting_handler", this.craftingHandler.serializeNBT(provider));
+		tag.put("furnace_handler", this.furnaceHandler.serialize(provider));
 		tag.put("smelt_handler", this.smeltHandler.serialize());
-		tag.put("anvil_handler", this.anvilHandler.serialize());
-		tag.put("enchanting_handler", this.enchantingHandler.serialize());
-		tag.put("stonecutter_handler", this.stonecutterHandler.serialize());
-		tag.put("brewing_handler", this.brewingHandler.serialize());
+		tag.put("anvil_handler", this.anvilHandler.serialize(provider));
+		tag.put("enchanting_handler", this.enchantingHandler.serialize(provider));
+		tag.put("stonecutter_handler", this.stonecutterHandler.serialize(provider));
+		tag.put("brewing_handler", this.brewingHandler.serialize(provider));
 		tag.put("brew_handler", this.brewHandler.serialize());
-		tag.put("grindstone_handler", this.grindstoneHandler.serialize());
-		tag.put("smithing_handler", this.smithingHandler.serialize());
+		tag.put("grindstone_handler", this.grindstoneHandler.serialize(provider));
+		tag.put("smithing_handler", this.smithingHandler.serialize(provider));
 		return tag;
 	}
 	
 	@Override
-	public void deserialize(CompoundTag tag) {
+	public void deserialize(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag tag) {
 		int dataVersion = 0;
 		if (tag.contains("data_version")) {
 			dataVersion = tag.getInt("data_version");
 		}
 		if (dataVersion == DATA_VERSION) {
 			this.config.deserialize(tag.getCompound("backpack_config"));
-			this.backpackHandler.deserializeNBT(tag.getCompound("backpack_handler"));
-			this.toolHandler.deserializeNBT(tag.getCompound("tool_handler"));
-			this.craftingHandler.deserializeNBT(tag.getCompound("crafting_handler"));
-			this.furnaceHandler.deserialize(tag.getCompound("furnace_handler"));
+			this.backpackHandler.deserializeNBT(provider, tag.getCompound("backpack_handler"));
+			this.toolHandler.deserializeNBT(provider, tag.getCompound("tool_handler"));
+			this.craftingHandler.deserializeNBT(provider, tag.getCompound("crafting_handler"));
+			this.furnaceHandler.deserialize(provider, tag.getCompound("furnace_handler"));
 			this.smeltHandler.deserialize(tag.getCompound("smelt_handler"));
-			this.anvilHandler.deserialize(tag.getCompound("anvil_handler"));
-			this.enchantingHandler.deserialize(tag.getCompound("enchanting_handler"));
-			this.stonecutterHandler.deserialize(tag.getCompound("stonecutter_handler"));
-			this.brewingHandler.deserialize(tag.getCompound("brewing_handler"));
+			this.anvilHandler.deserialize(provider, tag.getCompound("anvil_handler"));
+			this.enchantingHandler.deserialize(provider, tag.getCompound("enchanting_handler"));
+			this.stonecutterHandler.deserialize(provider, tag.getCompound("stonecutter_handler"));
+			this.brewingHandler.deserialize(provider, tag.getCompound("brewing_handler"));
 			this.brewHandler.deserialize(tag.getCompound("brew_handler"));
-			this.grindstoneHandler.deserialize(tag.getCompound("grindstone_handler"));
-			this.smithingHandler.deserialize(tag.getCompound("smithing_handler"));
+			this.grindstoneHandler.deserialize(provider, tag.getCompound("grindstone_handler"));
+			this.smithingHandler.deserialize(provider, tag.getCompound("smithing_handler"));
 		} else {
 			XBackpack.LOGGER.error("The data version has changed, to prevent the loss of the backpack inventory, the game will be terminated");
 			XBackpack.LOGGER.info("If you want to know how to update the data version, check out the linked wiki on CurseForge");

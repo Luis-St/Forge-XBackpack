@@ -54,7 +54,7 @@ public abstract class AbstractModifiableContainerScreen<T extends AbstractModifi
 	private ActionButton sorterButton;
 	private ActionButton mergerButton;
 	
-	protected AbstractModifiableContainerScreen(T menu, Inventory inventory, Component titleComponent) {
+	protected AbstractModifiableContainerScreen(@NotNull T menu, @NotNull Inventory inventory, @NotNull Component titleComponent) {
 		super(menu, inventory, titleComponent);
 	}
 	
@@ -87,15 +87,15 @@ public abstract class AbstractModifiableContainerScreen<T extends AbstractModifi
 		}, this::addRenderableWidget);
 	}
 	
-	protected abstract RenderData getSearchData();
+	protected abstract @NotNull RenderData getSearchData();
 	
 	protected abstract int getMaxSearchLength();
 	
-	protected abstract RenderData getFilterData();
+	protected abstract @NotNull RenderData getFilterData();
 	
-	protected abstract RenderData getSorterData();
+	protected abstract @NotNull RenderData getSorterData();
 	
-	protected abstract RenderData getMergerData();
+	protected abstract @NotNull RenderData getMergerData();
 	
 	@Override
 	public void resize(@NotNull Minecraft minecraft, int width, int height) {
@@ -116,7 +116,7 @@ public abstract class AbstractModifiableContainerScreen<T extends AbstractModifi
 	}
 	
 	@Override
-	protected void renderScreen(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+	protected void renderScreen(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		if (this.searchBox != null) {
 			this.searchBox.render(graphics, mouseX, mouseY, partialTicks);
 		}
@@ -147,7 +147,7 @@ public abstract class AbstractModifiableContainerScreen<T extends AbstractModifi
 		return Lists.newArrayList(Component.translatable("xbackpack.backpack_action.item_merger").withStyle(ChatFormatting.WHITE));
 	}
 	
-	protected abstract TooltipFlag getTooltipFlag();
+	protected abstract @NotNull TooltipFlag getTooltipFlag();
 	
 	@Override
 	public boolean charTyped(char character, int modifiers) {
@@ -207,7 +207,7 @@ public abstract class AbstractModifiableContainerScreen<T extends AbstractModifi
 		return super.keyReleased(keyCode, scanCode, modifiers);
 	}
 	
-	protected abstract void updateSearchTerm(String searchBoxValue);
+	protected abstract void updateSearchTerm(@NotNull String searchBoxValue);
 	
-	protected abstract void updateItemModifier(ItemModifierType modifierType);
+	protected abstract void updateItemModifier(@NotNull ItemModifierType modifierType);
 }

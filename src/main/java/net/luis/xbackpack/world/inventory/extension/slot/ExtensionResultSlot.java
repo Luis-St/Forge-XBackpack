@@ -24,6 +24,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.ResultSlot;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -35,18 +36,18 @@ public class ExtensionResultSlot extends ResultSlot implements ExtensionMenuSlot
 	
 	private final AbstractExtensionMenu extensionMenu;
 	
-	public ExtensionResultSlot(AbstractExtensionMenu extensionMenu, Player player, CraftingContainer craftingContainer, Container container, int index, int xPosition, int yPosition) {
+	public ExtensionResultSlot(@NotNull AbstractExtensionMenu extensionMenu, @NotNull Player player, @NotNull CraftingContainer craftingContainer, @NotNull Container container, int index, int xPosition, int yPosition) {
 		super(player, craftingContainer, container, index, xPosition, yPosition);
 		this.extensionMenu = extensionMenu;
 	}
 	
 	@Override
-	public AbstractExtensionMenu getMenu() {
+	public @NotNull AbstractExtensionMenu getMenu() {
 		return this.extensionMenu;
 	}
 	
 	@Override
-	public BackpackExtension getExtension() {
+	public @NotNull BackpackExtension getExtension() {
 		return this.extensionMenu.getExtension();
 	}
 }

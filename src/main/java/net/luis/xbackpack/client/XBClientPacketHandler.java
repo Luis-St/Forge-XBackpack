@@ -29,6 +29,7 @@ import net.luis.xbackpack.world.inventory.modifier.sorter.ItemSorter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -41,12 +42,11 @@ import java.util.Objects;
 
 public class XBClientPacketHandler {
 	
-	public static void updateBackpack(CompoundTag tag) {
+	public static void updateBackpack(@NotNull CompoundTag tag) {
 		BackpackProvider.get(Objects.requireNonNull(Minecraft.getInstance().player)).deserialize(tag);
 	}
 	
-	@Nullable
-	private static AbstractExtensionScreen getExtensionScreen(BackpackExtension extension) {
+	private static @Nullable AbstractExtensionScreen getExtensionScreen(@NotNull BackpackExtension extension) {
 		Minecraft minecraft = Minecraft.getInstance();
 		if (minecraft.screen instanceof BackpackScreen screen) {
 			return screen.getExtensionScreen(extension);
@@ -66,7 +66,7 @@ public class XBClientPacketHandler {
 		}
 	}
 	
-	public static void updateEnchantmentTableExtension(ResourceLocation[] enchantments, int[] enchantmentLevels, int[] enchantingCosts, int enchantmentSeed) {
+	public static void updateEnchantmentTableExtension(ResourceLocation @NotNull [] enchantments, int @NotNull [] enchantmentLevels, int @NotNull [] enchantingCosts, int enchantmentSeed) {
 		if (getExtensionScreen(BackpackExtensions.ENCHANTMENT_TABLE.get()) instanceof EnchantmentTableExtensionScreen enchantmentTableExtension) {
 			enchantmentTableExtension.update(enchantments, enchantmentLevels, enchantingCosts, enchantmentSeed);
 		}
@@ -84,7 +84,7 @@ public class XBClientPacketHandler {
 		}
 	}
 	
-	public static void updateBackpackItemModifiers(ItemFilter filter, ItemSorter sorter) {
+	public static void updateBackpackItemModifiers(@NotNull ItemFilter filter, @NotNull ItemSorter sorter) {
 		Minecraft minecraft = Minecraft.getInstance();
 		if (minecraft.screen instanceof BackpackScreen screen) {
 			screen.getMenu().updateFilter(filter, UpdateType.SET_NO_UPDATE, null);

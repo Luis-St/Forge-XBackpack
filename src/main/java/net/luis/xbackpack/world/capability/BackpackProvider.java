@@ -20,11 +20,13 @@ package net.luis.xbackpack.world.capability;
 
 import net.luis.xbackpack.world.backpack.BackpackHandler;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  *
@@ -39,27 +41,27 @@ public class BackpackProvider implements ICapabilitySerializable<CompoundTag> {
 	private final BackpackHandler handler;
 	private final LazyOptional<IBackpack> optional;
 	
-	public BackpackProvider(Player player) {
+	public BackpackProvider(@NotNull Player player) {
 		this.handler = new BackpackHandler(player);
 		this.optional = LazyOptional.of(() -> this.handler);
 	}
 	
-	public static IBackpack get(@NotNull Player player) {
+	public static @NotNull IBackpack get(@NotNull Player player) {
 		return player.getCapability(BACKPACK, null).orElseThrow(NullPointerException::new);
 	}
 	
 	@Override
-	public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> capability, Direction side) {
+	public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> capability, @Nullable Direction side) {
 		return BACKPACK.orEmpty(capability, this.optional);
 	}
 	
 	@Override
-	public CompoundTag serializeNBT() {
-		return this.handler.serialize();
+	public @NotNull CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
+		return this.handler.serialize(provider);
 	}
 	
 	@Override
-	public void deserializeNBT(CompoundTag tag) {
-		this.handler.deserialize(tag);
+	public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag tag) {
+		this.handler.deserialize(provider, tag);
 	}
 }

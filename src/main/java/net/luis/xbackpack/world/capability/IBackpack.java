@@ -21,10 +21,12 @@ package net.luis.xbackpack.world.capability;
 import net.luis.xbackpack.world.backpack.config.BackpackConfig;
 import net.luis.xbackpack.world.inventory.handler.*;
 import net.luis.xbackpack.world.inventory.progress.ProgressHandler;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 import net.minecraftforge.items.ItemStackHandler;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -35,39 +37,39 @@ import net.minecraftforge.items.ItemStackHandler;
 @AutoRegisterCapability
 public interface IBackpack {
 	
-	Player getPlayer();
+	@NotNull Player getPlayer();
 	
-	BackpackConfig getConfig();
+	@NotNull BackpackConfig getConfig();
 	
-	ItemStackHandler getBackpackHandler();
+	@NotNull ItemStackHandler getBackpackHandler();
 	
-	ItemStackHandler getToolHandler();
+	@NotNull ItemStackHandler getToolHandler();
 	
-	ItemStackHandler getCraftingHandler();
+	@NotNull ItemStackHandler getCraftingHandler();
 	
-	SmeltingHandler getSmeltingHandler();
+	@NotNull SmeltingHandler getSmeltingHandler();
 	
-	ProgressHandler getSmeltHandler();
+	@NotNull ProgressHandler getSmeltHandler();
 	
-	CraftingHandler getAnvilHandler();
+	@NotNull CraftingHandler getAnvilHandler();
 	
-	EnchantingHandler getEnchantingHandler();
+	@NotNull EnchantingHandler getEnchantingHandler();
 	
-	CraftingHandler getStonecutterHandler();
+	@NotNull CraftingHandler getStonecutterHandler();
 	
-	CraftingFuelHandler getBrewingHandler();
+	@NotNull CraftingFuelHandler getBrewingHandler();
 	
-	ProgressHandler getBrewHandler();
+	@NotNull ProgressHandler getBrewHandler();
 	
-	CraftingHandler getGrindstoneHandler();
+	@NotNull CraftingHandler getGrindstoneHandler();
 	
-	CraftingHandler getSmithingHandler();
+	@NotNull CraftingHandler getSmithingHandler();
 	
 	void tick();
 	
 	boolean broadcastChanges();
 	
-	CompoundTag serialize();
+	@NotNull CompoundTag serialize(HolderLookup.@NotNull Provider provider);
 	
-	void deserialize(CompoundTag tag);
+	void deserialize(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag tag);
 }

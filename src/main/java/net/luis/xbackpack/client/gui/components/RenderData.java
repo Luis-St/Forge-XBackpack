@@ -20,6 +20,7 @@ package net.luis.xbackpack.client.gui.components;
 
 import net.luis.xbackpack.util.QuadFunction;
 import net.minecraft.client.gui.components.AbstractWidget;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
@@ -33,7 +34,7 @@ import java.util.function.Consumer;
 public record RenderData(boolean exists, int xPosition, int yPosition, int width, int height) {
 	
 	@Nullable
-	public <T extends AbstractWidget> T addIfExists(QuadFunction<Integer, Integer, Integer, Integer, T> function, Consumer<T> action) {
+	public <T extends AbstractWidget> T addIfExists(@NotNull QuadFunction<Integer, Integer, Integer, Integer, T> function, @NotNull Consumer<T> action) {
 		if (this.exists) {
 			T renderable = function.apply(this.xPosition, this.yPosition, this.width, this.height);
 			action.accept(renderable);

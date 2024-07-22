@@ -38,21 +38,15 @@ public class OpenBackpackPacket implements NetworkPacket {
 	
 	private static final Component CONTAINER_NAME = Component.translatable(XBackpack.MOD_ID + ".container.backpack");
 	
-	public OpenBackpackPacket() {
-		
-	}
+	public OpenBackpackPacket() {}
 	
-	public OpenBackpackPacket(FriendlyByteBuf buffer) {
-		
-	}
+	public OpenBackpackPacket(FriendlyByteBuf buffer) {}
 	
 	@Override
-	public void encode(@NotNull FriendlyByteBuf buffer) {
-		
-	}
+	public void encode(@NotNull FriendlyByteBuf buffer) {}
 	
 	@Override
-	public void handle(@NotNull CustomPayloadEvent.Context context) {
+	public void handle(CustomPayloadEvent.@NotNull Context context) {
 		ServerPlayer player = context.getSender();
 		context.enqueueWork(() -> {
 			assert player != null;
