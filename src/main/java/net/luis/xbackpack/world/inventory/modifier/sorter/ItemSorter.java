@@ -21,6 +21,7 @@ package net.luis.xbackpack.world.inventory.modifier.sorter;
 import net.luis.xbackpack.world.inventory.modifier.ItemModifier;
 import net.luis.xbackpack.world.inventory.modifier.ItemModifierType;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -33,9 +34,9 @@ import java.util.List;
 public interface ItemSorter extends ItemModifier {
 	
 	@Override
-	default ItemModifierType getType() {
+	default @NotNull ItemModifierType getType() {
 		return ItemModifierType.SORTER;
 	}
 	
-	List<ItemStack> sort(List<ItemStack> stacks, String searchTerm, boolean negate);
+	@NotNull List<ItemStack> sort(@NotNull List<ItemStack> stacks, @NotNull String searchTerm, boolean negate);
 }

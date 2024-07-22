@@ -36,13 +36,13 @@ public class FurnaceExtensionResultSlot extends ExtensionSlot {
 	private final Player player;
 	private int removeCount;
 	
-	public FurnaceExtensionResultSlot(FurnaceExtensionMenu extensionMenu, Player player, IItemHandler itemHandler, int index, int xPosition, int yPosition) {
+	public FurnaceExtensionResultSlot(@NotNull FurnaceExtensionMenu extensionMenu, @NotNull Player player, @NotNull IItemHandler itemHandler, int index, int xPosition, int yPosition) {
 		super(extensionMenu, itemHandler, index, xPosition, yPosition);
 		this.player = player;
 	}
 	
 	@Override
-	public FurnaceExtensionMenu getMenu() {
+	public @NotNull FurnaceExtensionMenu getMenu() {
 		return (FurnaceExtensionMenu) super.getMenu();
 	}
 	
@@ -72,7 +72,7 @@ public class FurnaceExtensionResultSlot extends ExtensionSlot {
 	}
 	
 	@Override
-	protected void checkTakeAchievements(ItemStack stack) {
+	protected void checkTakeAchievements(@NotNull ItemStack stack) {
 		stack.onCraftedBy(this.player.level(), this.player, this.removeCount);
 		this.removeCount = 0;
 		ForgeEventFactory.firePlayerSmeltedEvent(this.player, stack);

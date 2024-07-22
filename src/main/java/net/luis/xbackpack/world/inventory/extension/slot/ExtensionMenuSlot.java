@@ -20,6 +20,7 @@ package net.luis.xbackpack.world.inventory.extension.slot;
 
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.inventory.extension.AbstractExtensionMenu;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -29,7 +30,7 @@ import net.luis.xbackpack.world.inventory.extension.AbstractExtensionMenu;
 
 public interface ExtensionMenuSlot {
 	
-	AbstractExtensionMenu getMenu();
+	@NotNull AbstractExtensionMenu getMenu();
 	
-	BackpackExtension getExtension();
+	@NotNull BackpackExtension getExtension();
 }

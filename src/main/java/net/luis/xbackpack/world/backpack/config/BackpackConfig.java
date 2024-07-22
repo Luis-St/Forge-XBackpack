@@ -23,6 +23,8 @@ import net.luis.xbackpack.world.backpack.config.client.BackpackClientConfig;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  *
@@ -33,26 +35,26 @@ import net.minecraft.world.entity.player.Player;
 public class BackpackConfig {
 	
 	private final Player player;
-	private final boolean isClientSide;
+	private final boolean isServerSide;
 	private final BackpackClientConfig clientConfig;
 	private final BackpackExtensionConfig extensionConfig;
 	
-	public BackpackConfig(Player player) {
+	public BackpackConfig(@NotNull Player player) {
 		this.player = player;
-		this.isClientSide = this.player.level().isClientSide;
+		this.isServerSide = !this.player.level().isClientSide;
 		this.clientConfig = new BackpackClientConfig();
 		this.extensionConfig = new BackpackExtensionConfig();
 	}
 	
-	public BackpackClientConfig getClientConfig() {
-		if (!this.isClientSide) {
+	public @Nullable BackpackClientConfig getClientConfig() {
+		if (this.isServerSide) {
 			XBackpack.LOGGER.warn("The backpack client config is not accessible from the server");
 			return null;
 		}
 		return this.clientConfig;
 	}
 	
-	public BackpackExtensionConfig getExtensionConfig() {
+	public @NotNull BackpackExtensionConfig getExtensionConfig() {
 		return this.extensionConfig;
 	}
 	
@@ -64,13 +66,15 @@ public class BackpackConfig {
 		}
 	}
 	
-	public CompoundTag serialize() {
+	//region Serialization
+	public @NotNull CompoundTag serialize() {
 		CompoundTag tag = new CompoundTag();
 		tag.put("extension_config", this.extensionConfig.serialize());
 		return tag;
 	}
 	
-	public void deserialize(CompoundTag tag) {
+	public void deserialize(@NotNull CompoundTag tag) {
 		this.extensionConfig.deserialize(tag.getCompound("extension_config"));
 	}
+	//endregion
 }

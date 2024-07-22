@@ -18,6 +18,7 @@
 
 package net.luis.xbackpack.world.inventory.modifier;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -34,20 +35,19 @@ public enum ItemModifierType {
 	private final String name;
 	private final int id;
 	
-	ItemModifierType(String name, int id) {
+	ItemModifierType(@NotNull String name, int id) {
 		this.name = name;
 		this.id = id;
 	}
 	
-	@Nullable
-	public static ItemModifierType byId(int id) {
+	public static @Nullable ItemModifierType byId(int id) {
 		if (id == FILTER.getId()) {
 			return FILTER;
 		}
 		return id == SORTER.getId() ? SORTER : null;
 	}
 	
-	public String getName() {
+	public @NotNull String getName() {
 		return this.name;
 	}
 	

@@ -45,13 +45,13 @@ public enum ItemSorters implements ItemSorter {
 	
 	NONE("none", 0) {
 		@Override
-		public List<ItemStack> sort(List<ItemStack> stacks, String searchTerm, boolean negate) {
+		public @NotNull List<ItemStack> sort(@NotNull List<ItemStack> stacks, @NotNull String searchTerm, boolean negate) {
 			return stacks;
 		}
 	},
 	NAME_SEARCH("name_search", 1, false) {
 		@Override
-		public List<ItemStack> sort(List<ItemStack> stacks, String searchTerm, boolean negate) {
+		public @NotNull List<ItemStack> sort(@NotNull List<ItemStack> stacks, @NotNull String searchTerm, boolean negate) {
 			if (!searchTerm.isEmpty()) {
 				List<ItemStack> returnList = Lists.newArrayList();
 				List<ItemStack> equalsList = Lists.newArrayList();
@@ -85,7 +85,7 @@ public enum ItemSorters implements ItemSorter {
 	},
 	NAMESPACE_SEARCH("namespace_search", 2, false) {
 		@Override
-		public List<ItemStack> sort(List<ItemStack> stacks, String searchTerm, boolean negate) {
+		public @NotNull List<ItemStack> sort(@NotNull List<ItemStack> stacks, @NotNull String searchTerm, boolean negate) {
 			if (searchTerm.startsWith("@")) {
 				String string = searchTerm.substring(1);
 				if (!string.isEmpty()) {
@@ -122,7 +122,7 @@ public enum ItemSorters implements ItemSorter {
 	},
 	TAG_SEARCH("tag_search", 3, false) {
 		@Override
-		public List<ItemStack> sort(List<ItemStack> stacks, String searchTerm, boolean negate) {
+		public @NotNull List<ItemStack> sort(@NotNull List<ItemStack> stacks, @NotNull String searchTerm, boolean negate) {
 			if (searchTerm.startsWith("#")) {
 				TagKey<Item> tag = this.getTag(searchTerm);
 				if (tag != null) {
@@ -155,7 +155,7 @@ public enum ItemSorters implements ItemSorter {
 	},
 	COUNT_SEARCH("count_search", 4, false) {
 		@Override
-		public List<ItemStack> sort(List<ItemStack> stacks, String searchTerm, boolean negate) {
+		public @NotNull List<ItemStack> sort(@NotNull List<ItemStack> stacks, @NotNull String searchTerm, boolean negate) {
 			if (!searchTerm.isEmpty()) {
 				int count = Util.tryParseInteger(searchTerm, -1);
 				if (count == -1) {
@@ -168,7 +168,7 @@ public enum ItemSorters implements ItemSorter {
 		}
 		
 		@Override
-		public List<MutableComponent> getInfo() {
+		public @NotNull List<MutableComponent> getInfo() {
 			List<MutableComponent> infoTooltip = Lists.newArrayList();
 			infoTooltip.add(Component.translatable(this.getInfoDescriptorId() + "0"));
 			return infoTooltip;
@@ -176,13 +176,13 @@ public enum ItemSorters implements ItemSorter {
 	},
 	ALPHABETICALLY("alphabetically", 5) {
 		@Override
-		public List<ItemStack> sort(List<ItemStack> stacks, String searchTerm, boolean negate) {
+		public @NotNull List<ItemStack> sort(@NotNull List<ItemStack> stacks, @NotNull String searchTerm, boolean negate) {
 			stacks.sort(Comparator.comparing(stack -> stack.getDisplayName().getString().toLowerCase()));
 			return stacks;
 		}
 		
 		@Override
-		public List<MutableComponent> getInfo() {
+		public @NotNull List<MutableComponent> getInfo() {
 			List<MutableComponent> infoTooltip = Lists.newArrayList();
 			infoTooltip.add(Component.translatable(this.getInfoDescriptorId() + "0"));
 			return infoTooltip;
@@ -190,14 +190,14 @@ public enum ItemSorters implements ItemSorter {
 	},
 	COUNT_DOWNWARDS("count_downwards", 6) {
 		@Override
-		public List<ItemStack> sort(List<ItemStack> stacks, String searchTerm, boolean negate) {
+		public @NotNull List<ItemStack> sort(@NotNull List<ItemStack> stacks, @NotNull String searchTerm, boolean negate) {
 			stacks.sort((firstStack, secondStack) -> Integer.compare(secondStack.getCount(), firstStack.getCount()));
 			return stacks;
 		}
 	},
 	COUNT_UPWARDS("count_upwards", 7) {
 		@Override
-		public List<ItemStack> sort(List<ItemStack> stacks, String searchTerm, boolean negate) {
+		public @NotNull List<ItemStack> sort(@NotNull List<ItemStack> stacks, @NotNull String searchTerm, boolean negate) {
 			stacks.sort(Comparator.comparingInt(ItemStack::getCount));
 			return stacks;
 		}
@@ -231,7 +231,7 @@ public enum ItemSorters implements ItemSorter {
 	}
 	
 	@Override
-	public String getName() {
+	public @NotNull String getName() {
 		return this.name;
 	}
 	
@@ -246,19 +246,19 @@ public enum ItemSorters implements ItemSorter {
 	}
 	
 	@Override
-	public abstract List<ItemStack> sort(List<ItemStack> stacks, String searchTerm, boolean negate);
+	public abstract @NotNull List<ItemStack> sort(@NotNull List<ItemStack> stacks, @NotNull String searchTerm, boolean negate);
 	
 	@Override
-	public MutableComponent getDisplayName() {
+	public @NotNull MutableComponent getDisplayName() {
 		return Component.translatable("xbackpack.backpack_action.sorter." + this.name);
 	}
 	
-	protected String getInfoDescriptorId() {
+	protected @NotNull String getInfoDescriptorId() {
 		return "xbackpack.backpack_action.sorter." + this.name + ".info.";
 	}
 	
 	@Override
-	public List<MutableComponent> getInfo() {
+	public @NotNull List<MutableComponent> getInfo() {
 		List<MutableComponent> infoTooltip = Lists.newArrayList();
 		infoTooltip.add(Component.translatable(this.getInfoDescriptorId() + "0"));
 		infoTooltip.add(Component.translatable(this.getInfoDescriptorId() + "1"));

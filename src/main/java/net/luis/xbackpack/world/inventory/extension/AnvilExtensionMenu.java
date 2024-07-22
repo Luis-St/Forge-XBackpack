@@ -55,7 +55,7 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 	private int repairItemCountCost;
 	private int cost;
 	
-	public AnvilExtensionMenu(AbstractExtensionContainerMenu menu, Player player) {
+	public AnvilExtensionMenu(@NotNull AbstractExtensionContainerMenu menu, @NotNull Player player) {
 		super(menu, player, BackpackExtensions.ANVIL.get());
 		this.handler = BackpackProvider.get(this.player).getAnvilHandler();
 	}
@@ -83,7 +83,7 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 			}
 			
 			@Override
-			public boolean mayPickup(Player player) {
+			public boolean mayPickup(@NotNull Player player) {
 				return AnvilExtensionMenu.this.mayPickup(player);
 			}
 			
@@ -99,7 +99,7 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 		return (player.getAbilities().instabuild || player.experienceLevel >= this.cost) && this.cost > 0;
 	}
 	
-	private void onTake(Player player) {
+	private void onTake(@NotNull Player player) {
 		if (player instanceof ServerPlayer serverPlayer) {
 			if (!serverPlayer.getAbilities().instabuild) {
 				serverPlayer.giveExperienceLevels(-this.cost);
@@ -124,7 +124,7 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 		this.createResult();
 	}
 	
-	private void playSound(ServerPlayer player, ServerLevel level) {
+	private void playSound(@NotNull ServerPlayer player, @NotNull ServerLevel level) {
 		player.connection.send(new ClientboundSoundPacket(BuiltInRegistries.SOUND_EVENT.wrapAsHolder(SoundEvents.ANVIL_USE), SoundSource.BLOCKS, player.getX(), player.getY(), player.getZ(), 1.0F, level.random.nextFloat() * 0.1F + 0.9F, level.random.nextLong()));
 	}
 	
@@ -274,7 +274,7 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 		return this.cost;
 	}
 	
-	private boolean onAnvilUpdate(ItemStack leftStack, ItemStack rightStack, int repairCost) {
+	private boolean onAnvilUpdate(@NotNull ItemStack leftStack, @NotNull ItemStack rightStack, int repairCost) {
 		AnvilUpdateEvent event = new AnvilUpdateEvent(leftStack, rightStack, leftStack.getDisplayName().getString(), repairCost, this.player);
 		if (MinecraftForge.EVENT_BUS.post(event)) {
 			return false;
@@ -289,7 +289,7 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	@Override
-	public boolean quickMoveStack(ItemStack slotStack, int index) {
+	public boolean quickMoveStack(@NotNull ItemStack slotStack, int index) {
 		if (908 >= index && index >= 0) { // from container
 			return this.menu.moveItemStackTo(slotStack, 938, 940); // into input
 		} else if (index == 940) { // from result

@@ -27,6 +27,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 /**
  *
  * @author Luis-St
@@ -51,8 +53,8 @@ public class ResetItemModifierPacket implements NetworkPacket {
 	}
 	
 	@Override
-	public void handle(@NotNull CustomPayloadEvent.Context context) {
-		ServerPlayer player = context.getSender();
+	public void handle(CustomPayloadEvent.@NotNull Context context) {
+		ServerPlayer player = Objects.requireNonNull(context.getSender());
 		context.enqueueWork(() -> {
 			if (player.containerMenu instanceof BackpackMenu menu) {
 				if (this.modifierType == ItemModifierType.FILTER) {

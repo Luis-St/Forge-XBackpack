@@ -20,6 +20,7 @@ package net.luis.xbackpack.world.inventory.extension;
 
 import net.luis.xbackpack.world.inventory.AbstractExtensionContainerMenu;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -30,5 +31,5 @@ import net.minecraft.world.entity.player.Player;
 @FunctionalInterface
 public interface ExtensionMenuFactory {
 	
-	AbstractExtensionMenu create(AbstractExtensionContainerMenu menu, Player player);
+	@NotNull AbstractExtensionMenu create(@NotNull AbstractExtensionContainerMenu menu, @NotNull Player player);
 }

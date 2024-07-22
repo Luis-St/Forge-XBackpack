@@ -20,6 +20,7 @@ package net.luis.xbackpack.world.inventory.slot;
 
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.SlotItemHandler;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -29,7 +30,7 @@ import net.minecraftforge.items.SlotItemHandler;
 
 public class BackpackSlot extends SlotItemHandler implements MoveableSlot {
 	
-	public BackpackSlot(IItemHandlerModifiable itemHandler, int index, int xPosition, int yPosition) {
+	public BackpackSlot(@NotNull IItemHandlerModifiable itemHandler, int index, int xPosition, int yPosition) {
 		super(itemHandler, index, xPosition, yPosition);
 	}
 	

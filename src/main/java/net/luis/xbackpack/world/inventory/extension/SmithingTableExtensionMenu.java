@@ -48,7 +48,7 @@ public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 	private final List<RecipeHolder<SmithingRecipe>> recipes;
 	private RecipeHolder<SmithingRecipe> selectedRecipe;
 	
-	public SmithingTableExtensionMenu(AbstractExtensionContainerMenu menu, Player player) {
+	public SmithingTableExtensionMenu(@NotNull AbstractExtensionContainerMenu menu, @NotNull Player player) {
 		super(menu, player, BackpackExtensions.SMITHING_TABLE.get());
 		this.handler = BackpackProvider.get(this.player).getSmithingHandler();
 		this.level = this.player.level();
@@ -93,7 +93,7 @@ public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 			}
 			
 			@Override
-			public boolean mayPickup(Player player) {
+			public boolean mayPickup(@NotNull Player player) {
 				return SmithingTableExtensionMenu.this.mayPickup(player);
 			}
 			
@@ -105,11 +105,11 @@ public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 		});
 	}
 	
-	private boolean mayPickup(Player player) {
+	private boolean mayPickup(@NotNull Player player) {
 		return this.selectedRecipe != null && this.selectedRecipe.value().matches(this.asContainer(), this.level);
 	}
 	
-	private void onTake(Player player, @NotNull ItemStack stack) {
+	private void onTake(@NotNull Player player, @NotNull ItemStack stack) {
 		stack.onCraftedBy(player.level(), player, stack.getCount());
 		if (this.selectedRecipe != null) {
 			player.awardRecipes(Collections.singleton(this.selectedRecipe));
@@ -154,7 +154,7 @@ public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	@Override
-	public boolean quickMoveStack(ItemStack slotStack, int index) {
+	public boolean quickMoveStack(@NotNull ItemStack slotStack, int index) {
 		if (908 >= index && index >= 0) { // from container
 			int slot = 954 + this.getSlotOffset(slotStack);
 			if (954 > slot || slot > 956) {
@@ -167,7 +167,7 @@ public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 		return false;
 	}
 	
-	private int getSlotOffset(ItemStack stack) {
+	private int getSlotOffset(@NotNull ItemStack stack) {
 		return this.recipes.stream().map((recipe) -> {
 			if (recipe.value().isTemplateIngredient(stack)) {
 				return 0;

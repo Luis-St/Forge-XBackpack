@@ -28,9 +28,7 @@ public class BackpackClientConfig {
 	
 	private boolean showModifierInfo = false;
 	
-	public BackpackClientConfig() {
-		
-	}
+	public BackpackClientConfig() {}
 	
 	public boolean shouldShowModifierInfo() {
 		return this.showModifierInfo;

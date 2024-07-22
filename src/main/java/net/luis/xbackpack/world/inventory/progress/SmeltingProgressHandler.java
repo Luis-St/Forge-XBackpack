@@ -32,6 +32,7 @@ import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -49,11 +50,11 @@ public class SmeltingProgressHandler implements ProgressHandler {
 	private final List<RecipeType<? extends AbstractCookingRecipe>> recipeTypes;
 	private int cookingProgress;
 	private int cookingTime;
-	private AbstractCookingRecipe progressingRecipe;
+	private @Nullable AbstractCookingRecipe progressingRecipe;
 	private int fuelTime;
 	private int maxFuel;
 	
-	public SmeltingProgressHandler(Player player, SmeltingHandler handler, List<RecipeType<? extends AbstractCookingRecipe>> recipeTypes) {
+	public SmeltingProgressHandler(@NotNull Player player, @NotNull SmeltingHandler handler, @NotNull List<RecipeType<? extends AbstractCookingRecipe>> recipeTypes) {
 		this.player = player;
 		this.handler = handler;
 		this.recipeTypes = recipeTypes;
@@ -163,7 +164,7 @@ public class SmeltingProgressHandler implements ProgressHandler {
 		}
 	}
 	
-	private boolean areMergable(@NotNull ItemStack toStack, ItemStack stack) {
+	private boolean areMergable(@NotNull ItemStack toStack, @NotNull ItemStack stack) {
 		if (toStack.getCount() >= toStack.getMaxStackSize()) {
 			return false;
 		} else if (!toStack.is(stack.getItem())) {
@@ -218,7 +219,7 @@ public class SmeltingProgressHandler implements ProgressHandler {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private AbstractCookingRecipe getRecipe(ItemStack stack) {
+	private @Nullable AbstractCookingRecipe getRecipe(@NotNull ItemStack stack) {
 		AbstractCookingRecipe cookingRecipe = null;
 		for (RecipeType<? extends AbstractCookingRecipe> recipeType : this.recipeTypes) {
 			Optional<RecipeHolder<AbstractCookingRecipe>> optional = this.player.level().getRecipeManager().getRecipeFor((RecipeType<AbstractCookingRecipe>) recipeType, new SimpleContainer(stack), this.player.level());
@@ -234,11 +235,11 @@ public class SmeltingProgressHandler implements ProgressHandler {
 		return cookingRecipe;
 	}
 	
-	private boolean canSmelt(ItemStack stack) {
+	private boolean canSmelt(@NotNull ItemStack stack) {
 		return 0 >= this.cookingProgress && 0 >= this.cookingTime && this.fuelTime > 0 && this.canProgress(stack);
 	}
 	
-	private boolean canProgress(ItemStack stack) {
+	private boolean canProgress(@NotNull ItemStack stack) {
 		AbstractCookingRecipe recipe = this.getRecipe(stack);
 		if (recipe != null) {
 			return ItemEntity.areMergable(recipe.getResultItem(this.player.level().registryAccess()), this.getResultItem()) || this.getResultItem().isEmpty();
@@ -246,7 +247,7 @@ public class SmeltingProgressHandler implements ProgressHandler {
 		return false;
 	}
 	
-	private int getFuelTime(ItemStack stack) {
+	private int getFuelTime(@NotNull ItemStack stack) {
 		int fuelTime = 0;
 		for (RecipeType<? extends AbstractCookingRecipe> recipeType : this.recipeTypes) {
 			fuelTime = Math.max(ForgeHooks.getBurnTime(stack, recipeType), fuelTime);
@@ -254,23 +255,23 @@ public class SmeltingProgressHandler implements ProgressHandler {
 		return fuelTime;
 	}
 	
-	public ItemStack getInputItem() {
+	public @NotNull ItemStack getInputItem() {
 		return this.handler.getInputHandler().getStackInSlot(0);
 	}
 	
-	public ItemStack getFuelItem() {
+	public @NotNull ItemStack getFuelItem() {
 		return this.handler.getFuelHandler().getStackInSlot(0);
 	}
 	
-	public ItemStack getResultItem() {
+	public @NotNull ItemStack getResultItem() {
 		return this.handler.getResultHandler().getStackInSlot(0);
 	}
 	
-	public ItemStackHandler getInputStorage() {
+	public @NotNull ItemStackHandler getInputStorage() {
 		return this.handler.getInputStorageHandler();
 	}
 	
-	public ItemStackHandler getResultStorage() {
+	public @NotNull ItemStackHandler getResultStorage() {
 		return this.handler.getResultStorageHandler();
 	}
 	
@@ -291,7 +292,7 @@ public class SmeltingProgressHandler implements ProgressHandler {
 	}
 	
 	@Override
-	public CompoundTag serialize() {
+	public @NotNull CompoundTag serialize() {
 		CompoundTag tag = new CompoundTag();
 		tag.putInt("cooking_progress", this.cookingProgress);
 		tag.putInt("cooking_time", this.cookingTime);
@@ -301,7 +302,7 @@ public class SmeltingProgressHandler implements ProgressHandler {
 	}
 	
 	@Override
-	public void deserialize(CompoundTag tag) {
+	public void deserialize(@NotNull CompoundTag tag) {
 		this.cookingProgress = tag.getInt("cooking_progress");
 		this.cookingTime = tag.getInt("cooking_time");
 		this.fuelTime = tag.getInt("fuel_time");

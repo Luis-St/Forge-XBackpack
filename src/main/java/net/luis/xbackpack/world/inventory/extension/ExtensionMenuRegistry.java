@@ -25,6 +25,7 @@ import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.luis.xbackpack.world.inventory.AbstractExtensionContainerMenu;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
@@ -38,7 +39,7 @@ public class ExtensionMenuRegistry {
 	
 	private static final Map<BackpackExtension, ExtensionMenuFactory> EXTENSION_FACTORIES = Maps.newHashMap();
 	
-	public static AbstractExtensionMenu getExtensionMenu(BackpackExtension extension, AbstractExtensionContainerMenu menu, Player player, ExtensionMenuFactory fallbackFactory) {
+	public static @NotNull AbstractExtensionMenu getExtensionMenu(@NotNull BackpackExtension extension, @NotNull AbstractExtensionContainerMenu menu, @NotNull Player player, @NotNull ExtensionMenuFactory fallbackFactory) {
 		return EXTENSION_FACTORIES.getOrDefault(extension, fallbackFactory).create(menu, player);
 	}
 	
@@ -46,9 +47,9 @@ public class ExtensionMenuRegistry {
 	 * Use this method to register a {@link ExtensionMenuFactory} for the {@link BackpackExtension}.
 	 * Call this method in {@link FMLCommonSetupEvent}
 	 */
-	public static void registerOverride(BackpackExtension extension, String modid, ExtensionMenuFactory factory) {
+	public static void registerOverride(@NotNull BackpackExtension extension, @NotNull String modId, @NotNull ExtensionMenuFactory factory) {
 		if (EXTENSION_FACTORIES.containsKey(extension)) {
-			XBackpack.LOGGER.error("Fail to register Extension Menu override for Mod {} of type {}, since there is already a Extension Menu present", modid, BackpackExtensions.REGISTRY.get().getKey(extension));
+			XBackpack.LOGGER.error("Fail to register Extension Menu override for Mod {} of type {}, since there is already a Extension Menu present", modId, BackpackExtensions.REGISTRY.get().getKey(extension));
 		} else {
 			EXTENSION_FACTORIES.put(extension, factory);
 		}

@@ -34,6 +34,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -54,12 +55,11 @@ public abstract class AbstractExtensionContainerScreen<T extends AbstractExtensi
 	private final List<AbstractExtensionScreen> extensionScreens = Lists.newArrayList();
 	private BackpackExtension extension = NO.get();
 	
-	protected AbstractExtensionContainerScreen(T menu, Inventory inventory, Component titleComponent) {
+	protected AbstractExtensionContainerScreen(@NotNull T menu, @NotNull Inventory inventory, @NotNull Component titleComponent) {
 		super(menu, inventory, titleComponent);
 	}
 	
-	@NotNull
-	public BackpackExtension getExtension() {
+	public @NotNull BackpackExtension getExtension() {
 		return this.extension == null ? NO.get() : this.extension;
 	}
 	
@@ -76,7 +76,7 @@ public abstract class AbstractExtensionContainerScreen<T extends AbstractExtensi
 		this.renderTooltip(graphics, mouseX, mouseY);
 	}
 	
-	protected abstract void renderScreen(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks);
+	protected abstract void renderScreen(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks);
 	
 	@Override
 	protected void renderBg(@NotNull GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
@@ -85,7 +85,7 @@ public abstract class AbstractExtensionContainerScreen<T extends AbstractExtensi
 		this.renderExtensions(graphics, partialTicks, mouseX, mouseY);
 	}
 	
-	private void renderExtensions(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
+	private void renderExtensions(@NotNull GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
 		for (BackpackExtension extension : this.extensions) {
 			AbstractExtensionScreen extensionScreen = this.getExtensionScreen(extension);
 			if (extensionScreen != null) {
@@ -109,7 +109,7 @@ public abstract class AbstractExtensionContainerScreen<T extends AbstractExtensi
 		}
 	}
 	
-	protected boolean canUseExtension(BackpackExtension extension) {
+	protected boolean canUseExtension(@NotNull BackpackExtension extension) {
 		return BackpackProvider.get(Objects.requireNonNull(Objects.requireNonNull(this.minecraft).player)).getConfig().getExtensionConfig().getWithState(BackpackExtensionState.UNLOCKED).contains(extension);
 	}
 	
@@ -125,7 +125,7 @@ public abstract class AbstractExtensionContainerScreen<T extends AbstractExtensi
 		}
 	}
 	
-	public int getExtensionOffset(BackpackExtension extension) {
+	public int getExtensionOffset(@NotNull BackpackExtension extension) {
 		int offset = 3;
 		for (BackpackExtension backpackExtension : this.extensions) {
 			if (backpackExtension == extension) {
@@ -136,7 +136,7 @@ public abstract class AbstractExtensionContainerScreen<T extends AbstractExtensi
 		return offset;
 	}
 	
-	protected boolean isInExtension(BackpackExtension extension, double mouseX, double mouseY) {
+	protected boolean isInExtension(@NotNull BackpackExtension extension, double mouseX, double mouseY) {
 		if (this.extension == extension || this.isExtensionRenderable(extension)) {
 			double topX = this.leftPos + this.imageWidth;
 			double topY = this.topPos + this.getExtensionOffset(extension);
@@ -216,18 +216,18 @@ public abstract class AbstractExtensionContainerScreen<T extends AbstractExtensi
 		return false;
 	}
 	
-	protected void addExtensionScreen(@NotNull BiFunction<AbstractExtensionContainerScreen<T>, List<BackpackExtension>, AbstractExtensionScreen> screenFactory) {
+	protected void addExtensionScreen(@NotNull BiFunction<AbstractExtensionContainerScreen<T>, @NotNull List<BackpackExtension>, @NotNull AbstractExtensionScreen> screenFactory) {
 		AbstractExtensionScreen extensionScreen = screenFactory.apply(this, this.extensions);
 		if (!extensionScreen.getExtension().isDisabled()) {
 			this.extensionScreens.add(extensionScreen);
 		}
 	}
 	
-	public AbstractExtensionScreen getExtensionScreen(BackpackExtension extension) {
+	public AbstractExtensionScreen getExtensionScreen(@NotNull BackpackExtension extension) {
 		return this.extensionScreens.stream().filter((extensionScreen) -> extensionScreen.getExtension() == extension).findAny().orElse(null);
 	}
 	
-	private void updateExtension(BackpackExtension extension) {
+	private void updateExtension(@Nullable BackpackExtension extension) {
 		Objects.requireNonNull(this.minecraft).getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 		if (this.extension == extension || extension == null || extension.isDisabled()) {
 			this.extension = NO.get();

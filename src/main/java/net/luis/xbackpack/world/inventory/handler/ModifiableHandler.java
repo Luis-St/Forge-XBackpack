@@ -46,7 +46,7 @@ public class ModifiableHandler implements IItemHandlerModifiable {
 		this(new ItemStackHandler(size));
 	}
 	
-	public ModifiableHandler(ItemStackHandler mainHandler) {
+	public ModifiableHandler(@NotNull ItemStackHandler mainHandler) {
 		this.mainHandler = mainHandler;
 		this.slotWrappers = Lists.newArrayList();
 		this.initSlotWrappers(mainHandler.getSlots(), SlotWrapper::ofUnwrapped);
@@ -81,7 +81,7 @@ public class ModifiableHandler implements IItemHandlerModifiable {
 		return ItemStack.EMPTY;
 	}
 	
-	public ItemStack insertItem(ItemStack stack, boolean simulate) {
+	public @NotNull ItemStack insertItem(@NotNull ItemStack stack, boolean simulate) {
 		for (int i = 0; i < this.getSlots() && !stack.isEmpty(); i++) {
 			stack = this.insertItem(i, stack, simulate);
 		}
@@ -135,13 +135,13 @@ public class ModifiableHandler implements IItemHandlerModifiable {
 		}
 	}
 	
-	private void initSlotWrappers(int size, Function<Integer, SlotWrapper> function) {
+	private void initSlotWrappers(int size, @NotNull Function<Integer, SlotWrapper> function) {
 		for (int i = 0; i < size; i++) {
 			this.slotWrappers.add(function.apply(i));
 		}
 	}
 	
-	private SlotWrapper getSlotWrapper(int mainSlot) {
+	private @NotNull SlotWrapper getSlotWrapper(int mainSlot) {
 		this.validateSlotIndex(mainSlot);
 		SlotWrapper wrapper = this.slotWrappers.get(mainSlot);
 		if (wrapper.getMainSlot() == mainSlot) {
@@ -164,13 +164,13 @@ public class ModifiableHandler implements IItemHandlerModifiable {
 		this.resetWrappedSlots(SlotWrapper::ofUnwrapped);
 	}
 	
-	public void resetWrappedSlots(Function<Integer, SlotWrapper> function) {
+	public void resetWrappedSlots(@NotNull Function<Integer, SlotWrapper> function) {
 		int size = this.slotWrappers.size();
 		this.slotWrappers.clear();
 		this.initSlotWrappers(size, function);
 	}
 	
-	public List<ItemStack> createModifiableList() {
+	public @NotNull List<ItemStack> createModifiableList() {
 		List<ItemStack> stacks = Lists.newArrayList();
 		for (int i = 0; i < this.mainHandler.getSlots(); i++) {
 			ItemStack stack = this.mainHandler.getStackInSlot(i).copy();

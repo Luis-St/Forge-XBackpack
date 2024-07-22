@@ -40,7 +40,7 @@ public class BackpackArmorSlot extends Slot {
 	private final Player player;
 	private final EquipmentSlot equipmentSlot;
 	
-	public BackpackArmorSlot(Inventory inventory, EquipmentSlot equipmentSlot, int index, int xPosition, int yPosition) {
+	public BackpackArmorSlot(@NotNull Inventory inventory, @NotNull EquipmentSlot equipmentSlot, int index, int xPosition, int yPosition) {
 		super(inventory, index, xPosition, yPosition);
 		this.player = inventory.player;
 		this.equipmentSlot = equipmentSlot;
@@ -57,7 +57,7 @@ public class BackpackArmorSlot extends Slot {
 	}
 	
 	@Override
-	public boolean mayPlace(ItemStack stack) {
+	public boolean mayPlace(@NotNull ItemStack stack) {
 		return stack.canEquip(this.equipmentSlot, this.player);
 	}
 	
@@ -68,7 +68,7 @@ public class BackpackArmorSlot extends Slot {
 	}
 	
 	@Override
-	public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
+	public @NotNull Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
 		return switch (this.equipmentSlot) {
 			case HEAD -> Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_HELMET);
 			case CHEST -> Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_CHESTPLATE);

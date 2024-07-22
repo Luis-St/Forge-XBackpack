@@ -19,6 +19,7 @@
 package net.luis.xbackpack.world.inventory.handler;
 
 import net.luis.xbackpack.world.item.DynamicItemStackHandler;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
@@ -39,7 +40,7 @@ public class EnchantingHandler {
 		this(power, input, 1);
 	}
 	
-	public EnchantingHandler(DynamicItemStackHandler powerHandler, DynamicItemStackHandler inputHandler) {
+	public EnchantingHandler(@NotNull DynamicItemStackHandler powerHandler, @NotNull DynamicItemStackHandler inputHandler) {
 		this(powerHandler, inputHandler, new DynamicItemStackHandler(1));
 	}
 	
@@ -47,35 +48,35 @@ public class EnchantingHandler {
 		this(new DynamicItemStackHandler(power), new DynamicItemStackHandler(input), new DynamicItemStackHandler(fuel));
 	}
 	
-	public EnchantingHandler(DynamicItemStackHandler powerHandler, DynamicItemStackHandler inputHandler, DynamicItemStackHandler fuelHandler) {
+	public EnchantingHandler(@NotNull DynamicItemStackHandler powerHandler, @NotNull DynamicItemStackHandler inputHandler, @NotNull DynamicItemStackHandler fuelHandler) {
 		this.powerHandler = powerHandler;
 		this.inputHandler = inputHandler;
 		this.fuelHandler = fuelHandler;
 	}
 	
-	public ItemStackHandler getPowerHandler() {
+	public @NotNull ItemStackHandler getPowerHandler() {
 		return this.powerHandler;
 	}
 	
-	public ItemStackHandler getInputHandler() {
+	public @NotNull ItemStackHandler getInputHandler() {
 		return this.inputHandler;
 	}
 	
-	public ItemStackHandler getFuelHandler() {
+	public @NotNull ItemStackHandler getFuelHandler() {
 		return this.fuelHandler;
 	}
 	
-	public CompoundTag serialize() {
+	public @NotNull CompoundTag serialize(HolderLookup.@NotNull Provider provider) {
 		CompoundTag tag = new CompoundTag();
-		tag.put("power_handler", this.powerHandler.serializeNBT());
-		tag.put("input_handler", this.inputHandler.serializeNBT());
-		tag.put("fuel_handler", this.fuelHandler.serializeNBT());
+		tag.put("power_handler", this.powerHandler.serializeNBT(provider));
+		tag.put("input_handler", this.inputHandler.serializeNBT(provider));
+		tag.put("fuel_handler", this.fuelHandler.serializeNBT(provider));
 		return tag;
 	}
 	
-	public void deserialize(@NotNull CompoundTag tag) {
-		this.powerHandler.deserializeNBT(tag.getCompound("power_handler"));
-		this.inputHandler.deserializeNBT(tag.getCompound("input_handler"));
-		this.fuelHandler.deserializeNBT(tag.getCompound("fuel_handler"));
+	public void deserialize(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag tag) {
+		this.powerHandler.deserializeNBT(provider, tag.getCompound("power_handler"));
+		this.inputHandler.deserializeNBT(provider, tag.getCompound("input_handler"));
+		this.fuelHandler.deserializeNBT(provider, tag.getCompound("fuel_handler"));
 	}
 }

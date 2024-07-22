@@ -44,7 +44,7 @@ public abstract class AbstractExtensionContainerMenu extends AbstractContainerMe
 	private final List<AbstractExtensionMenu> extensionMenus = Lists.newArrayList();
 	private BackpackExtension extension = BackpackExtensions.NO.get();
 	
-	protected AbstractExtensionContainerMenu(MenuType<?> menuType, int id, Inventory inventory) {
+	protected AbstractExtensionContainerMenu(@NotNull MenuType<?> menuType, int id, @NotNull Inventory inventory) {
 		super(menuType, id);
 	}
 	
@@ -108,7 +108,7 @@ public abstract class AbstractExtensionContainerMenu extends AbstractContainerMe
 		return stack.isEmpty();
 	}
 	
-	protected boolean moveExtension(ItemStack slotStack, int index) {
+	protected boolean moveExtension(@NotNull ItemStack slotStack, int index) {
 		AbstractExtensionMenu extensionMenu = this.getExtensionMenu(this.extension);
 		return extensionMenu != null && extensionMenu.quickMoveStack(slotStack, index);
 	}
@@ -139,7 +139,7 @@ public abstract class AbstractExtensionContainerMenu extends AbstractContainerMe
 		return this.extensionMenus;
 	}
 	
-	protected void addExtensionMenu(BackpackExtension extension, Player player, ExtensionMenuFactory menuFactory) {
+	protected void addExtensionMenu(@NotNull BackpackExtension extension, @NotNull Player player, @NotNull ExtensionMenuFactory menuFactory) {
 		if (!extension.isDisabled()) {
 			AbstractExtensionMenu extensionMenu = ExtensionMenuRegistry.getExtensionMenu(extension, this, player, menuFactory);
 			extensionMenu.addSlots(this::addSlot);
@@ -147,13 +147,11 @@ public abstract class AbstractExtensionContainerMenu extends AbstractContainerMe
 		}
 	}
 	
-	@Nullable
-	public AbstractExtensionMenu getExtensionMenu(BackpackExtension extension) {
+	public @Nullable AbstractExtensionMenu getExtensionMenu(@NotNull BackpackExtension extension) {
 		return this.extensionMenus.stream().filter((extensionMenu) -> extensionMenu.getExtension() == extension).findAny().orElse(null);
 	}
 	
-	@NotNull
-	public Optional<AbstractExtensionMenu> getExtensionMenu() {
+	public @NotNull Optional<AbstractExtensionMenu> getExtensionMenu() {
 		return Optional.ofNullable(this.getExtensionMenu(this.getExtension()));
 	}
 }

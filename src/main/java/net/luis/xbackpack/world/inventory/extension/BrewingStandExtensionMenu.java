@@ -50,7 +50,7 @@ public class BrewingStandExtensionMenu extends AbstractExtensionMenu {
 	private final CraftingFuelHandler handler;
 	private final ProgressHandler progressHandler;
 	
-	public BrewingStandExtensionMenu(AbstractExtensionContainerMenu menu, Player player) {
+	public BrewingStandExtensionMenu(@NotNull AbstractExtensionContainerMenu menu, @NotNull Player player) {
 		super(menu, player, BackpackExtensions.BREWING_STAND.get());
 		IBackpack backpack = BackpackProvider.get(player);
 		this.handler = backpack.getBrewingHandler();
@@ -97,7 +97,7 @@ public class BrewingStandExtensionMenu extends AbstractExtensionMenu {
 		}
 	}
 	
-	private void onTake(Player player, ItemStack stack) {
+	private void onTake(@NotNull Player player, @NotNull ItemStack stack) {
 		Potion potion = PotionUtils.getPotion(stack);
 		if (player instanceof ServerPlayer serverPlayer) {
 			ForgeEventFactory.onPlayerBrewedPotion(player, stack);
@@ -106,7 +106,7 @@ public class BrewingStandExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	@Override
-	public boolean quickMoveStack(ItemStack slotStack, int index) {
+	public boolean quickMoveStack(@NotNull ItemStack slotStack, int index) {
 		if (908 >= index && index >= 0) { // from container
 			if (slotStack.is(Items.BLAZE_POWDER) && this.canQuickMovePowder()) {
 				return this.menu.moveItemStackTo(slotStack, 947, 948); // into fuel

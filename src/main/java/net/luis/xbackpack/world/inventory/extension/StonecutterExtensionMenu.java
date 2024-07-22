@@ -57,7 +57,7 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 	private int selectedRecipe = -1;
 	private RecipeHolder<StonecutterRecipe> recipe;
 	
-	public StonecutterExtensionMenu(AbstractExtensionContainerMenu menu, Player player) {
+	public StonecutterExtensionMenu(@NotNull AbstractExtensionContainerMenu menu, @NotNull Player player) {
 		super(menu, player, BackpackExtensions.STONECUTTER.get());
 		this.handler = BackpackProvider.get(this.player).getStonecutterHandler();
 	}
@@ -84,7 +84,7 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 		});
 	}
 	
-	private void onTake(Player player, @NotNull ItemStack stack) {
+	private void onTake(@NotNull Player player, @NotNull ItemStack stack) {
 		stack.onCraftedBy(player.level(), player, stack.getCount());
 		if (this.recipe != null && !this.recipe.value().isSpecial()) {
 			player.awardRecipes(Collections.singleton(this.recipe));
@@ -115,15 +115,15 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 	@Override
 	public void slotsChanged() {
 		ItemStack stack = this.handler.getInputHandler().getStackInSlot(0);
-		if (!stack.is(this.input.getItem())) {
+		if (stack.is(this.input.getItem())) {
+			XBNetworkHandler.INSTANCE.sendToPlayer(this.player, new UpdateStonecutterPacket(false));
+		} else {
 			this.input = stack.copy();
 			this.setupRecipes(stack);
-		} else {
-			XBNetworkHandler.INSTANCE.sendToPlayer(this.player, new UpdateStonecutterPacket(false));
 		}
 	}
 	
-	private void setupRecipes(ItemStack stack) {
+	private void setupRecipes(@NotNull ItemStack stack) {
 		this.recipes.clear();
 		this.selectedRecipe = -1;
 		this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);
@@ -132,7 +132,7 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	@Override
-	public boolean clickMenuButton(Player player, int button) {
+	public boolean clickMenuButton(@NotNull Player player, int button) {
 		if (this.isValidIndex(button)) {
 			this.selectedRecipe = button;
 			this.setupResult();
@@ -157,7 +157,7 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	@Override
-	public boolean quickMoveStack(ItemStack slotStack, int index) {
+	public boolean quickMoveStack(@NotNull ItemStack slotStack, int index) {
 		if (908 >= index && index >= 0) { // from container
 			return this.menu.moveItemStackTo(slotStack, 944, 945); // into input
 		} else if (index == 945) { // from result

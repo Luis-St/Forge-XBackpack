@@ -40,7 +40,7 @@ public class AttachCapabilitiesEventHandler {
 	@SubscribeEvent
 	public static void attachPlayerCapabilities(@NotNull AttachCapabilitiesEvent<Entity> event) {
 		if (event.getObject() instanceof Player player) {
-			event.addCapability(new ResourceLocation(XBackpack.MOD_ID, "backpack"), new BackpackProvider(player));
+			event.addCapability(ResourceLocation.fromNamespaceAndPath(XBackpack.MOD_ID, "backpack"), new BackpackProvider(player));
 		}
 	}
 }

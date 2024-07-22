@@ -51,9 +51,7 @@ public class BackpackExtensionStateArgument implements ArgumentType<BackpackExte
 		return Component.translatable("xbackpack.commands.arguments.state.invalid", name);
 	});
 	
-	private BackpackExtensionStateArgument() {
-		
-	}
+	private BackpackExtensionStateArgument() {}
 	
 	public static @NotNull BackpackExtensionStateArgument state() {
 		return new BackpackExtensionStateArgument();
@@ -82,12 +80,11 @@ public class BackpackExtensionStateArgument implements ArgumentType<BackpackExte
 		return Lists.newArrayList(BackpackExtensionState.values()).stream().map(BackpackExtensionState::getName).collect(Collectors.toList());
 	}
 	
+	//region Argument info
 	public static class Info implements ArgumentTypeInfo<BackpackExtensionStateArgument, Info.Template> {
 		
 		@Override
-		public void serializeToNetwork(@NotNull Template template, @NotNull FriendlyByteBuf buffer) {
-			
-		}
+		public void serializeToNetwork(@NotNull Template template, @NotNull FriendlyByteBuf buffer) {}
 		
 		@Override
 		public @NotNull Template deserializeFromNetwork(@NotNull FriendlyByteBuf buffer) {
@@ -95,9 +92,7 @@ public class BackpackExtensionStateArgument implements ArgumentType<BackpackExte
 		}
 		
 		@Override
-		public void serializeToJson(@NotNull Template template, @NotNull JsonObject object) {
-			
-		}
+		public void serializeToJson(@NotNull Template template, @NotNull JsonObject object) {}
 		
 		@Override
 		public @NotNull Template unpack(@NotNull BackpackExtensionStateArgument argument) {
@@ -121,7 +116,7 @@ public class BackpackExtensionStateArgument implements ArgumentType<BackpackExte
 			public @NotNull ArgumentTypeInfo<BackpackExtensionStateArgument, ?> type() {
 				return Info.this;
 			}
-			
 		}
 	}
+	//endregion
 }

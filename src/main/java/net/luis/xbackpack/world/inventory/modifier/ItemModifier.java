@@ -35,15 +35,15 @@ import java.util.List;
 
 public interface ItemModifier {
 	
-	String getName();
+	@NotNull String getName();
 	
 	int getId();
 	
-	ItemModifierType getType();
+	@NotNull ItemModifierType getType();
 	
 	boolean isSelectable();
 	
-	default List<Component> getTooltip(@NotNull TooltipFlag tooltipFlag) {
+	default @NotNull List<Component> getTooltip(@NotNull TooltipFlag tooltipFlag) {
 		if (tooltipFlag.isAdvanced()) {
 			List<MutableComponent> info = this.getInfo();
 			if (!info.isEmpty()) {
@@ -56,7 +56,7 @@ public interface ItemModifier {
 		return Lists.newArrayList(this.getDisplayName().withStyle(ChatFormatting.WHITE));
 	}
 	
-	MutableComponent getDisplayName();
+	@NotNull MutableComponent getDisplayName();
 	
-	List<MutableComponent> getInfo();
+	@NotNull List<MutableComponent> getInfo();
 }

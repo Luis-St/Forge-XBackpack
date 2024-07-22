@@ -33,6 +33,7 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Objects;
@@ -54,7 +55,7 @@ public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 	private int startIndex = 0;
 	private int selectedRecipe = -1;
 	
-	public StonecutterExtensionScreen(AbstractExtensionContainerScreen<?> screen, List<BackpackExtension> extensions) {
+	public StonecutterExtensionScreen(@NotNull AbstractExtensionContainerScreen<?> screen, @NotNull List<BackpackExtension> extensions) {
 		super(screen, BackpackExtensions.STONECUTTER.get(), extensions);
 	}
 	
@@ -65,7 +66,7 @@ public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 	}
 	
 	@Override
-	protected void renderAdditional(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY, boolean open) {
+	protected void renderAdditional(@NotNull GuiGraphics graphics, float partialTicks, int mouseX, int mouseY, boolean open) {
 		if (open) {
 			graphics.blit(this.getTexture(), this.leftPos + this.imageWidth + 72, this.topPos + 143 + (int) (39.0 * this.scrollOffset), 95 + (this.isScrollBarActive() ? 0 : 12), 0, 12, 15);
 			this.renderButtons(graphics, mouseX, mouseY);
@@ -73,7 +74,7 @@ public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 		}
 	}
 	
-	private void renderButtons(GuiGraphics graphics, int mouseX, int mouseY) {
+	private void renderButtons(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {
 		for (int index = this.startIndex; index < this.startIndex + 12 && index < this.recipes.size(); ++index) {
 			int i = index - this.startIndex;
 			int x = this.leftPos + 225 + index % 4 * 16;
@@ -88,7 +89,7 @@ public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 		}
 	}
 	
-	private void renderRecipes(GuiGraphics graphics) {
+	private void renderRecipes(@NotNull GuiGraphics graphics) {
 		for (int index = this.startIndex; index < this.startIndex + 12 && index < this.recipes.size(); ++index) {
 			int i = index - this.startIndex;
 			int x = this.leftPos + 225 + index % 4 * 16;
@@ -98,7 +99,7 @@ public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 	}
 	
 	@Override
-	public void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY, boolean open, boolean renderable, Consumer<ItemStack> tooltipRenderer) {
+	public void renderTooltip(@NotNull GuiGraphics graphics, int mouseX, int mouseY, boolean open, boolean renderable, @NotNull Consumer<ItemStack> tooltipRenderer) {
 		super.renderTooltip(graphics, mouseX, mouseY, open, renderable, tooltipRenderer);
 		if (open) {
 			if (this.shouldDisplayRecipes()) {
@@ -168,7 +169,7 @@ public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 		return true;
 	}
 	
-	private ItemStack getInputStack() {
+	private @NotNull ItemStack getInputStack() {
 		return this.handler.getInputHandler().getStackInSlot(0);
 	}
 	

@@ -57,7 +57,7 @@ public class BrewingProgressHandler implements ProgressHandler {
 	private int fuel;
 	private int brewTime;
 	
-	public BrewingProgressHandler(Player player, CraftingFuelHandler handler) {
+	public BrewingProgressHandler(@NotNull Player player, @NotNull CraftingFuelHandler handler) {
 		this.player = player;
 		this.handler = handler;
 	}
@@ -140,7 +140,7 @@ public class BrewingProgressHandler implements ProgressHandler {
 		return this.handler.getFuelHandler().getStackInSlot(0);
 	}
 	
-	private ItemStackHandler getResultHandler() {
+	private @NotNull ItemStackHandler getResultHandler() {
 		return this.handler.getResultHandler();
 	}
 	
@@ -176,7 +176,7 @@ public class BrewingProgressHandler implements ProgressHandler {
 		return false;
 	}
 	
-	private void onPotionBrewed(NonNullList<ItemStack> stacks) {
+	private void onPotionBrewed(@NotNull NonNullList<ItemStack> stacks) {
 		ForgeEventFactory.onPotionBrewed(stacks);
 	}
 	
@@ -186,7 +186,7 @@ public class BrewingProgressHandler implements ProgressHandler {
 	}
 	
 	@Override
-	public CompoundTag serialize() {
+	public @NotNull CompoundTag serialize() {
 		CompoundTag tag = new CompoundTag();
 		tag.putString("input", Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(this.input)).toString());
 		tag.putInt("fuel", this.fuel);

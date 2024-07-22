@@ -32,6 +32,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -48,7 +49,7 @@ public class CraftingExtensionMenu extends AbstractExtensionMenu {
 	private final CraftingContainerWrapper craftingWrapper;
 	private final ResultContainer resultWrapper;
 	
-	public CraftingExtensionMenu(AbstractExtensionContainerMenu menu, Player player) {
+	public CraftingExtensionMenu(@NotNull AbstractExtensionContainerMenu menu, @NotNull Player player) {
 		super(menu, player, BackpackExtensions.CRAFTING_TABLE.get());
 		this.craftingWrapper = new CraftingContainerWrapper(this.menu, BackpackProvider.get(this.player).getCraftingHandler(), 3, 3);
 		this.resultWrapper = new ResultContainer();
@@ -60,7 +61,7 @@ public class CraftingExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	@Override
-	public void addSlots(Consumer<Slot> consumer) {
+	public void addSlots(@NotNull Consumer<Slot> consumer) {
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
 				consumer.accept(new ExtensionSlot(this, this.craftingWrapper, j + i * 3, 225 + j * 18, 25 + i * 18));
@@ -70,7 +71,7 @@ public class CraftingExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	@Override
-	public void slotsChanged(Container container) {
+	public void slotsChanged(@NotNull Container container) {
 		if (container == this.craftingWrapper) {
 			this.slotChangedCraftingGrid();
 		}
@@ -93,7 +94,7 @@ public class CraftingExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	@Override
-	public boolean quickMoveStack(ItemStack slotStack, int index) {
+	public boolean quickMoveStack(@NotNull ItemStack slotStack, int index) {
 		if (908 >= index && index >= 0) { // from container
 			return this.menu.moveItemStackTo(slotStack, 917, 926); // into input
 		} else if (index == 926) { // from result

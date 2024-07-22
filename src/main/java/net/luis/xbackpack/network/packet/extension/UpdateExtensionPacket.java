@@ -53,8 +53,8 @@ public class UpdateExtensionPacket implements NetworkPacket {
 	}
 	
 	@Override
-	public void handle(@NotNull CustomPayloadEvent.Context context) {
-		ServerPlayer player = context.getSender();
+	public void handle(CustomPayloadEvent.@NotNull Context context) {
+		ServerPlayer player = Objects.requireNonNull(context.getSender());
 		context.enqueueWork(() -> {
 			if (player.containerMenu instanceof BackpackMenu menu) {
 				menu.setExtension(this.extension);

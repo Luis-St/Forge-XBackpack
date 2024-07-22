@@ -32,5 +32,5 @@ public interface NetworkPacket {
 	
 	void encode(@NotNull FriendlyByteBuf buffer);
 	
-	void handle(@NotNull CustomPayloadEvent.Context context);
+	void handle(CustomPayloadEvent.@NotNull Context context);
 }

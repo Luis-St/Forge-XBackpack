@@ -28,6 +28,8 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -41,7 +43,7 @@ import java.util.function.Consumer;
 
 public abstract class AbstractExtensionScreen {
 	
-	protected static final ResourceLocation ICONS = new ResourceLocation(XBackpack.MOD_ID, "textures/gui/container/backpack_icons.png");
+	protected static final ResourceLocation ICONS = ResourceLocation.fromNamespaceAndPath(XBackpack.MOD_ID, "textures/gui/container/backpack_icons.png");
 	
 	protected final AbstractExtensionContainerScreen<?> screen;
 	protected final BackpackExtension extension;
@@ -53,13 +55,13 @@ public abstract class AbstractExtensionScreen {
 	protected int leftPos;
 	protected int topPos;
 	
-	protected AbstractExtensionScreen(AbstractExtensionContainerScreen<?> screen, BackpackExtension extension, List<BackpackExtension> extensions) {
+	protected AbstractExtensionScreen(@NotNull AbstractExtensionContainerScreen<?> screen, @NotNull BackpackExtension extension, @NotNull List<BackpackExtension> extensions) {
 		this.screen = screen;
 		this.extension = extension;
 		this.extensions = extensions;
 	}
 	
-	public final void init(Minecraft minecraft, Font font, int imageWidth, int imageHeight, int leftPos, int topPos) {
+	public final void init(@Nullable Minecraft minecraft, @NotNull Font font, int imageWidth, int imageHeight, int leftPos, int topPos) {
 		this.minecraft = minecraft;
 		this.font = font;
 		this.imageWidth = imageWidth;
@@ -71,11 +73,9 @@ public abstract class AbstractExtensionScreen {
 		}
 	}
 	
-	protected void init() {
-		
-	}
+	protected void init() {}
 	
-	protected int getExtensionOffset(BackpackExtension extension) {
+	protected int getExtensionOffset(@NotNull BackpackExtension extension) {
 		int offset = 3;
 		for (BackpackExtension backpackExtension : this.extensions) {
 			if (backpackExtension == extension) {
@@ -86,7 +86,7 @@ public abstract class AbstractExtensionScreen {
 		return offset;
 	}
 	
-	protected boolean isExtensionRenderable(BackpackExtension extension) {
+	protected boolean isExtensionRenderable(@NotNull BackpackExtension extension) {
 		if (this.extension == BackpackExtensions.NO.get()) {
 			return true;
 		} else if (this.extensions.indexOf(this.extension) > this.extensions.indexOf(extension)) {
@@ -105,18 +105,18 @@ public abstract class AbstractExtensionScreen {
 		return false;
 	}
 	
-	protected ResourceLocation getTexture() {
+	protected @NotNull ResourceLocation getTexture() {
 		ResourceLocation location = Objects.requireNonNull(BackpackExtensions.REGISTRY.get().getKey(this.extension));
-		return new ResourceLocation(location.getNamespace(), "textures/gui/container/" + location.getPath() + "_extension.png");
+		return ResourceLocation.fromNamespaceAndPath(location.getNamespace(), "textures/gui/container/" + location.getPath() + "_extension.png");
 	}
 	
-	public void render(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
+	public void render(@NotNull GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
 		int offset = this.getExtensionOffset(this.extension);
 		graphics.blit(ICONS, this.leftPos + this.imageWidth, this.topPos + offset, this.extension.getIconWidth(), this.extension.getIconHeight(), 0, 0, 32, 32, 256, 256);
 		graphics.renderItem(this.extension.getIcon(), this.leftPos + this.imageWidth + 1, this.topPos + 3 + offset);
 	}
 	
-	public void renderOpened(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
+	public void renderOpened(@NotNull GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
 		int offset = this.getExtensionOffset(this.extension);
 		RenderSystem.setShaderTexture(0, this.getTexture());
 		graphics.blit(this.getTexture(), this.leftPos + this.imageWidth - 3, this.topPos + offset, 0, 0, this.extension.getImageWidth(), this.extension.getImageHeight());
@@ -128,11 +128,9 @@ public abstract class AbstractExtensionScreen {
 		}
 	}
 	
-	protected void renderAdditional(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY, boolean open) {
-		
-	}
+	protected void renderAdditional(@NotNull GuiGraphics graphics, float partialTicks, int mouseX, int mouseY, boolean open) {}
 	
-	public void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY, boolean open, boolean renderable, Consumer<ItemStack> tooltipRenderer) {
+	public void renderTooltip(@NotNull GuiGraphics graphics, int mouseX, int mouseY, boolean open, boolean renderable, @NotNull Consumer<ItemStack> tooltipRenderer) {
 		if (this.isInExtension(this.extension, mouseX, mouseY) && !open && renderable) {
 			graphics.renderTooltip(this.font, this.extension.getTooltip(), mouseX, mouseY);
 		}
@@ -154,7 +152,7 @@ public abstract class AbstractExtensionScreen {
 		return false;
 	}
 	
-	public BackpackExtension getExtension() {
+	public @NotNull BackpackExtension getExtension() {
 		return this.extension;
 	}
 }

@@ -60,7 +60,7 @@ public class ClientEventHandler {
 	}
 	
 	@SubscribeEvent
-	public static void clientTick(@NotNull TickEvent.ClientTickEvent event) {
+	public static void clientTick(TickEvent. @NotNull ClientTickEvent event) {
 		if (event.phase == Phase.START) {
 			if (0 >= lastPacket) {
 				if (XBKeyMappings.BACKPACK_OPEN.isDown()) {

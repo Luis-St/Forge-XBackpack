@@ -53,18 +53,18 @@ public abstract class AbstractModifiableContainerMenu extends AbstractExtensionC
 	private String searchTerm = "";
 	private boolean negate = false;
 	
-	protected AbstractModifiableContainerMenu(MenuType<?> menuType, int id, Inventory inventory) {
+	protected AbstractModifiableContainerMenu(@NotNull MenuType<?> menuType, int id, @NotNull Inventory inventory) {
 		super(menuType, id, inventory);
 		this.player = inventory.player;
 	}
 	
 	@Override
-	public String getSearchTerm() {
+	public @NotNull String getSearchTerm() {
 		return StringUtils.trimToEmpty(this.searchTerm).toLowerCase();
 	}
 	
 	@Override
-	public void setSearchTerm(String searchTerm) {
+	public void setSearchTerm(@NotNull String searchTerm) {
 		this.searchTerm = StringUtils.trimToEmpty(searchTerm).toLowerCase();
 		if (this.searchTerm.startsWith("!")) {
 			this.negate = true;
@@ -90,7 +90,7 @@ public abstract class AbstractModifiableContainerMenu extends AbstractExtensionC
 		this.updateItemModifiers();
 	}
 	
-	private boolean isNumber(String searchTerm) {
+	private boolean isNumber(@NotNull String searchTerm) {
 		return Util.tryParseInteger(searchTerm, -1) >= 0;
 	}
 	
@@ -99,7 +99,7 @@ public abstract class AbstractModifiableContainerMenu extends AbstractExtensionC
 	}
 	
 	@Override
-	public ItemFilter getFilter() {
+	public @NotNull ItemFilter getFilter() {
 		return this.filter;
 	}
 	
@@ -129,7 +129,7 @@ public abstract class AbstractModifiableContainerMenu extends AbstractExtensionC
 	}
 	
 	@Override
-	public ItemSorter getSorter() {
+	public @NotNull ItemSorter getSorter() {
 		return this.sorter;
 	}
 	
@@ -165,5 +165,5 @@ public abstract class AbstractModifiableContainerMenu extends AbstractExtensionC
 		}
 	}
 	
-	protected abstract void onItemModifiersChanged(ServerPlayer player);
+	protected abstract void onItemModifiersChanged(@NotNull ServerPlayer player);
 }

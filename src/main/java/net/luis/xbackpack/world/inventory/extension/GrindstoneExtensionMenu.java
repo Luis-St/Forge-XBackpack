@@ -56,7 +56,7 @@ public class GrindstoneExtensionMenu extends AbstractExtensionMenu {
 	private final CraftingHandler handler;
 	private int xp = -1;
 	
-	public GrindstoneExtensionMenu(AbstractExtensionContainerMenu menu, Player player) {
+	public GrindstoneExtensionMenu(@NotNull AbstractExtensionContainerMenu menu, @NotNull Player player) {
 		super(menu, player, BackpackExtensions.GRINDSTONE.get());
 		this.handler = BackpackProvider.get(this.player).getGrindstoneHandler();
 	}
@@ -93,7 +93,7 @@ public class GrindstoneExtensionMenu extends AbstractExtensionMenu {
 		});
 	}
 	
-	private void onTake(Player player, ItemStack stack) {
+	private void onTake(@NotNull Player player, @NotNull ItemStack stack) {
 		if (player instanceof ServerPlayer serverPlayer) {
 			GrindstoneEvent.OnTakeItem event = new GrindstoneEvent.OnTakeItem(this.handler.getInputHandler().getStackInSlot(0), this.handler.getInputHandler().getStackInSlot(1), this.getExperienceAmount(player.level()));
 			if (MinecraftForge.EVENT_BUS.post(event)) {
@@ -107,7 +107,7 @@ public class GrindstoneExtensionMenu extends AbstractExtensionMenu {
 		this.menu.broadcastChanges();
 	}
 	
-	private int getExperienceAmount(Level level) {
+	private int getExperienceAmount(@NotNull Level level) {
 		if (this.xp > -1) {
 			return this.xp;
 		}
@@ -122,7 +122,7 @@ public class GrindstoneExtensionMenu extends AbstractExtensionMenu {
 		}
 	}
 	
-	private int getExperienceFromItem(ItemStack stack) {
+	private int getExperienceFromItem(@NotNull ItemStack stack) {
 		int experience = 0;
 		Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
 		for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
@@ -200,7 +200,7 @@ public class GrindstoneExtensionMenu extends AbstractExtensionMenu {
 		this.menu.broadcastChanges();
 	}
 	
-	private @NotNull ItemStack mergeEnchants(@NotNull ItemStack firstStack, ItemStack secondStack) {
+	private @NotNull ItemStack mergeEnchants(@NotNull ItemStack firstStack, @NotNull ItemStack secondStack) {
 		ItemStack resultStack = firstStack.copy();
 		Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(secondStack);
 		for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
@@ -240,7 +240,7 @@ public class GrindstoneExtensionMenu extends AbstractExtensionMenu {
 		return resultStack;
 	}
 	
-	private int onGrindstoneChange(ItemStack topStack, ItemStack bottomStack, int xp) {
+	private int onGrindstoneChange(@NotNull ItemStack topStack, @NotNull ItemStack bottomStack, int xp) {
 		GrindstoneEvent.OnPlaceItem event = new GrindstoneEvent.OnPlaceItem(topStack, bottomStack, xp);
 		if (MinecraftForge.EVENT_BUS.post(event)) {
 			return event.getXp();
@@ -253,7 +253,7 @@ public class GrindstoneExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	@Override
-	public boolean quickMoveStack(ItemStack slotStack, int index) {
+	public boolean quickMoveStack(@NotNull ItemStack slotStack, int index) {
 		if (908 >= index && index >= 0) { // from container
 			if (slotStack.isDamageableItem() || slotStack.is(Items.ENCHANTED_BOOK) || slotStack.isEnchanted()) {
 				return this.menu.moveItemStackTo(slotStack, 951, 953); // into input

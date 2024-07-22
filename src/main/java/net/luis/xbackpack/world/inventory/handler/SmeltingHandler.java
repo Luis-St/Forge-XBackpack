@@ -19,6 +19,7 @@
 package net.luis.xbackpack.world.inventory.handler;
 
 import net.luis.xbackpack.world.item.DynamicItemStackHandler;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
@@ -57,17 +58,17 @@ public class SmeltingHandler extends CraftingFuelHandler {
 	}
 	
 	@Override
-	public CompoundTag serialize() {
-		CompoundTag tag = super.serialize();
-		tag.put("input_storage_handler", this.inputStorageHandler.serializeNBT());
-		tag.put("result_storage_handler", this.resultStorageHandler.serializeNBT());
+	public @NotNull CompoundTag serialize(HolderLookup.@NotNull Provider provider) {
+		CompoundTag tag = super.serialize(provider);
+		tag.put("input_storage_handler", this.inputStorageHandler.serializeNBT(provider));
+		tag.put("result_storage_handler", this.resultStorageHandler.serializeNBT(provider));
 		return tag;
 	}
 	
 	@Override
-	public void deserialize(@NotNull CompoundTag tag) {
-		super.deserialize(tag);
-		this.inputStorageHandler.deserializeNBT(tag.getCompound("input_storage_handler"));
-		this.resultStorageHandler.deserializeNBT(tag.getCompound("result_storage_handler"));
+	public void deserialize(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag tag) {
+		super.deserialize(provider, tag);
+		this.inputStorageHandler.deserializeNBT(provider, tag.getCompound("input_storage_handler"));
+		this.resultStorageHandler.deserializeNBT(provider, tag.getCompound("result_storage_handler"));
 	}
 }

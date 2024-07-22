@@ -26,6 +26,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 /**
  *
  * @author Luis-St
@@ -46,7 +48,7 @@ public class TooltipCommand {
 	
 	private static int getTooltipVisibility(@NotNull CommandSourceStack source) {
 		if (source.getEntity() instanceof Player player) {
-			boolean showModifierInfo = BackpackProvider.get(player).getConfig().getClientConfig().shouldShowModifierInfo();
+			boolean showModifierInfo = Objects.requireNonNull(BackpackProvider.get(player).getConfig().getClientConfig()).shouldShowModifierInfo();
 			if (showModifierInfo) {
 				source.sendSuccess(() -> Component.translatable("xbackpack.commands.tooltip.get.success.true"), false);
 			} else {
@@ -60,7 +62,7 @@ public class TooltipCommand {
 	
 	private static int setTooltipVisibility(@NotNull CommandSourceStack source, boolean value) {
 		if (source.getEntity() instanceof Player player) {
-			BackpackProvider.get(player).getConfig().getClientConfig().setShowModifierInfo(value);
+			Objects.requireNonNull(BackpackProvider.get(player).getConfig().getClientConfig()).setShowModifierInfo(value);
 			if (value) {
 				source.sendSuccess(() -> Component.translatable("xbackpack.commands.tooltip.set.success.true"), false);
 			} else {

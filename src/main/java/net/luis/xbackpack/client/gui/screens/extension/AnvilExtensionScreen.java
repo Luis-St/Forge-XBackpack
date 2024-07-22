@@ -27,6 +27,7 @@ import net.luis.xbackpack.world.inventory.extension.AnvilExtensionMenu;
 import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Objects;
@@ -42,7 +43,7 @@ public class AnvilExtensionScreen extends AbstractExtensionScreen {
 	private CraftingHandler handler;
 	private int cost;
 	
-	public AnvilExtensionScreen(AbstractExtensionContainerScreen<?> screen, List<BackpackExtension> extensions) {
+	public AnvilExtensionScreen(@NotNull AbstractExtensionContainerScreen<?> screen, @NotNull List<BackpackExtension> extensions) {
 		super(screen, BackpackExtensions.ANVIL.get(), extensions);
 	}
 	
@@ -52,7 +53,7 @@ public class AnvilExtensionScreen extends AbstractExtensionScreen {
 	}
 	
 	@Override
-	protected void renderAdditional(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY, boolean open) {
+	protected void renderAdditional(@NotNull GuiGraphics graphics, float partialTicks, int mouseX, int mouseY, boolean open) {
 		if (open) {
 			if (this.shouldRenderCanceled()) {
 				graphics.blit(this.getTexture(), this.leftPos + this.imageWidth + 59, this.topPos + 71, 111, 0, 22, 21);
@@ -68,7 +69,7 @@ public class AnvilExtensionScreen extends AbstractExtensionScreen {
 		return false;
 	}
 	
-	private void renderLabels(GuiGraphics graphics) {
+	private void renderLabels(@NotNull GuiGraphics graphics) {
 		RenderSystem.disableBlend();
 		if (this.screen.getMenu().getExtensionMenu(this.extension) instanceof AnvilExtensionMenu menu) {
 			if (this.cost > 0) {
