@@ -1,8 +1,6 @@
 {
   "pack": {
-    "description": {
-      "text": "XBackpack resources"
-    },
-    "pack_format": 18
+    "description": "XBackpack resources",
+    "pack_format": 34
   }
 }
