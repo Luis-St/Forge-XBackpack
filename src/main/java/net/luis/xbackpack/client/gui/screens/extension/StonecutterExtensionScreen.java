@@ -29,7 +29,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
@@ -50,10 +49,10 @@ public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 	private final List<RecipeHolder<StonecutterRecipe>> recipes = Lists.newArrayList();
 	private Player player;
 	private CraftingHandler handler;
-	private double scrollOffset = 0.0F;
-	private boolean scrolling = false;
-	private int startIndex = 0;
-	private int selectedRecipe = -1;
+	private double scrollOffset;
+	private boolean scrolling;
+	private int startIndex;
+	private int selectedRecipe;
 	
 	public StonecutterExtensionScreen(@NotNull AbstractExtensionContainerScreen<?> screen, @NotNull List<BackpackExtension> extensions) {
 		super(screen, BackpackExtensions.STONECUTTER.get(), extensions);
@@ -120,8 +119,8 @@ public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 		if (this.shouldDisplayRecipes()) {
 			for (int index = this.startIndex; index < this.startIndex + 12; ++index) {
 				int i = index - this.startIndex;
-				double x = mouseX - (double) (this.leftPos + 225 + i % 4 * 16);
-				double y = mouseY - (double) (this.topPos + 142 + i / 4 * 18);
+				double x = mouseX - (this.leftPos + 225 + i % 4 * 16);
+				double y = mouseY - (this.topPos + 142 + i / 4.0 * 18);
 				if (x >= 0.0 && y >= 0.0 && x < 16.0 && y < 18.0) {
 					Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_STONECUTTER_SELECT_RECIPE, 1.0F));
 					Objects.requireNonNull(this.minecraft.gameMode).handleInventoryButtonClick(this.screen.getMenu().containerId, index);
@@ -152,7 +151,7 @@ public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 			int bottom = top + 54;
 			this.scrollOffset = (mouseY - top - 7.5) / ((bottom - top) - 15.0);
 			this.scrollOffset = Mth.clamp(this.scrollOffset, 0.0, 1.0);
-			this.startIndex = (int) (this.scrollOffset * (double) this.getOffScreenRows() + 0.5) * 4;
+			this.startIndex = (int) (this.scrollOffset * this.getOffScreenRows() + 0.5) * 4;
 			return true;
 		} else {
 			return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
@@ -162,9 +161,9 @@ public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
 		if (this.isScrollBarActive()) {
-			double offset = delta / (double) this.getOffScreenRows();
+			double offset = delta / this.getOffScreenRows();
 			this.scrollOffset = Mth.clamp(this.scrollOffset - offset, 0.0F, 1.0F);
-			this.startIndex = (int) (this.scrollOffset * (double) this.getOffScreenRows() + 0.5) * 4;
+			this.startIndex = (int) (this.scrollOffset * this.getOffScreenRows() + 0.5) * 4;
 		}
 		return true;
 	}
@@ -187,7 +186,7 @@ public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 	
 	public void updateRecipes(boolean resetSelected) {
 		this.recipes.clear();
-		this.recipes.addAll(Objects.requireNonNull(this.minecraft.getConnection()).getRecipeManager().getRecipesFor(RecipeType.STONECUTTING, new SimpleContainer(this.getInputStack()), Objects.requireNonNull(this.minecraft.level)));
+		this.recipes.addAll(Objects.requireNonNull(this.minecraft.getConnection()).getRecipeManager().getRecipesFor(RecipeType.STONECUTTING, new SingleRecipeInput(this.getInputStack()), Objects.requireNonNull(this.minecraft.level)));
 		this.scrollOffset = 0.0F;
 		this.startIndex = 0;
 		if (resetSelected) {

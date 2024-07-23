@@ -35,7 +35,7 @@ import java.util.List;
 
 public class BrewingStandExtensionScreen extends AbstractExtensionScreen {
 	
-	private static final int[] BUBBLES = new int[] {
+	private static final int[] BUBBLES = {
 		29, 24, 20, 16, 11, 6, 0
 	};
 	private int fuel;
@@ -62,7 +62,7 @@ public class BrewingStandExtensionScreen extends AbstractExtensionScreen {
 	
 	private void renderBrewing(@NotNull GuiGraphics graphics) {
 		if (this.brewTime > 0) {
-			int progress = (int) (28.0 * (1.0 - (double) this.brewTime / 400.0));
+			int progress = (int) (28.0 * (1.0 - this.brewTime / 400.0));
 			if (progress > 0) {
 				graphics.blit(this.getTexture(), this.leftPos + this.imageWidth + 75, this.topPos + 145, 106, 0, 9, progress);
 			}

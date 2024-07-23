@@ -15,7 +15,7 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 minecraft {
 	mappings channel: "official", version: MinecraftVersion
 	copyIdeResources = true
-	//accessTransformer = file("src/main/resources/META-INF/accesstransformer.cfg")
+	accessTransformer = file("src/main/resources/META-INF/accesstransformer.cfg")
 	
 	runs {
 		configureEach {
@@ -99,9 +99,9 @@ dependencies {
 	compileOnly fg.deobf("mezz.jei:jei-${MinecraftVersion}-forge-api:${JeiVersion}")
 	runtimeOnly fg.deobf("mezz.jei:jei-${MinecraftVersion}-forge:${JeiVersion}")*/
 	
-	compileOnly(fg.deobf("mezz.jei:jei-1.21-common-api:19.5.0.47"))
+/*	compileOnly(fg.deobf("mezz.jei:jei-1.21-common-api:19.5.0.47"))
 	compileOnly(fg.deobf("mezz.jei:jei-1.21-forge-api:19.5.0.47"))
-	runtimeOnly(fg.deobf("mezz.jei:jei-1.21-forge:19.5.0.47"))
+	runtimeOnly(fg.deobf("mezz.jei:jei-1.21-forge:19.5.0.47"))*/
 }
 
 compileJava.dependsOn(updateLicenses)

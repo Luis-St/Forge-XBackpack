@@ -21,6 +21,7 @@ package net.luis.xbackpack;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.*;
@@ -71,6 +72,6 @@ public class BackpackConstants {
 	 * if you want to quick move the item via shift into the offhand slot
 	 */
 	public static final List<Item> SHIFTABLE_OFFHAND_SLOT_ITEMS = ITEMS.stream().filter(item -> {
-		return item instanceof ShieldItem || item == Items.TORCH || item == Items.SOUL_TORCH || item.isEdible();
+		return item instanceof ShieldItem || item == Items.TORCH || item == Items.SOUL_TORCH || item.components().has(DataComponents.FOOD);
 	}).collect(Collectors.toList());
 }

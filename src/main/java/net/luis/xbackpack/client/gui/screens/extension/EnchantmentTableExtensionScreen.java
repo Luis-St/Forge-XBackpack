@@ -29,11 +29,13 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.EnchantmentNames;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -49,11 +51,11 @@ import java.util.function.Consumer;
 
 public class EnchantmentTableExtensionScreen extends AbstractExtensionScreen {
 	
-	private final Enchantment[] enchantments = new Enchantment[3];
+	private final ResourceLocation[] enchantments = new ResourceLocation[3];
 	private final int[] enchantmentLevels = new int[3];
 	private final int[] enchantingCosts = new int[3];
 	private EnchantingHandler handler;
-	private int enchantmentSeed = 0;
+	private int enchantmentSeed;
 	
 	public EnchantmentTableExtensionScreen(@NotNull AbstractExtensionContainerScreen<?> screen, @NotNull List<BackpackExtension> extensions) {
 		super(screen, BackpackExtensions.ENCHANTMENT_TABLE.get(), extensions);
@@ -71,7 +73,7 @@ public class EnchantmentTableExtensionScreen extends AbstractExtensionScreen {
 		}
 	}
 	
-	private void renderRow(@NotNull GuiGraphics graphics, int mouseX, int mouseY, int row, @NotNull LocalPlayer player, @Nullable Enchantment enchantment, int enchantingCost) {
+	private void renderRow(@NotNull GuiGraphics graphics, int mouseX, int mouseY, int row, @NotNull LocalPlayer player, @Nullable ResourceLocation enchantment, int enchantingCost) {
 		if (enchantment != null) {
 			int costColor;
 			int enchantmentColor;
@@ -114,12 +116,18 @@ public class EnchantmentTableExtensionScreen extends AbstractExtensionScreen {
 		}
 	}
 	
-	private void renderTooltip(@NotNull GuiGraphics graphics, int mouseX, int mouseY, int row, @NotNull LocalPlayer player, @Nullable Enchantment enchantment, int enchantmentLevel, int enchantingCost) {
+	private void renderTooltip(@NotNull GuiGraphics graphics, int mouseX, int mouseY, int row, @NotNull LocalPlayer player, @Nullable ResourceLocation enchantment, int enchantmentLevel, int enchantingCost) {
 		int fuel = this.getFuel();
 		int rowIndex = row + 1;
 		if (this.isHoveringRow(row, mouseX, mouseY) && enchantingCost > 0) {
 			List<Component> components = Lists.newArrayList();
-			components.add((Component.translatable("container.enchant.clue", enchantment == null ? "" : enchantment.getFullname(enchantmentLevel))).withStyle(ChatFormatting.WHITE));
+			if (enchantment != null) {
+				Registry<Enchantment> registry = Objects.requireNonNull(this.minecraft.level).registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+				Holder<Enchantment> holder = registry.getHolder(enchantment).orElseThrow();
+				components.add((Component.translatable("container.enchant.clue", Enchantment.getFullname(holder, enchantmentLevel))).withStyle(ChatFormatting.WHITE));
+			} else {
+				components.add(Component.translatable("container.enchant.clue", ""));
+			}
 			if (enchantment == null) {
 				components.add(CommonComponents.EMPTY);
 				components.add(Component.translatable("forge.container.enchant.limitedEnchantability").withStyle(ChatFormatting.RED));
@@ -165,9 +173,7 @@ public class EnchantmentTableExtensionScreen extends AbstractExtensionScreen {
 	}
 	
 	public void update(ResourceLocation @NotNull [] enchantments, int @NotNull [] enchantmentLevels, int @NotNull [] enchantingCosts, int enchantmentSeed) {
-		for (int row = 0; row < this.enchantments.length; row++) {
-			this.enchantments[row] = ForgeRegistries.ENCHANTMENTS.getValue(enchantments[row]);
-		}
+		System.arraycopy(enchantments, 0, this.enchantments, 0, this.enchantments.length);
 		System.arraycopy(enchantmentLevels, 0, this.enchantmentLevels, 0, this.enchantmentLevels.length);
 		System.arraycopy(enchantingCosts, 0, this.enchantingCosts, 0, this.enchantingCosts.length);
 		this.enchantmentSeed = enchantmentSeed;
