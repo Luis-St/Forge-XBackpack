@@ -46,7 +46,7 @@ public enum XBNetworkHandler {
 	INSTANCE();
 	
 	private static final int VERSION = 6;
-	private int id = 0;
+	private int id;
 	private SimpleChannel simpleChannel;
 	
 	public void initChannel() {

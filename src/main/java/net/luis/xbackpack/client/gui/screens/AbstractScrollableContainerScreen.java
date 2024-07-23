@@ -19,29 +19,22 @@
 package net.luis.xbackpack.client.gui.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.datafixers.util.Pair;
 import net.luis.xbackpack.world.inventory.slot.MoveableSlot;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
-import net.minecraft.client.gui.components.events.ContainerEventHandler;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.event.ContainerScreenEvent;
-import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.client.event.ForgeEventFactoryClient;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Objects;
+import org.jetbrains.annotations.Nullable;
 
 /**
  *
@@ -63,32 +56,29 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 	
 	@Override
 	public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+		//region Avoid super call
 		this.renderBackground(graphics, mouseX, mouseY, partialTicks);
-		MinecraftForge.EVENT_BUS.post(new ContainerScreenEvent.Render.Background(this, graphics, mouseX, mouseY));
-		RenderSystem.disableDepthTest();
 		for (Renderable widget : this.renderables) {
 			widget.render(graphics, mouseX, mouseY, partialTicks);
 		}
-		PoseStack viewStack = RenderSystem.getModelViewStack();
-		viewStack.pushPose();
-		viewStack.translate(this.leftPos, this.topPos, 0.0D);
-		RenderSystem.applyModelViewMatrix();
-		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+		ForgeEventFactoryClient.onContainerRenderBackground(this, graphics, mouseX, mouseY);
+		//endregion
+		RenderSystem.disableDepthTest();
+		graphics.pose().pushPose();
+		graphics.pose().translate(this.leftPos, this.topPos, 0.0F);
 		this.hoveredSlot = null;
-		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+		
 		this.renderSlots(graphics, mouseX, mouseY);
 		this.renderLabels(graphics, mouseX, mouseY);
-		MinecraftForge.EVENT_BUS.post(new ContainerScreenEvent.Render.Foreground(this, graphics, mouseX, mouseY));
+		ForgeEventFactoryClient.onContainerRenderForeground(this, graphics, mouseX, mouseY);
 		ItemStack mouseStack = this.draggingItem.isEmpty() ? this.menu.getCarried() : this.draggingItem;
 		if (!mouseStack.isEmpty()) {
 			int renderOffset = this.draggingItem.isEmpty() ? 8 : 16;
 			String count = null;
 			if (!this.draggingItem.isEmpty() && this.isSplittingStack) {
-				mouseStack = mouseStack.copy();
-				mouseStack.setCount(Mth.ceil((float) mouseStack.getCount() / 2.0F));
+				mouseStack = mouseStack.copyWithCount(Mth.ceil(mouseStack.getCount() / 2.0F));
 			} else if (this.isQuickCrafting && this.quickCraftSlots.size() > 1) {
-				mouseStack = mouseStack.copy();
-				mouseStack.setCount(this.quickCraftingRemainder);
+				mouseStack = mouseStack.copyWithCount(this.quickCraftingRemainder);
 				if (mouseStack.isEmpty()) {
 					count = ChatFormatting.YELLOW + "0";
 				}
@@ -96,16 +86,16 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 			this.renderFloatingItem(graphics, mouseStack, mouseX - this.leftPos - 8, mouseY - this.topPos - renderOffset, count);
 		}
 		if (!this.snapbackItem.isEmpty()) {
-			float time = (float) (Util.getMillis() - this.snapbackTime) / 100.0F;
-			if (time >= 1.0F) {
-				time = 1.0F;
+			float f = (float) (Util.getMillis() - this.snapbackTime) / 100.0F;
+			if (f >= 1.0F) {
+				f = 1.0F;
 				this.snapbackItem = ItemStack.EMPTY;
 			}
-			this.renderFloatingItem(graphics, this.snapbackItem, this.snapbackStartX + (int) ((Objects.requireNonNull(this.snapbackEnd).x - this.snapbackStartX) * time),
-				this.snapbackStartY + (int) ((this.snapbackEnd.y - this.snapbackStartY) * time), null);
+			int x = this.snapbackStartX + (int) ((float) this.snapbackEnd.x - this.snapbackStartX * f);
+			int y = this.snapbackStartY + (int) ((float) this.snapbackEnd.y - this.snapbackStartY * f);
+			this.renderFloatingItem(graphics, this.snapbackItem, x, y, null);
 		}
-		viewStack.popPose();
-		RenderSystem.applyModelViewMatrix();
+		
 		RenderSystem.enableDepthTest();
 		this.renderTooltip(graphics, mouseX, mouseY);
 	}
@@ -115,25 +105,39 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 	}
 	
 	protected void renderSlots(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {
+		/* Vanilla code
+		for (int k = 0; k < this.menu.slots.size(); ++k) {
+			Slot slot = this.menu.slots.get(k);
+			if (slot.isActive()) {
+				this.renderSlot(graphics, slot);
+			}
+			if (this.isHovering(slot, mouseX, mouseY) && slot.isActive()) {
+				this.hoveredSlot = slot;
+				if (this.hoveredSlot.isHighlightable()) {
+					renderSlotHighlight(graphics, slot.x, slot.y, 0, this.getSlotColor(k));
+				}
+			}
+		}
+		*/
 		for (int i = 0; i < this.menu.slots.size(); ++i) {
 			Slot slot = this.menu.slots.get(i);
 			if (this.getSlotRenderType(slot) != SlotRenderType.SKIP) {
-				int y = slot instanceof MoveableSlot moveableSlot ? moveableSlot.getY(this.scrollOffset) : slot.y;
-				this.renderAndDecorateSlot(graphics, mouseX, mouseY, slot, slot.x, y, this.getSlotColor(i));
+				this.renderSlot(graphics, slot);
+				if (this.isHovering(slot, mouseX, mouseY) && slot.isActive()) {
+					this.hoveredSlot = slot;
+					renderSlotHighlight(graphics, slot.x, slot.y, 0, this.getSlotColor(i));
+				}
 			}
 		}
 	}
 	
-	protected void renderAndDecorateSlot(@NotNull GuiGraphics graphics, int mouseX, int mouseY, Slot slot, int slotX, int slotY, int slotColor) {
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-		this.renderSlot(graphics, slot, slotX, slotY);
-		if (this.isHovering(slot, mouseX, mouseY)) {
-			this.hoveredSlot = slot;
-			renderSlotHighlight(graphics, slotX, slotY, 0, slotColor);
-		}
+	@Override
+	protected void renderSlot(@NotNull GuiGraphics graphics, @NotNull Slot slot) {
+		int y = slot instanceof MoveableSlot moveableSlot ? moveableSlot.getY(this.scrollOffset) : slot.y;
+		super.renderSlot(graphics, new Slot(slot.container, slot.slot, slot.x, y)); // ToDo: Test if this works
 	}
 	
-	protected void renderSlot(@NotNull GuiGraphics graphics, @NotNull Slot slot, int slotX, int slotY) {
+/*	protected void renderSlot(@NotNull GuiGraphics graphics, @NotNull Slot slot, int slotX, int slotY) {
 		ItemStack slotStack = slot.getItem();
 		boolean quickReplace = false;
 		boolean clickedSlot = slot == this.clickedSlot && !this.draggingItem.isEmpty() && !this.isSplittingStack;
@@ -181,7 +185,7 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 			graphics.renderItemDecorations(this.font, slotStack, slotX, slotY, stackCount);
 		}
 		graphics.pose().popPose();
-	}
+	}*/
 	
 	@Override
 	protected void renderTooltip(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {
@@ -191,7 +195,7 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 	}
 	
 	@Override
-	public @NotNull Slot findSlot(double mouseX, double mouseY) {
+	public @Nullable Slot findSlot(double mouseX, double mouseY) {
 		for (int i = 0; i < this.menu.slots.size(); ++i) {
 			Slot slot = this.menu.slots.get(i);
 			if (this.isHovering(slot, mouseX, mouseY) && this.getSlotRenderType(slot) == SlotRenderType.DEFAULT) {

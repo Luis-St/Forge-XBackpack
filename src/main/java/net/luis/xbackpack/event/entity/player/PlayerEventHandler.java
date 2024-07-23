@@ -22,6 +22,7 @@ import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.capability.IBackpack;
 import net.luis.xbackpack.world.inventory.BackpackMenu;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.TickEvent;
@@ -50,34 +51,35 @@ public class PlayerEventHandler {
 	}
 	
 	@SubscribeEvent
-	public static void playerChangedDimension(PlayerEvent. @NotNull PlayerChangedDimensionEvent event) {
+	public static void playerChangedDimension(PlayerEvent.@NotNull PlayerChangedDimensionEvent event) {
 		if (event.getEntity() instanceof ServerPlayer player) {
 			BackpackProvider.get(player).broadcastChanges();
 		}
 	}
 	
 	@SubscribeEvent
-	public static void playerClone(PlayerEvent. @NotNull Clone event) {
+	public static void playerClone(PlayerEvent.@NotNull Clone event) {
 		Player original = event.getOriginal();
 		Player player = event.getEntity();
 		original.reviveCaps();
 		original.getCapability(BackpackProvider.BACKPACK, null).ifPresent(oldBackpack -> {
 			player.getCapability(BackpackProvider.BACKPACK, null).ifPresent(newBackpack -> {
-				newBackpack.deserialize(oldBackpack.serialize());
+				RegistryAccess access = original.registryAccess();
+				newBackpack.deserialize(access, oldBackpack.serialize(access));
 			});
 		});
 		original.invalidateCaps();
 	}
 	
 	@SubscribeEvent
-	public static void playerRespawn(PlayerEvent. @NotNull PlayerRespawnEvent event) {
+	public static void playerRespawn(PlayerEvent.@NotNull PlayerRespawnEvent event) {
 		if (event.getEntity() instanceof ServerPlayer player) {
 			BackpackProvider.get(player).broadcastChanges();
 		}
 	}
 	
 	@SubscribeEvent
-	public static void playerTick(TickEvent. @NotNull PlayerTickEvent event) {
+	public static void playerTick(TickEvent.@NotNull PlayerTickEvent event) {
 		if (event.phase == Phase.START && event.side == LogicalSide.SERVER) {
 			event.player.getCapability(BackpackProvider.BACKPACK, null).ifPresent(IBackpack::tick);
 			if (event.player.containerMenu instanceof BackpackMenu menu) {

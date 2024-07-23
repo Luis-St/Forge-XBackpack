@@ -18,6 +18,7 @@
 
 package net.luis.xbackpack.world.inventory.extension;
 
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.luis.xbackpack.network.XBNetworkHandler;
 import net.luis.xbackpack.network.packet.extension.UpdateAnvilPacket;
 import net.luis.xbackpack.world.capability.BackpackProvider;
@@ -25,6 +26,8 @@ import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.luis.xbackpack.world.inventory.AbstractExtensionContainerMenu;
 import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
 import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.server.level.ServerLevel;
@@ -33,14 +36,13 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.*;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.*;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -145,15 +147,15 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 		} else {
 			ItemStack resultStack = leftStack.copy();
 			ItemStack rightStack = this.handler.getInputHandler().getStackInSlot(1);
-			Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments(resultStack);
-			repairCost += leftStack.getBaseRepairCost() + (rightStack.isEmpty() ? 0 : rightStack.getBaseRepairCost());
+			ItemEnchantments.Mutable mutable = new ItemEnchantments.Mutable(EnchantmentHelper.getEnchantmentsForCrafting(resultStack));
+			repairCost += leftStack.getOrDefault(DataComponents.REPAIR_COST, 0) + rightStack.getOrDefault(DataComponents.REPAIR_COST, 0);
 			this.repairItemCountCost = 0;
 			boolean enchantedBook = false;
 			if (!this.onAnvilUpdate(leftStack, rightStack, repairCost)) {
 				return;
 			}
 			if (!rightStack.isEmpty()) {
-				enchantedBook = rightStack.getItem() == Items.ENCHANTED_BOOK && !EnchantedBookItem.getEnchantments(rightStack).isEmpty();
+				enchantedBook = rightStack.getItem() == Items.ENCHANTED_BOOK && !rightStack.getOrDefault(DataComponents.STORED_ENCHANTMENTS, ItemEnchantments.EMPTY).isEmpty();
 				if (resultStack.isDamageableItem() && resultStack.getItem().isValidRepairItem(leftStack, rightStack)) {
 					int damage = Math.min(resultStack.getDamageValue(), resultStack.getMaxDamage() / 4);
 					if (damage <= 0) {
@@ -191,46 +193,40 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 							enchantCost += 2;
 						}
 					}
-					Map<Enchantment, Integer> rightEnchantments = EnchantmentHelper.getEnchantments(rightStack);
+					ItemEnchantments rightEnchantments = rightStack.getOrDefault(DataComponents.STORED_ENCHANTMENTS, ItemEnchantments.EMPTY);
 					boolean canEnchant = false;
 					boolean survival = false;
-					for (Enchantment rightEnchantment : rightEnchantments.keySet()) {
-						if (rightEnchantment != null) {
-							int resultLevel = map.getOrDefault(rightEnchantment, 0);
-							int rightLevel = rightEnchantments.get(rightEnchantment);
-							rightLevel = resultLevel == rightLevel ? rightLevel + 1 : Math.max(rightLevel, resultLevel);
-							boolean canEnchantOrCreative = rightEnchantment.canEnchant(leftStack);
-							if (this.player.getAbilities().instabuild || leftStack.is(Items.ENCHANTED_BOOK)) {
-								canEnchantOrCreative = true;
+					for (Object2IntMap.Entry<Holder<Enchantment>> entry : rightEnchantments.entrySet()) {
+						Holder<Enchantment> rightHolder = entry.getKey();
+						int resultLevel = mutable.getLevel(rightHolder);
+						int rightLevel = entry.getIntValue();
+						rightLevel = resultLevel == rightLevel ? rightLevel + 1 : Math.max(rightLevel, resultLevel);
+						boolean canEnchantOrCreative = rightHolder.value().canEnchant(leftStack);
+						if (this.player.getAbilities().instabuild || leftStack.is(Items.ENCHANTED_BOOK)) {
+							canEnchantOrCreative = true;
+						}
+						for (Holder<Enchantment> holder : mutable.keySet()) {
+							if (holder.equals(rightHolder) && !Enchantment.areCompatible(rightHolder, holder)) {
+								canEnchantOrCreative = false;
+								++enchantCost;
 							}
-							for (Enchantment enchantment : map.keySet()) {
-								if (enchantment != rightEnchantment && !rightEnchantment.isCompatibleWith(enchantment)) {
-									canEnchantOrCreative = false;
-									++enchantCost;
-								}
+						}
+						if (canEnchantOrCreative) {
+							canEnchant = true;
+							if (rightLevel > rightHolder.value().getMaxLevel()) {
+								rightLevel = rightHolder.value().getMaxLevel();
 							}
-							if (!canEnchantOrCreative) {
-								survival = true;
-							} else {
-								canEnchant = true;
-								if (rightLevel > rightEnchantment.getMaxLevel()) {
-									rightLevel = rightEnchantment.getMaxLevel();
-								}
-								map.put(rightEnchantment, rightLevel);
-								int rarityCost = switch (rightEnchantment.getRarity()) {
-									case COMMON -> 1;
-									case UNCOMMON -> 2;
-									case RARE -> 4;
-									case VERY_RARE -> 8;
-								};
-								if (enchantedBook) {
-									rarityCost = Math.max(1, rarityCost / 2);
-								}
-								enchantCost += rarityCost * rightLevel;
-								if (leftStack.getCount() > 1) {
-									enchantCost = 40;
-								}
+							mutable.set(rightHolder, rightLevel);
+							int anvilCost = rightHolder.value().getAnvilCost();
+							if (enchantedBook) {
+								anvilCost = Math.max(1, anvilCost / 2);
 							}
+							enchantCost += anvilCost * rightLevel;
+							if (leftStack.getCount() > 1) {
+								enchantCost = 40;
+							}
+						} else {
+							survival = true;
 						}
 					}
 					if (survival && !canEnchant) {
@@ -252,13 +248,13 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 				resultStack = ItemStack.EMPTY;
 			}
 			if (!resultStack.isEmpty()) {
-				int baseRepairCost = resultStack.getBaseRepairCost();
-				if (!rightStack.isEmpty() && baseRepairCost < rightStack.getBaseRepairCost()) {
-					baseRepairCost = rightStack.getBaseRepairCost();
+				int baseRepairCost = resultStack.getOrDefault(DataComponents.REPAIR_COST, 0);
+				if (!rightStack.isEmpty() && baseRepairCost < rightStack.getOrDefault(DataComponents.REPAIR_COST, 0)) {
+					baseRepairCost = rightStack.getOrDefault(DataComponents.REPAIR_COST, 0);
 				}
 				baseRepairCost = calculateIncreasedRepairCost(baseRepairCost);
-				resultStack.setRepairCost(baseRepairCost);
-				EnchantmentHelper.setEnchantments(map, resultStack);
+				resultStack.set(DataComponents.REPAIR_COST, baseRepairCost);
+				EnchantmentHelper.setEnchantments(resultStack, mutable.toImmutable());
 			}
 			this.handler.getResultHandler().setStackInSlot(0, resultStack);
 			this.menu.broadcastChanges();
@@ -282,7 +278,7 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 			return true;
 		}
 		this.handler.getResultHandler().setStackInSlot(0, event.getOutput());
-		this.cost = event.getCost();
+		this.cost = (int) event.getCost();
 		this.repairItemCountCost = event.getMaterialCost();
 		this.broadcastChanges();
 		return false;
