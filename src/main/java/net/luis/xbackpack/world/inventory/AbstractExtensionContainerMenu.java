@@ -89,7 +89,7 @@ public abstract class AbstractExtensionContainerMenu extends AbstractContainerMe
 				return true;
 			}
 			ItemStack slotStack = slot.getItem();
-			if (slotStack.getCount() >= slotStack.getMaxStackSize() || !ItemStack.isSameItemSameTags(stack, slotStack)) {
+			if (slotStack.getCount() >= slotStack.getMaxStackSize() || !ItemStack.isSameItemSameComponents(stack, slotStack)) {
 				continue;
 			}
 			int count = slotStack.getCount() + stack.getCount();

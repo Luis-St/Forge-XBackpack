@@ -29,15 +29,13 @@ import org.jetbrains.annotations.Nullable;
 
 public enum ItemModifierType {
 	
-	FILTER("filter", 0),
-	SORTER("sorter", 1);
+	FILTER("filter"),
+	SORTER("sorter");
 	
 	private final String name;
-	private final int id;
 	
-	ItemModifierType(@NotNull String name, int id) {
+	ItemModifierType(@NotNull String name) {
 		this.name = name;
-		this.id = id;
 	}
 	
 	public static @Nullable ItemModifierType byId(int id) {
@@ -52,7 +50,7 @@ public enum ItemModifierType {
 	}
 	
 	public int getId() {
-		return this.id;
+		return this.ordinal();
 	}
 	
 	@Override

@@ -43,13 +43,13 @@ import java.util.stream.Stream;
 
 public enum ItemSorters implements ItemSorter {
 	
-	NONE("none", 0) {
+	NONE("none") {
 		@Override
 		public @NotNull List<ItemStack> sort(@NotNull List<ItemStack> stacks, @NotNull String searchTerm, boolean negate) {
 			return stacks;
 		}
 	},
-	NAME_SEARCH("name_search", 1, false) {
+	NAME_SEARCH("name_search", false) {
 		@Override
 		public @NotNull List<ItemStack> sort(@NotNull List<ItemStack> stacks, @NotNull String searchTerm, boolean negate) {
 			if (!searchTerm.isEmpty()) {
@@ -83,7 +83,7 @@ public enum ItemSorters implements ItemSorter {
 			return stacks;
 		}
 	},
-	NAMESPACE_SEARCH("namespace_search", 2, false) {
+	NAMESPACE_SEARCH("namespace_search", false) {
 		@Override
 		public @NotNull List<ItemStack> sort(@NotNull List<ItemStack> stacks, @NotNull String searchTerm, boolean negate) {
 			if (searchTerm.startsWith("@")) {
@@ -120,7 +120,7 @@ public enum ItemSorters implements ItemSorter {
 			return stacks;
 		}
 	},
-	TAG_SEARCH("tag_search", 3, false) {
+	TAG_SEARCH("tag_search", false) {
 		@Override
 		public @NotNull List<ItemStack> sort(@NotNull List<ItemStack> stacks, @NotNull String searchTerm, boolean negate) {
 			if (searchTerm.startsWith("#")) {
@@ -153,7 +153,7 @@ public enum ItemSorters implements ItemSorter {
 			return null;
 		}
 	},
-	COUNT_SEARCH("count_search", 4, false) {
+	COUNT_SEARCH("count_search", false) {
 		@Override
 		public @NotNull List<ItemStack> sort(@NotNull List<ItemStack> stacks, @NotNull String searchTerm, boolean negate) {
 			if (!searchTerm.isEmpty()) {
@@ -174,7 +174,7 @@ public enum ItemSorters implements ItemSorter {
 			return infoTooltip;
 		}
 	},
-	ALPHABETICALLY("alphabetically", 5) {
+	ALPHABETICALLY("alphabetically") {
 		@Override
 		public @NotNull List<ItemStack> sort(@NotNull List<ItemStack> stacks, @NotNull String searchTerm, boolean negate) {
 			stacks.sort(Comparator.comparing(stack -> stack.getDisplayName().getString().toLowerCase()));
@@ -188,14 +188,14 @@ public enum ItemSorters implements ItemSorter {
 			return infoTooltip;
 		}
 	},
-	COUNT_DOWNWARDS("count_downwards", 6) {
+	COUNT_DOWNWARDS("count_downwards") {
 		@Override
 		public @NotNull List<ItemStack> sort(@NotNull List<ItemStack> stacks, @NotNull String searchTerm, boolean negate) {
 			stacks.sort((firstStack, secondStack) -> Integer.compare(secondStack.getCount(), firstStack.getCount()));
 			return stacks;
 		}
 	},
-	COUNT_UPWARDS("count_upwards", 7) {
+	COUNT_UPWARDS("count_upwards") {
 		@Override
 		public @NotNull List<ItemStack> sort(@NotNull List<ItemStack> stacks, @NotNull String searchTerm, boolean negate) {
 			stacks.sort(Comparator.comparingInt(ItemStack::getCount));
@@ -204,16 +204,14 @@ public enum ItemSorters implements ItemSorter {
 	};
 	
 	private final String name;
-	private final int id;
 	private final boolean selectable;
 	
-	ItemSorters(String name, int id) {
-		this(name, id, true);
+	ItemSorters(String name) {
+		this(name, true);
 	}
 	
-	ItemSorters(String name, int id, boolean selectable) {
+	ItemSorters(String name, boolean selectable) {
 		this.name = name;
-		this.id = id;
 		this.selectable = selectable;
 	}
 	
@@ -237,7 +235,7 @@ public enum ItemSorters implements ItemSorter {
 	
 	@Override
 	public int getId() {
-		return this.id;
+		return this.ordinal();
 	}
 	
 	@Override

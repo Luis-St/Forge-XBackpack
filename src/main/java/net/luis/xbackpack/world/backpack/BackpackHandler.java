@@ -146,7 +146,7 @@ public class BackpackHandler implements IBackpack {
 	public boolean broadcastChanges() {
 		if (this.player instanceof ServerPlayer player) {
 			this.config.updateServer();
-			XBNetworkHandler.INSTANCE.sendToPlayer(player, new UpdateBackpackPacket(this.serialize()));
+			XBNetworkHandler.INSTANCE.sendToPlayer(player, new UpdateBackpackPacket(this.serialize(player.registryAccess())));
 			return true;
 		}
 		XBackpack.LOGGER.warn("Can not broadcast changes on the client");

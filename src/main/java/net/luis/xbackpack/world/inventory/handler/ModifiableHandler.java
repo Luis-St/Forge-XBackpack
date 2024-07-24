@@ -19,10 +19,8 @@
 package net.luis.xbackpack.world.inventory.handler;
 
 import com.google.common.collect.Lists;
-import net.luis.xbackpack.XBackpack;
+import net.luis.xbackpack.core.components.XBDataComponents;
 import net.luis.xbackpack.world.inventory.slot.SlotWrapper;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
@@ -175,7 +173,7 @@ public class ModifiableHandler implements IItemHandlerModifiable {
 		for (int i = 0; i < this.mainHandler.getSlots(); i++) {
 			ItemStack stack = this.mainHandler.getStackInSlot(i).copy();
 			if (!stack.isEmpty()) {
-				stack.getOrCreateTagElement(XBackpack.MOD_NAME + "ItemModifierInformation").putInt("SlotIndex", i);
+				stack.set(XBDataComponents.MODIFICATION_SLOT_INDEX.get(), i);
 				stacks.add(stack);
 			}
 		}
@@ -185,9 +183,9 @@ public class ModifiableHandler implements IItemHandlerModifiable {
 	public void applyModifications(@NotNull List<ItemStack> stacks) {
 		this.resetWrappedSlots(SlotWrapper::ofDisabled);
 		for (int i = 0; i < stacks.size(); i++) {
-			CompoundTag tag = stacks.get(i).getTagElement(XBackpack.MOD_NAME + "ItemModifierInformation");
-			if (tag != null && tag.contains("SlotIndex", Tag.TAG_INT)) {
-				this.setWrappedSlot(i, tag.getInt("SlotIndex"));
+			Integer slot = stacks.get(i).get(XBDataComponents.MODIFICATION_SLOT_INDEX.get());
+			if (slot != null) {
+				this.setWrappedSlot(i, slot);
 			}
 		}
 	}

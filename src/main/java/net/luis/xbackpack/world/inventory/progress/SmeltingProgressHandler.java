@@ -23,7 +23,6 @@ import net.luis.xbackpack.network.packet.extension.UpdateFurnacePacket;
 import net.luis.xbackpack.world.inventory.handler.SmeltingHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -90,8 +89,9 @@ public class SmeltingProgressHandler implements ProgressHandler {
 			} else if (this.cookingProgress > 0) {
 				this.cookingProgress--;
 			}
-			if (this.cookingProgress >= this.cookingTime && !this.handler.getInputHandler().extractItem(0, 1, false).isEmpty()) {
-				ItemStack stack = this.handler.getResultHandler().insertItem(0, progressingRecipe.assemble(new SimpleContainer(), this.player.level().registryAccess()), false);
+			ItemStack input = this.handler.getInputHandler().extractItem(0, 1, false);
+			if (this.cookingProgress >= this.cookingTime && !input.isEmpty()) {
+				ItemStack stack = this.handler.getResultHandler().insertItem(0, progressingRecipe.assemble(new SingleRecipeInput(input), this.player.level().registryAccess()), false);
 				if (!stack.isEmpty()) {
 					this.player.drop(stack, true, true);
 				}
@@ -169,14 +169,8 @@ public class SmeltingProgressHandler implements ProgressHandler {
 			return false;
 		} else if (!toStack.is(stack.getItem())) {
 			return false;
-		} else if (toStack.hasTag() ^ stack.hasTag()) {
-			return false;
-		} else if (!toStack.areCapsCompatible(stack)) {
-			return false;
 		} else {
-			if (!toStack.hasTag()) return true;
-			assert toStack.getTag() != null;
-			return toStack.getTag().equals(stack.getTag());
+			return ItemStack.isSameItemSameComponents(toStack, stack);
 		}
 	}
 	
@@ -222,7 +216,7 @@ public class SmeltingProgressHandler implements ProgressHandler {
 	private @Nullable AbstractCookingRecipe getRecipe(@NotNull ItemStack stack) {
 		AbstractCookingRecipe cookingRecipe = null;
 		for (RecipeType<? extends AbstractCookingRecipe> recipeType : this.recipeTypes) {
-			Optional<RecipeHolder<AbstractCookingRecipe>> optional = this.player.level().getRecipeManager().getRecipeFor((RecipeType<AbstractCookingRecipe>) recipeType, new SimpleContainer(stack), this.player.level());
+			Optional<RecipeHolder<AbstractCookingRecipe>> optional = this.player.level().getRecipeManager().getRecipeFor((RecipeType<AbstractCookingRecipe>) recipeType, new SingleRecipeInput(stack), this.player.level());
 			if (optional.isPresent()) {
 				AbstractCookingRecipe recipe = optional.get().value();
 				if (cookingRecipe == null) {

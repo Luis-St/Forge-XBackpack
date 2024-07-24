@@ -48,7 +48,7 @@ public enum BackpackExtensionState {
 		return null;
 	}
 	
-	public static @Nullable BackpackExtensionState fromString(@NotNull String string, @NotNull BackpackExtensionState fallbackState) {
+	public static @NotNull BackpackExtensionState fromString(@NotNull String string, @NotNull BackpackExtensionState fallbackState) {
 		BackpackExtensionState state = fromString(string);
 		return state != null ? state : fallbackState;
 	}

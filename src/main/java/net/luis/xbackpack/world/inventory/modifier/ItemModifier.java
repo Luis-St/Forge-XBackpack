@@ -37,6 +37,7 @@ public interface ItemModifier {
 	
 	@NotNull String getName();
 	
+	@Deprecated // ToDo: Replace by Enum#ordinal
 	int getId();
 	
 	@NotNull ItemModifierType getType();

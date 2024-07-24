@@ -47,21 +47,19 @@ public interface ModifiableMenu {
 	
 	enum UpdateType {
 		
-		NONE("none", 0, false),
-		SET("set", 1, true),
-		SET_NO_UPDATE("set_no_update", 2, false),
-		RESET("reset", 3, true),
-		RESET_NO_UPDATE("reset_no_update", 4, false),
-		CYCLE("cycle", 5, true),
-		CYCLE_NO_UPDATE("cycle_no_update", 6, false);
+		NONE("none", false),
+		SET("set", true),
+		SET_NO_UPDATE("set_no_update", false),
+		RESET("reset", true),
+		RESET_NO_UPDATE("reset_no_update", false),
+		CYCLE("cycle", true),
+		CYCLE_NO_UPDATE("cycle_no_update", false);
 		
 		private final String name;
-		private final int id;
 		private final boolean shouldUpdate;
 		
-		UpdateType(@NotNull String name, int id, boolean shouldUpdate) {
+		UpdateType(@NotNull String name, boolean shouldUpdate) {
 			this.name = name;
-			this.id = id;
 			this.shouldUpdate = shouldUpdate;
 		}
 		
@@ -70,7 +68,7 @@ public interface ModifiableMenu {
 		}
 		
 		public int getId() {
-			return this.id;
+			return this.ordinal();
 		}
 		
 		public boolean shouldSet() {
@@ -97,13 +95,13 @@ public interface ModifiableMenu {
 	
 	enum CycleDirection {
 		
-		FORWARDS("forwards", 0) {
+		FORWARDS("forwards") {
 			@Override
 			public <T extends ItemModifier> T cycle(@NotNull List<T> itemModifiers, T itemModifier) {
 				return itemModifiers.get((itemModifiers.indexOf(itemModifier) + 1) % itemModifiers.size());
 			}
 		},
-		BACKWARDS("backwards", 1) {
+		BACKWARDS("backwards") {
 			@Override
 			public <T extends ItemModifier> T cycle(@NotNull List<T> itemModifiers, T itemModifier) {
 				int index = itemModifiers.indexOf(itemModifier);
@@ -116,11 +114,9 @@ public interface ModifiableMenu {
 		};
 		
 		private final String name;
-		private final int id;
 		
-		CycleDirection(@NotNull String name, int id) {
+		CycleDirection(@NotNull String name) {
 			this.name = name;
-			this.id = id;
 		}
 		
 		public @NotNull String getName() {
@@ -128,7 +124,7 @@ public interface ModifiableMenu {
 		}
 		
 		public int getId() {
-			return this.id;
+			return this.ordinal();
 		}
 		
 		public abstract <T extends ItemModifier> T cycle(@NotNull List<T> itemModifiers, T itemModifier);

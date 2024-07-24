@@ -27,8 +27,10 @@ import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
 import net.luis.xbackpack.world.inventory.handler.EnchantingHandler;
 import net.minecraft.Util;
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -36,19 +38,19 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
+import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.EnchantmentInstance;
+import net.minecraft.world.item.enchantment.*;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 /**
@@ -63,13 +65,13 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 	
 	private final EnchantingHandler handler;
 	private final RandomSource rng = RandomSource.create();
-	private final ResourceLocation[] enchantments = new ResourceLocation[] {
+	private final ResourceLocation[] enchantments = {
 		EMPTY_ENCHANTMENT, EMPTY_ENCHANTMENT, EMPTY_ENCHANTMENT
 	};
-	private final int[] enchantmentLevels = new int[] {
+	private final int[] enchantmentLevels = {
 		-1, -1, -1
 	};
-	private final int[] enchantingCosts = new int[] {
+	private final int[] enchantingCosts = {
 		0, 0, 0
 	};
 	private int enchantmentSeed;
@@ -116,6 +118,7 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 	public void slotsChanged() {
 		ItemStack inputStack = this.handler.getInputHandler().getStackInSlot(0);
 		if (!inputStack.isEmpty() && inputStack.isEnchantable()) {
+			Registry<Enchantment> registry = this.player.registryAccess().registryOrThrow(Registries.ENCHANTMENT);
 			int power = this.calculatePower();
 			this.rng.setSeed(this.enchantmentSeed);
 			for (int row = 0; row < 3; ++row) {
@@ -132,7 +135,7 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 					List<EnchantmentInstance> enchantments = this.getEnchantmentList(inputStack, row, this.enchantingCosts[row]);
 					if (!enchantments.isEmpty()) {
 						EnchantmentInstance instance = Util.getRandom(enchantments, this.rng);
-						this.enchantments[row] = ForgeRegistries.ENCHANTMENTS.getKey(instance.enchantment);
+						this.enchantments[row] = registry.getKey(instance.enchantment.value());
 						this.enchantmentLevels[row] = instance.level;
 					}
 				}
@@ -176,19 +179,11 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 					player.onEnchantmentPerformed(inputStack, requiredFuel);
 					boolean isBook = inputStack.is(Items.BOOK);
 					if (isBook) {
-						resultStack = new ItemStack(Items.ENCHANTED_BOOK);
-						CompoundTag tag = inputStack.getTag();
-						if (tag != null) {
-							resultStack.setTag(tag.copy());
-						}
+						resultStack = inputStack.transmuteCopy(Items.ENCHANTED_BOOK);
 						this.handler.getInputHandler().setStackInSlot(0, resultStack);
 					}
 					for (EnchantmentInstance enchantment : enchantments) {
-						if (isBook) {
-							EnchantedBookItem.addEnchantment(resultStack, enchantment);
-						} else {
-							resultStack.enchant(enchantment.enchantment, enchantment.level);
-						}
+						resultStack.enchant(enchantment.enchantment, enchantment.level);
 					}
 					if (!player.getAbilities().instabuild) {
 						fuelStack.shrink(requiredFuel);
@@ -213,8 +208,12 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	private @NotNull List<EnchantmentInstance> getEnchantmentList(@NotNull ItemStack inputStack, int row, int enchantingCost) {
+		Optional<HolderSet.Named<Enchantment>> optional = this.player.registryAccess().registryOrThrow(Registries.ENCHANTMENT).getTag(EnchantmentTags.IN_ENCHANTING_TABLE);
+		if (optional.isEmpty()) {
+			return List.of();
+		}
 		this.rng.setSeed(this.enchantmentSeed + row);
-		List<EnchantmentInstance> enchantments = EnchantmentHelper.selectEnchantment(this.rng, inputStack, enchantingCost, false);
+		List<EnchantmentInstance> enchantments = EnchantmentHelper.selectEnchantment(this.rng, inputStack, enchantingCost, optional.get().stream());
 		if (inputStack.is(Items.BOOK) && enchantments.size() > 1) {
 			enchantments.remove(this.rng.nextInt(enchantments.size()));
 		}
