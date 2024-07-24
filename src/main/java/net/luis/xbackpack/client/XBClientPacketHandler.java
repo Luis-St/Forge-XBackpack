@@ -27,6 +27,7 @@ import net.luis.xbackpack.world.inventory.modifier.ModifiableMenu.UpdateType;
 import net.luis.xbackpack.world.inventory.modifier.filter.ItemFilter;
 import net.luis.xbackpack.world.inventory.modifier.sorter.ItemSorter;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
@@ -43,7 +44,8 @@ import java.util.Objects;
 public class XBClientPacketHandler {
 	
 	public static void updateBackpack(@NotNull CompoundTag tag) {
-		BackpackProvider.get(Objects.requireNonNull(Minecraft.getInstance().player)).deserialize(tag);
+		LocalPlayer player = Objects.requireNonNull(Minecraft.getInstance().player);
+		BackpackProvider.get(player).deserialize(player.registryAccess(), tag);
 	}
 	
 	private static @Nullable AbstractExtensionScreen getExtensionScreen(@NotNull BackpackExtension extension) {

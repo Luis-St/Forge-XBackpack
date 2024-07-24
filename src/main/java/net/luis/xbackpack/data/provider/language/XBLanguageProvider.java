@@ -98,10 +98,6 @@ public class XBLanguageProvider extends LanguageProvider {
 		this.add("xbackpack.backpack_action.filter.damageable.info.0", "Only items that can be damaged are displayed");
 		this.add("xbackpack.backpack_action.filter.damaged", "Damaged Filter");
 		this.add("xbackpack.backpack_action.filter.damaged.info.0", "Only items that are damaged are displayed");
-		this.add("xbackpack.backpack_action.filter.edible", "Edible Filter");
-		this.add("xbackpack.backpack_action.filter.edible.info.0", "Only items that are edible are displayed");
-		this.add("xbackpack.backpack_action.filter.repairable", "Repairable Filter");
-		this.add("xbackpack.backpack_action.filter.repairable.info.0", "Only items that can be repaired are displayed");
 		this.add("xbackpack.backpack_action.filter.fire_resistant", "Fire Resistant Filter");
 		this.add("xbackpack.backpack_action.filter.fire_resistant.info.0", "Only items that are resistant to fire are displayed");
 		this.add("xbackpack.backpack_action.filter.weapon", "Weapon Filter");

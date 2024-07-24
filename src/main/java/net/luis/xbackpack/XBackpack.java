@@ -19,6 +19,7 @@
 package net.luis.xbackpack;
 
 import net.luis.xbackpack.commands.XBCommandArgumentTypes;
+import net.luis.xbackpack.core.components.XBDataComponents;
 import net.luis.xbackpack.network.XBNetworkHandler;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.luis.xbackpack.world.inventory.XBMenuTypes;
@@ -46,6 +47,7 @@ public class XBackpack {
 		XBMenuTypes.MENU_TYPES.register(modEventBus);
 		BackpackExtensions.BACKPACK_EXTENSIONS.register(modEventBus);
 		XBCommandArgumentTypes.COMMAND_ARGUMENT_TYPES.register(modEventBus);
+		XBDataComponents.DATA_COMPONENT_TYPES.register(modEventBus);
 		XBNetworkHandler.INSTANCE.initChannel();
 		XBNetworkHandler.INSTANCE.registerPackets();
 	}

@@ -32,7 +32,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -127,7 +126,7 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 		this.recipes.clear();
 		this.selectedRecipe = -1;
 		this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);
-		this.recipes.addAll(this.player.level().getRecipeManager().getRecipesFor(RecipeType.STONECUTTING, new SimpleContainer(stack), this.player.level()));
+		this.recipes.addAll(this.player.level().getRecipeManager().getRecipesFor(RecipeType.STONECUTTING, new SingleRecipeInput(stack), this.player.level()));
 		XBNetworkHandler.INSTANCE.sendToPlayer(this.player, new UpdateStonecutterPacket(true));
 	}
 	
@@ -144,7 +143,7 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 	private void setupResult() {
 		if (!this.recipes.isEmpty() && this.isValidIndex(this.selectedRecipe)) {
 			RecipeHolder<StonecutterRecipe> recipe = this.recipes.get(this.selectedRecipe);
-			this.handler.getResultHandler().setStackInSlot(0, recipe.value().assemble(new SimpleContainer(this.handler.getInputHandler().getStackInSlot(0)), this.player.level().registryAccess()));
+			this.handler.getResultHandler().setStackInSlot(0, recipe.value().assemble(new SingleRecipeInput(this.handler.getInputHandler().getStackInSlot(0)), this.player.level().registryAccess()));
 			this.recipe = recipe;
 		} else {
 			this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);

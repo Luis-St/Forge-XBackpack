@@ -51,7 +51,7 @@ public abstract class AbstractModifiableContainerMenu extends AbstractExtensionC
 	private ItemFilter filter = ItemFilters.NONE;
 	private ItemSorter sorter = ItemSorters.NONE;
 	private String searchTerm = "";
-	private boolean negate = false;
+	private boolean negate;
 	
 	protected AbstractModifiableContainerMenu(@NotNull MenuType<?> menuType, int id, @NotNull Inventory inventory) {
 		super(menuType, id, inventory);

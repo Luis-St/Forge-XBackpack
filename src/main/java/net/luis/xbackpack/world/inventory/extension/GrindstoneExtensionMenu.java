@@ -18,32 +18,33 @@
 
 package net.luis.xbackpack.world.inventory.extension;
 
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.luis.xbackpack.world.inventory.AbstractExtensionContainerMenu;
 import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
 import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AnvilMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.*;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.GrindstoneEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 /**
  *
@@ -124,11 +125,10 @@ public class GrindstoneExtensionMenu extends AbstractExtensionMenu {
 	
 	private int getExperienceFromItem(@NotNull ItemStack stack) {
 		int experience = 0;
-		Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
-		for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
-			Enchantment enchantment = entry.getKey();
-			if (!enchantment.isCurse()) {
-				experience += enchantment.getMinCost(entry.getValue());
+		ItemEnchantments enchantments = EnchantmentHelper.getEnchantmentsForCrafting(stack);
+		for (Object2IntMap.Entry<Holder<Enchantment>> entry : enchantments.entrySet()) {
+			if (!entry.getKey().is(EnchantmentTags.CURSE)) {
+				experience += entry.getKey().value().getMinCost(entry.getIntValue());
 			}
 		}
 		return experience;
@@ -152,92 +152,75 @@ public class GrindstoneExtensionMenu extends AbstractExtensionMenu {
 		if (this.xp != Integer.MIN_VALUE) {
 			return;
 		}
-		if (!hasInput) {
-			this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);
-		} else {
-			boolean hasEnchantedBook = !topStack.isEmpty() && !topStack.is(Items.ENCHANTED_BOOK) && !topStack.isEnchanted() || !bottomStack.isEmpty() && !bottomStack.is(Items.ENCHANTED_BOOK) && !bottomStack.isEnchanted();
-			if (topStack.getCount() > 1 || bottomStack.getCount() > 1) {
-				this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);
-				this.menu.broadcastChanges();
-				return;
-			} else if (!hasInputs && hasEnchantedBook) {
-				this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);
-				this.menu.broadcastChanges();
-				return;
-			}
-			int count = 1;
-			int damageValue;
-			ItemStack resultStack;
+		if (hasInput && topStack.getCount() <= 1 && bottomStack.getCount() <= 1) {
 			if (hasInputs) {
-				if (!topStack.is(bottomStack.getItem())) {
-					this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);
+				this.handler.getResultHandler().setStackInSlot(0, this.mergeItems(topStack, bottomStack));
+				this.menu.broadcastChanges();
+				return;
+			} else {
+				ItemStack resultStack = !topStack.isEmpty() ? topStack : bottomStack;
+				if (EnchantmentHelper.hasAnyEnchantments(resultStack)) {
+					this.handler.getResultHandler().setStackInSlot(0, this.removeNonCursesFrom(resultStack.copy()));
 					this.menu.broadcastChanges();
 					return;
 				}
-				int k = topStack.getMaxDamage() - topStack.getDamageValue();
-				int l = topStack.getMaxDamage() - bottomStack.getDamageValue();
-				int i1 = k + l + topStack.getMaxDamage() * 5 / 100;
-				damageValue = Math.max(topStack.getMaxDamage() - i1, 0);
-				resultStack = this.mergeEnchants(topStack, bottomStack);
-				if (!resultStack.isRepairable()) {
-					damageValue = topStack.getDamageValue();
-				}
-				if (!resultStack.isDamageableItem() || !resultStack.isRepairable()) {
-					if (!ItemStack.matches(topStack, bottomStack)) {
-						this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);
-						this.menu.broadcastChanges();
-						return;
-					}
-					count = 2;
-				}
-			} else {
-				boolean topEmpty = !topStack.isEmpty();
-				damageValue = topEmpty ? topStack.getDamageValue() : bottomStack.getDamageValue();
-				resultStack = topEmpty ? topStack : bottomStack;
 			}
-			this.handler.getResultHandler().setStackInSlot(0, this.removeNonCurses(resultStack, damageValue, count));
 		}
+		this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);
 		this.menu.broadcastChanges();
 	}
 	
-	private @NotNull ItemStack mergeEnchants(@NotNull ItemStack firstStack, @NotNull ItemStack secondStack) {
-		ItemStack resultStack = firstStack.copy();
-		Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(secondStack);
-		for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
-			Enchantment enchantment = entry.getKey();
-			if (!enchantment.isCurse() || EnchantmentHelper.getTagEnchantmentLevel(enchantment, resultStack) == 0) {
-				resultStack.enchant(enchantment, entry.getValue());
+	private @NotNull ItemStack mergeItems(@NotNull ItemStack topStack, @NotNull ItemStack bottomStack) {
+		if (topStack.is(bottomStack.getItem())) {
+			int maxDamage = Math.max(topStack.getMaxDamage(), bottomStack.getMaxDamage());
+			int topDurability = topStack.getMaxDamage() - topStack.getDamageValue();
+			int bottomDurability = bottomStack.getMaxDamage() - bottomStack.getDamageValue();
+			int resultDurability = topDurability + bottomDurability + maxDamage * 5 / 100;
+			int count = 1;
+			if (!topStack.isDamageableItem()) {
+				if (topStack.getMaxStackSize() < 2 || !ItemStack.matches(topStack, bottomStack)) {
+					return ItemStack.EMPTY;
+				}
+				count = 2;
 			}
+			ItemStack resultStack = topStack.copyWithCount(count);
+			if (resultStack.isDamageableItem()) {
+				resultStack.set(DataComponents.MAX_DAMAGE, maxDamage);
+				resultStack.setDamageValue(Math.max(maxDamage - resultDurability, 0));
+			}
+			this.mergeEnchantsFrom(resultStack, bottomStack);
+			return this.removeNonCursesFrom(resultStack);
+		} else {
+			return ItemStack.EMPTY;
 		}
-		return resultStack;
 	}
 	
-	private @NotNull ItemStack removeNonCurses(@NotNull ItemStack inputStack, int damageValue, int count) {
-		ItemStack resultStack = inputStack.copy();
-		resultStack.removeTagKey("Enchantments");
-		resultStack.removeTagKey("StoredEnchantments");
-		if (damageValue > 0) {
-			resultStack.setDamageValue(damageValue);
-		} else {
-			resultStack.removeTagKey("Damage");
-		}
-		resultStack.setCount(count);
-		
-		Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(inputStack).entrySet().stream().filter((entry) -> {
-			return entry.getKey().isCurse();
-		}).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-		EnchantmentHelper.setEnchantments(enchantments, resultStack);
-		resultStack.setRepairCost(0);
-		if (resultStack.is(Items.ENCHANTED_BOOK) && enchantments.size() == 0) {
-			resultStack = new ItemStack(Items.BOOK);
-			if (inputStack.hasCustomHoverName()) {
-				resultStack.setHoverName(inputStack.getHoverName());
+	private void mergeEnchantsFrom(ItemStack topStack, ItemStack bottomStack) {
+		EnchantmentHelper.updateEnchantments(topStack, mutable -> {
+			for (Object2IntMap.Entry<Holder<Enchantment>> entry : EnchantmentHelper.getEnchantmentsForCrafting(bottomStack).entrySet()) {
+				Holder<Enchantment> holder = entry.getKey();
+				if (!holder.is(EnchantmentTags.CURSE) || mutable.getLevel(holder) == 0) {
+					mutable.upgrade(holder, entry.getIntValue());
+				}
 			}
+		});
+	}
+	
+	private @NotNull ItemStack removeNonCursesFrom(@NotNull ItemStack stack) {
+		ItemEnchantments enchantments = EnchantmentHelper.updateEnchantments(stack, mutable -> {
+			mutable.removeIf(holder -> {
+				return !holder.is(EnchantmentTags.CURSE);
+			});
+		});
+		if (stack.is(Items.ENCHANTED_BOOK) && enchantments.isEmpty()) {
+			stack = stack.transmuteCopy(Items.BOOK);
 		}
-		for (int i = 0; i < enchantments.size(); ++i) {
-			resultStack.setRepairCost(AnvilMenu.calculateIncreasedRepairCost(resultStack.getBaseRepairCost()));
+		int repairCost = 0;
+		for (int i = 0; i < enchantments.size(); i++) {
+			repairCost = AnvilMenu.calculateIncreasedRepairCost(repairCost);
 		}
-		return resultStack;
+		stack.set(DataComponents.REPAIR_COST, repairCost);
+		return stack;
 	}
 	
 	private int onGrindstoneChange(@NotNull ItemStack topStack, @NotNull ItemStack bottomStack, int xp) {

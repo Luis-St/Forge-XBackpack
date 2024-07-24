@@ -26,17 +26,18 @@ import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
 import net.luis.xbackpack.world.inventory.handler.CraftingFuelHandler;
 import net.luis.xbackpack.world.inventory.progress.ProgressHandler;
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
+import net.minecraft.world.item.alchemy.*;
 import net.minecraftforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 
 /**
@@ -47,11 +48,13 @@ import java.util.function.Consumer;
 
 public class BrewingStandExtensionMenu extends AbstractExtensionMenu {
 	
+	private final PotionBrewing potionBrewing;
 	private final CraftingFuelHandler handler;
 	private final ProgressHandler progressHandler;
 	
 	public BrewingStandExtensionMenu(@NotNull AbstractExtensionContainerMenu menu, @NotNull Player player) {
 		super(menu, player, BackpackExtensions.BREWING_STAND.get());
+		this.potionBrewing = player.level().potionBrewing();
 		IBackpack backpack = BackpackProvider.get(player);
 		this.handler = backpack.getBrewingHandler();
 		this.progressHandler = backpack.getBrewHandler();
@@ -67,7 +70,7 @@ public class BrewingStandExtensionMenu extends AbstractExtensionMenu {
 		consumer.accept(new ExtensionSlot(this, this.handler.getInputHandler(), 0, 277, 146) {
 			@Override
 			public boolean mayPlace(@NotNull ItemStack stack) {
-				return BrewingRecipeRegistry.isValidIngredient(stack);
+				return BrewingStandExtensionMenu.this.potionBrewing.isIngredient(stack);
 			}
 		});
 		consumer.accept(new ExtensionSlot(this, this.handler.getFuelHandler(), 0, 225, 146) {
@@ -80,7 +83,7 @@ public class BrewingStandExtensionMenu extends AbstractExtensionMenu {
 			consumer.accept(new ExtensionSlot(this, this.handler.getResultHandler(), i, 254 + i * 23, i == 1 ? 187 : 180) {
 				@Override
 				public boolean mayPlace(@NotNull ItemStack stack) {
-					return BrewingRecipeRegistry.isValidInput(stack);
+					return BrewingStandExtensionMenu.this.potionBrewing.isValidInput(stack);
 				}
 				
 				@Override
@@ -98,10 +101,10 @@ public class BrewingStandExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	private void onTake(@NotNull Player player, @NotNull ItemStack stack) {
-		Potion potion = PotionUtils.getPotion(stack);
-		if (player instanceof ServerPlayer serverPlayer) {
+		Optional<Holder<Potion>> optional = stack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY).potion();
+		if (optional.isPresent() && player instanceof ServerPlayer serverPlayer) {
 			ForgeEventFactory.onPlayerBrewedPotion(player, stack);
-			CriteriaTriggers.BREWED_POTION.trigger(serverPlayer, potion.builtInRegistryHolder());
+			CriteriaTriggers.BREWED_POTION.trigger(serverPlayer, optional.get());
 		}
 	}
 	
@@ -110,9 +113,9 @@ public class BrewingStandExtensionMenu extends AbstractExtensionMenu {
 		if (908 >= index && index >= 0) { // from container
 			if (slotStack.is(Items.BLAZE_POWDER) && this.canQuickMovePowder()) {
 				return this.menu.moveItemStackTo(slotStack, 947, 948); // into fuel
-			} else if (BrewingRecipeRegistry.isValidIngredient(slotStack)) {
+			} else if (this.potionBrewing.isIngredient(slotStack)) {
 				return this.menu.moveItemStackTo(slotStack, 946, 947); // into input
-			} else if (BrewingRecipeRegistry.isValidInput(slotStack)) {
+			} else if (this.potionBrewing.isValidInput(slotStack)) {
 				return this.menu.moveItemStackTo(slotStack, 948, 451); // into result
 			}
 		} else if (950 >= index && index >= 946) { // from extension

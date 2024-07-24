@@ -29,7 +29,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -142,15 +141,15 @@ public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 		if (recipes.isEmpty()) {
 			this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);
 		} else {
-			this.selectedRecipe = recipes.get(0);
+			this.selectedRecipe = recipes.getFirst();
 			ItemStack stack = this.selectedRecipe.value().assemble(this.asContainer(), this.level.registryAccess());
 			this.handler.getResultHandler().setStackInSlot(0, stack);
 		}
 		
 	}
 	
-	private @NotNull SimpleContainer asContainer() {
-		return new SimpleContainer(this.handler.getInputHandler().getStackInSlot(0), this.handler.getInputHandler().getStackInSlot(1), this.handler.getInputHandler().getStackInSlot(2));
+	private @NotNull SmithingRecipeInput asContainer() {
+		return new SmithingRecipeInput(this.handler.getInputHandler().getStackInSlot(0), this.handler.getInputHandler().getStackInSlot(1), this.handler.getInputHandler().getStackInSlot(2));
 	}
 	
 	@Override

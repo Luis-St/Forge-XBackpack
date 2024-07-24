@@ -81,11 +81,11 @@ public class CraftingExtensionMenu extends AbstractExtensionMenu {
 		Level level = this.player.level();
 		if (!level.isClientSide && this.player instanceof ServerPlayer player) {
 			ItemStack stack = ItemStack.EMPTY;
-			Optional<RecipeHolder<CraftingRecipe>> optional = Objects.requireNonNull(level.getServer()).getRecipeManager().getRecipeFor(RecipeType.CRAFTING, this.craftingWrapper, level);
+			Optional<RecipeHolder<CraftingRecipe>> optional = Objects.requireNonNull(level.getServer()).getRecipeManager().getRecipeFor(RecipeType.CRAFTING, this.craftingWrapper.asCraftInput(), level);
 			if (optional.isPresent()) {
 				RecipeHolder<CraftingRecipe> recipe = optional.get();
 				if (this.resultWrapper.setRecipeUsed(level, player, recipe)) {
-					stack = recipe.value().assemble(this.craftingWrapper, player.level().registryAccess());
+					stack = recipe.value().assemble(this.craftingWrapper.asCraftInput(), player.level().registryAccess());
 				}
 			}
 			this.resultWrapper.setItem(0, stack);

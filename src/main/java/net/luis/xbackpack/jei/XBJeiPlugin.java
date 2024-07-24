@@ -38,7 +38,7 @@ public class XBJeiPlugin implements IModPlugin {
 	private final ResourceLocation pluginId;
 	
 	public XBJeiPlugin() {
-		this.pluginId = new ResourceLocation(XBackpack.MOD_ID, "jei");
+		this.pluginId = ResourceLocation.fromNamespaceAndPath(XBackpack.MOD_ID, "jei");
 	}
 	
 	@Override

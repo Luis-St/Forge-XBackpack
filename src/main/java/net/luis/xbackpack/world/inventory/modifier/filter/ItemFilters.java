@@ -21,6 +21,7 @@ package net.luis.xbackpack.world.inventory.modifier.filter;
 import com.google.common.collect.Lists;
 import net.luis.xbackpack.util.Util;
 import net.luis.xbackpack.world.item.CustomBackpackFilterItem;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.tags.TagKey;
@@ -42,7 +43,7 @@ import java.util.function.BiPredicate;
 
 public enum ItemFilters implements ItemFilter {
 	
-	NONE("none", 0) {
+	NONE("none") {
 		@Override
 		protected boolean canKeepItem(@NotNull ItemStack stack, @NotNull String searchTerm) {
 			return true;
@@ -56,7 +57,7 @@ public enum ItemFilters implements ItemFilter {
 			return infoTooltip;
 		}
 	},
-	NAME_SEARCH("name_search", 1, false) {
+	NAME_SEARCH("name_search", false) {
 		@Override
 		protected boolean canKeepItem(@NotNull ItemStack stack, @NotNull String searchTerm) {
 			String itemName = stack.getDisplayName().getString().replace("[", "").replace("]", "").trim().toLowerCase();
@@ -70,7 +71,7 @@ public enum ItemFilters implements ItemFilter {
 			return itemName.startsWith(searchTerm);
 		}
 	},
-	NAMESPACE_SEARCH("namespace_search", 2, false) {
+	NAMESPACE_SEARCH("namespace_search", false) {
 		@Override
 		protected boolean canKeepItem(@NotNull ItemStack stack, @NotNull String searchTerm) {
 			String namespace = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(stack.getItem())).getNamespace().trim().toLowerCase();
@@ -90,7 +91,7 @@ public enum ItemFilters implements ItemFilter {
 			return namespace.startsWith(string);
 		}
 	},
-	TAG_SEARCH("tag_search", 3, false) {
+	TAG_SEARCH("tag_search", false) {
 		@Override
 		protected boolean canKeepItem(@NotNull ItemStack stack, @NotNull String searchTerm) {
 			if (searchTerm.isEmpty()) {
@@ -121,7 +122,7 @@ public enum ItemFilters implements ItemFilter {
 			return null;
 		}
 	},
-	COUNT_SEARCH("count_search", 4, false) {
+	COUNT_SEARCH("count_search", false) {
 		@Override
 		protected boolean canKeepItem(@NotNull ItemStack stack, @NotNull String searchTerm) {
 			if (searchTerm.isEmpty()) {
@@ -148,104 +149,90 @@ public enum ItemFilters implements ItemFilter {
 			return stack.getCount() == count;
 		}
 	},
-	STACKABLE("stackable", 5) {
+	STACKABLE("stackable") {
 		@Override
 		protected boolean canKeepItem(@NotNull ItemStack stack, @NotNull String searchTerm) {
 			return this.checkCustom(stack, CustomBackpackFilterItem::isStackable) || stack.isStackable();
 		}
 	},
-	NONE_STACKABLE("none_stackable", 6) {
+	NONE_STACKABLE("none_stackable") {
 		@Override
 		protected boolean canKeepItem(@NotNull ItemStack stack, @NotNull String searchTerm) {
 			return this.checkCustom(stack, (custom, itemStack) -> !custom.isStackable(itemStack)) || !stack.isStackable();
 		}
 	},
-	MAX_COUNT("max_count", 7) {
+	MAX_COUNT("max_count") {
 		@Override
 		protected boolean canKeepItem(@NotNull ItemStack stack, @NotNull String searchTerm) {
-			return this.checkCustom(stack, CustomBackpackFilterItem::isMaxCount) || stack.getItem().getMaxStackSize(stack) == stack.getCount();
+			return this.checkCustom(stack, CustomBackpackFilterItem::isMaxCount) || stack.getOrDefault(DataComponents.MAX_STACK_SIZE, 64) == stack.getCount();
 		}
 	},
-	ENCHANTABLE("enchantable", 8) {
+	ENCHANTABLE("enchantable") {
 		@Override
 		protected boolean canKeepItem(@NotNull ItemStack stack, @NotNull String searchTerm) {
 			return stack.getItem() == Items.BOOK || this.checkCustom(stack, CustomBackpackFilterItem::isEnchantable) || stack.isEnchantable();
 		}
 	},
-	ENCHANTED("enchanted", 9) {
+	ENCHANTED("enchanted") {
 		@Override
 		protected boolean canKeepItem(@NotNull ItemStack stack, @NotNull String searchTerm) {
 			return stack.getItem() instanceof EnchantedBookItem || this.checkCustom(stack, CustomBackpackFilterItem::isEnchanted) || stack.isEnchanted();
 		}
 	},
-	DAMAGEABLE("damageable", 10) {
+	DAMAGEABLE("damageable") {
 		@Override
 		protected boolean canKeepItem(@NotNull ItemStack stack, @NotNull String searchTerm) {
 			return this.checkCustom(stack, CustomBackpackFilterItem::isDamageable) || stack.isDamageableItem();
 		}
 	},
-	DAMAGED("damaged", 11) {
+	DAMAGED("damaged") {
 		@Override
 		protected boolean canKeepItem(@NotNull ItemStack stack, @NotNull String searchTerm) {
 			return this.checkCustom(stack, CustomBackpackFilterItem::isDamaged) || stack.isDamaged();
 		}
 	},
-	EDIBLE("edible", 12) {
+	FIRE_RESISTANT("fire_resistant") {
 		@Override
 		protected boolean canKeepItem(@NotNull ItemStack stack, @NotNull String searchTerm) {
-			return this.checkCustom(stack, CustomBackpackFilterItem::isEdible) || stack.isEdible();
+			return this.checkCustom(stack, CustomBackpackFilterItem::isFireResistant) || stack.has(DataComponents.FIRE_RESISTANT);
 		}
 	},
-	REPAIRABLE("repairable", 13) {
+	FOOD("food") {
 		@Override
 		protected boolean canKeepItem(@NotNull ItemStack stack, @NotNull String searchTerm) {
-			return this.checkCustom(stack, CustomBackpackFilterItem::isRepairable) || stack.isRepairable();
+			return this.checkCustom(stack, CustomBackpackFilterItem::isFood) || stack.has(DataComponents.FOOD);
 		}
 	},
-	FIRE_RESISTANT("fire_resistant", 14) {
-		@Override
-		protected boolean canKeepItem(@NotNull ItemStack stack, @NotNull String searchTerm) {
-			return this.checkCustom(stack, CustomBackpackFilterItem::isFireResistant) || stack.getItem().isFireResistant();
-		}
-	},
-	WEAPON("weapon", 15) {
+	WEAPON("weapon") {
 		@Override
 		protected boolean canKeepItem(@NotNull ItemStack stack, @NotNull String searchTerm) {
 			Item item = stack.getItem();
 			return this.checkCustom(stack, CustomBackpackFilterItem::isWeapon) || item instanceof SwordItem || item instanceof BowItem || item instanceof CrossbowItem;
 		}
 	},
-	TOOL("tool", 16) {
+	TOOL("tool") {
 		@Override
 		protected boolean canKeepItem(@NotNull ItemStack stack, @NotNull String searchTerm) {
 			Item item = stack.getItem();
 			return this.checkCustom(stack, CustomBackpackFilterItem::isTool) || item instanceof DiggerItem || item instanceof FishingRodItem || item instanceof FlintAndSteelItem || item instanceof CompassItem || item == Items.CLOCK;
 		}
 	},
-	ARMOR("armor", 17) {
+	ARMOR("armor") {
 		@Override
 		protected boolean canKeepItem(@NotNull ItemStack stack, @NotNull String searchTerm) {
 			return this.checkCustom(stack, CustomBackpackFilterItem::isArmor) || stack.getItem() instanceof Equipable;
 		}
-	},
-	FOOD("food", 18) {
-		@Override
-		protected boolean canKeepItem(@NotNull ItemStack stack, @NotNull String searchTerm) {
-			return this.checkCustom(stack, CustomBackpackFilterItem::isFood) || stack.getFoodProperties(null) != null || stack.getItem().getFoodProperties() != null;
-		}
 	};
 	
 	private final String name;
-	private final int id;
 	private final boolean selectable;
 	
-	ItemFilters(@NotNull String name, int id) {
-		this(name, id, true);
+	ItemFilters(@NotNull String name) {
+		this(name, true);
 	}
 	
-	ItemFilters(@NotNull String name, int id, boolean selectable) {
+	ItemFilters(@NotNull String name, boolean selectable) {
 		this.name = name;
-		this.id = id;
 		this.selectable = selectable;
 	}
 	
@@ -265,7 +252,7 @@ public enum ItemFilters implements ItemFilter {
 	
 	@Override
 	public int getId() {
-		return this.id;
+		return this.ordinal();
 	}
 	
 	@Override

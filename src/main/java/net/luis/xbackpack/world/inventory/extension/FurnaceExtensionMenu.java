@@ -27,13 +27,11 @@ import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
 import net.luis.xbackpack.world.inventory.extension.slot.FurnaceExtensionResultSlot;
 import net.luis.xbackpack.world.inventory.handler.SmeltingHandler;
 import net.luis.xbackpack.world.inventory.progress.ProgressHandler;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.AbstractCookingRecipe;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.*;
 import net.minecraftforge.common.ForgeHooks;
 import org.jetbrains.annotations.NotNull;
 
@@ -103,7 +101,7 @@ public class FurnaceExtensionMenu extends AbstractExtensionMenu {
 	@SuppressWarnings("unchecked")
 	private boolean canSmelt(@NotNull ItemStack stack) {
 		for (RecipeType<? extends AbstractCookingRecipe> recipeType : BackpackConstants.FURNACE_RECIPE_TYPES) {
-			if (this.player.level().getRecipeManager().getRecipeFor((RecipeType<AbstractCookingRecipe>) recipeType, new SimpleContainer(stack), this.player.level()).isPresent()) {
+			if (this.player.level().getRecipeManager().getRecipeFor((RecipeType<AbstractCookingRecipe>) recipeType, new SingleRecipeInput(stack), this.player.level()).isPresent()) {
 				return true;
 			}
 		}

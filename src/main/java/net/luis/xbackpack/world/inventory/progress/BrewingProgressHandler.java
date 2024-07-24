@@ -33,8 +33,8 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.brewing.PotionBrewEvent;
 import net.minecraftforge.items.ItemStackHandler;
@@ -52,6 +52,7 @@ import java.util.Objects;
 public class BrewingProgressHandler implements ProgressHandler {
 	
 	private final Player player;
+	private final PotionBrewing potionBrewing;
 	private final CraftingFuelHandler handler;
 	private Item input;
 	private int fuel;
@@ -59,6 +60,7 @@ public class BrewingProgressHandler implements ProgressHandler {
 	
 	public BrewingProgressHandler(@NotNull Player player, @NotNull CraftingFuelHandler handler) {
 		this.player = player;
+		this.potionBrewing = player.level().potionBrewing();
 		this.handler = handler;
 	}
 	
@@ -91,7 +93,7 @@ public class BrewingProgressHandler implements ProgressHandler {
 		ItemStack inputStack = this.getInputItem();
 		if (!inputStack.isEmpty()) {
 			for (int i = 0; i < 3; i++) {
-				if (BrewingRecipeRegistry.hasOutput(this.getResultHandler().getStackInSlot(i), inputStack)) {
+				if (this.potionBrewing.hasMix(this.getResultHandler().getStackInSlot(i), inputStack)) {
 					return true;
 				}
 			}
@@ -103,7 +105,7 @@ public class BrewingProgressHandler implements ProgressHandler {
 		if (!this.onPotionAttemptBrew()) {
 			ItemStack inputStack = this.getInputItem();
 			for (int i = 0; i < 3; i++) {
-				this.getResultHandler().setStackInSlot(i, BrewingRecipeRegistry.getOutput(this.getResultHandler().getStackInSlot(i), inputStack));
+				this.getResultHandler().setStackInSlot(i, this.potionBrewing.mix(this.getResultHandler().getStackInSlot(i), inputStack));
 			}
 			this.onPotionBrewed(this.asList());
 			if (this.player instanceof ServerPlayer player) {
