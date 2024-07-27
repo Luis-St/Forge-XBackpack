@@ -40,7 +40,7 @@ public class OpenBackpackPacket implements NetworkPacket {
 	
 	public OpenBackpackPacket() {}
 	
-	public OpenBackpackPacket(FriendlyByteBuf buffer) {}
+	public OpenBackpackPacket(@NotNull FriendlyByteBuf buffer) {}
 	
 	@Override
 	public void encode(@NotNull FriendlyByteBuf buffer) {}

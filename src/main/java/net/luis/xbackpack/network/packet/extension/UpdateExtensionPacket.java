@@ -39,7 +39,7 @@ public class UpdateExtensionPacket implements NetworkPacket {
 	
 	private final BackpackExtension extension;
 	
-	public UpdateExtensionPacket(BackpackExtension extension) {
+	public UpdateExtensionPacket(@NotNull BackpackExtension extension) {
 		this.extension = extension;
 	}
 	

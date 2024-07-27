@@ -41,7 +41,7 @@ public class UpdateItemModifiersPacket implements NetworkPacket {
 	private final ItemFilter filter;
 	private final ItemSorter sorter;
 	
-	public UpdateItemModifiersPacket(ItemFilter filter, ItemSorter sorter) {
+	public UpdateItemModifiersPacket(@NotNull ItemFilter filter, @NotNull ItemSorter sorter) {
 		this.filter = filter;
 		this.sorter = sorter;
 	}

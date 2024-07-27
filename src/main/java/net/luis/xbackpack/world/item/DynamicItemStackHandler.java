@@ -42,7 +42,7 @@ public class DynamicItemStackHandler extends ItemStackHandler {
 	}
 	
 	@Override
-	public CompoundTag serializeNBT(HolderLookup. @NotNull Provider lookup) {
+	public CompoundTag serializeNBT(HolderLookup.@NotNull Provider lookup) {
 		ListTag itemsTag = new ListTag();
 		for (int i = 0; i < this.stacks.size(); i++) {
 			if (!this.stacks.get(i).isEmpty()) {
@@ -58,7 +58,7 @@ public class DynamicItemStackHandler extends ItemStackHandler {
 	}
 	
 	@Override
-	public void deserializeNBT(HolderLookup. @NotNull Provider lookup, @NotNull CompoundTag tag) {
+	public void deserializeNBT(HolderLookup.@NotNull Provider lookup, @NotNull CompoundTag tag) {
 		int size = tag.contains("Size", Tag.TAG_INT) ? tag.getInt("Size") : this.stacks.size();
 		boolean reduced = false;
 		if (this.initialSize >= size) {
