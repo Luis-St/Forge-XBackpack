@@ -48,8 +48,7 @@ public class DynamicItemStackHandler extends ItemStackHandler {
 			if (!this.stacks.get(i).isEmpty()) {
 				CompoundTag itemTag = new CompoundTag();
 				itemTag.putInt("Slot", i);
-				this.stacks.get(i).save(lookup, itemTag);
-				itemsTag.add(itemTag);
+				itemsTag.add(this.stacks.get(i).save(lookup, itemTag));
 			}
 		}
 		CompoundTag handlerTag = new CompoundTag();

@@ -288,9 +288,9 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 	public boolean quickMoveStack(@NotNull ItemStack slotStack, int index) {
 		if (908 >= index && index >= 0) { // from container
 			return this.menu.moveItemStackTo(slotStack, 938, 940); // into input
-		} else if (index == 940) { // from result
+		}/* else if (index == 940) { // from result
 			return this.movePreferredMenu(slotStack); // into container
-		}
+		}*/ // Not possible due issue in vanilla code
 		return false;
 	}
 	

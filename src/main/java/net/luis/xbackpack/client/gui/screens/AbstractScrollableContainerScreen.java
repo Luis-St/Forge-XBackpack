@@ -129,7 +129,7 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 			Slot slot = this.menu.slots.get(i);
 			if (this.getSlotRenderType(slot) != SlotRenderType.SKIP) {
 				this.renderSlot(graphics, slot);
-				if (this.isHovering(slot, mouseX, mouseY) && slot.isActive()) {
+				if (this.isHovering(slot, mouseX, mouseY)) {
 					this.hoveredSlot = slot;
 					int y = slot instanceof MoveableSlot moveableSlot ? moveableSlot.getY(this.scrollOffset) : slot.y;
 					renderSlotHighlight(graphics, slot.x, y, 0, this.getSlotColor(i));

@@ -89,9 +89,9 @@ public class SmeltingProgressHandler implements ProgressHandler {
 			} else if (this.cookingProgress > 0) {
 				this.cookingProgress--;
 			}
-			ItemStack input = this.handler.getInputHandler().extractItem(0, 1, false);
-			if (this.cookingProgress >= this.cookingTime && !input.isEmpty()) {
-				ItemStack stack = this.handler.getResultHandler().insertItem(0, progressingRecipe.assemble(new SingleRecipeInput(input), this.player.level().registryAccess()), false);
+			ItemStackHandler inputHandler = this.handler.getInputHandler();
+			if (this.cookingProgress >= this.cookingTime && !inputHandler.extractItem(0, 1, true).isEmpty()) {
+				ItemStack stack = this.handler.getResultHandler().insertItem(0, progressingRecipe.assemble(new SingleRecipeInput(inputHandler.extractItem(0, 1, false)), this.player.level().registryAccess()), false);
 				if (!stack.isEmpty()) {
 					this.player.drop(stack, true, true);
 				}
