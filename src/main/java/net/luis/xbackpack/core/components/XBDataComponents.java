@@ -21,10 +21,9 @@ package net.luis.xbackpack.core.components;
 import com.mojang.serialization.Codec;
 import net.luis.xbackpack.XBackpack;
 import net.minecraft.core.component.DataComponentType;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraftforge.registries.*;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.RegistryObject;
 
 /**
  *

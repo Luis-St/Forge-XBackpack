@@ -41,7 +41,7 @@ public class NextToolDownPacket implements NetworkPacket {
 	
 	public NextToolDownPacket() {}
 	
-	public NextToolDownPacket(FriendlyByteBuf buffer) {}
+	public NextToolDownPacket(@NotNull FriendlyByteBuf buffer) {}
 	
 	@Override
 	public void encode(@NotNull FriendlyByteBuf buffer) {}

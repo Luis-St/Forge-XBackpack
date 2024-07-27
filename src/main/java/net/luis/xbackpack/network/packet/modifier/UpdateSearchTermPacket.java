@@ -37,7 +37,7 @@ public class UpdateSearchTermPacket implements NetworkPacket {
 	
 	private final String searchBoxValue;
 	
-	public UpdateSearchTermPacket(String searchBoxValue) {
+	public UpdateSearchTermPacket(@NotNull String searchBoxValue) {
 		this.searchBoxValue = searchBoxValue;
 	}
 	

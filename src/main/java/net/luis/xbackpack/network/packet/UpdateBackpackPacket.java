@@ -35,7 +35,7 @@ public class UpdateBackpackPacket implements NetworkPacket {
 	
 	private final CompoundTag tag;
 	
-	public UpdateBackpackPacket(CompoundTag tag) {
+	public UpdateBackpackPacket(@NotNull CompoundTag tag) {
 		this.tag = tag;
 	}
 	

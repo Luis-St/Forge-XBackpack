@@ -40,7 +40,7 @@ public class UpdateEnchantmentTablePacket implements NetworkPacket {
 	private final int[] enchantingCosts;
 	private final int enchantmentSeed;
 	
-	public UpdateEnchantmentTablePacket(ResourceLocation[] enchantments, int[] enchantmentLevels, int[] enchantingCosts, int enchantmentSeed) {
+	public UpdateEnchantmentTablePacket(ResourceLocation @NotNull [] enchantments, int @NotNull [] enchantmentLevels, int @NotNull [] enchantingCosts, int enchantmentSeed) {
 		this.enchantments = enchantments;
 		this.enchantmentLevels = enchantmentLevels;
 		this.enchantingCosts = enchantingCosts;

@@ -39,7 +39,7 @@ public class ResetItemModifierPacket implements NetworkPacket {
 	
 	private final ItemModifierType modifierType;
 	
-	public ResetItemModifierPacket(ItemModifierType modifierType) {
+	public ResetItemModifierPacket(@NotNull ItemModifierType modifierType) {
 		this.modifierType = modifierType;
 	}
 	
