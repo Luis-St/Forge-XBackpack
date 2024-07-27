@@ -74,7 +74,7 @@ public class EnchantmentTableExtensionScreen extends AbstractExtensionScreen {
 	}
 	
 	private void renderRow(@NotNull GuiGraphics graphics, int mouseX, int mouseY, int row, @NotNull LocalPlayer player, @Nullable ResourceLocation enchantment, int enchantingCost) {
-		if (enchantment != null) {
+		if (enchantment != null && this.enchantingCosts[row] > 0) {
 			int costColor;
 			int enchantmentColor;
 			RenderSystem.setShaderTexture(0, this.getTexture());

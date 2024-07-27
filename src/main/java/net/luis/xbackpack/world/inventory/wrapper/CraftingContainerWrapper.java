@@ -25,6 +25,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author Luis-St
@@ -95,6 +98,15 @@ public class CraftingContainerWrapper extends TransientCraftingContainer impleme
 			}
 		}
 		return true;
+	}
+	
+	@Override
+	public @NotNull List<ItemStack> getItems() {
+		List<ItemStack> stacks = new ArrayList<>();
+		for (int i = 0; i < this.getSlots(); i++) {
+			stacks.add(this.getStackInSlot(i));
+		}
+		return List.copyOf(stacks);
 	}
 	
 	@Override

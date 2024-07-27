@@ -18,6 +18,7 @@
 
 package net.luis.xbackpack.world.inventory.progress;
 
+import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.network.XBNetworkHandler;
 import net.luis.xbackpack.network.packet.extension.UpdateBrewingStandPacket;
 import net.luis.xbackpack.world.inventory.handler.CraftingFuelHandler;
@@ -105,7 +106,7 @@ public class BrewingProgressHandler implements ProgressHandler {
 		if (!this.onPotionAttemptBrew()) {
 			ItemStack inputStack = this.getInputItem();
 			for (int i = 0; i < 3; i++) {
-				this.getResultHandler().setStackInSlot(i, this.potionBrewing.mix(this.getResultHandler().getStackInSlot(i), inputStack));
+				this.getResultHandler().setStackInSlot(i, this.potionBrewing.mix(inputStack, this.getResultHandler().getStackInSlot(i)));
 			}
 			this.onPotionBrewed(this.asList());
 			if (this.player instanceof ServerPlayer player) {
