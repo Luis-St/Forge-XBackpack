@@ -186,7 +186,6 @@ jar {
 			"Mod-ID": "xbackpack",
 		])
 	}
-	finalizedBy("reobfJar")
 }
 
 sourcesJar {
