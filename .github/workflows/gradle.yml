@@ -10,16 +10,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout repository'
-        uses: actions/checkout@v4.1.1
-      - name: 'Set up Oracle JDK 21'
-        uses: oracle-actions/setup-java@v1
+        uses: actions/checkout@v4.1.7
+      - name: 'Set up JDK 21'
+        uses: actions/setup-java@v4.2.1
         with:
-          website: oracle.com
-          release: 21
+          distribution: 'temurin'
+          java-version: '21'
       - name: 'Grant Permission to Gradle'
         run: chmod +x gradlew
       - name: 'License check with Gradle'
-        uses: gradle/actions/setup-gradle@v3.1.0
+        uses: gradle/actions/setup-gradle@v3.5.0
         with:
           arguments: licenseCheck
   build:
@@ -27,15 +27,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout repository'
-        uses: actions/checkout@v4.1.1
-      - name: 'Set up Oracle JDK 21'
-        uses: oracle-actions/setup-java@v1
+        uses: actions/checkout@v4.1.7
+      - name: 'Set up JDK 21'
+        uses: actions/setup-java@v4.2.1
         with:
-          website: oracle.com
-          release: 21
+          distribution: 'temurin'
+          java-version: '21'
       - name: 'Grant Permission to Gradle'
         run: chmod +x gradlew
       - name: 'Build with Gradle'
-        uses: gradle/actions/setup-gradle@v3.1.0
+        uses: gradle/actions/setup-gradle@v3.5.0
         with:
           arguments: build
