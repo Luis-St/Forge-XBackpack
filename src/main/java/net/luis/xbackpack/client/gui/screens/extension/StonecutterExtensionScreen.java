@@ -187,8 +187,6 @@ public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 	public void updateRecipes(boolean resetSelected) {
 		this.recipes.clear();
 		this.recipes.addAll(Objects.requireNonNull(this.minecraft.getConnection()).getRecipeManager().getRecipesFor(RecipeType.STONECUTTING, new SingleRecipeInput(this.getInputStack()), Objects.requireNonNull(this.minecraft.level)));
-		this.scrollOffset = 0.0F;
-		this.startIndex = 0;
 		if (resetSelected) {
 			this.selectedRecipe = -1;
 		}
