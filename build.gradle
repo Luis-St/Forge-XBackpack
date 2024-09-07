@@ -100,10 +100,6 @@ dependencies {
 	compileOnly "mezz.jei:jei-${MinecraftVersion}-common-api:${JeiVersion}"
 	compileOnly "mezz.jei:jei-${MinecraftVersion}-forge-api:${JeiVersion}"
 	runtimeOnly "mezz.jei:jei-${MinecraftVersion}-forge:${JeiVersion}"
-	
-/*	compileOnly(fg.deobf("mezz.jei:jei-1.21-common-api:19.5.0.47"))
-	compileOnly(fg.deobf("mezz.jei:jei-1.21-forge-api:19.5.0.47"))
-	runtimeOnly(fg.deobf("mezz.jei:jei-1.21-forge:19.5.0.47"))*/
 }
 
 compileJava.dependsOn(updateLicenses)

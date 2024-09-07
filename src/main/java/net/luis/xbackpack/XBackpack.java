@@ -28,6 +28,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -42,8 +43,8 @@ public class XBackpack {
 	public static final String MOD_NAME = "XBackpack";
 	public static final Logger LOGGER = LogManager.getLogger(XBackpack.class);
 	
-	public XBackpack() {
-		IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+	public XBackpack(@NotNull FMLJavaModLoadingContext context) {
+		IEventBus modEventBus = context.getModEventBus();
 		XBMenuTypes.MENU_TYPES.register(modEventBus);
 		BackpackExtensions.BACKPACK_EXTENSIONS.register(modEventBus);
 		XBCommandArgumentTypes.COMMAND_ARGUMENT_TYPES.register(modEventBus);
