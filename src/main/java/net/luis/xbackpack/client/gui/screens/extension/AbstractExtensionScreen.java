@@ -26,6 +26,7 @@ import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -112,14 +113,16 @@ public abstract class AbstractExtensionScreen {
 	
 	public void render(@NotNull GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
 		int offset = this.getExtensionOffset(this.extension);
-		graphics.blit(ICONS, this.leftPos + this.imageWidth, this.topPos + offset, this.extension.getIconWidth(), this.extension.getIconHeight(), 0, 0, 32, 32, 256, 256);
+		graphics.blit(RenderType::guiTextured, ICONS, this.leftPos + this.imageWidth, this.topPos + offset, this.extension.getIconWidth(), this.extension.getIconHeight(), 0, 0, 32, 32, 256, 256);
 		graphics.renderItem(this.extension.getIcon(), this.leftPos + this.imageWidth + 1, this.topPos + 3 + offset);
 	}
 	
 	public void renderOpened(@NotNull GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
 		int offset = this.getExtensionOffset(this.extension);
 		RenderSystem.setShaderTexture(0, this.getTexture());
-		graphics.blit(this.getTexture(), this.leftPos + this.imageWidth - 3, this.topPos + offset, 0, 0, this.extension.getImageWidth(), this.extension.getImageHeight());
+		int imageWidth = this.extension.getImageWidth();
+		int imageHeight = this.extension.getImageHeight();
+		graphics.blit(RenderType::guiTextured, this.getTexture(), this.leftPos + this.imageWidth - 3, this.topPos + offset, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
 		graphics.renderItem(this.extension.getIcon(), this.leftPos + this.imageWidth + 1, this.topPos + 4 + offset);
 		graphics.renderItemDecorations(this.font, this.extension.getIcon(), this.leftPos + this.imageWidth + 1, this.topPos + 4 + offset);
 		graphics.drawString(this.font, this.extension.getTitle(), this.leftPos + this.imageWidth + 19, this.topPos + 9 + offset, 4210752, false);

@@ -33,6 +33,7 @@ import net.luis.xbackpack.world.inventory.modifier.sorter.ItemSorters;
 import net.luis.xbackpack.world.inventory.slot.BackpackSlot;
 import net.luis.xbackpack.world.inventory.slot.MoveableSlot;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -40,6 +41,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.TooltipFlag;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -93,19 +95,19 @@ public class BackpackScreen extends AbstractModifiableContainerScreen<BackpackMe
 	@Override
 	protected void renderScreen(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		super.renderScreen(graphics, mouseX, mouseY, partialTicks);
-		graphics.blit(ICONS, this.leftPos + 75, this.topPos + 6, 32, 0, 8, 8);
-		graphics.blit(ICONS, this.leftPos + 89, this.topPos + 6, 8, 8, 46, 0, 14, 14, 256, 256);
+		graphics.blit(RenderType::guiTextured, ICONS, this.leftPos + 75, this.topPos + 6, 32, 0, 8, 8, 256, 256);
+		graphics.blit(RenderType::guiTextured, ICONS, this.leftPos + 89, this.topPos + 6, 8, 8, 46, 0, 14, 14, 256, 256);
 		if (this.menu.getFilter() == ItemFilters.NONE && this.menu.getSorter() == ItemSorters.NONE) {
-			graphics.blit(ICONS, this.leftPos + 200, this.topPos + 6, 8, 8, 40, 0, 6, 6, 256, 256);
+			graphics.blit(RenderType::guiTextured, ICONS, this.leftPos + 200, this.topPos + 6, 8, 8, 40, 0, 6, 6, 256, 256);
 		}
 	}
 	
 	@Override
 	protected void renderBg(@NotNull GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
 		super.renderBg(graphics, partialTicks, mouseX, mouseY);
-		graphics.blit(BACKPACK, this.leftPos, this.topPos, 0, 0, 220, 220);
+		graphics.blit(RenderType::guiTextured, BACKPACK, this.leftPos, this.topPos, 0, 0, 220, 220, 256, 256);
 		int scrollPosition = this.topPos + 18 + this.scrollOffset;
-		graphics.blit(BACKPACK, this.leftPos + 198, scrollPosition, 244, 0, 12, 15);
+		graphics.blit(RenderType::guiTextured, BACKPACK, this.leftPos + 198, scrollPosition, 244, 0, 12, 15, 256, 256);
 	}
 	
 	@Override
@@ -136,8 +138,8 @@ public class BackpackScreen extends AbstractModifiableContainerScreen<BackpackMe
 	}
 	
 	@Override
-	public @NotNull Slot findSlot(double mouseX, double mouseY) {
-		return super.findSlot(mouseX, mouseY);
+	public @Nullable Slot getHoveredSlot(double mouseX, double mouseY) {
+		return super.getHoveredSlot(mouseX, mouseY);
 	}
 	
 	@Override

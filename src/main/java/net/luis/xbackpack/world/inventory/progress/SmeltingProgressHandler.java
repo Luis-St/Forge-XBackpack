@@ -22,12 +22,11 @@ import net.luis.xbackpack.network.XBNetworkHandler;
 import net.luis.xbackpack.network.packet.extension.UpdateFurnacePacket;
 import net.luis.xbackpack.world.inventory.handler.SmeltingHandler;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
-import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
@@ -74,7 +73,7 @@ public class SmeltingProgressHandler implements ProgressHandler {
 			if (this.canSmelt(stack)) {
 				this.progressingRecipe = this.getRecipe(stack);
 				if (this.progressingRecipe != null) {
-					this.cookingTime = this.progressingRecipe.getCookingTime();
+					this.cookingTime = this.progressingRecipe.cookingTime();
 					this.cookingProgress = 0;
 				}
 			}
@@ -186,8 +185,9 @@ public class SmeltingProgressHandler implements ProgressHandler {
 	private void consumeFuel(int fuelTime) {
 		ItemStack stack = this.handler.getFuelHandler().extractItem(0, 1, false);
 		if (!stack.isEmpty()) {
-			if (this.getFuelItem().isEmpty() && stack.hasCraftingRemainingItem()) {
-				this.handler.getFuelHandler().insertItem(0, stack.getCraftingRemainingItem(), false);
+			ItemStack remainingStack = stack.getCraftingRemainder();
+			if (this.getFuelItem().isEmpty() && !stack.isEmpty()) {
+				this.handler.getFuelHandler().insertItem(0, remainingStack, false);
 			}
 			this.maxFuel = fuelTime;
 			this.fuelTime = fuelTime;
@@ -198,7 +198,7 @@ public class SmeltingProgressHandler implements ProgressHandler {
 		RandomSource rng = this.player.getRandom();
 		float experience;
 		if (this.progressingRecipe != null) {
-			experience = this.progressingRecipe.getExperience();
+			experience = this.progressingRecipe.experience();
 		} else {
 			experience = rng.nextFloat() + rng.nextFloat();
 		}
@@ -216,12 +216,15 @@ public class SmeltingProgressHandler implements ProgressHandler {
 	private @Nullable AbstractCookingRecipe getRecipe(@NotNull ItemStack stack) {
 		AbstractCookingRecipe cookingRecipe = null;
 		for (RecipeType<? extends AbstractCookingRecipe> recipeType : this.recipeTypes) {
-			Optional<RecipeHolder<AbstractCookingRecipe>> optional = this.player.level().getRecipeManager().getRecipeFor((RecipeType<AbstractCookingRecipe>) recipeType, new SingleRecipeInput(stack), this.player.level());
+			Optional<RecipeHolder<AbstractCookingRecipe>> optional = Optional.empty();
+			if (this.player instanceof ServerPlayer player) {
+				optional = player.serverLevel().recipeAccess().getRecipeFor((RecipeType<AbstractCookingRecipe>) recipeType, new SingleRecipeInput(stack), player.serverLevel());
+			}
 			if (optional.isPresent()) {
 				AbstractCookingRecipe recipe = optional.get().value();
 				if (cookingRecipe == null) {
 					cookingRecipe = recipe;
-				} else if (cookingRecipe.getCookingTime() > recipe.getCookingTime()) {
+				} else if (cookingRecipe.cookingTime() > recipe.cookingTime()) {
 					cookingRecipe = recipe;
 				}
 			}
@@ -236,7 +239,8 @@ public class SmeltingProgressHandler implements ProgressHandler {
 	private boolean canProgress(@NotNull ItemStack stack) {
 		AbstractCookingRecipe recipe = this.getRecipe(stack);
 		if (recipe != null) {
-			return ItemEntity.areMergable(recipe.getResultItem(this.player.level().registryAccess()), this.getResultItem()) || this.getResultItem().isEmpty();
+			ItemStack result = recipe.assemble(new SingleRecipeInput(stack), this.player.level().registryAccess());
+			return ItemStack.isSameItemSameComponents(result, this.getResultItem()) || this.getResultItem().isEmpty();
 		}
 		return false;
 	}
@@ -244,7 +248,7 @@ public class SmeltingProgressHandler implements ProgressHandler {
 	private int getFuelTime(@NotNull ItemStack stack) {
 		int fuelTime = 0;
 		for (RecipeType<? extends AbstractCookingRecipe> recipeType : this.recipeTypes) {
-			fuelTime = Math.max(ForgeHooks.getBurnTime(stack, recipeType), fuelTime);
+			fuelTime = Math.max(this.player.level().fuelValues().burnDuration(stack, recipeType), fuelTime);
 		}
 		return fuelTime;
 	}

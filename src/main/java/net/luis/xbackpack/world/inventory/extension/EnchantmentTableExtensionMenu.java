@@ -92,13 +92,13 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 		consumer.accept(new ExtensionSlot(this, this.handler.getPowerHandler(), 0, 235, 108) {
 			@Override
 			public boolean mayPlace(@NotNull ItemStack stack) {
-				return stack.is(Tags.Items.BOOKSHELVES) || stack.getItem() instanceof BookItem;
+				return stack.is(Tags.Items.BOOKSHELVES) || stack.getItem() == Items.BOOK;
 			}
 		});
 		consumer.accept(new ExtensionSlot(this, this.handler.getInputHandler(), 0, 225, 130) {
 			@Override
 			public boolean mayPlace(@NotNull ItemStack stack) {
-				return stack.isEnchantable() || stack.getItem() instanceof BookItem;
+				return stack.isEnchantable() || stack.getItem() == Items.BOOK;
 			}
 			
 			@Override
@@ -118,7 +118,7 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 	public void slotsChanged() {
 		ItemStack inputStack = this.handler.getInputHandler().getStackInSlot(0);
 		if (!inputStack.isEmpty() && inputStack.isEnchantable()) {
-			Registry<Enchantment> registry = this.player.registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+			Registry<Enchantment> registry = this.player.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
 			int power = this.calculatePower();
 			this.rng.setSeed(this.enchantmentSeed);
 			for (int row = 0; row < 3; ++row) {
@@ -208,7 +208,7 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	private @NotNull List<EnchantmentInstance> getEnchantmentList(@NotNull ItemStack inputStack, int row, int enchantingCost) {
-		Optional<HolderSet.Named<Enchantment>> optional = this.player.registryAccess().registryOrThrow(Registries.ENCHANTMENT).getTag(EnchantmentTags.IN_ENCHANTING_TABLE);
+		Optional<HolderSet.Named<Enchantment>> optional = this.player.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).get(EnchantmentTags.IN_ENCHANTING_TABLE);
 		if (optional.isEmpty()) {
 			return List.of();
 		}
@@ -229,7 +229,7 @@ public class EnchantmentTableExtensionMenu extends AbstractExtensionMenu {
 		if (908 >= index && index >= 0) { // from container
 			if (slotStack.is(Tags.Items.BOOKSHELVES) || this.canQuickMoveBook()) {
 				return this.menu.moveItemStackTo(slotStack, 941, 942); // into power
-			} else if (slotStack.isEnchantable() || slotStack.getItem() instanceof BookItem) {
+			} else if (slotStack.isEnchantable() || slotStack.getItem() == Items.BOOK) {
 				return this.menu.moveItemStackTo(slotStack, 942, 943); // into input
 			} else if (slotStack.is(Tags.Items.ENCHANTING_FUELS)) {
 				return this.menu.moveItemStackTo(slotStack, 943, 944); // into fuel

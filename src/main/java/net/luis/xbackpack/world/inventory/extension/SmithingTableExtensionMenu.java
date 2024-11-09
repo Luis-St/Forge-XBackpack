@@ -36,22 +36,26 @@ import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 	
+	private final List<RecipeHolder<SmithingRecipe>> recipes = new ArrayList<>();
 	private final CraftingHandler handler;
 	private final Level level;
-	private final List<RecipeHolder<SmithingRecipe>> recipes;
 	private RecipeHolder<SmithingRecipe> selectedRecipe;
 	
+	@SuppressWarnings("unchecked")
 	public SmithingTableExtensionMenu(@NotNull AbstractExtensionContainerMenu menu, @NotNull Player player) {
 		super(menu, player, BackpackExtensions.SMITHING_TABLE.get());
 		this.handler = BackpackProvider.get(this.player).getSmithingHandler();
 		this.level = this.player.level();
-		this.recipes = this.level.getRecipeManager().getAllRecipesFor(RecipeType.SMITHING);
+		if (this.level instanceof ServerLevel level) {
+			level.recipeAccess().getRecipes().stream().filter((recipe) -> recipe.value().getType() == RecipeType.SMITHING).forEach(recipe -> {
+				this.recipes.add((RecipeHolder<SmithingRecipe>) recipe);
+			});
+		}
 	}
 	
 	@Override
@@ -65,7 +69,7 @@ public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 			@Override
 			public boolean mayPlace(@NotNull ItemStack stack) {
 				return SmithingTableExtensionMenu.this.recipes.stream().anyMatch((recipe) -> {
-					return recipe.value().isTemplateIngredient(stack);
+					return recipe.value().templateIngredient().map(ingredient -> ingredient.test(stack)).orElse(false);
 				});
 			}
 		});
@@ -73,7 +77,7 @@ public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 			@Override
 			public boolean mayPlace(@NotNull ItemStack stack) {
 				return SmithingTableExtensionMenu.this.recipes.stream().anyMatch((recipe) -> {
-					return recipe.value().isBaseIngredient(stack);
+					return recipe.value().baseIngredient().map(ingredient -> ingredient.test(stack)).orElse(false);
 				});
 			}
 		});
@@ -81,7 +85,7 @@ public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 			@Override
 			public boolean mayPlace(@NotNull ItemStack stack) {
 				return SmithingTableExtensionMenu.this.recipes.stream().anyMatch((recipe) -> {
-					return recipe.value().isAdditionIngredient(stack);
+					return recipe.value().additionIngredient().map(ingredient -> ingredient.test(stack)).orElse(false);
 				});
 			}
 		});
@@ -137,11 +141,14 @@ public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	private void createResult() {
-		List<RecipeHolder<SmithingRecipe>> recipes = this.level.getRecipeManager().getRecipesFor(RecipeType.SMITHING, this.asContainer(), this.level);
+		Optional<RecipeHolder<SmithingRecipe>> recipes = Optional.empty();
+		if (this.level instanceof ServerLevel level) {
+			recipes = level.recipeAccess().getRecipeFor(RecipeType.SMITHING, this.asContainer(), level);
+		}
 		if (recipes.isEmpty()) {
 			this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);
 		} else {
-			this.selectedRecipe = recipes.getFirst();
+			this.selectedRecipe = recipes.orElseThrow();
 			ItemStack stack = this.selectedRecipe.value().assemble(this.asContainer(), this.level.registryAccess());
 			this.handler.getResultHandler().setStackInSlot(0, stack);
 		}
@@ -168,12 +175,12 @@ public class SmithingTableExtensionMenu extends AbstractExtensionMenu {
 	
 	private int getSlotOffset(@NotNull ItemStack stack) {
 		return this.recipes.stream().map((recipe) -> {
-			if (recipe.value().isTemplateIngredient(stack)) {
+			if (recipe.value().templateIngredient().map(ingredient -> ingredient.test(stack)).orElse(false)) {
 				return 0;
-			} else if (recipe.value().isBaseIngredient(stack)) {
+			} else if (recipe.value().baseIngredient().map(ingredient -> ingredient.test(stack)).orElse(false)) {
 				return 1;
 			} else {
-				return recipe.value().isAdditionIngredient(stack) ? 2 : -1;
+				return recipe.value().additionIngredient().map(ingredient -> ingredient.test(stack)).orElse(false) ? 2 : -1;
 			}
 		}).findFirst().orElse(-1);
 	}

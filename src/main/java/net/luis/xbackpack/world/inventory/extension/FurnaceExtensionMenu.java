@@ -27,14 +27,15 @@ import net.luis.xbackpack.world.inventory.extension.slot.ExtensionSlot;
 import net.luis.xbackpack.world.inventory.extension.slot.FurnaceExtensionResultSlot;
 import net.luis.xbackpack.world.inventory.handler.SmeltingHandler;
 import net.luis.xbackpack.world.inventory.progress.ProgressHandler;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
-import net.minecraftforge.common.ForgeHooks;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 
 /**
@@ -101,16 +102,18 @@ public class FurnaceExtensionMenu extends AbstractExtensionMenu {
 	@SuppressWarnings("unchecked")
 	private boolean canSmelt(@NotNull ItemStack stack) {
 		for (RecipeType<? extends AbstractCookingRecipe> recipeType : BackpackConstants.FURNACE_RECIPE_TYPES) {
-			if (this.player.level().getRecipeManager().getRecipeFor((RecipeType<AbstractCookingRecipe>) recipeType, new SingleRecipeInput(stack), this.player.level()).isPresent()) {
-				return true;
+			Optional<RecipeHolder<AbstractCookingRecipe>> optional = Optional.empty();
+			if (this.player instanceof ServerPlayer player) {
+				optional = player.serverLevel().recipeAccess().getRecipeFor((RecipeType<AbstractCookingRecipe>) recipeType, new SingleRecipeInput(stack), player.serverLevel());
 			}
+			return optional.isPresent();
 		}
 		return false;
 	}
 	
 	private boolean isFuel(@NotNull ItemStack stack) {
 		for (RecipeType<? extends AbstractCookingRecipe> recipeType : BackpackConstants.FURNACE_RECIPE_TYPES) {
-			if (ForgeHooks.getBurnTime(stack, recipeType) > 0) {
+			if (this.player.level().fuelValues().burnDuration(stack, recipeType) > 0) {
 				return true;
 			}
 		}

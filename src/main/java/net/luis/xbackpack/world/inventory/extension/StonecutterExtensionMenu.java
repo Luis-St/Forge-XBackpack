@@ -38,8 +38,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
@@ -126,7 +125,7 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 		this.recipes.clear();
 		this.selectedRecipe = -1;
 		this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);
-		this.recipes.addAll(this.player.level().getRecipeManager().getRecipesFor(RecipeType.STONECUTTING, new SingleRecipeInput(stack), this.player.level()));
+		this.player.level().recipeAccess().stonecutterRecipes().entries().stream().map(SelectableRecipe.SingleInputEntry::recipe).map(SelectableRecipe::recipe).filter(Optional::isPresent).map(Optional::orElseThrow).forEach(this.recipes::add);
 		XBNetworkHandler.INSTANCE.sendToPlayer(this.player, new UpdateStonecutterPacket(true));
 	}
 	

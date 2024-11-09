@@ -29,6 +29,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.EnchantmentNames;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
@@ -74,29 +75,33 @@ public class EnchantmentTableExtensionScreen extends AbstractExtensionScreen {
 	}
 	
 	private void renderRow(@NotNull GuiGraphics graphics, int mouseX, int mouseY, int row, @NotNull LocalPlayer player, @Nullable ResourceLocation enchantment, int enchantingCost) {
+		int imageWidth = this.extension.getImageWidth();
+		int imageHeight = this.extension.getImageHeight();
 		if (enchantment != null && this.enchantingCosts[row] > 0) {
 			int costColor;
 			int enchantmentColor;
 			RenderSystem.setShaderTexture(0, this.getTexture());
 			if ((player.experienceLevel >= enchantingCost && this.hasFuel(row)) || player.getAbilities().instabuild) {
-				graphics.blit(this.getTexture(), this.leftPos + this.imageWidth + 47, this.topPos + 97 + row * 19, 136, this.isHoveringRow(row, mouseX, mouseY) ? 38 : 0, 78, 19);
+				graphics.blit(RenderType::guiTextured, this.getTexture(), this.leftPos + this.imageWidth + 47, this.topPos + 97 + row * 19, 136, this.isHoveringRow(row, mouseX, mouseY) ? 38 : 0, 78, 19, imageWidth, imageHeight);
 				this.renderLevel(graphics, row, true);
 				costColor = 8453920;
 				enchantmentColor = 6839882;
 			} else {
-				graphics.blit(this.getTexture(), this.leftPos + this.imageWidth + 47, this.topPos + 97 + row * 19, 136, 19, 78, 19);
+				graphics.blit(RenderType::guiTextured, this.getTexture(), this.leftPos + this.imageWidth + 47, this.topPos + 97 + row * 19, 136, 19, 78, 19, imageWidth, imageHeight);
 				this.renderLevel(graphics, row, false);
 				costColor = 4226832;
 				enchantmentColor = 3419941;
 			}
 			this.renderLabels(graphics, row, costColor, enchantmentColor);
 		} else {
-			graphics.blit(this.getTexture(), this.leftPos + this.imageWidth + 47, this.topPos + 97 + row * 19, 136, 19, 78, 19);
+			graphics.blit(RenderType::guiTextured, this.getTexture(), this.leftPos + this.imageWidth + 47, this.topPos + 97 + row * 19, 136, 19, 78, 19, imageWidth, imageHeight);
 		}
 	}
 	
 	private void renderLevel(@NotNull GuiGraphics graphics, int row, boolean active) {
-		graphics.blit(this.getTexture(), this.leftPos + this.imageWidth + 47, this.topPos + 97 + row * 19, 136 + row * 19, active ? 57 : 76, 19, 19);
+		int imageWidth = this.extension.getImageWidth();
+		int imageHeight = this.extension.getImageHeight();
+		graphics.blit(RenderType::guiTextured, this.getTexture(), this.leftPos + this.imageWidth + 47, this.topPos + 97 + row * 19, 136 + row * 19, active ? 57 : 76, 19, 19, imageWidth, imageHeight);
 	}
 	
 	private void renderLabels(@NotNull GuiGraphics graphics, int row, int costColor, int enchantmentColor) {
@@ -122,8 +127,8 @@ public class EnchantmentTableExtensionScreen extends AbstractExtensionScreen {
 		if (this.isHoveringRow(row, mouseX, mouseY) && enchantingCost > 0) {
 			List<Component> components = Lists.newArrayList();
 			if (enchantment != null) {
-				Registry<Enchantment> registry = Objects.requireNonNull(this.minecraft.level).registryAccess().registryOrThrow(Registries.ENCHANTMENT);
-				Holder<Enchantment> holder = registry.getHolder(enchantment).orElseThrow();
+				Registry<Enchantment> registry = Objects.requireNonNull(this.minecraft.level).registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
+				Holder<Enchantment> holder = registry.get(enchantment).orElseThrow();
 				components.add((Component.translatable("container.enchant.clue", Enchantment.getFullname(holder, enchantmentLevel))).withStyle(ChatFormatting.WHITE));
 			} else {
 				components.add(Component.translatable("container.enchant.clue", ""));

@@ -80,7 +80,6 @@ public abstract class AbstractExtensionContainerScreen<T extends AbstractExtensi
 	
 	@Override
 	protected void renderBg(@NotNull GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		this.renderExtensions(graphics, partialTicks, mouseX, mouseY);
 	}

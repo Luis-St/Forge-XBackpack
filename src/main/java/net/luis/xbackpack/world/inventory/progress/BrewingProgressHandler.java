@@ -22,6 +22,7 @@ import net.luis.xbackpack.network.XBNetworkHandler;
 import net.luis.xbackpack.network.packet.extension.UpdateBrewingStandPacket;
 import net.luis.xbackpack.world.inventory.handler.CraftingFuelHandler;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
@@ -111,16 +112,16 @@ public class BrewingProgressHandler implements ProgressHandler {
 			if (this.player instanceof ServerPlayer player) {
 				this.playSound(player, player.serverLevel());
 			}
-			if (inputStack.hasCraftingRemainingItem()) {
-				ItemStack remainingStack = inputStack.getCraftingRemainingItem();
+			ItemStack remainingStack = inputStack.getCraftingRemainder();
+			if (remainingStack.isEmpty()) {
+				inputStack.shrink(1);
+			} else {
 				inputStack.shrink(1);
 				if (inputStack.isEmpty()) {
 					inputStack = remainingStack;
 				} else {
 					Containers.dropItemStack(this.player.level(), this.player.getX(), this.player.getY(), this.player.getZ(), remainingStack);
 				}
-			} else {
-				inputStack.shrink(1);
 			}
 			this.handler.getInputHandler().setStackInSlot(0, inputStack);
 		}

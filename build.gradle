@@ -97,9 +97,9 @@ dependencies {
 	
 	implementation('net.sf.jopt-simple:jopt-simple:5.0.4') { version { strictly '5.0.4' } }
 	
-	compileOnly "mezz.jei:jei-${MinecraftVersion}-common-api:${JeiVersion}"
-	compileOnly "mezz.jei:jei-${MinecraftVersion}-forge-api:${JeiVersion}"
-	runtimeOnly "mezz.jei:jei-${MinecraftVersion}-forge:${JeiVersion}"
+	compileOnly "mezz.jei:jei-${JeiMinecraftVersion}-common-api:${JeiVersion}"
+	compileOnly "mezz.jei:jei-${JeiMinecraftVersion}-forge-api:${JeiVersion}"
+	runtimeOnly "mezz.jei:jei-${JeiMinecraftVersion}-forge:${JeiVersion}"
 }
 
 compileJava.dependsOn(updateLicenses)

@@ -26,6 +26,7 @@ import net.minecraft.Util;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -47,6 +48,9 @@ import java.util.Objects;
  */
 
 public abstract class AbstractScrollableContainerScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> {
+	
+	private static final ResourceLocation SLOT_HIGHLIGHT_BACK_SPRITE = ResourceLocation.withDefaultNamespace("container/slot_highlight_back");
+	private static final ResourceLocation SLOT_HIGHLIGHT_FRONT_SPRITE = ResourceLocation.withDefaultNamespace("container/slot_highlight_front");
 	
 	private boolean scrolling = false;
 	protected int scrollOffset = 0;
@@ -70,9 +74,16 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 		RenderSystem.disableDepthTest();
 		graphics.pose().pushPose();
 		graphics.pose().translate(this.leftPos, this.topPos, 0.0F);
-		this.hoveredSlot = null;
 		
-		this.renderSlots(graphics, mouseX, mouseY);
+		Slot slot = this.hoveredSlot;
+		this.hoveredSlot = this.getHoveredSlot(mouseX, mouseY);
+		this.renderSlotHighlightBack(graphics);
+		this.renderSlots(graphics);
+		this.renderSlotHighlightFront(graphics);
+		if (slot != null && slot != this.hoveredSlot) {
+			this.onStopHovering(slot);
+		}
+		
 		this.renderLabels(graphics, mouseX, mouseY);
 		ForgeEventFactoryClient.onContainerRenderForeground(this, graphics, mouseX, mouseY);
 		ItemStack mouseStack = this.draggingItem.isEmpty() ? this.menu.getCarried() : this.draggingItem;
@@ -109,31 +120,30 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 		return SlotRenderType.DEFAULT;
 	}
 	
-	protected void renderSlots(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {
-		/* Vanilla code
-		for (int k = 0; k < this.menu.slots.size(); ++k) {
-			Slot slot = this.menu.slots.get(k);
-			if (slot.isActive()) {
+	@Override
+	protected void renderSlots(@NotNull GuiGraphics graphics) {
+		for (Slot slot : this.menu.slots) {
+			if (slot.isActive() && this.getSlotRenderType(slot) != SlotRenderType.SKIP) {
 				this.renderSlot(graphics, slot);
-			}
-			if (this.isHovering(slot, mouseX, mouseY) && slot.isActive()) {
-				this.hoveredSlot = slot;
-				if (this.hoveredSlot.isHighlightable()) {
-					renderSlotHighlight(graphics, slot.x, slot.y, 0, this.getSlotColor(k));
-				}
 			}
 		}
-		*/
-		for (int i = 0; i < this.menu.slots.size(); ++i) {
-			Slot slot = this.menu.slots.get(i);
-			if (this.getSlotRenderType(slot) != SlotRenderType.SKIP) {
-				this.renderSlot(graphics, slot);
-				if (this.isHovering(slot, mouseX, mouseY)) {
-					this.hoveredSlot = slot;
-					int y = slot instanceof MoveableSlot moveableSlot ? moveableSlot.getY(this.scrollOffset) : slot.y;
-					renderSlotHighlight(graphics, slot.x, y, 0, this.getSlotColor(i));
-				}
-			}
+	}
+	
+	@Override
+	protected void renderSlotHighlightBack(@NotNull GuiGraphics graphics) {
+		this.renderSlotHighlight(graphics, SLOT_HIGHLIGHT_BACK_SPRITE);
+	}
+	
+	@Override
+	protected void renderSlotHighlightFront(@NotNull GuiGraphics graphics) {
+		this.renderSlotHighlight(graphics, SLOT_HIGHLIGHT_FRONT_SPRITE);
+	}
+	
+	private void renderSlotHighlight(@NotNull GuiGraphics graphics, @NotNull ResourceLocation sprite) {
+		Slot slot = this.hoveredSlot;
+		if (slot != null && slot.isHighlightable() && this.getSlotRenderType(slot) != SlotRenderType.SKIP) {
+			int y = slot instanceof MoveableSlot moveableSlot ? moveableSlot.getY(this.scrollOffset) : slot.y;
+			graphics.blitSprite(RenderType::guiTexturedOverlay, sprite, slot.x - 4, y - 4, 24, 24);
 		}
 	}
 	
@@ -171,7 +181,7 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 			Pair<ResourceLocation, ResourceLocation> pair = slot.getNoItemIcon();
 			if (pair != null) {
 				TextureAtlasSprite atlasSprite = Objects.requireNonNull(this.minecraft).getTextureAtlas(pair.getFirst()).apply(pair.getSecond());
-				graphics.blit(slot.x, y, 0, 16, 16, atlasSprite);
+				graphics.blitSprite(RenderType::guiTextured, atlasSprite, slot.x, y, 16, 16);
 				clickedSlot = true;
 			}
 		}
@@ -198,7 +208,7 @@ public abstract class AbstractScrollableContainerScreen<T extends AbstractContai
 	}
 	
 	@Override
-	public @Nullable Slot findSlot(double mouseX, double mouseY) {
+	public @Nullable Slot getHoveredSlot(double mouseX, double mouseY) {
 		for (int i = 0; i < this.menu.slots.size(); ++i) {
 			Slot slot = this.menu.slots.get(i);
 			if (this.isHovering(slot, mouseX, mouseY) && this.getSlotRenderType(slot) == SlotRenderType.DEFAULT) {
