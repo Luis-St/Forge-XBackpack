@@ -147,7 +147,7 @@ public class BackpackScreen extends AbstractModifiableContainerScreen<BackpackMe
 		if (this.searchData == null) {
 			this.searchData = new RenderData(true, this.leftPos + 103, this.topPos + 6, 86, 9);
 		}
-		return new RenderData(true, this.leftPos + 103, this.topPos + 6, 86, 9);
+		return this.searchData;
 	}
 	
 	@Override
@@ -160,7 +160,7 @@ public class BackpackScreen extends AbstractModifiableContainerScreen<BackpackMe
 		if (this.filterData == null) {
 			this.filterData = new RenderData(true, this.leftPos + 73, this.topPos + 4, 12, 12);
 		}
-		return new RenderData(true, this.leftPos + 73, this.topPos + 4, 12, 12);
+		return this.filterData;
 	}
 	
 	@Override
@@ -168,7 +168,7 @@ public class BackpackScreen extends AbstractModifiableContainerScreen<BackpackMe
 		if (this.sorterData == null) {
 			this.sorterData = new RenderData(true, this.leftPos + 87, this.topPos + 4, 12, 12);
 		}
-		return new RenderData(true, this.leftPos + 87, this.topPos + 4, 12, 12);
+		return this.sorterData;
 	}
 	
 	@Override
@@ -176,7 +176,7 @@ public class BackpackScreen extends AbstractModifiableContainerScreen<BackpackMe
 		if (this.mergerData == null) {
 			this.mergerData = new RenderData(true, this.leftPos + 198, this.topPos + 4, 12, 12);
 		}
-		return new RenderData(true, this.leftPos + 198, this.topPos + 4, 12, 12);
+		return this.mergerData;
 	}
 	
 	@Override

@@ -16,6 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+/*
 package net.luis.xbackpack.jei;
 
 import mezz.jei.api.IModPlugin;
@@ -26,11 +27,13 @@ import net.luis.xbackpack.client.gui.screens.BackpackScreen;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
+*/
 /**
  *
  * @author Luis-St
  *
- */
+ *//*
+
 
 @JeiPlugin
 public class XBJeiPlugin implements IModPlugin {
@@ -50,4 +53,4 @@ public class XBJeiPlugin implements IModPlugin {
 	public void registerGuiHandlers(@NotNull IGuiHandlerRegistration registration) {
 		registration.addGuiContainerHandler(BackpackScreen.class, new BackpackContainerHandler());
 	}
-}
+}*/
