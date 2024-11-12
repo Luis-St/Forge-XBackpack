@@ -18,10 +18,13 @@
 
 package net.luis.xbackpack.client.gui.screens.extension;
 
+import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.client.gui.screens.AbstractExtensionContainerScreen;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,6 +37,10 @@ import java.util.List;
  */
 
 public class BrewingStandExtensionScreen extends AbstractExtensionScreen {
+	
+	private static final ResourceLocation BREW_PROGRESS_SPRITE = ResourceLocation.fromNamespaceAndPath(XBackpack.MOD_ID, "extensions/brewing_stand/brew_progress");
+	private static final ResourceLocation BUBBLES_SPRITE = ResourceLocation.fromNamespaceAndPath(XBackpack.MOD_ID, "extensions/brewing_stand/bubbles");
+	private static final ResourceLocation FUEL_LENGTH_SPRITE = ResourceLocation.fromNamespaceAndPath(XBackpack.MOD_ID, "extensions/brewing_stand/fuel_length");
 	
 	private static final int[] BUBBLES = {
 		29, 24, 20, 16, 11, 6, 0
@@ -56,19 +63,21 @@ public class BrewingStandExtensionScreen extends AbstractExtensionScreen {
 	private void renderFuel(@NotNull GuiGraphics graphics) {
 		int fuel = Mth.clamp((18 * this.fuel + 20 - 1) / 20, 0, 18);
 		if (fuel > 0) {
-			graphics.blit(this.getTexture(), this.leftPos + this.imageWidth + 38, this.topPos + 173, 106, 29, fuel, 4);
+			graphics.blitSprite(RenderType::guiTextured, FUEL_LENGTH_SPRITE, this.leftPos + this.imageWidth + 38, this.topPos + 173, fuel, 4);
 		}
 	}
 	
 	private void renderBrewing(@NotNull GuiGraphics graphics) {
+		int imageWidth = this.extension.getImageWidth();
+		int imageHeight = this.extension.getImageHeight();
 		if (this.brewTime > 0) {
 			int progress = (int) (28.0 * (1.0 - this.brewTime / 400.0));
 			if (progress > 0) {
-				graphics.blit(this.getTexture(), this.leftPos + this.imageWidth + 75, this.topPos + 145, 106, 0, 9, progress);
+				graphics.blitSprite(RenderType::guiTextured, BREW_PROGRESS_SPRITE, 9, 28, 0, 0, this.leftPos + this.imageWidth + 75, this.topPos + 145, 9, progress);
 			}
 			int bubbles = BUBBLES[this.brewTime / 2 % 7];
 			if (bubbles > 0) {
-				graphics.blit(this.getTexture(), this.leftPos + this.imageWidth + 42, this.topPos + 143 + 29 - bubbles, 115, 29 - bubbles, 12, bubbles);
+				graphics.blitSprite(RenderType::guiTextured, BUBBLES_SPRITE, 12, 29, 0, 29 - bubbles, this.leftPos + this.imageWidth + 42, this.topPos + 143 + 29 - bubbles, 12, bubbles);
 			}
 		}
 	}

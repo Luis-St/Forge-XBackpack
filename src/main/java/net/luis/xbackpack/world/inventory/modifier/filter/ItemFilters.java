@@ -24,8 +24,10 @@ import net.luis.xbackpack.world.item.CustomBackpackFilterItem;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.DamageResistant;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.tags.ITag;
 import org.jetbrains.annotations.NotNull;
@@ -176,7 +178,7 @@ public enum ItemFilters implements ItemFilter {
 	ENCHANTED("enchanted") {
 		@Override
 		protected boolean canKeepItem(@NotNull ItemStack stack, @NotNull String searchTerm) {
-			return stack.getItem() instanceof EnchantedBookItem || this.checkCustom(stack, CustomBackpackFilterItem::isEnchanted) || stack.isEnchanted();
+			return stack.has(DataComponents.STORED_ENCHANTMENTS) || this.checkCustom(stack, CustomBackpackFilterItem::isEnchanted) || stack.isEnchanted();
 		}
 	},
 	DAMAGEABLE("damageable") {
@@ -194,7 +196,11 @@ public enum ItemFilters implements ItemFilter {
 	FIRE_RESISTANT("fire_resistant") {
 		@Override
 		protected boolean canKeepItem(@NotNull ItemStack stack, @NotNull String searchTerm) {
-			return this.checkCustom(stack, CustomBackpackFilterItem::isFireResistant) || stack.has(DataComponents.FIRE_RESISTANT);
+			DamageResistant damageResistant = stack.get(DataComponents.DAMAGE_RESISTANT);
+			if (damageResistant != null) {
+				return damageResistant.types() == DamageTypeTags.IS_FIRE;
+			}
+			return this.checkCustom(stack, CustomBackpackFilterItem::isFireResistant);
 		}
 	},
 	FOOD("food") {
@@ -220,7 +226,7 @@ public enum ItemFilters implements ItemFilter {
 	ARMOR("armor") {
 		@Override
 		protected boolean canKeepItem(@NotNull ItemStack stack, @NotNull String searchTerm) {
-			return this.checkCustom(stack, CustomBackpackFilterItem::isArmor) || stack.getItem() instanceof Equipable;
+			return this.checkCustom(stack, CustomBackpackFilterItem::isArmor) || stack.has(DataComponents.EQUIPPABLE);
 		}
 	};
 	

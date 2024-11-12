@@ -20,6 +20,7 @@ package net.luis.xbackpack.client.gui.screens.extension;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.client.gui.screens.AbstractExtensionContainerScreen;
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtension;
@@ -29,6 +30,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.EnchantmentNames;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
@@ -50,6 +52,16 @@ import java.util.function.Consumer;
  */
 
 public class EnchantmentTableExtensionScreen extends AbstractExtensionScreen {
+	
+	private static final ResourceLocation ENCHANTMENT_SLOT_SPRITE = ResourceLocation.fromNamespaceAndPath(XBackpack.MOD_ID, "extensions/enchantment_table/enchantment_slot");
+	private static final ResourceLocation ENCHANTMENT_SLOT_DISABLED_SPRITE = ResourceLocation.fromNamespaceAndPath(XBackpack.MOD_ID, "extensions/enchantment_table/enchantment_slot_disabled");
+	private static final ResourceLocation ENCHANTMENT_SLOT_HIGHLIGHTED_SPRITE = ResourceLocation.fromNamespaceAndPath(XBackpack.MOD_ID, "extensions/enchantment_table/enchantment_slot_highlighted");
+	private static final ResourceLocation LEVEL_1_SPRITE = ResourceLocation.fromNamespaceAndPath(XBackpack.MOD_ID, "extensions/enchantment_table/level_1");
+	private static final ResourceLocation LEVEL_1_DISABLED_SPRITE = ResourceLocation.fromNamespaceAndPath(XBackpack.MOD_ID, "extensions/enchantment_table/level_1_disabled");
+	private static final ResourceLocation LEVEL_2_SPRITE = ResourceLocation.fromNamespaceAndPath(XBackpack.MOD_ID, "extensions/enchantment_table/level_2");
+	private static final ResourceLocation LEVEL_2_DISABLED_SPRITE = ResourceLocation.fromNamespaceAndPath(XBackpack.MOD_ID, "extensions/enchantment_table/level_2_disabled");
+	private static final ResourceLocation LEVEL_3_SPRITE = ResourceLocation.fromNamespaceAndPath(XBackpack.MOD_ID, "extensions/enchantment_table/level_3");
+	private static final ResourceLocation LEVEL_3_DISABLED_SPRITE = ResourceLocation.fromNamespaceAndPath(XBackpack.MOD_ID, "extensions/enchantment_table/level_3_disabled");
 	
 	private final ResourceLocation[] enchantments = new ResourceLocation[3];
 	private final int[] enchantmentLevels = new int[3];
@@ -79,24 +91,31 @@ public class EnchantmentTableExtensionScreen extends AbstractExtensionScreen {
 			int enchantmentColor;
 			RenderSystem.setShaderTexture(0, this.getTexture());
 			if ((player.experienceLevel >= enchantingCost && this.hasFuel(row)) || player.getAbilities().instabuild) {
-				graphics.blit(this.getTexture(), this.leftPos + this.imageWidth + 47, this.topPos + 97 + row * 19, 136, this.isHoveringRow(row, mouseX, mouseY) ? 38 : 0, 78, 19);
+				ResourceLocation sprite = this.isHoveringRow(row, mouseX, mouseY) ? ENCHANTMENT_SLOT_HIGHLIGHTED_SPRITE : ENCHANTMENT_SLOT_SPRITE;
+				graphics.blitSprite(RenderType::guiTextured, sprite, this.leftPos + this.imageWidth + 47, this.topPos + 97 + row * 19, 78, 19);
 				this.renderLevel(graphics, row, true);
 				costColor = 8453920;
 				enchantmentColor = 6839882;
 			} else {
-				graphics.blit(this.getTexture(), this.leftPos + this.imageWidth + 47, this.topPos + 97 + row * 19, 136, 19, 78, 19);
+				graphics.blitSprite(RenderType::guiTextured, ENCHANTMENT_SLOT_DISABLED_SPRITE, this.leftPos + this.imageWidth + 47, this.topPos + 97 + row * 19, 78, 19);
 				this.renderLevel(graphics, row, false);
 				costColor = 4226832;
 				enchantmentColor = 3419941;
 			}
 			this.renderLabels(graphics, row, costColor, enchantmentColor);
 		} else {
-			graphics.blit(this.getTexture(), this.leftPos + this.imageWidth + 47, this.topPos + 97 + row * 19, 136, 19, 78, 19);
+			graphics.blitSprite(RenderType::guiTextured, ENCHANTMENT_SLOT_DISABLED_SPRITE, this.leftPos + this.imageWidth + 47, this.topPos + 97 + row * 19, 78, 19);
 		}
 	}
 	
 	private void renderLevel(@NotNull GuiGraphics graphics, int row, boolean active) {
-		graphics.blit(this.getTexture(), this.leftPos + this.imageWidth + 47, this.topPos + 97 + row * 19, 136 + row * 19, active ? 57 : 76, 19, 19);
+		ResourceLocation sprite = switch (row) {
+			case 0 -> active ? LEVEL_1_SPRITE : LEVEL_1_DISABLED_SPRITE;
+			case 1 -> active ? LEVEL_2_SPRITE : LEVEL_2_DISABLED_SPRITE;
+			case 2 -> active ? LEVEL_3_SPRITE : LEVEL_3_DISABLED_SPRITE;
+			default -> throw new IllegalStateException("Expected row to be 0, 1 or 2, but got: " + row);
+		};
+		graphics.blitSprite(RenderType::guiTextured, sprite, this.leftPos + this.imageWidth + 47, this.topPos + 98 + row * 19, 16, 16);
 	}
 	
 	private void renderLabels(@NotNull GuiGraphics graphics, int row, int costColor, int enchantmentColor) {
@@ -122,8 +141,8 @@ public class EnchantmentTableExtensionScreen extends AbstractExtensionScreen {
 		if (this.isHoveringRow(row, mouseX, mouseY) && enchantingCost > 0) {
 			List<Component> components = Lists.newArrayList();
 			if (enchantment != null) {
-				Registry<Enchantment> registry = Objects.requireNonNull(this.minecraft.level).registryAccess().registryOrThrow(Registries.ENCHANTMENT);
-				Holder<Enchantment> holder = registry.getHolder(enchantment).orElseThrow();
+				Registry<Enchantment> registry = Objects.requireNonNull(this.minecraft.level).registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
+				Holder<Enchantment> holder = registry.get(enchantment).orElseThrow();
 				components.add((Component.translatable("container.enchant.clue", Enchantment.getFullname(holder, enchantmentLevel))).withStyle(ChatFormatting.WHITE));
 			} else {
 				components.add(Component.translatable("container.enchant.clue", ""));

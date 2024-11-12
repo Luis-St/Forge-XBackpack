@@ -19,6 +19,7 @@
 package net.luis.xbackpack.world.inventory.wrapper;
 
 import net.minecraft.world.entity.player.StackedContents;
+import net.minecraft.world.entity.player.StackedItemContents;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
@@ -142,7 +143,7 @@ public class CraftingContainerWrapper extends TransientCraftingContainer impleme
 	}
 	
 	@Override
-	public void fillStackedContents(@NotNull StackedContents contents) {
+	public void fillStackedContents(@NotNull StackedItemContents contents) {
 		for (int i = 0; i < this.getSlots(); i++) {
 			contents.accountSimpleStack(this.getStackInSlot(i));
 		}

@@ -18,10 +18,13 @@
 
 package net.luis.xbackpack.client.gui.screens.extension;
 
+import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.client.gui.screens.AbstractExtensionContainerScreen;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -34,6 +37,9 @@ import java.util.List;
 
 public class FurnaceExtensionScreen extends AbstractExtensionScreen {
 	
+	private static final ResourceLocation BURN_PROGRESS_SPRITE = ResourceLocation.fromNamespaceAndPath(XBackpack.MOD_ID, "extensions/furnace/burn_progress");
+	private static final ResourceLocation LIT_PROGRESS_SPRITE = ResourceLocation.fromNamespaceAndPath(XBackpack.MOD_ID, "extensions/furnace/lit_progress");
+	
 	private int cookingProgress;
 	private int fuelProgress;
 	
@@ -44,8 +50,8 @@ public class FurnaceExtensionScreen extends AbstractExtensionScreen {
 	@Override
 	protected void renderAdditional(@NotNull GuiGraphics graphics, float partialTicks, int mouseX, int mouseY, boolean open) {
 		if (open) {
-			graphics.blit(this.getTexture(), this.leftPos + this.imageWidth + 24, this.topPos + 89, 86, 14, this.cookingProgress, 17);
-			graphics.blit(this.getTexture(), this.leftPos + this.imageWidth + 5, this.topPos + 90 + 13 - this.fuelProgress, 86, 13 - this.fuelProgress, 14, this.fuelProgress);
+			graphics.blitSprite(RenderType::guiTextured, LIT_PROGRESS_SPRITE, 14, 14, 0, 14 - this.fuelProgress, this.leftPos + this.imageWidth + 5, this.topPos + 104 - this.fuelProgress, 14, this.fuelProgress);
+			graphics.blitSprite(RenderType::guiTextured, BURN_PROGRESS_SPRITE, 24, 17, 0, 0, this.leftPos + this.imageWidth + 24, this.topPos + 88, this.cookingProgress, 17);
 		}
 	}
 	

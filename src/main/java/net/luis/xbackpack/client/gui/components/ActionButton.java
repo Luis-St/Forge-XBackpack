@@ -24,6 +24,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
@@ -38,7 +39,8 @@ import java.util.function.Consumer;
 
 public class ActionButton extends AbstractButton {
 	
-	private static final ResourceLocation BACKPACK = ResourceLocation.fromNamespaceAndPath(XBackpack.MOD_ID, "textures/gui/container/backpack.png");
+	private static final ResourceLocation MODIFIER_BUTTON_SPRITE = ResourceLocation.fromNamespaceAndPath(XBackpack.MOD_ID, "backpack/modifier_button");
+	private static final ResourceLocation MODIFIER_BUTTON_HIGHLIGHTED_SPRITE = ResourceLocation.fromNamespaceAndPath(XBackpack.MOD_ID, "backpack/modifier_button_highlighted");
 	
 	private final Consumer<ClickType> action;
 	
@@ -53,11 +55,8 @@ public class ActionButton extends AbstractButton {
 	@Override
 	public void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		if (this.isHovered()) {
-			graphics.blit(BACKPACK, this.getX(), this.getY(), this.width, this.height, 244, 27, 12, 12, 256, 256);
-		} else {
-			graphics.blit(BACKPACK, this.getX(), this.getY(), this.width, this.height, 244, 15, 12, 12, 256, 256);
-		}
+		ResourceLocation sprite = this.isHovered() ? MODIFIER_BUTTON_HIGHLIGHTED_SPRITE : MODIFIER_BUTTON_SPRITE;
+		graphics.blitSprite(RenderType::guiTextured, sprite, this.getX(), this.getY(), this.getWidth(), this.getHeight());
 	}
 	
 	@Override

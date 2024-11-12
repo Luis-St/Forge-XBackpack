@@ -19,6 +19,7 @@
 package net.luis.xbackpack.client.gui.screens.extension;
 
 import com.google.common.collect.Lists;
+import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.client.gui.screens.AbstractExtensionContainerScreen;
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtension;
@@ -26,12 +27,18 @@ import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
+import net.minecraft.util.context.ContextMap;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.SelectableRecipe;
+import net.minecraft.world.item.crafting.StonecutterRecipe;
+import net.minecraft.world.item.crafting.display.SlotDisplay;
+import net.minecraft.world.item.crafting.display.SlotDisplayContext;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -46,7 +53,13 @@ import java.util.function.Consumer;
 
 public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 	
-	private final List<RecipeHolder<StonecutterRecipe>> recipes = Lists.newArrayList();
+	private static final ResourceLocation RECIPE_SPRITE = ResourceLocation.fromNamespaceAndPath(XBackpack.MOD_ID, "extensions/stonecutter/recipe");
+	private static final ResourceLocation RECIPE_HIGHLIGHTED_SPRITE = ResourceLocation.fromNamespaceAndPath(XBackpack.MOD_ID, "extensions/stonecutter/recipe_highlighted");
+	private static final ResourceLocation RECIPE_SELECTED_SPRITE = ResourceLocation.fromNamespaceAndPath(XBackpack.MOD_ID, "extensions/stonecutter/recipe_selected");
+	private static final ResourceLocation SCROLLER_SPRITE = ResourceLocation.fromNamespaceAndPath(XBackpack.MOD_ID, "extensions/stonecutter/scroller");
+	private static final ResourceLocation SCROLLER_DISABLED_SPRITE = ResourceLocation.fromNamespaceAndPath(XBackpack.MOD_ID, "extensions/stonecutter/scroller_disabled");
+	
+	private final List<ItemStack> recipesForInput = Lists.newArrayList();
 	private Player player;
 	private CraftingHandler handler;
 	private double scrollOffset;
@@ -67,48 +80,48 @@ public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 	@Override
 	protected void renderAdditional(@NotNull GuiGraphics graphics, float partialTicks, int mouseX, int mouseY, boolean open) {
 		if (open) {
-			graphics.blit(this.getTexture(), this.leftPos + this.imageWidth + 72, this.topPos + 143 + (int) (39.0 * this.scrollOffset), 95 + (this.isScrollBarActive() ? 0 : 12), 0, 12, 15);
+			ResourceLocation sprite = this.isScrollBarActive() ? SCROLLER_SPRITE : SCROLLER_DISABLED_SPRITE;
+			graphics.blitSprite(RenderType::guiTextured, sprite, this.leftPos + this.imageWidth + 72, this.topPos + 143 + (int) (39.0 * this.scrollOffset), 12, 15);
 			this.renderButtons(graphics, mouseX, mouseY);
 			this.renderRecipes(graphics);
 		}
 	}
 	
 	private void renderButtons(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {
-		for (int index = this.startIndex; index < this.startIndex + 12 && index < this.recipes.size(); ++index) {
+		int maxRecipes = this.startIndex + 12;
+		for (int index = this.startIndex; index < maxRecipes && index < this.recipesForInput.size(); ++index) {
 			int i = index - this.startIndex;
 			int x = this.leftPos + 225 + index % 4 * 16;
 			int y = this.topPos + 142 + (i / 4) * 18 + 2;
-			int offset = 15;
+			ResourceLocation sprite = RECIPE_SPRITE;
 			if (index == this.selectedRecipe) {
-				offset += 18;
+				sprite = RECIPE_SELECTED_SPRITE;
 			} else if (mouseX >= x && x + 16 > mouseX && mouseY + 1 >= y && y + 18 > mouseY + 1) {
-				offset += 36;
+				sprite = RECIPE_HIGHLIGHTED_SPRITE;
 			}
-			graphics.blit(this.getTexture(), x, y - 1, 95, offset, 16, 18);
+			graphics.blitSprite(RenderType::guiTextured, sprite, x, y - 1, 16, 18);
 		}
 	}
 	
 	private void renderRecipes(@NotNull GuiGraphics graphics) {
-		for (int index = this.startIndex; index < this.startIndex + 12 && index < this.recipes.size(); ++index) {
+		for (int index = this.startIndex; index < this.startIndex + 12 && index < this.recipesForInput.size(); ++index) {
 			int i = index - this.startIndex;
 			int x = this.leftPos + 225 + index % 4 * 16;
 			int y = this.topPos + 142 + (i / 4) * 18 + 2;
-			graphics.renderItem(this.recipes.get(index).value().getResultItem(this.player.level().registryAccess()), x, y);
+			graphics.renderItem(this.recipesForInput.get(index), x, y);
 		}
 	}
 	
 	@Override
 	public void renderTooltip(@NotNull GuiGraphics graphics, int mouseX, int mouseY, boolean open, boolean renderable, @NotNull Consumer<ItemStack> tooltipRenderer) {
 		super.renderTooltip(graphics, mouseX, mouseY, open, renderable, tooltipRenderer);
-		if (open) {
-			if (this.shouldDisplayRecipes()) {
-				for (int index = this.startIndex; index < this.startIndex + 12 && index < this.recipes.size(); ++index) {
-					int i = index - this.startIndex;
-					double x = mouseX - (double) (this.leftPos + 225 + i % 4 * 16);
-					double y = mouseY - (double) (this.topPos + 142 + i / 4 * 18);
-					if (x >= 0.0 && y >= 0.0 && x < 16.0 && y < 18.0) {
-						tooltipRenderer.accept(this.recipes.get(index).value().getResultItem(this.player.level().registryAccess()));
-					}
+		if (open && this.shouldDisplayRecipes()) {
+			for (int index = this.startIndex; index < this.startIndex + 12 && index < this.recipesForInput.size(); ++index) {
+				int i = index - this.startIndex;
+				double x = mouseX - (double) (this.leftPos + 225 + i % 4 * 16);
+				double y = mouseY - (double) (this.topPos + 142 + i / 4 * 18);
+				if (x >= 0.0 && y >= 0.0 && x < 16.0 && y < 18.0) {
+					tooltipRenderer.accept(this.recipesForInput.get(index));
 				}
 			}
 		}
@@ -151,7 +164,7 @@ public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 			int bottom = top + 54;
 			this.scrollOffset = (mouseY - top - 7.5) / ((bottom - top) - 15.0);
 			this.scrollOffset = Mth.clamp(this.scrollOffset, 0.0, 1.0);
-			this.startIndex = (int) (this.scrollOffset * this.getOffScreenRows() + 0.5) * 4;
+			this.startIndex = (int) ((this.scrollOffset * this.getOffScreenRows()) + 0.5) * 4;
 			return true;
 		} else {
 			return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
@@ -163,7 +176,7 @@ public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 		if (this.isScrollBarActive()) {
 			double offset = delta / this.getOffScreenRows();
 			this.scrollOffset = Mth.clamp(this.scrollOffset - offset, 0.0F, 1.0F);
-			this.startIndex = (int) (this.scrollOffset * this.getOffScreenRows() + 0.5) * 4;
+			this.startIndex = (int) ((this.scrollOffset * this.getOffScreenRows()) + 0.5) * 4;
 		}
 		return true;
 	}
@@ -177,17 +190,27 @@ public class StonecutterExtensionScreen extends AbstractExtensionScreen {
 	}
 	
 	private boolean isScrollBarActive() {
-		return this.shouldDisplayRecipes() && this.recipes.size() > 12;
+		return this.shouldDisplayRecipes() && this.recipesForInput.size() > 12;
 	}
 	
 	private int getOffScreenRows() {
-		return (this.recipes.size() + 4 - 1) / 4 - 3;
+		return (this.recipesForInput.size() + 4 - 1) / 4 - 3;
 	}
 	
 	public void updateRecipes(boolean resetSelected) {
-		this.recipes.clear();
-		this.recipes.addAll(Objects.requireNonNull(this.minecraft.getConnection()).getRecipeManager().getRecipesFor(RecipeType.STONECUTTING, new SingleRecipeInput(this.getInputStack()), Objects.requireNonNull(this.minecraft.level)));
+		this.recipesForInput.clear();
+		if (!this.getInputStack().isEmpty()) {
+			ContextMap context = SlotDisplayContext.fromLevel(this.player.level());
+			SelectableRecipe.SingleInputSet<StonecutterRecipe> allRecipes = this.player.level().recipeAccess().stonecutterRecipes();
+			SelectableRecipe.SingleInputSet<StonecutterRecipe> recipesForInput = allRecipes.selectByInput(this.getInputStack());
+			recipesForInput.entries().forEach((entry) -> {
+				SlotDisplay slotDisplay = entry.recipe().optionDisplay();
+				this.recipesForInput.add(slotDisplay.resolveForFirstStack(context));
+			});
+		}
 		if (resetSelected) {
+			this.scrollOffset = 0.0;
+			this.startIndex = 0;
 			this.selectedRecipe = -1;
 		}
 	}

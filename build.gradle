@@ -21,60 +21,22 @@ minecraft {
 	
 	runs {
 		configureEach {
+			workingDirectory project.file("run")
+			
 			property "forge.logging.markers", "REGISTRIES"
 			property "forge.logging.console.level", "debug"
+			property "forge.enabledGameTestNamespaces", "xbackpack"
+			//property "forge.logging.mojang.level", "debug"
 		}
 		
-		client {
-			workingDirectory project.file("run")
-			
-			property "forge.enabledGameTestNamespaces", "xbackpack"
-			property "forge.logging.mojang.level", "debug"
-			
-			mods {
-				xbackpack {
-					source sourceSets.main
-				}
-			}
-		}
+		client {}
 		
-		server {
-			workingDirectory project.file("run")
-			
-			property "forge.enabledGameTestNamespaces", "xbackpack"
-			property "forge.logging.mojang.level", "debug"
-			
-			mods {
-				xbackpack {
-					source sourceSets.main
-				}
-			}
-		}
+		server {}
 		
-		gameTestServer {
-			workingDirectory project.file("run")
-			
-			property "forge.enabledGameTestNamespaces", "xbackpack"
-			property "mixin.env.remapRefMap", "true"
-			property "mixin.env.refMapRemappingFile", "${buildDir}/createSrgToMcp/output.srg"
-			
-			mods {
-				xbackpack {
-					source sourceSets.main
-				}
-			}
-		}
+		gameTestServer {}
 		
 		data {
-			workingDirectory project.file("run")
-			
 			args "--mod", "xbackpack", "--all", "--output", file("src/generated/resources/"), "--existing", file("src/main/resources/")
-			
-			mods {
-				xbackpack {
-					source sourceSets.main
-				}
-			}
 		}
 	}
 }
@@ -97,9 +59,10 @@ dependencies {
 	
 	implementation('net.sf.jopt-simple:jopt-simple:5.0.4') { version { strictly '5.0.4' } }
 	
-	compileOnly "mezz.jei:jei-${MinecraftVersion}-common-api:${JeiVersion}"
+	// Jei does not have a version for 1.21.3 yet
+	/*compileOnly "mezz.jei:jei-${MinecraftVersion}-common-api:${JeiVersion}"
 	compileOnly "mezz.jei:jei-${MinecraftVersion}-forge-api:${JeiVersion}"
-	runtimeOnly "mezz.jei:jei-${MinecraftVersion}-forge:${JeiVersion}"
+	runtimeOnly "mezz.jei:jei-${MinecraftVersion}-forge:${JeiVersion}"*/
 }
 
 compileJava.dependsOn(updateLicenses)

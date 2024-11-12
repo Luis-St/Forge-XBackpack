@@ -16,6 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+/*
 package net.luis.xbackpack.jei;
 
 import com.google.common.collect.Lists;
@@ -29,11 +30,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+*/
 /**
  *
  * @author Luis-St
  *
- */
+ *//*
+
 
 public class BackpackContainerHandler implements IGuiContainerHandler<BackpackScreen> {
 	
@@ -53,4 +56,4 @@ public class BackpackContainerHandler implements IGuiContainerHandler<BackpackSc
 		}
 		return Lists.newArrayList();
 	}
-}
+}*/

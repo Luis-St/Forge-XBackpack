@@ -26,5 +26,5 @@ package net.luis.xbackpack.client.gui.screens;
 
 public enum SlotRenderType {
 	
-	DEFAULT(), SKIP()
+	DEFAULT, SKIP
 }

@@ -19,6 +19,7 @@
 package net.luis.xbackpack.client.gui.screens.extension;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.client.gui.screens.AbstractExtensionContainerScreen;
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtension;
@@ -26,7 +27,9 @@ import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.luis.xbackpack.world.inventory.extension.AnvilExtensionMenu;
 import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -39,6 +42,8 @@ import java.util.Objects;
  */
 
 public class AnvilExtensionScreen extends AbstractExtensionScreen {
+	
+	private static final ResourceLocation ERROR_SPRITE = ResourceLocation.fromNamespaceAndPath(XBackpack.MOD_ID, "extensions/anvil/error");
 	
 	private CraftingHandler handler;
 	private int cost;
@@ -56,7 +61,7 @@ public class AnvilExtensionScreen extends AbstractExtensionScreen {
 	protected void renderAdditional(@NotNull GuiGraphics graphics, float partialTicks, int mouseX, int mouseY, boolean open) {
 		if (open) {
 			if (this.shouldRenderCanceled()) {
-				graphics.blit(this.getTexture(), this.leftPos + this.imageWidth + 59, this.topPos + 71, 111, 0, 22, 21);
+				graphics.blitSprite(RenderType::guiTextured, ERROR_SPRITE, this.leftPos + this.imageWidth + 59, this.topPos + 71, 22, 21);
 			}
 			this.renderLabels(graphics);
 		}
