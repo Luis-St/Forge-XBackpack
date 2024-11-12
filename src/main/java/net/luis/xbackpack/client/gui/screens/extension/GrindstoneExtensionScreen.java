@@ -18,6 +18,7 @@
 
 package net.luis.xbackpack.client.gui.screens.extension;
 
+import net.luis.xbackpack.XBackpack;
 import net.luis.xbackpack.client.gui.screens.AbstractExtensionContainerScreen;
 import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtension;
@@ -25,6 +26,7 @@ import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,6 +40,8 @@ import java.util.Objects;
  */
 
 public class GrindstoneExtensionScreen extends AbstractExtensionScreen {
+	
+	private static final ResourceLocation ERROR_SPRITE = ResourceLocation.fromNamespaceAndPath(XBackpack.MOD_ID, "extensions/grindstone/error");
 	
 	private CraftingHandler handler;
 	
@@ -55,9 +59,7 @@ public class GrindstoneExtensionScreen extends AbstractExtensionScreen {
 		if (open) {
 			ItemStackHandler handler = this.handler.getInputHandler();
 			if ((!handler.getStackInSlot(0).isEmpty() || !handler.getStackInSlot(1).isEmpty()) && this.handler.getResultHandler().getStackInSlot(0).isEmpty()) {
-				int imageWidth = this.extension.getImageWidth();
-				int imageHeight = this.extension.getImageHeight();
-				graphics.blit(RenderType::guiTextured, this.getTexture(), this.leftPos + this.imageWidth + 60, this.topPos + 184, 112, 0, 22, 21, imageWidth, imageHeight);
+				graphics.blitSprite(RenderType::guiTextured, ERROR_SPRITE, this.leftPos + this.imageWidth + 60, this.topPos + 184, 22, 21);
 			}
 		}
 	}

@@ -32,6 +32,7 @@ import net.luis.xbackpack.world.inventory.modifier.filter.ItemFilters;
 import net.luis.xbackpack.world.inventory.modifier.sorter.ItemSorters;
 import net.luis.xbackpack.world.inventory.slot.BackpackSlot;
 import net.luis.xbackpack.world.inventory.slot.MoveableSlot;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
@@ -54,12 +55,15 @@ import java.util.Objects;
 public class BackpackScreen extends AbstractModifiableContainerScreen<BackpackMenu> {
 	
 	private static final ResourceLocation BACKPACK = ResourceLocation.fromNamespaceAndPath(XBackpack.MOD_ID, "textures/gui/container/backpack.png");
-	private static final ResourceLocation ICONS = ResourceLocation.fromNamespaceAndPath(XBackpack.MOD_ID, "textures/gui/container/backpack_icons.png");
+	private static final ResourceLocation FILTER_SPRITE = ResourceLocation.fromNamespaceAndPath(XBackpack.MOD_ID, "backpack/filter");
+	private static final ResourceLocation SORTER_SPRITE = ResourceLocation.fromNamespaceAndPath(XBackpack.MOD_ID, "backpack/sorter");
+	private static final ResourceLocation MERGER_SPRITE = ResourceLocation.fromNamespaceAndPath(XBackpack.MOD_ID, "backpack/merger");
+	private static final ResourceLocation SCROLLER_SPRITE = ResourceLocation.fromNamespaceAndPath(XBackpack.MOD_ID, "backpack/scroller");
 	
-	private RenderData searchData;
-	private RenderData filterData;
-	private RenderData sorterData;
-	private RenderData mergerData;
+	private @Nullable RenderData searchData;
+	private @Nullable RenderData filterData;
+	private @Nullable RenderData sorterData;
+	private @Nullable RenderData mergerData;
 	
 	public BackpackScreen(BackpackMenu menu, Inventory inventory, Component titleComponent) {
 		super(menu, inventory, titleComponent);
@@ -75,6 +79,15 @@ public class BackpackScreen extends AbstractModifiableContainerScreen<BackpackMe
 		this.addExtensionScreen(BrewingStandExtensionScreen::new);
 		this.addExtensionScreen(GrindstoneExtensionScreen::new);
 		this.addExtensionScreen(SmithingTableExtensionScreen::new);
+	}
+	
+	@Override
+	public void resize(@NotNull Minecraft minecraft, int width, int height) {
+		this.searchData = null;
+		this.filterData = null;
+		this.sorterData = null;
+		this.mergerData = null;
+		super.resize(minecraft, width, height);
 	}
 	
 	@Override
@@ -95,10 +108,10 @@ public class BackpackScreen extends AbstractModifiableContainerScreen<BackpackMe
 	@Override
 	protected void renderScreen(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		super.renderScreen(graphics, mouseX, mouseY, partialTicks);
-		graphics.blit(RenderType::guiTextured, ICONS, this.leftPos + 75, this.topPos + 6, 32, 0, 8, 8, 256, 256);
-		graphics.blit(RenderType::guiTextured, ICONS, this.leftPos + 89, this.topPos + 6, 8, 8, 46, 0, 14, 14, 256, 256);
+		graphics.blitSprite(RenderType::guiTextured, FILTER_SPRITE, this.leftPos + 75, this.topPos + 6, 8, 8);
+		graphics.blitSprite(RenderType::guiTextured, SORTER_SPRITE, this.leftPos + 89, this.topPos + 6, 8, 8);
 		if (this.menu.getFilter() == ItemFilters.NONE && this.menu.getSorter() == ItemSorters.NONE) {
-			graphics.blit(RenderType::guiTextured, ICONS, this.leftPos + 200, this.topPos + 6, 8, 8, 40, 0, 6, 6, 256, 256);
+			graphics.blitSprite(RenderType::guiTextured, MERGER_SPRITE, this.leftPos + 200, this.topPos + 6, 8, 8);
 		}
 	}
 	
@@ -107,7 +120,7 @@ public class BackpackScreen extends AbstractModifiableContainerScreen<BackpackMe
 		super.renderBg(graphics, partialTicks, mouseX, mouseY);
 		graphics.blit(RenderType::guiTextured, BACKPACK, this.leftPos, this.topPos, 0, 0, 220, 220, 256, 256);
 		int scrollPosition = this.topPos + 18 + this.scrollOffset;
-		graphics.blit(RenderType::guiTextured, BACKPACK, this.leftPos + 198, scrollPosition, 244, 0, 12, 15, 256, 256);
+		graphics.blitSprite(RenderType::guiTextured, SCROLLER_SPRITE, this.leftPos + 198, scrollPosition, 12, 15);
 	}
 	
 	@Override

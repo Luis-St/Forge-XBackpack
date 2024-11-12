@@ -18,7 +18,6 @@
 
 package net.luis.xbackpack.world.inventory.extension;
 
-import com.google.common.collect.Lists;
 import net.luis.xbackpack.network.XBNetworkHandler;
 import net.luis.xbackpack.network.packet.extension.UpdateStonecutterPacket;
 import net.luis.xbackpack.world.capability.BackpackProvider;
@@ -37,8 +36,10 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 /**
@@ -50,10 +51,10 @@ import java.util.function.Consumer;
 public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 	
 	private final CraftingHandler handler;
-	private final List<RecipeHolder<StonecutterRecipe>> recipes = Lists.newArrayList();
+	private SelectableRecipe.SingleInputSet<StonecutterRecipe> recipesForInput = SelectableRecipe.SingleInputSet.empty();
 	private ItemStack input = ItemStack.EMPTY;
 	private int selectedRecipe = -1;
-	private RecipeHolder<StonecutterRecipe> recipe;
+	private @Nullable RecipeHolder<StonecutterRecipe> recipe;
 	
 	public StonecutterExtensionMenu(@NotNull AbstractExtensionContainerMenu menu, @NotNull Player player) {
 		super(menu, player, BackpackExtensions.STONECUTTER.get());
@@ -104,10 +105,10 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 	public boolean requiresTickUpdate() {
 		ItemStack input = this.handler.getInputHandler().getStackInSlot(0);
 		ItemStack result = this.handler.getResultHandler().getStackInSlot(0);
-		if (result.isEmpty() && !this.recipes.isEmpty()) {
+		if (result.isEmpty() && !this.recipesForInput.isEmpty()) {
 			return true;
 		}
-		return !input.isEmpty() && this.recipes.isEmpty();
+		return !input.isEmpty() && this.recipesForInput.isEmpty();
 	}
 	
 	@Override
@@ -122,10 +123,13 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	private void setupRecipes(@NotNull ItemStack stack) {
-		this.recipes.clear();
 		this.selectedRecipe = -1;
 		this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);
-		this.player.level().recipeAccess().stonecutterRecipes().entries().stream().map(SelectableRecipe.SingleInputEntry::recipe).map(SelectableRecipe::recipe).filter(Optional::isPresent).map(Optional::orElseThrow).forEach(this.recipes::add);
+		if (stack.isEmpty()) {
+			this.recipesForInput = SelectableRecipe.SingleInputSet.empty();
+		} else {
+			this.recipesForInput = this.player.level().recipeAccess().stonecutterRecipes().selectByInput(stack);
+		}
 		XBNetworkHandler.INSTANCE.sendToPlayer(this.player, new UpdateStonecutterPacket(true));
 	}
 	
@@ -140,18 +144,23 @@ public class StonecutterExtensionMenu extends AbstractExtensionMenu {
 	}
 	
 	private void setupResult() {
-		if (!this.recipes.isEmpty() && this.isValidIndex(this.selectedRecipe)) {
-			RecipeHolder<StonecutterRecipe> recipe = this.recipes.get(this.selectedRecipe);
-			this.handler.getResultHandler().setStackInSlot(0, recipe.value().assemble(new SingleRecipeInput(this.handler.getInputHandler().getStackInSlot(0)), this.player.level().registryAccess()));
-			this.recipe = recipe;
-		} else {
-			this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);
+		Optional<RecipeHolder<StonecutterRecipe>> optional = Optional.empty();
+		if (!this.recipesForInput.isEmpty() && this.isValidIndex(this.selectedRecipe)) {
+			SelectableRecipe.SingleInputEntry<StonecutterRecipe> selectedRecipe = this.recipesForInput.entries().get(this.selectedRecipe);
+			optional = selectedRecipe.recipe().recipe();
 		}
+		optional.ifPresentOrElse(recipe -> {
+			this.recipe = recipe;
+			this.handler.getResultHandler().setStackInSlot(0, recipe.value().assemble(new SingleRecipeInput(this.handler.getInputHandler().getStackInSlot(0)), this.player.level().registryAccess()));
+		}, () -> {
+			this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);
+			this.recipe = null;
+		});
 		this.menu.broadcastChanges();
 	}
 	
 	private boolean isValidIndex(int index) {
-		return this.recipes.size() > index && index >= 0;
+		return this.recipesForInput.size() > index && index >= 0;
 	}
 	
 	@Override

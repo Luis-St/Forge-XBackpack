@@ -140,7 +140,7 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 		this.cost = 1;
 		int enchantCost = 0;
 		int repairCost = 0;
-		if (leftStack.isEmpty()) {
+		if (leftStack.isEmpty() || !EnchantmentHelper.canStoreEnchantments(leftStack)) {
 			this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);
 			this.cost = 0;
 			this.broadcastChanges();
@@ -155,7 +155,7 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 				return;
 			}
 			if (!rightStack.isEmpty()) {
-				enchantedBook = rightStack.getItem() == Items.ENCHANTED_BOOK && !rightStack.getOrDefault(DataComponents.STORED_ENCHANTMENTS, ItemEnchantments.EMPTY).isEmpty();
+				enchantedBook = rightStack.has(DataComponents.STORED_ENCHANTMENTS);
 				if (resultStack.isDamageableItem() && resultStack.isValidRepairItem(rightStack)) {
 					int damage = Math.min(resultStack.getDamageValue(), resultStack.getMaxDamage() / 4);
 					if (damage <= 0) {
@@ -164,6 +164,7 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 						this.broadcastChanges();
 						return;
 					}
+					
 					int currentRepairCost;
 					for (currentRepairCost = 0; damage > 0 && currentRepairCost < rightStack.getCount(); ++currentRepairCost) {
 						int currentDamage = resultStack.getDamageValue() - damage;
@@ -171,6 +172,7 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 						++enchantCost;
 						damage = Math.min(resultStack.getDamageValue(), resultStack.getMaxDamage() / 4);
 					}
+					
 					this.repairItemCountCost = currentRepairCost;
 				} else {
 					if (!enchantedBook && (!resultStack.is(rightStack.getItem()) || !resultStack.isDamageableItem())) {
@@ -193,6 +195,7 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 							enchantCost += 2;
 						}
 					}
+					//Issue start
 					ItemEnchantments rightEnchantments = rightStack.getOrDefault(DataComponents.STORED_ENCHANTMENTS, ItemEnchantments.EMPTY);
 					boolean canEnchant = false;
 					boolean survival = false;
@@ -206,7 +209,7 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 							canEnchantOrCreative = true;
 						}
 						for (Holder<Enchantment> holder : mutable.keySet()) {
-							if (holder.equals(rightHolder) && !Enchantment.areCompatible(rightHolder, holder)) {
+							if (!holder.equals(rightHolder) && !Enchantment.areCompatible(rightHolder, holder)) {
 								canEnchantOrCreative = false;
 								++enchantCost;
 							}
@@ -229,7 +232,8 @@ public class AnvilExtensionMenu extends AbstractExtensionMenu {
 							survival = true;
 						}
 					}
-					if (survival && !canEnchant) {
+					//Issue end
+					if (survival && !canEnchant) { // Issue encounter here
 						this.handler.getResultHandler().setStackInSlot(0, ItemStack.EMPTY);
 						this.cost = 0;
 						this.broadcastChanges();

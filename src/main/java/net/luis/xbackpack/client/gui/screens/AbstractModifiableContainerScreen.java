@@ -99,6 +99,7 @@ public abstract class AbstractModifiableContainerScreen<T extends AbstractModifi
 	
 	@Override
 	public void resize(@NotNull Minecraft minecraft, int width, int height) {
+		super.resize(minecraft, width, height);
 		if (this.searchBox != null) {
 			String searchBoxValue = this.searchBox.getValue();
 			this.init(minecraft, width, height);

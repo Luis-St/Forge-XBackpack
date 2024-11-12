@@ -281,7 +281,7 @@ public class SmeltingProgressHandler implements ProgressHandler {
 	
 	public int getFuelProgress() {
 		int maxFuel = this.maxFuel == 0 ? 200 : this.maxFuel;
-		return this.fuelTime * 13 / maxFuel;
+		return this.fuelTime * 14 / maxFuel;
 	}
 	
 	@Override
