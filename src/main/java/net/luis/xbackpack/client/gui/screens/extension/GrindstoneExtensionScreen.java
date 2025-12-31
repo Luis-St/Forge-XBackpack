@@ -24,9 +24,9 @@ import net.luis.xbackpack.world.capability.BackpackProvider;
 import net.luis.xbackpack.world.extension.BackpackExtension;
 import net.luis.xbackpack.world.extension.BackpackExtensions;
 import net.luis.xbackpack.world.inventory.handler.CraftingHandler;
+import net.luis.xbackpack.world.item.DynamicItemStacksResourceHandler;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -56,7 +56,7 @@ public class GrindstoneExtensionScreen extends AbstractExtensionScreen {
 	@Override
 	protected void renderAdditional(@NotNull GuiGraphics graphics, float partialTicks, int mouseX, int mouseY, boolean open) {
 		if (open) {
-			ItemStackHandler handler = this.handler.getInputHandler();
+			DynamicItemStacksResourceHandler handler = this.handler.getInputHandler();
 			if ((!handler.getStackInSlot(0).isEmpty() || !handler.getStackInSlot(1).isEmpty()) && this.handler.getResultHandler().getStackInSlot(0).isEmpty()) {
 				graphics.blitSprite(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, ERROR_SPRITE, this.leftPos + this.imageWidth + 60, this.topPos + 184, 22, 21);
 			}

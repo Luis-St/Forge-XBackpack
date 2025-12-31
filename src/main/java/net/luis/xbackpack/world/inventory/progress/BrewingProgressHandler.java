@@ -21,6 +21,7 @@ package net.luis.xbackpack.world.inventory.progress;
 import net.luis.xbackpack.network.XBNetworkHandler;
 import net.luis.xbackpack.network.packet.extension.UpdateBrewingStandPacket;
 import net.luis.xbackpack.world.inventory.handler.CraftingFuelHandler;
+import net.luis.xbackpack.world.item.DynamicItemStacksResourceHandler;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -37,7 +38,6 @@ import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.event.brewing.PotionBrewEvent;
-import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -141,7 +141,7 @@ public class BrewingProgressHandler implements ProgressHandler {
 		return this.handler.getFuelHandler().getStackInSlot(0);
 	}
 	
-	private @NotNull ItemStackHandler getResultHandler() {
+	private @NotNull DynamicItemStacksResourceHandler getResultHandler() {
 		return this.handler.getResultHandler();
 	}
 	

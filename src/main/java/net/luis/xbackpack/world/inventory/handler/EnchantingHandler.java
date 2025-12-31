@@ -18,12 +18,11 @@
 
 package net.luis.xbackpack.world.inventory.handler;
 
-import net.luis.xbackpack.world.item.DynamicItemStackHandler;
+import net.luis.xbackpack.world.item.DynamicItemStacksResourceHandler;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.level.storage.*;
-import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -33,41 +32,41 @@ import org.jetbrains.annotations.NotNull;
  */
 
 public class EnchantingHandler {
-	
-	private final ItemStackHandler powerHandler;
-	private final ItemStackHandler inputHandler;
-	private final ItemStackHandler fuelHandler;
-	
+
+	private final DynamicItemStacksResourceHandler powerHandler;
+	private final DynamicItemStacksResourceHandler inputHandler;
+	private final DynamicItemStacksResourceHandler fuelHandler;
+
 	public EnchantingHandler(int power, int input) {
 		this(power, input, 1);
 	}
-	
-	public EnchantingHandler(@NotNull DynamicItemStackHandler powerHandler, @NotNull DynamicItemStackHandler inputHandler) {
-		this(powerHandler, inputHandler, new DynamicItemStackHandler(1));
+
+	public EnchantingHandler(@NotNull DynamicItemStacksResourceHandler powerHandler, @NotNull DynamicItemStacksResourceHandler inputHandler) {
+		this(powerHandler, inputHandler, new DynamicItemStacksResourceHandler(1));
 	}
-	
+
 	public EnchantingHandler(int power, int input, int fuel) {
-		this(new DynamicItemStackHandler(power), new DynamicItemStackHandler(input), new DynamicItemStackHandler(fuel));
+		this(new DynamicItemStacksResourceHandler(power), new DynamicItemStacksResourceHandler(input), new DynamicItemStacksResourceHandler(fuel));
 	}
-	
-	public EnchantingHandler(@NotNull DynamicItemStackHandler powerHandler, @NotNull DynamicItemStackHandler inputHandler, @NotNull DynamicItemStackHandler fuelHandler) {
+
+	public EnchantingHandler(@NotNull DynamicItemStacksResourceHandler powerHandler, @NotNull DynamicItemStacksResourceHandler inputHandler, @NotNull DynamicItemStacksResourceHandler fuelHandler) {
 		this.powerHandler = powerHandler;
 		this.inputHandler = inputHandler;
 		this.fuelHandler = fuelHandler;
 	}
-	
-	public @NotNull ItemStackHandler getPowerHandler() {
+
+	public @NotNull DynamicItemStacksResourceHandler getPowerHandler() {
 		return this.powerHandler;
 	}
-	
-	public @NotNull ItemStackHandler getInputHandler() {
+
+	public @NotNull DynamicItemStacksResourceHandler getInputHandler() {
 		return this.inputHandler;
 	}
-	
-	public @NotNull ItemStackHandler getFuelHandler() {
+
+	public @NotNull DynamicItemStacksResourceHandler getFuelHandler() {
 		return this.fuelHandler;
 	}
-	
+
 	public @NotNull CompoundTag serialize(HolderLookup.@NotNull Provider provider) {
 		CompoundTag tag = new CompoundTag();
 		TagValueOutput output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, provider);

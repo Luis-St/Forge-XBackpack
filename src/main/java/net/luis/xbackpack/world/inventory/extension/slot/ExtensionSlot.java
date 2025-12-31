@@ -34,6 +34,7 @@ import java.util.Optional;
  *
  */
 
+@SuppressWarnings("deprecation") // SlotItemHandler is deprecated, will be migrated when NeoForge provides stable replacement
 public class ExtensionSlot extends SlotItemHandler implements ExtensionMenuSlot {
 	
 	private final AbstractExtensionMenu extensionMenu;

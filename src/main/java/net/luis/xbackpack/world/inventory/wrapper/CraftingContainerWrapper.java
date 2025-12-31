@@ -34,6 +34,7 @@ import java.util.List;
  *
  */
 
+@SuppressWarnings("deprecation") // IItemHandlerModifiable is deprecated, will be migrated when NeoForge provides stable replacement
 public class CraftingContainerWrapper extends TransientCraftingContainer implements IItemHandlerModifiable {
 
 	private final AbstractContainerMenu menu;

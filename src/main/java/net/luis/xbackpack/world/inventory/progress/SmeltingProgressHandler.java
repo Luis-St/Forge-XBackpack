@@ -21,13 +21,13 @@ package net.luis.xbackpack.world.inventory.progress;
 import net.luis.xbackpack.network.XBNetworkHandler;
 import net.luis.xbackpack.network.packet.extension.UpdateFurnacePacket;
 import net.luis.xbackpack.world.inventory.handler.SmeltingHandler;
+import net.luis.xbackpack.world.item.DynamicItemStacksResourceHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
-import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -87,7 +87,7 @@ public class SmeltingProgressHandler implements ProgressHandler {
 			} else if (this.cookingProgress > 0) {
 				this.cookingProgress--;
 			}
-			ItemStackHandler inputHandler = this.handler.getInputHandler();
+			DynamicItemStacksResourceHandler inputHandler = this.handler.getInputHandler();
 			if (this.cookingProgress >= this.cookingTime && !inputHandler.extractItem(0, 1, true).isEmpty()) {
 				ItemStack stack = this.handler.getResultHandler().insertItem(0, progressingRecipe.assemble(new SingleRecipeInput(inputHandler.extractItem(0, 1, false)), this.player.level().registryAccess()), false);
 				if (!stack.isEmpty()) {
@@ -118,7 +118,7 @@ public class SmeltingProgressHandler implements ProgressHandler {
 	}
 	
 	private void forceInputStorage() {
-		ItemStackHandler handler = this.getInputStorage();
+		DynamicItemStacksResourceHandler handler = this.getInputStorage();
 		for (int i = 0; i < handler.getSlots(); i++) {
 			ItemStack stack = handler.getStackInSlot(i);
 			if (stack.isEmpty()) {
@@ -143,7 +143,7 @@ public class SmeltingProgressHandler implements ProgressHandler {
 	}
 	
 	private void forceResultStorage() {
-		ItemStackHandler handler = this.getResultStorage();
+		DynamicItemStacksResourceHandler handler = this.getResultStorage();
 		for (int i = 0; i < handler.getSlots(); i++) {
 			ItemStack result = this.getResultItem();
 			if (result.isEmpty()) {
@@ -268,11 +268,11 @@ public class SmeltingProgressHandler implements ProgressHandler {
 		return this.handler.getResultHandler().getStackInSlot(0);
 	}
 	
-	public @NotNull ItemStackHandler getInputStorage() {
+	public @NotNull DynamicItemStacksResourceHandler getInputStorage() {
 		return this.handler.getInputStorageHandler();
 	}
-	
-	public @NotNull ItemStackHandler getResultStorage() {
+
+	public @NotNull DynamicItemStacksResourceHandler getResultStorage() {
 		return this.handler.getResultStorageHandler();
 	}
 	
