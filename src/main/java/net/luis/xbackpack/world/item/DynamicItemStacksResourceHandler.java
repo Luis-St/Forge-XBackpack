@@ -20,6 +20,7 @@ package net.luis.xbackpack.world.item;
 
 import net.luis.xbackpack.XBackpack;
 import net.minecraft.core.NonNullList;
+import net.minecraft.world.ItemStackWithSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -104,27 +105,30 @@ public class DynamicItemStacksResourceHandler extends ItemStacksResourceHandler 
 
 	@Override
 	public void deserialize(@NotNull ValueInput input) {
+		// Check for old "Size" key to determine format
+		// Old ItemStackHandler used "Size" key, new format uses "initial_size"
+		int oldSize = input.getIntOr("Size", -1);
 		int size = input.getIntOr("initial_size", this.initialSize);
-		if (size > this.initialSize) {
-			XBackpack.LOGGER.error("DynamicItemStacksResourceHandler does not support shrinking of the inventory size");
-			throw new RuntimeException("Tried to deserialize to a handler with more slots than it was created with");
+
+		if (oldSize > 0) {
+			// OLD FORMAT: Read from "Items" key using ItemStackWithSlot (sparse format)
+			XBackpack.LOGGER.info("Migrating from old ItemStackHandler format (Size={})", oldSize);
+			this.ensureStacksSize();
+			input.listOrEmpty("Items", ItemStackWithSlot.CODEC).forEach(slot -> {
+				if (slot.isValidInContainer(this.stacks.size())) {
+					this.stacks.set(slot.slot(), slot.stack());
+				}
+			});
+		} else {
+			// NEW FORMAT: Use parent deserialize which reads "stacks" key
+			if (size > this.initialSize) {
+				XBackpack.LOGGER.error("DynamicItemStacksResourceHandler does not support shrinking of the inventory size");
+				throw new RuntimeException("Tried to deserialize to a handler with more slots than it was created with");
+			}
+			super.deserialize(input);
+			this.ensureStacksSize();
 		}
 
-		// Try to read new format first, then fall back to checking for old format
-		// The super.deserialize will read "stacks" key if present
-		super.deserialize(input);
-
-		// Also check for "stacks" key with the codec list format (from old DynamicItemStackHandler)
-		input.read("stacks", ItemStack.OPTIONAL_CODEC.listOf()).ifPresent(stackList -> {
-			for (int i = 0; i < stackList.size() && i < this.stacks.size(); i++) {
-				ItemStack stack = stackList.get(i);
-				if (!stack.isEmpty()) {
-					this.stacks.set(i, stack);
-				}
-			}
-		});
-
-		ensureStacksSize();
 		this.onLoad();
 	}
 
