@@ -32,6 +32,7 @@ import org.jetbrains.annotations.NotNull;
  *
  */
 
+@SuppressWarnings("deprecation") // SlotItemHandler is deprecated, will be migrated when NeoForge provides stable replacement
 public class BackpackToolSlot extends SlotItemHandler {
 
 	private static final ResourceLocation EMPTY_TOOL_SLOT = ResourceLocation.fromNamespaceAndPath(XBackpack.MOD_ID, "container/slot/empty_tool_slot");

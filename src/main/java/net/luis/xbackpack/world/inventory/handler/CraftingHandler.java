@@ -18,12 +18,11 @@
 
 package net.luis.xbackpack.world.inventory.handler;
 
-import net.luis.xbackpack.world.item.DynamicItemStackHandler;
+import net.luis.xbackpack.world.item.DynamicItemStacksResourceHandler;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.level.storage.*;
-import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -34,27 +33,27 @@ import org.jetbrains.annotations.NotNull;
 
 public class CraftingHandler {
 
-	private final ItemStackHandler inputHandler;
-	private final ItemStackHandler resultHandler;
+	private final DynamicItemStacksResourceHandler inputHandler;
+	private final DynamicItemStacksResourceHandler resultHandler;
 
-	public CraftingHandler(@NotNull DynamicItemStackHandler inputHandler) {
-		this(inputHandler, new DynamicItemStackHandler(1));
+	public CraftingHandler(@NotNull DynamicItemStacksResourceHandler inputHandler) {
+		this(inputHandler, new DynamicItemStacksResourceHandler(1));
 	}
 
 	public CraftingHandler(int input, int result) {
-		this(new DynamicItemStackHandler(input), new DynamicItemStackHandler(result));
+		this(new DynamicItemStacksResourceHandler(input), new DynamicItemStacksResourceHandler(result));
 	}
 
-	public CraftingHandler(@NotNull DynamicItemStackHandler inputHandler, @NotNull DynamicItemStackHandler resultHandler) {
+	public CraftingHandler(@NotNull DynamicItemStacksResourceHandler inputHandler, @NotNull DynamicItemStacksResourceHandler resultHandler) {
 		this.inputHandler = inputHandler;
 		this.resultHandler = resultHandler;
 	}
 
-	public @NotNull ItemStackHandler getInputHandler() {
+	public @NotNull DynamicItemStacksResourceHandler getInputHandler() {
 		return this.inputHandler;
 	}
 
-	public @NotNull ItemStackHandler getResultHandler() {
+	public @NotNull DynamicItemStacksResourceHandler getResultHandler() {
 		return this.resultHandler;
 	}
 

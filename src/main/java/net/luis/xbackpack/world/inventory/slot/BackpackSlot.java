@@ -28,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
  *
  */
 
+@SuppressWarnings("deprecation") // SlotItemHandler is deprecated, will be migrated when NeoForge provides stable replacement
 public class BackpackSlot extends SlotItemHandler implements MoveableSlot {
 	
 	public BackpackSlot(@NotNull IItemHandlerModifiable itemHandler, int index, int xPosition, int yPosition) {

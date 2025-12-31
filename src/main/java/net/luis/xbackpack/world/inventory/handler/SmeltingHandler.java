@@ -18,12 +18,11 @@
 
 package net.luis.xbackpack.world.inventory.handler;
 
-import net.luis.xbackpack.world.item.DynamicItemStackHandler;
+import net.luis.xbackpack.world.item.DynamicItemStacksResourceHandler;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.level.storage.*;
-import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -33,29 +32,29 @@ import org.jetbrains.annotations.NotNull;
  */
 
 public class SmeltingHandler extends CraftingFuelHandler {
-	
-	private final ItemStackHandler inputStorageHandler;
-	private final ItemStackHandler resultStorageHandler;
-	
+
+	private final DynamicItemStacksResourceHandler inputStorageHandler;
+	private final DynamicItemStacksResourceHandler resultStorageHandler;
+
 	public SmeltingHandler(int input, int inputStorage, int resultStorage) {
 		this(input, 1, 1, inputStorage, resultStorage);
 	}
-	
+
 	public SmeltingHandler(int input, int fuel, int result, int inputStorage, int resultStorage) {
-		this(new DynamicItemStackHandler(input), new DynamicItemStackHandler(fuel), new DynamicItemStackHandler(result), new DynamicItemStackHandler(inputStorage), new DynamicItemStackHandler(resultStorage));
+		this(new DynamicItemStacksResourceHandler(input), new DynamicItemStacksResourceHandler(fuel), new DynamicItemStacksResourceHandler(result), new DynamicItemStacksResourceHandler(inputStorage), new DynamicItemStacksResourceHandler(resultStorage));
 	}
-	
-	public SmeltingHandler(DynamicItemStackHandler inputHandler, DynamicItemStackHandler fuelHandler, DynamicItemStackHandler resultHandler, DynamicItemStackHandler inputStorageHandler, DynamicItemStackHandler resultStorageHandler) {
+
+	public SmeltingHandler(DynamicItemStacksResourceHandler inputHandler, DynamicItemStacksResourceHandler fuelHandler, DynamicItemStacksResourceHandler resultHandler, DynamicItemStacksResourceHandler inputStorageHandler, DynamicItemStacksResourceHandler resultStorageHandler) {
 		super(inputHandler, fuelHandler, resultHandler);
 		this.inputStorageHandler = inputStorageHandler;
 		this.resultStorageHandler = resultStorageHandler;
 	}
-	
-	public ItemStackHandler getInputStorageHandler() {
+
+	public DynamicItemStacksResourceHandler getInputStorageHandler() {
 		return this.inputStorageHandler;
 	}
-	
-	public ItemStackHandler getResultStorageHandler() {
+
+	public DynamicItemStacksResourceHandler getResultStorageHandler() {
 		return this.resultStorageHandler;
 	}
 	

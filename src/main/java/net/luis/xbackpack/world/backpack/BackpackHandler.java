@@ -26,14 +26,13 @@ import net.luis.xbackpack.world.backpack.config.BackpackConfig;
 import net.luis.xbackpack.world.capability.IBackpack;
 import net.luis.xbackpack.world.inventory.handler.*;
 import net.luis.xbackpack.world.inventory.progress.*;
-import net.luis.xbackpack.world.item.DynamicItemStackHandler;
+import net.luis.xbackpack.world.item.DynamicItemStacksResourceHandler;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.storage.*;
-import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -44,13 +43,13 @@ import org.jetbrains.annotations.NotNull;
 
 public class BackpackHandler implements IBackpack {
 
-	public static final int DATA_VERSION = 1;
-	
+	public static final int DATA_VERSION = 2;
+
 	private Player player;
 	private BackpackConfig config;
-	private final ItemStackHandler backpackHandler = new DynamicItemStackHandler(873);
-	private final ItemStackHandler toolHandler = new DynamicItemStackHandler(3);
-	private final ItemStackHandler craftingHandler = new DynamicItemStackHandler(9);
+	private final DynamicItemStacksResourceHandler backpackHandler = new DynamicItemStacksResourceHandler(873);
+	private final DynamicItemStacksResourceHandler toolHandler = new DynamicItemStacksResourceHandler(3);
+	private final DynamicItemStacksResourceHandler craftingHandler = new DynamicItemStacksResourceHandler(9);
 	private final SmeltingHandler furnaceHandler = new SmeltingHandler(1, 4, 4);
 	private SmeltingProgressHandler smeltHandler;
 	private final CraftingHandler anvilHandler = new CraftingHandler(2, 1);
@@ -85,17 +84,17 @@ public class BackpackHandler implements IBackpack {
 	}
 	
 	@Override
-	public @NotNull ItemStackHandler getBackpackHandler() {
+	public @NotNull DynamicItemStacksResourceHandler getBackpackHandler() {
 		return this.backpackHandler;
 	}
-	
+
 	@Override
-	public @NotNull ItemStackHandler getToolHandler() {
+	public @NotNull DynamicItemStacksResourceHandler getToolHandler() {
 		return this.toolHandler;
 	}
-	
+
 	@Override
-	public @NotNull ItemStackHandler getCraftingHandler() {
+	public @NotNull DynamicItemStacksResourceHandler getCraftingHandler() {
 		return this.craftingHandler;
 	}
 	
@@ -189,7 +188,12 @@ public class BackpackHandler implements IBackpack {
 		if (tag.contains("data_version")) {
 			dataVersion = tag.getIntOr("data_version", 0);
 		}
-		if (dataVersion == DATA_VERSION) {
+		// Support both version 1 (old format) and version 2 (new format)
+		// DynamicItemStacksResourceHandler handles backward compatibility internally
+		if (dataVersion >= 1 && dataVersion <= DATA_VERSION) {
+			if (dataVersion < DATA_VERSION) {
+				XBackpack.LOGGER.info("Migrating backpack data from version {} to {}", dataVersion, DATA_VERSION);
+			}
 			this.config.deserialize(tag.getCompoundOrEmpty("backpack_config"));
 			ValueInput input = TagValueInput.create(ProblemReporter.DISCARDING, provider, tag);
 			input.child("backpack_handler").ifPresent(this.backpackHandler::deserialize);

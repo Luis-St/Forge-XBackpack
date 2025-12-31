@@ -21,9 +21,9 @@ package net.luis.xbackpack.world.inventory.handler;
 import com.google.common.collect.Lists;
 import net.luis.xbackpack.core.components.XBDataComponents;
 import net.luis.xbackpack.world.inventory.slot.SlotWrapper;
+import net.luis.xbackpack.world.item.DynamicItemStacksResourceHandler;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
-import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -35,16 +35,17 @@ import java.util.function.Function;
  *
  */
 
+@SuppressWarnings("deprecation") // IItemHandlerModifiable is deprecated, will be migrated in future
 public class ModifiableHandler implements IItemHandlerModifiable {
-	
-	private final ItemStackHandler mainHandler;
+
+	private final DynamicItemStacksResourceHandler mainHandler;
 	private final List<SlotWrapper> slotWrappers;
-	
+
 	public ModifiableHandler(int size) {
-		this(new ItemStackHandler(size));
+		this(new DynamicItemStacksResourceHandler(size));
 	}
-	
-	public ModifiableHandler(@NotNull ItemStackHandler mainHandler) {
+
+	public ModifiableHandler(@NotNull DynamicItemStacksResourceHandler mainHandler) {
 		this.mainHandler = mainHandler;
 		this.slotWrappers = Lists.newArrayList();
 		this.initSlotWrappers(mainHandler.getSlots(), SlotWrapper::ofUnwrapped);

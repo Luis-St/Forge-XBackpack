@@ -21,10 +21,10 @@ package net.luis.xbackpack.world.capability;
 import net.luis.xbackpack.world.backpack.config.BackpackConfig;
 import net.luis.xbackpack.world.inventory.handler.*;
 import net.luis.xbackpack.world.inventory.progress.ProgressHandler;
+import net.luis.xbackpack.world.item.DynamicItemStacksResourceHandler;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -39,11 +39,11 @@ public interface IBackpack {
 	
 	@NotNull BackpackConfig getConfig();
 	
-	@NotNull ItemStackHandler getBackpackHandler();
-	
-	@NotNull ItemStackHandler getToolHandler();
-	
-	@NotNull ItemStackHandler getCraftingHandler();
+	@NotNull DynamicItemStacksResourceHandler getBackpackHandler();
+
+	@NotNull DynamicItemStacksResourceHandler getToolHandler();
+
+	@NotNull DynamicItemStacksResourceHandler getCraftingHandler();
 	
 	@NotNull SmeltingHandler getSmeltingHandler();
 	

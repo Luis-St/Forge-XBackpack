@@ -18,12 +18,11 @@
 
 package net.luis.xbackpack.world.inventory.handler;
 
-import net.luis.xbackpack.world.item.DynamicItemStackHandler;
+import net.luis.xbackpack.world.item.DynamicItemStacksResourceHandler;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.level.storage.*;
-import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -33,27 +32,27 @@ import org.jetbrains.annotations.NotNull;
  */
 
 public class CraftingFuelHandler extends CraftingHandler {
-	
-	private final ItemStackHandler fuelHandler;
-	
+
+	private final DynamicItemStacksResourceHandler fuelHandler;
+
 	public CraftingFuelHandler(int input, int result) {
-		this(new DynamicItemStackHandler(input), new DynamicItemStackHandler(result));
+		this(new DynamicItemStacksResourceHandler(input), new DynamicItemStacksResourceHandler(result));
 	}
-	
-	public CraftingFuelHandler(@NotNull DynamicItemStackHandler inputHandler, @NotNull DynamicItemStackHandler resultHandler) {
-		this(inputHandler, new DynamicItemStackHandler(1), resultHandler);
+
+	public CraftingFuelHandler(@NotNull DynamicItemStacksResourceHandler inputHandler, @NotNull DynamicItemStacksResourceHandler resultHandler) {
+		this(inputHandler, new DynamicItemStacksResourceHandler(1), resultHandler);
 	}
-	
+
 	public CraftingFuelHandler(int input, int fuel, int result) {
-		this(new DynamicItemStackHandler(input), new DynamicItemStackHandler(fuel), new DynamicItemStackHandler(result));
+		this(new DynamicItemStacksResourceHandler(input), new DynamicItemStacksResourceHandler(fuel), new DynamicItemStacksResourceHandler(result));
 	}
-	
-	public CraftingFuelHandler(@NotNull DynamicItemStackHandler inputHandler, @NotNull DynamicItemStackHandler fuelHandler, @NotNull DynamicItemStackHandler resultHandler) {
+
+	public CraftingFuelHandler(@NotNull DynamicItemStacksResourceHandler inputHandler, @NotNull DynamicItemStacksResourceHandler fuelHandler, @NotNull DynamicItemStacksResourceHandler resultHandler) {
 		super(inputHandler, resultHandler);
 		this.fuelHandler = fuelHandler;
 	}
-	
-	public @NotNull ItemStackHandler getFuelHandler() {
+
+	public @NotNull DynamicItemStacksResourceHandler getFuelHandler() {
 		return this.fuelHandler;
 	}
 	
